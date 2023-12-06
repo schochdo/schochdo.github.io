@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+	<title>Crashes 2022</title>
+
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+	
+	<!-- Load Leaflet.timeline -->
+	<script src="https://skeate.dev/Leaflet.timeline/examples/leaflet.timeline.js"></script>
+
+	<!-- Load moment.js -->
+	<script src="https://momentjs.com/downloads/moment.js"></script>
+	
+	<style>
+		html, body {
+			height: 100%;
+			margin: 0;
+		}
+		#map {
+			width: 100%; height: 100%; font-family:'Century Gothic';
+		}
+		
+		.info { padding: 6px 8px; font: 14px/16px Century Gothic, Helvetica, sans-serif; background: white; 
+		background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; } 
+		
+		.info h4 { margin: 0 0 0px; color: #777; }
+		
+		
+		.leaflet-bottom.leaflet-left {
+        width: 90%;
+		}
+		
+		.leaflet-control-container .leaflet-timeline-controls {
+        box-sizing: border-box;
+        width: 90%;
+        margin: 20px;
+        margin-bottom: 15px;
+		}
+		
+		.leaflet-control.leaflet-timeline-control .button-container button {
+		  position: relative;
+		  width: 30%;
+		  height: 30px;
+		}
+		
+		
+		.leaflet-control.leaflet-timeline-control {
+			width: 50%;
+			box-sizing: border-box;
+			margin: 2%;
+			margin-bottom: 20px;
+			text-align: center;
+		}
+		
+		.leaflet-control.leaflet-timeline-control input[type="range"] {
+		width: 70%;
+		}
+
+
+		
+	</style>
+</head>
+<body>
+
+<div id='map'></div>
+
+	<script type="text/javascript" src="crashes_2022.js"></script>
+
+	<script type="text/javascript">
+
+	var map = L.map('map').setView([39.03, -105.5], 8);
+
+	
+	var terrain = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}', {
+	attribution: 'Tiles &copy; Esri &mdash; National Geographic, Esri, DeLorme, NAVTEQ, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC',
+	maxZoom: 16
+	}).addTo(map);
+	
+	var imagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+	attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+	});
+	
+	var lGrey = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}{r}.{ext}', {
+	attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+	subdomains: 'abcd',
+	minZoom: 0,
+	maxZoom: 20,
+	ext: 'png'
+	});
+
+	// Title info
+	var info = L.control();
+
+	info.onAdd = function (map) {
+		this._div = L.DomUtil.create('div', 'info');
+		this.update();
+		return this._div;
+	};
+
+	info.update = function (props) {
+		this._div.innerHTML = '<h4>Crashes 2022</h4>';
+	};
+
+	info.addTo(map);
+	
+	
+
+
+	var styleOptions= {
+			radius: 6,
+			weight: 1,
+			opacity: 1,
+			color: 'red',
+			dashArray: '',
+			fillOpacity: 0.5,
+			fillColor: 'red'
+		}
+
+
+	  
+	var getInterval = function(feature) {
+		return {
+			start: moment(new Date(feature.properties.DateStart)),
+			end: moment(new Date(feature.properties.YearEnd)),
+		};
+	};
+	var timelineControl = L.timelineSliderControl({
+		formatOutput: function(date){
+			return moment(date).format("MM-DD-YYYY");
+		},
+	});
+	
+	
+	var timeline = L.timeline(crashes_2022, {
+		getInterval: getInterval,
+		pointToLayer: function(feature, latlng) {
+					if (moment(new Date(feature.properties.DateStart))<moment(new Date('2024'))){
+					
+					return L.circleMarker(latlng, styleOptions);}
+					},
+	});
+	timeline.addTo(map);
+	timelineControl.addTo(map);
+	timelineControl.addTimelines(timeline);
+		
+	
+	var baseLayers = {
+    "Terrain": terrain,
+	"Imagery": imagery,
+	"Light Grey": lGrey
+	
+	};
+
+	var overlays = {
+	};
+
+	L.control.layers(baseLayers, overlays, {collapsed: false}).addTo(map);
+	
+	L.control.scale().addTo(map);
+
+
+
+
+
+</script>
+
+
+
+</body>
+</html>
