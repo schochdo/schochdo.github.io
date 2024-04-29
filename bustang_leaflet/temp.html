@@ -1,0 +1,75 @@
+
+
+let timerInterval;
+const resetTimer = () => {
+  clearInterval(timerInterval);
+  
+  const node = document.querySelector(".countdownTimer");
+  node.innerHTML = 15;
+  timerInterval = setInterval(() => {
+    const n = document.querySelector(".countdownTimer");
+    n.innerHTML = n.innerHTML - 1;
+  }, 1000);
+}
+
+// Removes all the graphics, calls the API to get the data,
+// and adds all the Graphics to the input graphicsLayer.
+const updateLayer = async (featureLayer, layerView) => {
+  // const [Graphic] = await loadModules(["esri/Graphic"]);
+
+  // then get all the locations by calling the API (Protocol buffer service)
+  const locations = await protobufUpdate();
+  // console.log("locations:", locations);
+
+  // Add all the locations to the map:
+  const graphics = locations.map(locationObject => {
+    var point = {
+      type: "point", // autocasts as new Polyline()
+      latitude: locationObject.vehicle.position.latitude,
+      longitude: locationObject.vehicle.position.longitude
+    };
+
+    var timeStampDate = new Date(0); // The 0 there is the key, which sets the date to the epoch
+    timeStampDate.setUTCSeconds(locationObject.vehicle.timestamp);
+
+    var attributes = {
+      name: locationObject.vehicle.vehicle.label,
+      timestamp: timeStampDate.toTimeString(),
+      route: locationObject.vehicle.trip.route_id,
+      route_start: locationObject.vehicle.trip.start_time
+    };
+
+    return new Graphic({
+      geometry: point,
+      attributes: attributes,
+    });
+  });
+
+  // first clear out the graphicsLayer
+  // console.log('featureLayer:', featureLayer);
+  layerView.queryFeatures().then((results) => {
+    featureLayer.applyEdits({
+      deleteFeatures: results.features,
+      addFeatures: graphics
+    });
+  });
+  
+};
+
+
+  
+  view.whenLayerView(fl).then(function(layerView) {
+    // console.log('layerView', layerView);
+    // do something with the layerView
+    updateLayer(fl, layerView);
+    resetTimer();
+    // every 15 seconds update the graphicsLayer:
+    setInterval(() => {
+      updateLayer(fl, layerView);
+      resetTimer();
+    }, 15000);
+  });
+
+  
+};
+main();

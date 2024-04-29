@@ -1,0 +1,12 @@
+var ramsstops = {
+"type": "FeatureCollection",
+"name": "rams_stops",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "stop_id": "26188", "stop_name": "Arapahoe at Village Center Station Gate D", "route_ids": [ "RAMS" ] }, "geometry": { "type": "Point", "coordinates": [ -104.887857, 39.601134 ] } },
+{ "type": "Feature", "properties": { "stop_id": "35123", "stop_name": "Colorado State University", "route_ids": [ "RAMS" ] }, "geometry": { "type": "Point", "coordinates": [ -105.088273, 40.5764 ] } },
+{ "type": "Feature", "properties": { "stop_id": "34323", "stop_name": "Union Station Gate B4", "route_ids": [ "NRTH", "RAMS", "SNOW", "SOUT" ] }, "geometry": { "type": "Point", "coordinates": [ -105.001241, 39.753904 ] } },
+{ "type": "Feature", "properties": { "stop_id": "35132", "stop_name": "Fort Collins Downtown Transit Center", "route_ids": [ "NRTH", "RAMS" ] }, "geometry": { "type": "Point", "coordinates": [ -105.078081, 40.59005 ] } },
+{ "type": "Feature", "properties": { "stop_id": "26107", "stop_name": "Wagon Road PnR Gate G", "route_ids": [ "RAMS" ] }, "geometry": { "type": "Point", "coordinates": [ -104.993741, 39.912498 ] } }
+]
+}

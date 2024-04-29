@@ -1,0 +1,17 @@
+var snowstangstops = {
+"type": "FeatureCollection",
+"name": "snowstang_stops",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "stop_id": "35457", "stop_name": "Steamboat Springs Stop 1", "route_ids": [ "SNOW" ] }, "geometry": { "type": "Point", "coordinates": [ -106.806242, 40.457539 ] } },
+{ "type": "Feature", "properties": { "stop_id": "35152", "stop_name": "Loveland Ski Area", "route_ids": [ "SNOW" ] }, "geometry": { "type": "Point", "coordinates": [ -105.896818, 39.680163 ] } },
+{ "type": "Feature", "properties": { "stop_id": "35465", "stop_name": "Copper Mountain", "route_ids": [ "SNOW" ] }, "geometry": { "type": "Point", "coordinates": [ -106.157811, 39.502105 ] } },
+{ "type": "Feature", "properties": { "stop_id": "35451", "stop_name": "A Basin", "route_ids": [ "SNOW" ] }, "geometry": { "type": "Point", "coordinates": [ -105.871835, 39.642721 ] } },
+{ "type": "Feature", "properties": { "stop_id": "33658", "stop_name": "Federal Center Station Gate L", "route_ids": [ "PEGA", "SNOW", "WEST" ] }, "geometry": { "type": "Point", "coordinates": [ -105.129459, 39.719621 ] } },
+{ "type": "Feature", "properties": { "stop_id": "35471", "stop_name": "Wooly Mammoth Park & Ride", "route_ids": [ "SNOW" ] }, "geometry": { "type": "Point", "coordinates": [ -105.207457, 39.697713 ] } },
+{ "type": "Feature", "properties": { "stop_id": "34323", "stop_name": "Union Station Gate B4", "route_ids": [ "NRTH", "RAMS", "SNOW", "SOUT" ] }, "geometry": { "type": "Point", "coordinates": [ -105.001241, 39.753904 ] } },
+{ "type": "Feature", "properties": { "stop_id": "35119", "stop_name": "Breckenridge Transfer Station", "route_ids": [ "SNOW" ] }, "geometry": { "type": "Point", "coordinates": [ -106.047533, 39.4848 ] } },
+{ "type": "Feature", "properties": { "stop_id": "35169", "stop_name": "Steamboat Springs Transit Station", "route_ids": [ "SNOW" ] }, "geometry": { "type": "Point", "coordinates": [ -106.850002, 40.493874 ] } },
+{ "type": "Feature", "properties": { "stop_id": "34343", "stop_name": "Union Station", "route_ids": [ "NRTH", "SNOW", "SOUT", "WEST" ] }, "geometry": { "type": "Point", "coordinates": [ -105.000558, 39.753394 ] } }
+]
+}

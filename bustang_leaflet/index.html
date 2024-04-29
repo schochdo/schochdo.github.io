@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Bustang Realtime</title>
+        <link rel="stylesheet" href="styles.css" />
+        <script src="script.js"></script>
+        <link
+            rel="stylesheet"
+            href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+            integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+            crossorigin="" />
+        <script
+            src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+
+        <script src="bustang_core.geojson" type="text/javascript"></script>
+        <script src="bustang_stops.geojson" type="text/javascript"></script>
+        <script src="outrider.geojson" type="text/javascript"></script>
+        <script src="outrider_stops.geojson" type="text/javascript"></script>
+        <script src="snowstang.geojson" type="text/javascript"></script>
+        <script src="snowstang_stops.geojson" type="text/javascript"></script>
+        <script src="rams.geojson" type="text/javascript"></script>
+        <script src="rams_stops.geojson" type="text/javascript"></script>
+        <script src="pegasus.geojson" type="text/javascript"></script>
+        <script src="pegasus_stops.geojson" type="text/javascript"></script>
+        
+        <script src="https://unpkg.com/pbf@3.0.5/dist/pbf.js"></script>
+        <script src="https://unpkg.com/gtfs-realtime-pbf-js-module@1.0.0/gtfs-realtime.browser.proto.js"></script>
+    </head>
+    
+    <body>
+        <div id="map"><div id="countdownTimer" class="countdownTimer"></div></div>
+        <script>
+            var carto = L.tileLayer(
+                "http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
+                {
+                    attribution:
+                        '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+                }
+            );
+
+            var osm = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+                    maxZoom: 19,
+                    attribution: "© OpenStreetMap"
+                }
+            );
+
+            var baseMaps = {
+                Carto: carto,
+                OpenStreetMap: osm
+            };
+
+
+
+            var map = L.map("map", {
+                center: [39.7, -106.6],
+                zoom: 9,
+                layers: [carto]
+            });
+
+            // Marker style for stops
+            var geojsonMarkerOptions = {
+                radius: 5,
+                fillColor: "#FFFFFF",
+                color: "#6A2C91",
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 1.0
+            };
+
+            // ADD ROUTES
+
+            // Add main Bustang lines (North, South, West) to map
+            var bustangCoreLayer = L.geoJSON(bustangcore, {
+                style: function (feature) {
+                    switch (feature.properties.route_name) {
+                        case "NORTH":
+                            return { color: "#F57F29", weight: 6 };
+                        case "SOUTH":
+                            return { color: "#2DB34A", weight: 6 };
+                        case "WEST":
+                            return { color: "#009AD9", weight: 6 };
+                    }
+                },
+                onEachFeature: function (feature, layer) {
+                    layer.bindPopup(
+                        "Bustang: " + feature.properties.route_name
+                    );
+                }
+            });
+
+            // Add Outrider to map
+            var outriderLayer = L.geoJSON(outrider, {
+                style: function (feature) {
+                    switch (feature.properties.route_id) {
+                        case "15554":
+                            return { color: "#F15A2D", weight: 2 };
+                        case "15566":
+                            return { color: "#FDEF2E", weight: 2 };
+                        case "15565":
+                            return { color: "#2DB34A", weight: 2 };
+                        case "15570":
+                            return { color: "#EC008C", weight: 2 };
+                        case "32590":
+                            return { color: "#386581", weight: 2 };
+                        case "32591":
+                            return { color: "#00AEC7", weight: 2 };
+                        case "32592":
+                            return { color: "#B8353C", weight: 2 };
+                        case "32593":
+                            return { color: "#68532D", weight: 2 };
+                        case "74969":
+                            return { color: "#A76527", weight: 2 };
+                    }
+                },
+                onEachFeature: function (feature, layer) {
+                    layer.bindPopup(feature.properties.route_name);
+                }
+            });
+
+            // Add Snowstang to map
+            var snowstangLayer = L.geoJSON(snowstang, {
+                onEachFeature: function (feature, layer) {
+                    layer.bindPopup(feature.properties.route_name);
+                },
+                style: {color: "#00A0DD"}
+            });
+
+            // Add RAMS to map
+            var ramsLayer = L.geoJSON(rams, {
+                onEachFeature: function (feature, layer) {
+                    layer.bindPopup(feature.properties.route_name);
+                },
+                style: {color: "#004D26"}
+            });
+
+            // Add Pegasus to map
+            var pegasusLayer = L.geoJSON(pegasus, {
+                onEachFeature: function (feature, layer) {
+                    layer.bindPopup(feature.properties.route_name);
+                },
+                style: {color: "#3FBBEC"}
+            });
+
+            // ADD STOPS
+
+            // Add Bustang stop locations
+            var bustangStopsLayer = L.geoJSON(bustangstops, {
+                pointToLayer: function (feature, latlng) {
+                    return L.circleMarker(latlng, geojsonMarkerOptions);
+                },
+                onEachFeature: function (feature, layer) {
+                    layer.bindTooltip(feature.properties.stop_name);
+                }
+            });
+
+            // Add Outrider stop locations
+            var outriderStopsLayer = L.geoJSON(outriderstops, {
+                pointToLayer: function (feature, latlng) {
+                    return L.circleMarker(latlng, geojsonMarkerOptions);
+                },
+                onEachFeature: function (feature, layer) {
+                    layer.bindTooltip(feature.properties.stop_name);
+                }
+            });
+
+            // Add Snowstang stop locations
+            var snowstangStopsLayer = L.geoJSON(snowstangstops, {
+                pointToLayer: function (feature, latlng) {
+                    return L.circleMarker(latlng, geojsonMarkerOptions);
+                },
+                onEachFeature: function (feature, layer) {
+                    layer.bindTooltip(feature.properties.stop_name);
+                }
+            });
+
+            // Add RAMS stop locations
+            var ramsStopsLayer = L.geoJSON(ramsstops, {
+                pointToLayer: function (feature, latlng) {
+                    return L.circleMarker(latlng, geojsonMarkerOptions);
+                },
+                onEachFeature: function (feature, layer) {
+                    layer.bindTooltip(feature.properties.stop_name);
+                }
+            });
+
+            // Add Pegasus stop locations
+            var pegasusStopsLayer = L.geoJSON(pegasusstops, {
+                pointToLayer: function (feature, latlng) {
+                    return L.circleMarker(latlng, geojsonMarkerOptions);
+                },
+                onEachFeature: function (feature, layer) {
+                    layer.bindTooltip(feature.properties.stop_name);
+                }
+            });
+
+            // Group layers for toggling.  
+            group1 = new L.FeatureGroup();
+            group1.addLayer(bustangCoreLayer);
+            group1.addLayer(bustangStopsLayer);
+
+            // Bustang layer loads on start.  Others need to be toggled.  
+            map.addLayer(group1);
+
+            group2 = new L.FeatureGroup();
+            group2.addLayer(outriderLayer);
+            group2.addLayer(outriderStopsLayer);
+
+            group3 = new L.FeatureGroup();
+            group3.addLayer(snowstangLayer);
+            group3.addLayer(snowstangStopsLayer);
+
+            group4 = new L.FeatureGroup();
+            group4.addLayer(ramsLayer);
+            group4.addLayer(ramsStopsLayer);
+
+            group5 = new L.FeatureGroup();
+            group5.addLayer(pegasusLayer);
+            group5.addLayer(pegasusStopsLayer);
+
+            var overlayMaps = {
+                Bustang: group1,
+                Outrider: group2,
+                Snowstang: group3,
+                Rams: group4,
+                Pegasus: group5
+            };
+
+            var layerControl = L.control
+                .layers(baseMaps, overlayMaps)
+                .addTo(map);
+
+            // Define bus icon
+            // Modified from svg at https://labs.mapbox.com/maki-icons/
+            var busIcon = L.icon({
+                iconUrl: "bustang.png",
+                iconSize: [40, 40], // size of the icon
+                iconAnchor: [20, 20], // point of the icon which will correspond to marker's location
+                popupAnchor: [0, 0] // point from which the popup should open relative to the iconAnchor
+            });
+
+            // GTFS Realtime 
+            // This section based off a project by Gavin Rehkemper: https://gavinr.com/protocol-buffers-protobuf-browser/
+            // Convert GTFS objects array to GeoJSON features array
+            const gtfsArrayToGeojsonFeatures = (gtfsArray) => {
+                return gtfsArray.map((gtfsObject) => {
+                    console.log("gtfsObject", gtfsObject);
+                    return {
+                        type: "Feature",
+                        properties: {
+                            // Field name descriptions at https://www.rtd-denver.com/open-records/open-spatial-information/real-time-feeds
+                            label: gtfsObject.vehicle.vehicle.label,
+                            // route_id: gtfsObject.vehicle.trip.route_id,
+                            bearing: gtfsObject.vehicle.position.bearing
+                        },
+                        geometry: {
+                            type: "Point",
+                            coordinates: [
+                                gtfsObject.vehicle.position.longitude,
+                                gtfsObject.vehicle.position.latitude
+                            ]
+                        }
+                    };
+                });
+            };
+
+            const pbfToGeojson = async () => {
+                const url = "https://www.rtd-denver.com/files/bustang/gtfs-rt/Bustang_VehiclePosition.pb";
+                // Replace with line below to connect to RTD Denver feed instead
+                //const url = 'https://www.rtd-denver.com/files/gtfs-rt/VehiclePosition.pb';
+                let response = await fetch(url);
+                if (response.ok) {
+                    // If good HTTP response, load content into the protocol buffer
+                    const bufferRes = await response.arrayBuffer();
+                    const pbf = new Pbf(new Uint8Array(bufferRes));
+                    const obj = FeedMessage.read(pbf);
+
+                    // Return the data in GeoJSON format:
+                    return {
+                        type: "FeatureCollection",
+                        features: gtfsArrayToGeojsonFeatures(obj.entity)
+                    };
+                } else {
+                    console.error("error:", response.status);
+                }
+            };
+            
+
+
+            const busLayer = L.geoJSON([], {
+                pointToLayer(feature, latlng) {
+                    return L.marker(latlng, { icon: busIcon });
+                }
+            })
+                .bindPopup(function (busLayer) {
+                    return "Bearing: " + busLayer.feature.properties.bearing + "˚";
+                })
+                .addTo(map);
+
+            group1.addLayer(busLayer);
+
+            const updateLayer = async (busLayer) => {
+                // Clear bus layer so only latest position displayed
+                busLayer.clearLayers();
+                const locations = await pbfToGeojson();
+                busLayer.addData(locations);
+            };
+
+            updateLayer(busLayer);
+            // Reload bus layer every 10 seconds
+            setInterval(() => {updateLayer(busLayer);}, 10000);
+
+            
+        </script>
+    </body>
+</html>
