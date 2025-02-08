@@ -269,7 +269,8 @@
             };
 
             const pbfToGeojson = async () => {
-                const url = "https://cors-proxy.schochdo.workers.dev/?url=https://www.rtd-denver.com/files/bustang/gtfs-rt/Bustang_VehiclePosition.pb";
+                //const url = "https://cors-proxy.schochdo.workers.dev/?url=https://www.rtd-denver.com/files/bustang/gtfs-rt/Bustang_VehiclePosition.pb";
+                const url = "https://cors-proxy.schochdo.workers.dev/?url=https://www.rtd-denver.com/files/gtfs-rt/VehiclePosition.pb";
                 // Replace with line below to connect to RTD Denver feed instead
                 //const url = 'https://www.rtd-denver.com/files/gtfs-rt/VehiclePosition.pb';
                 let response = await fetch(url);
