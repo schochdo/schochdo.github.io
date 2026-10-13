@@ -1,0 +1,133 @@
+---
+interface Props {
+  profile: {
+    name: string;
+    headline: string;
+    bio: string;
+    avatar: string;
+    email?: string;
+    github?: string;
+    website?: string;
+    skills?: string[];
+  };
+}
+
+const { profile } = Astro.props;
+
+const defaultSkills = [
+  "Cartography & Map Design",
+  "GIS Analysis & Modeling",
+  "Transit & GTFS Networks",
+  "Leaflet & Web GIS",
+  "Python & Spatial Data",
+  "QGIS & ArcGIS Pro",
+  "Topographic & Relief Shading",
+  "Isochrone / Network Analysis",
+  "GeoJSON & Geospatial Formats"
+];
+
+const skills = profile.skills && profile.skills.length > 0 ? profile.skills : defaultSkills;
+---
+
+<section id="about" class="py-16 md:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+    
+    <!-- Left Column: Bio & Background -->
+    <div class="lg:col-span-7">
+      <div class="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mb-2">
+        <span>🧭</span> Background & Expertise
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-6">
+        About Douglas Schoch
+      </h2>
+
+      <div class="prose dark:prose-invert text-slate-600 dark:text-slate-300 text-base leading-relaxed space-y-4">
+        <p>
+          I am a GIS professional and cartographer dedicated to transforming complex spatial data into intuitive, visually compelling maps and tools.
+        </p>
+        <p>
+          My cartographic journey has taken me from drafting official backcountry topographic maps for visitor centers in Idaho's <strong>Salmon-Challis National Forest</strong> during an Americorps service term, to researching historical visitor flows as a geography major at <strong>Penn State University</strong>.
+        </p>
+        <p>
+          More recently, my focus includes transit network optimization, travel time isochrone modeling, and developing real-time interactive mapping applications powered by modern open-source geospatial tools.
+        </p>
+      </div>
+
+      <!-- Experience Milestones -->
+      <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs">
+          <div class="text-emerald-600 dark:text-emerald-400 font-bold text-sm mb-1">🌲 US Forest Service</div>
+          <p class="text-xs text-slate-600 dark:text-slate-400">Americorps intern creating trail elevation profiles & hiking maps in Salmon-Challis NF, ID.</p>
+        </div>
+        <div class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs">
+          <div class="text-emerald-600 dark:text-emerald-400 font-bold text-sm mb-1">🎓 Penn State University</div>
+          <p class="text-xs text-slate-600 dark:text-slate-400">Geography degree focusing on advanced cartography, historical GIS, and spatial visualization.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Skills & Contact -->
+    <div class="lg:col-span-5 flex flex-col gap-8">
+      
+      <!-- Skills Card -->
+      <div class="p-6 sm:p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+        <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+          <span>🛠️</span> Technical Proficiencies
+        </h3>
+        <div class="flex flex-wrap gap-2">
+          {skills.map(skill => (
+            <span class="px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60 text-xs font-semibold">
+              {skill}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <!-- Connect & Links Card -->
+      <div class="p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white shadow-xl shadow-emerald-600/10">
+        <h3 class="text-lg font-bold text-white mb-2">Connect & Collaborate</h3>
+        <p class="text-xs sm:text-sm text-emerald-100 mb-6">
+          Interested in GIS analysis, custom cartography, or transit mapping projects?
+        </p>
+
+        <div class="space-y-3 text-xs sm:text-sm">
+          {profile.website && (
+            <a
+              href={profile.website}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex items-center justify-between p-3 rounded-xl bg-white/10 hover:bg-white/20 transition-colors border border-white/10"
+            >
+              <span>Personal Website</span>
+              <span class="font-mono text-xs">{profile.website.replace('https://', '')} ↗</span>
+            </a>
+          )}
+
+          {profile.github && (
+            <a
+              href={profile.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex items-center justify-between p-3 rounded-xl bg-white/10 hover:bg-white/20 transition-colors border border-white/10"
+            >
+              <span>GitHub</span>
+              <span class="font-mono text-xs">github.com/schochdo ↗</span>
+            </a>
+          )}
+
+          {profile.email && (
+            <a
+              href={`mailto:${profile.email}`}
+              class="flex items-center justify-between p-3 rounded-xl bg-white/10 hover:bg-white/20 transition-colors border border-white/10"
+            >
+              <span>Email</span>
+              <span class="font-mono text-xs">{profile.email} ↗</span>
+            </a>
+          )}
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>

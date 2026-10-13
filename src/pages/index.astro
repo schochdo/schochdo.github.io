@@ -1,0 +1,32 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Hero from '../components/Hero.astro';
+import ProjectsSection from '../components/ProjectsSection.astro';
+import TransitHighlight from '../components/TransitHighlight.astro';
+import AboutSection from '../components/AboutSection.astro';
+import MapLightbox from '../components/MapLightbox.astro';
+import Footer from '../components/Footer.astro';
+
+import { getCollection } from 'astro:content';
+import profileData from '../content/site/profile.json';
+
+const projects = await getCollection('projects');
+---
+
+<Layout
+  title={`${profileData.name} — ${profileData.headline}`}
+  description={profileData.tagline}
+>
+  <Navbar name={profileData.name} />
+  
+  <main class="flex-1">
+    <Hero profile={profileData} />
+    <ProjectsSection projects={projects} />
+    <TransitHighlight />
+    <AboutSection profile={profileData} />
+  </main>
+
+  <Footer name={profileData.name} />
+  <MapLightbox />
+</Layout>

@@ -1,0 +1,20 @@
+{
+  "name": "Douglas Schoch",
+  "headline": "GIS Analyst & Cartographer",
+  "tagline": "Crafting thoughtful maps, spatial analysis, and interactive transit visualizations.",
+  "bio": "I am a GIS professional and cartographer specializing in spatial analytics, transit networks, and cartographic design. My work spans topographic trail maps for the US Forest Service, historical cartography at Penn State, and real-time interactive Web GIS applications.",
+  "avatar": "/images/avatar.jpg",
+  "bg": "/images/bg.jpg",
+  "email": "me@schochdo.com",
+  "github": "https://github.com/schochdo",
+  "website": "https://dschoch.com",
+  "linkedin": "",
+  "skills": [
+    "Cartography & Map Design",
+    "GIS Analysis & Modeling",
+    "Transit & GTFS Networks",
+    "Leaflet & Web GIS",
+    "Python & Spatial Data",
+    "QGIS & ArcGIS Pro"
+  ]
+}

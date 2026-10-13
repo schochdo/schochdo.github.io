@@ -1,0 +1,50 @@
+backend:
+  name: github
+  repo: schochdo/schochdo.github.io
+  branch: main
+
+media_folder: public/images/uploads
+public_folder: /images/uploads
+
+collections:
+  - name: "projects"
+    label: "Portfolio Projects"
+    label_singular: "Project"
+    folder: "src/content/projects"
+    create: true
+    slug: "{{slug}}"
+    identifier_field: "title"
+    format: "yaml-frontmatter"
+    extension: "md"
+    editor:
+      preview: false
+    fields:
+      - { label: "Project Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "date", format: "YYYY-MM-DD" }
+      - { label: "Tags / Categories", name: "tags", widget: "list", default: ["GIS", "Cartography"] }
+      - { label: "Featured on Homepage", name: "featured", widget: "boolean", default: true }
+      - { label: "Display Order Priority", name: "order", widget: "number", default: 1, value_type: "int" }
+      - { label: "Short Summary", name: "summary", widget: "text" }
+      - { label: "Thumbnail Image", name: "thumbnail", widget: "image" }
+      - { label: "Full / Hero Map Image", name: "heroImage", widget: "image", required: false }
+      - { label: "Live Interactive Map URL", name: "liveUrl", widget: "string", required: false, hint: "Optional: e.g. /bustang_leaflet/ or external URL" }
+      - { label: "GitHub Code URL", name: "githubUrl", widget: "string", required: false }
+      - { label: "Project Story & Details", name: "body", widget: "markdown", required: false }
+
+  - name: "site_content"
+    label: "Profile & Settings"
+    files:
+      - file: "src/content/site/profile.json"
+        label: "About Douglas"
+        name: "profile"
+        fields:
+          - { label: "Full Name", name: "name", widget: "string" }
+          - { label: "Professional Title", name: "headline", widget: "string" }
+          - { label: "Short Tagline", name: "tagline", widget: "string" }
+          - { label: "About Bio", name: "bio", widget: "markdown" }
+          - { label: "Avatar Photo", name: "avatar", widget: "image" }
+          - { label: "Email Address", name: "email", widget: "string", required: false }
+          - { label: "GitHub Profile URL", name: "github", widget: "string", required: false }
+          - { label: "Personal Website URL", name: "website", widget: "string", required: false }
+          - { label: "LinkedIn URL", name: "linkedin", widget: "string", required: false }
+          - { label: "Core Skills", name: "skills", widget: "list" }
