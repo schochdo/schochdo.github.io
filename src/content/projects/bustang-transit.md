@@ -1,19 +1,22 @@
 ---
-title: "Bustang Real-Time Transit Map"
-date: "2024-03-01"
-tags: ["Web GIS", "Leaflet", "GTFS-Realtime", "Transit"]
+title: "Colorado Bustang Live Transit Dashboard"
+date: "2026-09-01"
+tags: ["Web GIS", "Leaflet", "GTFS-Realtime", "Transit", "Python"]
 featured: true
 order: 5
-summary: "Interactive web mapping application tracking Colorado's Bustang interregional transit system in real time using Leaflet and GTFS-RT protocol buffer feeds via a Cloudflare Worker proxy."
+summary: "Full real-time transit dashboard & tracking map for Colorado's statewide Bustang network, featuring live bus positions, route trends, stop departure boards, and OpenStreetMap integration."
 thumbnail: "/images/thumbs/transportation.jpg"
 heroImage: "/images/fulls/transportation.jpg"
-liveUrl: "/bustang_leaflet/"
+liveUrl: "https://transit-dashboard-ap50.onrender.com"
 githubUrl: "https://github.com/schochdo/schochdo.github.io"
 ---
 
-An interactive real-time web mapping application tracking Colorado's statewide interregional transit system (Bustang, Outrider, Pegasus, and Snowstang).
+A complete real-time transit intelligence dashboard and live interactive map tracking Colorado's statewide intercity bus network (Bustang, Outrider, Pegasus, and Snowstang).
 
-### Technical Architecture
-- **Interactive Mapping**: Built with Leaflet and custom vector layers.
-- **Real-Time GTFS-RT Feeds**: Pulls vehicle position protocol buffers (`VehiclePosition.pb`) through a Cloudflare Worker CORS proxy.
-- **Multi-Route Coverage**: Visualizes stops, corridors, and live GPS locations for intercity transit routes across Colorado.
+### Features & Architecture
+- **Live Vehicle Positions**: Real-time GPS coordinates and directional bearings decoded from RTD / CDOT GTFS-Realtime protocol buffers.
+- **Stop Search & Departure Boards**: Instant search for statewide stops with estimated arrival and departure times.
+- **OpenStreetMap Basemap**: Clean, reliable vector and raster basemaps with full OpenStreetMap and RTD license attributions.
+- **Bus Trends & Feed Health**: Analytical dashboards monitoring vehicle reliability, corridor speeds, and feed uptime.
+
+*Also accessible as a standalone lightweight Leaflet map at [/bustang_leaflet/](/bustang_leaflet/).*
