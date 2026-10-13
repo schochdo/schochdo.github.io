@@ -2,6 +2,7 @@ backend:
   name: github
   repo: schochdo/schochdo.github.io
   branch: main
+  auth_methods: [token]
 
 media_folder: public/images/uploads
 public_folder: /images/uploads
