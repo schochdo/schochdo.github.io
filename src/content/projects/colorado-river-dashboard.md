@@ -1,16 +1,16 @@
 ---
-title: "Colorado River Basin Hydrology & Plumbing Dashboard"
+title: "Colorado River Basin Water Infrastructure & Hydrology Dashboard"
 date: "2026-09-27"
-tags: ["GIS Analysis", "Hydrology", "Web GIS", "Leaflet", "Python", "Data Pipeline"]
+tags: ["GIS Analysis", "Hydrology", "Web GIS", "MapLibre GL", "Python", "Data Pipeline"]
 featured: true
 order: 1
 summary: "Real-time telemetry pipeline and interactive geospatial dashboard tracking Colorado River streamflow, Front Range trans-mountain diversions (Adams, Moffat, Roberts tunnels), and Lake Powell/Mead storage."
-thumbnail: "/images/colorado_river_basin.jpg"
-heroImage: "/images/colorado_river_basin.jpg"
+thumbnail: "/images/colorado_river_basin.png"
+heroImage: "/images/colorado_river_basin.png"
 githubUrl: "https://github.com/schochdo/CO_River"
 ---
 
-A real-time geospatial data pipeline and interactive hydrology dashboard tracking the plumbing and water balance of the Colorado River Basin, with special focus on the Upper Basin and trans-mountain diversions across the Continental Divide.
+A real-time geospatial data pipeline and interactive hydrology dashboard tracking the water infrastructure, streamflow dynamics, and hydrologic balance of the Colorado River Basin, with special focus on the Upper Basin and trans-mountain diversions across the Continental Divide.
 
 ### Project Overview
 The Colorado River supports over 40 million people and billions in agricultural production. This dashboard visualizes real-time flow telemetry across critical control points, measuring how water is diverted from the Western Slope to Front Range cities (Denver, Boulder, Northern Colorado) versus what remains for downstream compact allocations.
@@ -22,5 +22,5 @@ The Colorado River supports over 40 million people and billions in agricultural 
 
 ### Technical Stack & Architecture
 - **Data Engineering**: Python automated pipeline polling USGS, CDWR, and USBR hydrology APIs, computing compact deficits and volume allocations.
-- **Frontend & Mapping**: Custom Leaflet geospatial dashboard with Esri Terrain shaded relief, dynamic flow-weighted river widths, and live telemetry tables.
+- **Frontend & Mapping**: Custom MapLibre GL JS geospatial dashboard with Esri National Geographic shaded relief, dynamic flow-weighted river widths, and live telemetry tables.
 - **Hydrologic Analysis**: Contextualized against the 1922 Colorado River Compact, Shoshone senior water calls, and Front Range municipal demand.
