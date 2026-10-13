@@ -20,7 +20,7 @@ collections:
       preview: false
     fields:
       - { label: "Project Title", name: "title", widget: "string" }
-      - { label: "Date", name: "date", widget: "date", format: "YYYY-MM-DD" }
+      - { label: "Date", name: "date", widget: "datetime", type: "date", format: "YYYY-MM-DD" }
       - { label: "Tags / Categories", name: "tags", widget: "list", default: ["GIS", "Cartography"] }
       - { label: "Featured on Homepage", name: "featured", widget: "boolean", default: true }
       - { label: "Display Order Priority", name: "order", widget: "number", default: 1, value_type: "int" }
