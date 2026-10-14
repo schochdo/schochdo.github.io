@@ -4,7 +4,7 @@ date: "2026-07-15"
 tags: ["Digital Humanities", "Linguistics", "NLP", "Web Speech API", "React", "TypeScript"]
 featured: true
 order: 4
-category: "humanities"
+category: "digital-humanities"
 summary: "An interactive, linguistically annotated dual-column opera study companion with word-by-word grammatical breakdowns, native text-to-speech pronunciation, and complete corpora for Mozart, Wagner, Verdi, and Beethoven."
 thumbnail: "/images/libretto_companion.png"
 heroImage: "/images/libretto_companion.png"

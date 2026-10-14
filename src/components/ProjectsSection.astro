@@ -28,8 +28,9 @@ const sortedProjects = [...projects].sort((a, b) => (a.data.order || 99) - (b.da
 const categories = [
   { id: 'all', label: 'All Applications' },
   { id: 'environmental', label: '🌊 Environmental & Water' },
-  { id: 'real-time', label: '⚡ Real-Time & Streaming' },
-  { id: 'humanities', label: '🏛️ Spatial Humanities & Culture' },
+  { id: 'real-time', label: '⚡ Real-Time Transit' },
+  { id: 'spatial-humanities', label: '🏛️ Spatial Humanities' },
+  { id: 'digital-humanities', label: '📖 Digital Humanities' },
 ];
 
 function getCategoryBadge(cat?: string) {
@@ -37,9 +38,11 @@ function getCategoryBadge(cat?: string) {
     case 'environmental':
       return { label: 'Environmental & Water', icon: '🌊', color: 'bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border-sky-200 dark:border-sky-800/60' };
     case 'real-time':
-      return { label: 'Real-Time Streaming', icon: '⚡', color: 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/60' };
-    case 'humanities':
+      return { label: 'Real-Time Transit', icon: '⚡', color: 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/60' };
+    case 'spatial-humanities':
       return { label: 'Spatial Humanities', icon: '🏛️', color: 'bg-violet-50 dark:bg-violet-950/60 text-violet-700 dark:text-violet-300 border-violet-200 dark:border-violet-800/60' };
+    case 'digital-humanities':
+      return { label: 'Digital Humanities & NLP', icon: '📖', color: 'bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800/60' };
     default:
       return { label: 'Interactive Application', icon: '🗺️', color: 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700' };
   }

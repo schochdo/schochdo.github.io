@@ -1,12 +1,12 @@
 ---
 title: "Colorado Bustang Live Transit Dashboard"
 date: "2026-09-01"
-tags: ["Web GIS", "Leaflet", "GTFS-Realtime", "Transit", "Python"]
+tags: ["GTFS-Realtime", "Leaflet", "Transit Telemetry", "Python", "OpenStreetMap"]
 featured: true
 order: 2
 summary: "Full real-time transit dashboard & tracking map for Colorado's statewide Bustang network, featuring live bus positions, route trends, stop departure boards, and OpenStreetMap integration."
-thumbnail: "/images/bustang_dashboard.png"
-heroImage: "/images/bustang_dashboard.png"
+thumbnail: "/images/bustang_live_dashboard.png"
+heroImage: "/images/bustang_live_dashboard.png"
 liveUrl: "https://transit-dashboard-ap50.onrender.com"
 githubUrl: "https://github.com/schochdo/schochdo.github.io"
 category: "real-time"

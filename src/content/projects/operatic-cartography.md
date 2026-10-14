@@ -4,7 +4,7 @@ date: "2026-08-01"
 tags: ["Spatial Humanities", "Interactive 3D", "Globe", "Cultural Cartography", "Historical GIS", "React"]
 featured: true
 order: 3
-category: "humanities"
+category: "spatial-humanities"
 summary: "An interactive 3D globe and comprehensive directory mapping 395 historic opera houses, world premiere theaters, and festival stages across centuries of global operatic history."
 thumbnail: "/images/the_world_of_opera.png"
 heroImage: "/images/the_world_of_opera.png"

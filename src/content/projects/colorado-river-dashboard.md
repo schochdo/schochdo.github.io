@@ -1,7 +1,7 @@
 ---
 title: "Colorado River Basin Water Infrastructure & Hydrology Dashboard"
 date: "2026-09-27"
-tags: ["GIS Analysis", "Hydrology", "Web GIS", "MapLibre GL", "Python", "Data Pipeline"]
+tags: ["Hydrology", "MapLibre GL", "Python", "Data Pipeline", "Real-Time Telemetry"]
 featured: true
 order: 1
 summary: "Real-time telemetry pipeline and interactive geospatial dashboard tracking Colorado River streamflow, Front Range trans-mountain diversions (Adams, Moffat, Roberts tunnels), and Lake Powell/Mead storage."

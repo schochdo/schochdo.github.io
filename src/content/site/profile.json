@@ -1,7 +1,7 @@
 {
   "name": "Douglas Schoch",
   "headline": "Web GIS Developer & Spatial Data Technologist",
-  "tagline": "Engineering interactive web maps, automated spatial data pipelines, and visual dashboards across environmental systems, real-time telemetry, and the spatial humanities.",
+  "tagline": "Engineering interactive web applications, automated spatial data pipelines, and exploratory dashboards across environmental systems, real-time telemetry, 3D cartography, and digital humanities.",
   "bio": "I build interactive Web GIS applications, spatial data pipelines, and custom exploratory tools. With a background spanning environmental law (J.D.), geography, cartography, and full-stack spatial engineering, I specialize in translating complex, fragmented datasets into intuitive, responsive web experiences.",
   "avatar": "/images/avatar.jpg",
   "bg": "/images/bg.jpg",
@@ -12,11 +12,12 @@
   "skills": [
     "Interactive Web GIS (MapLibre GL & Leaflet)",
     "Python & Spatial Data Pipelines",
-    "Real-Time Telemetry & REST APIs",
-    "Spatial Humanities & Historical GIS",
+    "Real-Time Telemetry & GTFS Streams",
+    "Spatial Humanities & 3D Cartography",
+    "Digital Humanities & NLP",
     "Cartography & Shaded Relief Design",
     "QGIS, GDAL & ArcGIS Pro",
-    "Environmental & Spatial Policy (J.D.)",
-    "Data Synthesis & Visual Dashboarding"
+    "Environmental Law & Policy (J.D.)",
+    "Data Synthesis & Full-Stack Systems"
   ]
 }
