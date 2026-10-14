@@ -26,11 +26,10 @@ const { projects } = Astro.props;
 const sortedProjects = [...projects].sort((a, b) => (a.data.order || 99) - (b.data.order || 99));
 
 const categories = [
-  { id: 'all', label: 'All Works' },
+  { id: 'all', label: 'All Applications' },
   { id: 'environmental', label: '🌊 Environmental & Water' },
   { id: 'real-time', label: '⚡ Real-Time & Streaming' },
   { id: 'humanities', label: '🏛️ Spatial Humanities & Culture' },
-  { id: 'cartography', label: '🌲 Cartography & Public Lands' },
 ];
 
 function getCategoryBadge(cat?: string) {
@@ -41,10 +40,8 @@ function getCategoryBadge(cat?: string) {
       return { label: 'Real-Time Streaming', icon: '⚡', color: 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/60' };
     case 'humanities':
       return { label: 'Spatial Humanities', icon: '🏛️', color: 'bg-violet-50 dark:bg-violet-950/60 text-violet-700 dark:text-violet-300 border-violet-200 dark:border-violet-800/60' };
-    case 'cartography':
-      return { label: 'Cartography & Topo', icon: '🌲', color: 'bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800/60' };
     default:
-      return { label: 'Geospatial Project', icon: '🗺️', color: 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700' };
+      return { label: 'Interactive Application', icon: '🗺️', color: 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700' };
   }
 }
 ---
@@ -56,10 +53,10 @@ function getCategoryBadge(cat?: string) {
         <span>🗺️</span> Curated Portfolio
       </div>
       <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-        Interactive Works & Spatial Research
+        Interactive Applications & Spatial Systems
       </h2>
       <p class="text-slate-600 dark:text-slate-400 mt-2 max-w-2xl text-sm sm:text-base">
-        A multidisciplinary showcase bridging environmental water systems, real-time data streaming, the spatial humanities, and classical cartography.
+        A multidisciplinary showcase bridging environmental water telemetry, real-time data streaming, interactive 3D cartography, and digital humanities.
       </p>
     </div>
 
