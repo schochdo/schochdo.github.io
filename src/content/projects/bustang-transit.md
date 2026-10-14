@@ -6,8 +6,8 @@ featured: true
 order: 2
 summary: "Real-time transit dashboard and vehicle tracking map for Colorado's statewide bus network, decoding live vehicle coordinates, route performance, and stop departure times."
 techStack: "Leaflet • GTFS-Realtime • Python • OpenStreetMap"
-thumbnail: "/images/bustang_live_dashboard.png"
-heroImage: "/images/bustang_live_dashboard.png"
+thumbnail: "/images/bustang_network_map.png"
+heroImage: "/images/bustang_network_map.png"
 liveUrl: "https://transit-dashboard-ap50.onrender.com"
 githubUrl: "https://github.com/schochdo/schochdo.github.io"
 category: "real-time"

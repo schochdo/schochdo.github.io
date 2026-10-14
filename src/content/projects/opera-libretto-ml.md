@@ -7,8 +7,8 @@ order: 4
 category: "digital-humanities"
 summary: "Digital study companion pairing synchronized libretto translations with tokenized grammatical analysis, native text-to-speech pronunciation, and annotated repertoires."
 techStack: "React • TypeScript • NLP • Web Speech API"
-thumbnail: "/images/libretto_companion.png"
-heroImage: "/images/libretto_companion.png"
+thumbnail: "/images/libretto_companion_day.png"
+heroImage: "/images/libretto_companion_day.png"
 liveUrl: "https://libretto-eight.vercel.app/"
 githubUrl: "https://github.com/schochdo/Libretto"
 ---
