@@ -9,6 +9,7 @@ thumbnail: "/images/bustang_dashboard.png"
 heroImage: "/images/bustang_dashboard.png"
 liveUrl: "https://transit-dashboard-ap50.onrender.com"
 githubUrl: "https://github.com/schochdo/schochdo.github.io"
+category: "real-time"
 ---
 
 A complete real-time transit intelligence dashboard and live interactive map tracking Colorado's statewide intercity bus network (Bustang, Outrider, Pegasus, and Snowstang).

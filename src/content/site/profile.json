@@ -1,8 +1,8 @@
 {
   "name": "Douglas Schoch",
-  "headline": "GIS Analyst & Cartographer",
-  "tagline": "Crafting thoughtful maps, spatial analysis, and interactive transit visualizations.",
-  "bio": "I am a GIS professional and cartographer specializing in spatial analytics, transit networks, and cartographic design. My work spans topographic trail maps for the US Forest Service, historical cartography at Penn State, and real-time interactive Web GIS applications.",
+  "headline": "Web GIS Developer & Spatial Data Technologist",
+  "tagline": "Engineering interactive web maps, automated spatial data pipelines, and visual dashboards across environmental systems, real-time telemetry, and the spatial humanities.",
+  "bio": "I build interactive Web GIS applications, spatial data pipelines, and custom exploratory tools. With a background spanning environmental law (J.D.), geography, cartography, and full-stack spatial engineering, I specialize in translating complex, fragmented datasets into intuitive, responsive web experiences.",
   "avatar": "/images/avatar.jpg",
   "bg": "/images/bg.jpg",
   "email": "",
@@ -10,11 +10,13 @@
   "website": "",
   "linkedin": "",
   "skills": [
-    "Cartography & Map Design",
-    "GIS Analysis & Modeling",
-    "Transit & GTFS Networks",
-    "Leaflet & Web GIS",
-    "Python & Spatial Data",
-    "QGIS & ArcGIS Pro"
+    "Interactive Web GIS (MapLibre GL & Leaflet)",
+    "Python & Spatial Data Pipelines",
+    "Real-Time Telemetry & REST APIs",
+    "Spatial Humanities & Historical GIS",
+    "Cartography & Shaded Relief Design",
+    "QGIS, GDAL & ArcGIS Pro",
+    "Environmental & Spatial Policy (J.D.)",
+    "Data Synthesis & Visual Dashboarding"
   ]
 }

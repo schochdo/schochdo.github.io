@@ -7,6 +7,7 @@ order: 1
 summary: "Real-time telemetry pipeline and interactive geospatial dashboard tracking Colorado River streamflow, Front Range trans-mountain diversions (Adams, Moffat, Roberts tunnels), and Lake Powell/Mead storage."
 thumbnail: "/images/colorado_river_basin.png"
 heroImage: "/images/colorado_river_basin.png"
+category: "environmental"
 githubUrl: "https://github.com/schochdo/CO_River"
 ---
 

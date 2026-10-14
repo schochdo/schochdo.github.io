@@ -7,6 +7,7 @@ order: 3
 summary: "Due to its climate and topography, the Salmon-Challis National Forest has many large wildfires. Visualizing the history of these fires is important for predicting future fire behavior since the potential fuel loads are related to how recently areas have burned. Fire boundaries are color-coded by decade."
 thumbnail: "/images/thumbs/firehistory.jpg"
 heroImage: "/images/fulls/firehistory.jpg"
+category: "environmental"
 ---
 
 Due to its dry climate, steep topography, and extensive timber stands, the Salmon-Challis National Forest experiences frequent large wildfires.

@@ -7,6 +7,7 @@ order: 2
 summary: "This collection of several maps showing the origin of hotel visitors was part of a cartography course at Penn State University, where I majored in geography. To match the historic theme, I added in details like an aged paper background and old-fashioned shading for the state borders."
 thumbnail: "/images/thumbs/hotels.jpg"
 heroImage: "/images/fulls/hotels.jpg"
+category: "humanities"
 ---
 
 This collection of maps showing the geographic origin of historic resort and hotel visitors was created as part of a cartography course at Penn State University.

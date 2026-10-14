@@ -7,6 +7,7 @@ order: 4
 summary: "These drive time rings were used as part of a transportation analysis looking at optimizing bus routing in a school district. We also considered factors such as the current bus schedules, individual bus routes, average student travel times, stop locations, and bell schedules."
 thumbnail: "/images/thumbs/transportation.jpg"
 heroImage: "/images/fulls/transportation.jpg"
+category: "real-time"
 ---
 
 Isochrone drive-time analysis created to evaluate and optimize school bus routing across the Solanco School District in Lancaster County, PA.
