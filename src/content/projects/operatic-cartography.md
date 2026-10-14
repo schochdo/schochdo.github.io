@@ -1,19 +1,26 @@
 ---
-title: "Operatic Cartography: European Premieres & Historic Theaters"
+title: "The World of Opera: Interactive 3D Atlas & Directory"
 date: "2026-08-01"
-tags: ["Spatial Humanities", "Cultural Cartography", "Historical GIS", "Data Visualization"]
+tags: ["Spatial Humanities", "Interactive 3D", "Globe", "Cultural Cartography", "Historical GIS", "React"]
 featured: true
-order: 5
+order: 3
 category: "humanities"
-summary: "A spatial history tracking the geographic diffusion of opera house premieres and historical performance networks across European cultural capitals."
+summary: "An interactive 3D globe and comprehensive directory mapping 395 historic opera houses, world premiere theaters, and festival stages across centuries of global operatic history."
+thumbnail: "/images/the_world_of_opera.png"
+heroImage: "/images/the_world_of_opera.png"
+liveUrl: "https://opera-map.vercel.app/"
 ---
 
-An interactive spatial humanities project mapping the historical geography of major opera premieres, performance networks, and historic theaters across European cultural centers.
+An interactive 3D geographic atlas and comprehensive directory cataloging 395 historic opera houses, royal court theaters, metropolitan stages, and summer festivals across the world.
 
 ### Project Overview
-Tracing the diffusion of dramatic musical works across centuries reveals patterns of royal patronage, political censorship, theatrical architecture, and artistic migration. This project maps premiere locations and subsequent performance vectors across major historical opera houses in Italy, Germany, Austria, France, and beyond.
+The physical venues of opera are monuments to architectural acoustics, royal patronage, and cultural diffusion. This application contextualizes the geography of dramatic vocal music, allowing users to rotate an interactive 3D globe and explore where landmark works were commissioned, premiered, and performed across Europe and the globe.
 
-### Key Dimensions & Questions
-- **Spatial Centers & Peripheries**: How did theatrical hubs (Venice, Vienna, Paris, Milan, Leipzig, Dresden) shape composer mobility and performance traditions?
-- **Temporal Trajectories**: Visualizing chronological premiere waves from late Renaissance court spectacles to 19th-century grand opera.
-- **Architectural & Institutional Context**: Linking venue acoustics, stage machinery capacities, and historical sociopolitics to the geographic dissemination of repertoire.
+### Core Features & Directory Scope
+- **395 Georeferenced Venues**: Spanning legendary stages (Teatro alla Scala, Vienna State Opera, Opéra Garnier, Royal Opera House Covent Garden, Bayreuth Festspielhaus) to regional houses and historic festival grounds.
+- **Multidimensional Filtering**: Explore venues filtered by:
+  - **Category**: Global Premiere Theaters (47), Major Metropolitan (168), Summer Festivals (100), Regional & Chamber Operas (44), and Historic & Royal Courts (36).
+  - **Historical Era**: Baroque, Classical, Romantic, Bel Canto, Verismo, and 20th-century modernism.
+  - **Composer & Architect**: Connect legendary composers (Mozart, Verdi, Wagner, Puccini, Strauss) to the specific physical halls that birthed their works.
+- **Interactive 3D Navigation**: Smooth 3D spherical globe rendering with smooth rotation, auto-rotation modes, vector country boundaries, and pin clusters.
+- **Integrated Atlas Guide**: Contextual historical overviews explaining the development of opera houses from Italian court spectacles to democratic civic halls.
