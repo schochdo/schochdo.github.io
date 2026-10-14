@@ -1,10 +1,11 @@
 ---
 title: "Colorado Bustang Live Transit Dashboard"
 date: "2026-09-01"
-tags: ["GTFS-Realtime", "Leaflet", "Transit Telemetry", "Python", "OpenStreetMap"]
+tags: ["GTFS-Realtime", "Leaflet", "Transit Telemetry", "Python", "OpenStreetMap", "Web GIS"]
 featured: true
 order: 2
-summary: "Full real-time transit dashboard & tracking map for Colorado's statewide Bustang network, featuring live bus positions, route trends, stop departure boards, and OpenStreetMap integration."
+summary: "Real-time transit dashboard and vehicle tracking map for Colorado's statewide bus network, decoding live vehicle coordinates, route performance, and stop departure times."
+techStack: "Leaflet • GTFS-Realtime • Python • OpenStreetMap"
 thumbnail: "/images/bustang_live_dashboard.png"
 heroImage: "/images/bustang_live_dashboard.png"
 liveUrl: "https://transit-dashboard-ap50.onrender.com"
@@ -12,12 +13,9 @@ githubUrl: "https://github.com/schochdo/schochdo.github.io"
 category: "real-time"
 ---
 
-A complete real-time transit intelligence dashboard and live interactive map tracking Colorado's statewide intercity bus network (Bustang, Outrider, Pegasus, and Snowstang).
+A real-time transit intelligence dashboard and live interactive map tracking Colorado's statewide intercity bus network.
 
 ### Features & Architecture
-- **Live Vehicle Positions**: Real-time GPS coordinates and directional bearings decoded from RTD / CDOT GTFS-Realtime protocol buffers.
-- **Stop Search & Departure Boards**: Instant search for statewide stops with estimated arrival and departure times.
-- **OpenStreetMap Basemap**: Clean, reliable vector and raster basemaps with full OpenStreetMap and RTD license attributions.
-- **Bus Trends & Feed Health**: Analytical dashboards monitoring vehicle reliability, corridor speeds, and feed uptime.
-
-*Also accessible as a standalone lightweight Leaflet map at [/bustang_leaflet/](/bustang_leaflet/).*
+- **Live Vehicle Positions**: Real-time coordinates and bearings decoded directly from GTFS-Realtime protocol buffer streams.
+- **Stop Search & Departures**: Statewide search with live arrival/departure predictions and headway monitoring.
+- **Open Mapping Stack**: Lightweight Leaflet and OpenStreetMap rendering with zero vendor lock-in.
