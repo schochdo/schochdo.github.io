@@ -1,6 +1,5 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Navbar from '../components/Navbar.astro';
 import Hero from '../components/Hero.astro';
 import ProjectsSection from '../components/ProjectsSection.astro';
 import AboutSection from '../components/AboutSection.astro';
@@ -17,8 +16,6 @@ const projects = await getCollection('projects');
   title={`${profileData.name} — ${profileData.headline}`}
   description={profileData.tagline}
 >
-  <Navbar name={profileData.name} />
-  
   <main class="flex-1">
     <Hero profile={profileData} />
     <ProjectsSection projects={projects} />
