@@ -43,7 +43,7 @@ collections:
           - { label: "Professional Title", name: "headline", widget: "string" }
           - { label: "Short Tagline", name: "tagline", widget: "string" }
           - { label: "About Bio", name: "bio", widget: "markdown" }
-          - { label: "Avatar Photo", name: "avatar", widget: "image" }
+          - { label: "Avatar Photo", name: "avatar", widget: "image", required: false }
           - { label: "Email Address", name: "email", widget: "string", required: false }
           - { label: "GitHub Profile URL", name: "github", widget: "string", required: false }
           - { label: "Personal Website URL", name: "website", widget: "string", required: false }

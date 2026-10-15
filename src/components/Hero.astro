@@ -4,7 +4,7 @@ interface Props {
     name: string;
     headline: string;
     tagline: string;
-    avatar: string;
+    avatar?: string;
     github?: string;
     email?: string;
     website?: string;
@@ -23,12 +23,7 @@ const { profile } = Astro.props;
       
       <!-- Text & Intro Column -->
       <div class="flex-1 text-center md:text-left">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 text-xs font-semibold uppercase tracking-wider mb-5 border border-emerald-200 dark:border-emerald-800/60 shadow-xs">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          Web GIS & Software Development
-        </div>
-
-        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.15] mb-5">
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.15] mb-4">
           {profile.name}
         </h1>
 
@@ -75,16 +70,17 @@ const { profile } = Astro.props;
         </div>
       </div>
 
-      <!-- Avatar Photo Column -->
-      <div class="relative shrink-0">
-        <div class="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 rounded-2xl overflow-hidden p-2 bg-gradient-to-tr from-emerald-500 via-teal-400 to-sky-500 shadow-xl shadow-emerald-500/10">
-          <img
-            src={profile.avatar}
-            alt={profile.name}
-            class="w-full h-full object-cover rounded-xl bg-slate-200 dark:bg-slate-800"
-          />
+      {profile.avatar && (
+        <div class="relative shrink-0">
+          <div class="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 rounded-2xl overflow-hidden p-2 bg-gradient-to-tr from-emerald-500 via-teal-400 to-sky-500 shadow-xl shadow-emerald-500/10">
+            <img
+              src={profile.avatar}
+              alt={profile.name}
+              class="w-full h-full object-cover rounded-xl bg-slate-200 dark:bg-slate-800"
+            />
+          </div>
         </div>
-      </div>
+      )}
 
     </div>
   </div>
