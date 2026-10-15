@@ -401,11 +401,11 @@ document.addEventListener("keydown", (e) => {
 
 async function fetchLiveUSGS() {
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 4500);
+  const timeoutId = setTimeout(() => controller.abort(), 6000);
 
   try {
-    const sites = "09070500,09095500,09180500,09380000,09429100,09315000,09260050,09306500,09302000,09152500,09180000,09379500,09364500,09085000,09070000,09057500,09402000,09415000,09426000,09474000,09520500,09498500,09511300,09527700";
-    const url = `https://waterservices.usgs.gov/nwis/iv/?format=json&sites=${sites}&parameterCd=00060&siteStatus=all`;
+    const sites = "09070500,09095500,09180500,09380000,09429100,09315000,09260050,09306500,09302000,09152500,09180000,09379500,09364500,09085000,09070000,09057500,09402000,09415000,09426000,09474000,09520500,09498500,09511300,09527700,09379900,09422500,09427500";
+    const url = `https://waterservices.usgs.gov/nwis/iv/?format=json&sites=${sites}&parameterCd=00060,62614,00054&siteStatus=all`;
     const res = await fetch(url, { headers: { 'Accept': 'application/json' }, signal: controller.signal });
     clearTimeout(timeoutId);
     if (!res.ok) throw new Error(`USGS HTTP ${res.status}`);
@@ -443,9 +443,11 @@ async function fetchLiveUSGS() {
     };
     const streamflows = [];
     let aac = null;
+    const reservoirs = {};
     const series = data?.value?.timeSeries || [];
     for (const ts of series) {
       const code = ts.sourceInfo.siteCode[0].value;
+      const param = ts.variable.variableCode[0].value;
       const name = siteNames[code] || ts.sourceInfo.siteName;
       const lat = ts.sourceInfo.geoLocation.geogLocation.latitude;
       const lon = ts.sourceInfo.geoLocation.geogLocation.longitude;
@@ -454,15 +456,92 @@ async function fetchLiveUSGS() {
         const latest = vals[vals.length - 1];
         const val = parseFloat(latest.value);
         if (val >= 0) {
-          if (code === "09527700") {
+          if (code === "09527700" && param === "00060") {
             aac = { id: code, name, type: "diversion_canal", destination: "Imperial & Coachella Valleys", flow_cfs: val, timestamp: latest.dateTime, lat, lon };
-          } else {
+          } else if (code === "09379900") {
+            // Lake Powell live elevation
+            if (param === "62614") {
+              reservoirs["lake_powell"] = { elevation_ft: Math.round(val * 10) / 10, timestamp: latest.dateTime };
+            }
+          } else if (code === "09422500") {
+            // Lake Mohave
+            if (!reservoirs["lake_mohave"]) reservoirs["lake_mohave"] = {};
+            if (param === "00054") {
+              reservoirs["lake_mohave"].storage_af = val;
+              reservoirs["lake_mohave"].timestamp = latest.dateTime;
+            } else if (param === "62614") {
+              reservoirs["lake_mohave"].elevation_ft = Math.round(val * 10) / 10;
+            }
+          } else if (code === "09427500") {
+            // Lake Havasu
+            if (!reservoirs["lake_havasu"]) reservoirs["lake_havasu"] = {};
+            if (param === "00054") {
+              reservoirs["lake_havasu"].storage_af = val;
+              reservoirs["lake_havasu"].timestamp = latest.dateTime;
+            } else if (param === "62614") {
+              reservoirs["lake_havasu"].elevation_ft = Math.round(val * 10) / 10;
+            }
+          } else if (siteNames[code] && param === "00060") {
             streamflows.push({ id: code, name, type: "streamflow", flow_cfs: val, timestamp: latest.dateTime, lat, lon });
           }
         }
       }
     }
-    return { streamflows, aac };
+    return { streamflows, aac, reservoirs };
+  } catch (e) {
+    clearTimeout(timeoutId);
+    throw e;
+  }
+}
+
+async function fetchLiveCDWR() {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 6000);
+
+  try {
+    const abbrevs = "DILRESCO,GRARESCO,GRERESCO,HOMRESCO,ADATUNCO,MOFTUNCO,ROBTUNCO,BOUTUNCO";
+    const url = `https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeserieshour/?format=json&abbrev=${abbrevs}`;
+    const res = await fetch(url, { headers: { 'Accept': 'application/json' }, signal: controller.signal });
+    clearTimeout(timeoutId);
+    if (!res.ok) throw new Error(`CDWR HTTP ${res.status}`);
+    const data = await res.json();
+    const items = data?.ResultList || [];
+
+    const tunnels = {};
+    const reservoirs = {
+      "dillon_reservoir": {},
+      "lake_granby": {},
+      "green_mountain": {},
+      "homestake_reservoir": {}
+    };
+
+    const abbMap = {
+      "DILRESCO": "dillon_reservoir",
+      "GRARESCO": "lake_granby",
+      "GRERESCO": "green_mountain",
+      "HOMRESCO": "homestake_reservoir"
+    };
+
+    for (const item of items) {
+      const abb = item.abbrev;
+      const param = item.parameter;
+      const dt = item.measDateTime || item.measDate;
+      const val = parseFloat(item.measValue);
+      if (isNaN(val)) continue;
+
+      if (param === "DISCHRG" && ["ADATUNCO", "MOFTUNCO", "ROBTUNCO", "BOUTUNCO"].includes(abb)) {
+        tunnels[abb] = { flow_cfs: Math.max(0, Math.round(val * 10) / 10), timestamp: dt };
+      } else if (abbMap[abb]) {
+        const resId = abbMap[abb];
+        if (param === "STORAGE") {
+          reservoirs[resId].storage_af = Math.round(val);
+          reservoirs[resId].timestamp = dt;
+        } else if (param === "ELEV") {
+          reservoirs[resId].elev_val = val;
+        }
+      }
+    }
+    return { tunnels, reservoirs };
   } catch (e) {
     clearTimeout(timeoutId);
     throw e;
@@ -774,17 +853,95 @@ async function loadData(forceLive = false) {
     const initialDateStr = formatTimestamp(metrics.fetched_at);
     if (syncElem) syncElem.textContent = `Telemetry Snapshot (${initialDateStr})`;
 
-    // 4. In background (or when user clicks Reload), query live USGS directly from browser
-    fetchLiveUSGS().then(live => {
-      if (live && live.streamflows && live.streamflows.length > 0) {
-        metrics.streamflows = live.streamflows;
+    // 4. In background (or when user clicks Reload), query live USGS & CDWR directly from browser
+    Promise.allSettled([fetchLiveUSGS(), fetchLiveCDWR()]).then(results => {
+      let anyUpdated = false;
+      const [usgsRes, cdwrRes] = results;
+
+      if (usgsRes.status === "fulfilled" && usgsRes.value) {
+        const live = usgsRes.value;
+        if (live.streamflows && live.streamflows.length > 0) {
+          metrics.streamflows = live.streamflows;
+          anyUpdated = true;
+        }
         if (live.aac) {
           const cIdx = (metrics.canals || []).findIndex(c => c.id === "09527700");
           if (cIdx !== -1) {
             metrics.canals[cIdx].flow_cfs = live.aac.flow_cfs;
             metrics.canals[cIdx].timestamp = live.aac.timestamp;
+            anyUpdated = true;
           }
         }
+        if (live.reservoirs) {
+          for (const [rId, rData] of Object.entries(live.reservoirs)) {
+            const rObj = (metrics.reservoirs || []).find(r => r.id === rId);
+            if (rObj) {
+              if (rData.storage_af !== undefined) {
+                rObj.storage_af = rData.storage_af;
+                if (rObj.capacity_af) {
+                  rObj.capacity_pct = Number(((rObj.storage_af / rObj.capacity_af) * 100).toFixed(1));
+                }
+              }
+              if (rData.elevation_ft !== undefined) {
+                rObj.elevation_ft = rData.elevation_ft;
+              }
+              if (rData.timestamp) {
+                rObj.timestamp = rData.timestamp;
+              }
+              anyUpdated = true;
+            }
+          }
+        }
+      }
+
+      if (cdwrRes.status === "fulfilled" && cdwrRes.value) {
+        const cdwr = cdwrRes.value;
+        if (cdwr.tunnels) {
+          for (const [tunId, tunData] of Object.entries(cdwr.tunnels)) {
+            const tObj = (metrics.tunnels || []).find(t => t.id === tunId);
+            if (tObj) {
+              tObj.flow_cfs = tunData.flow_cfs;
+              tObj.timestamp = tunData.timestamp;
+              anyUpdated = true;
+            }
+          }
+        }
+        if (cdwr.reservoirs) {
+          for (const [rId, rData] of Object.entries(cdwr.reservoirs)) {
+            const rObj = (metrics.reservoirs || []).find(r => r.id === rId);
+            if (rObj) {
+              if (rData.storage_af !== undefined && rData.storage_af > 0) {
+                rObj.storage_af = rData.storage_af;
+                if (rObj.capacity_af) {
+                  rObj.capacity_pct = Number(((rObj.storage_af / rObj.capacity_af) * 100).toFixed(1));
+                }
+              }
+              if (rData.elev_val !== undefined) {
+                const elev = rData.elev_val;
+                const isStage = elev > 0 && elev < 500;
+                if (isStage) {
+                  rObj.stage_ft = Math.round(elev * 10) / 10;
+                  if (rObj.full_pool_elev) {
+                    rObj.elevation_ft = Math.round((rObj.full_pool_elev - (126.0 - elev)) * 10) / 10;
+                    rObj.feet_below_full = Math.round((rObj.full_pool_elev - rObj.elevation_ft) * 10) / 10;
+                  }
+                } else if (elev > 500) {
+                  rObj.elevation_ft = Math.round(elev * 10) / 10;
+                  if (rObj.full_pool_elev) {
+                    rObj.feet_below_full = Math.round((rObj.full_pool_elev - rObj.elevation_ft) * 10) / 10;
+                  }
+                }
+              }
+              if (rData.timestamp) {
+                rObj.timestamp = rData.timestamp;
+              }
+              anyUpdated = true;
+            }
+          }
+        }
+      }
+
+      if (anyUpdated) {
         metrics.fetched_at = new Date().toISOString();
         applyLiveHydrology(cachedRiverNetwork, metrics);
         renderMetrics(metrics);
@@ -794,8 +951,8 @@ async function loadData(forceLive = false) {
         const timeNow = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         if (syncElem) syncElem.textContent = `Live Telemetry (Synced ${timeNow})`;
       }
-    }).catch(usgsErr => {
-      console.warn("Live USGS query fell back to snapshot:", usgsErr);
+    }).catch(liveErr => {
+      console.warn("Live telemetry query fell back to snapshot:", liveErr);
     });
 
   } catch (error) {
