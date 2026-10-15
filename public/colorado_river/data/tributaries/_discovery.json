@@ -1,0 +1,87 @@
+{
+  "White River": {
+    "file": "web/data/tributaries/white_river_raw.geojson",
+    "segments": 395,
+    "levelpath": 760002152
+  },
+  "Duchesne River": {
+    "file": "web/data/tributaries/duchesne_river_raw.geojson",
+    "segments": 135,
+    "levelpath": 760004839
+  },
+  "Price River": {
+    "file": "web/data/tributaries/price_river_raw.geojson",
+    "segments": 106,
+    "levelpath": 760006224
+  },
+  "Little Snake River": {
+    "file": "web/data/tributaries/little_snake_river_raw.geojson",
+    "segments": 196,
+    "levelpath": 760002987
+  },
+  "Dolores River": {
+    "file": "web/data/tributaries/dolores_river_raw.geojson",
+    "segments": 233,
+    "levelpath": 760003635
+  },
+  "Uncompahgre River": {
+    "file": "web/data/tributaries/uncompahgre_river_raw.geojson",
+    "segments": 56,
+    "levelpath": 760008924
+  },
+  "San Rafael River": {
+    "file": "web/data/tributaries/san_rafael_river_raw.geojson",
+    "segments": 98,
+    "levelpath": 760006708
+  },
+  "Dirty Devil River": {
+    "file": "web/data/tributaries/dirty_devil_river_raw.geojson",
+    "segments": 132,
+    "levelpath": 760004298
+  },
+  "Escalante River": {
+    "file": "web/data/tributaries/escalante_river_raw.geojson",
+    "segments": 150,
+    "levelpath": 760004710
+  },
+  "Animas River": {
+    "file": "web/data/tributaries/animas_river_raw.geojson",
+    "segments": 163,
+    "levelpath": 760004162
+  },
+  "Little Colorado River": {
+    "file": "web/data/tributaries/little_colorado_river_raw.geojson",
+    "segments": 281,
+    "levelpath": 720001918
+  },
+  "Paria River": {
+    "file": "web/data/tributaries/paria_river_raw.geojson",
+    "segments": 86,
+    "levelpath": 760006405
+  },
+  "Virgin River": {
+    "file": "web/data/tributaries/virgin_river_raw.geojson",
+    "segments": 209,
+    "levelpath": 720002379
+  },
+  "Bill Williams River": {
+    "file": "web/data/tributaries/bill_williams_river_raw.geojson",
+    "segments": 187,
+    "levelpath": 720002917
+  },
+  "Gila River": {
+    "file": "web/data/tributaries/gila_river_raw.geojson",
+    "segments": 750,
+    "levelpath": 720000771
+  },
+  "Salt River": {
+    "file": "web/data/tributaries/salt_river_raw.geojson",
+    "segments": 323,
+    "levelpath": 720001660
+  },
+  "Verde River": {
+    "file": "web/data/tributaries/verde_river_raw.geojson",
+    "segments": 336,
+    "levelpath": 720001890
+  }
+}

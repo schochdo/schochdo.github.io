@@ -9,6 +9,7 @@ techStack: "MapLibre GL JS • Python • USGS & USBR APIs"
 thumbnail: "/images/colorado_river_basin.png"
 heroImage: "/images/colorado_river_basin.png"
 category: "environmental"
+liveUrl: "/colorado_river/"
 githubUrl: "https://github.com/schochdo/CO_River"
 ---
 

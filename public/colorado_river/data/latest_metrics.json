@@ -1,0 +1,469 @@
+{
+  "fetched_at": "2026-10-13T18:14:04.248554",
+  "streamflows": [
+    {
+      "id": "09057500",
+      "name": "Blue River below Green Mtn Reservoir, CO",
+      "type": "streamflow",
+      "flow_cfs": 170.0,
+      "timestamp": "2026-10-13T17:00:00.000-06:00",
+      "lat": 39.88026354,
+      "lon": -106.3339175
+    },
+    {
+      "id": "09070000",
+      "name": "Eagle River below Gypsum, CO",
+      "type": "streamflow",
+      "flow_cfs": 120.0,
+      "timestamp": "2026-10-13T17:15:00.000-06:00",
+      "lat": 39.64942954,
+      "lon": -106.9536554
+    },
+    {
+      "id": "09070500",
+      "name": "Colorado River near Dotsero, CO",
+      "type": "streamflow",
+      "flow_cfs": 611.0,
+      "timestamp": "2026-10-13T18:00:00.000-06:00",
+      "lat": 39.6446111,
+      "lon": -107.0780139
+    },
+    {
+      "id": "09085000",
+      "name": "Roaring Fork River at Glenwood Springs, CO",
+      "type": "streamflow",
+      "flow_cfs": 556.0,
+      "timestamp": "2026-10-13T17:45:00.000-06:00",
+      "lat": 39.54666667,
+      "lon": -107.33083333
+    },
+    {
+      "id": "09095500",
+      "name": "Colorado River near Cameo, CO",
+      "type": "streamflow",
+      "flow_cfs": 1620.0,
+      "timestamp": "2026-10-13T17:45:00.000-06:00",
+      "lat": 39.2391463,
+      "lon": -108.2661946
+    },
+    {
+      "id": "09152500",
+      "name": "Gunnison River near Grand Junction, CO",
+      "type": "streamflow",
+      "flow_cfs": 1050.0,
+      "timestamp": "2026-10-13T17:30:00.000-06:00",
+      "lat": 38.98331575,
+      "lon": -108.4506446
+    },
+    {
+      "id": "09180000",
+      "name": "Dolores River near Cisco, UT",
+      "type": "streamflow",
+      "flow_cfs": 236.0,
+      "timestamp": "2026-10-13T18:00:00.000-06:00",
+      "lat": 38.79720805,
+      "lon": -109.1951142
+    },
+    {
+      "id": "09180500",
+      "name": "Colorado River near Cisco, UT",
+      "type": "streamflow",
+      "flow_cfs": 3590.0,
+      "timestamp": "2026-10-13T17:00:00.000-06:00",
+      "lat": 38.81054095,
+      "lon": -109.2934493
+    },
+    {
+      "id": "09260050",
+      "name": "Yampa River at Deerlodge Park, CO",
+      "type": "streamflow",
+      "flow_cfs": 143.0,
+      "timestamp": "2026-10-13T17:15:00.000-06:00",
+      "lat": 40.45161747,
+      "lon": -108.52512937
+    },
+    {
+      "id": "09302000",
+      "name": "Duchesne River near Randlett, UT",
+      "type": "streamflow",
+      "flow_cfs": 1640.0,
+      "timestamp": "2026-10-13T17:00:00.000-06:00",
+      "lat": 40.21027778,
+      "lon": -109.7813889
+    },
+    {
+      "id": "09306500",
+      "name": "White River near Watson, UT",
+      "type": "streamflow",
+      "flow_cfs": 459.0,
+      "timestamp": "2026-10-13T17:45:00.000-06:00",
+      "lat": 39.97885629,
+      "lon": -109.1787269
+    },
+    {
+      "id": "09315000",
+      "name": "Green River at Green River, UT",
+      "type": "streamflow",
+      "flow_cfs": 3540.0,
+      "timestamp": "2026-10-13T18:00:00.000-06:00",
+      "lat": 38.98886944,
+      "lon": -110.15035556
+    },
+    {
+      "id": "09364500",
+      "name": "Animas River at Farmington, NM",
+      "type": "streamflow",
+      "flow_cfs": 676.0,
+      "timestamp": "2026-10-13T17:30:00.000-06:00",
+      "lat": 36.7225,
+      "lon": -108.20175
+    },
+    {
+      "id": "09379500",
+      "name": "San Juan River near Bluff, UT",
+      "type": "streamflow",
+      "flow_cfs": 734.0,
+      "timestamp": "2026-10-13T18:00:00.000-06:00",
+      "lat": 37.15067778,
+      "lon": -109.8666889
+    },
+    {
+      "id": "09380000",
+      "name": "Colorado River at Lees Ferry, AZ",
+      "type": "streamflow",
+      "flow_cfs": 8040.0,
+      "timestamp": "2026-10-13T16:00:00.000-07:00",
+      "lat": 36.86433333,
+      "lon": -111.58787222
+    },
+    {
+      "id": "09402000",
+      "name": "Little Colorado River near Cameron, AZ",
+      "type": "streamflow",
+      "flow_cfs": 14.6,
+      "timestamp": "2026-10-13T16:45:00.000-07:00",
+      "lat": 35.9263819,
+      "lon": -111.5673682
+    },
+    {
+      "id": "09415000",
+      "name": "Virgin River at Littlefield, AZ",
+      "type": "streamflow",
+      "flow_cfs": 536.0,
+      "timestamp": "2026-10-13T16:05:00.000-07:00",
+      "lat": 36.8916437,
+      "lon": -113.9244098
+    },
+    {
+      "id": "09426000",
+      "name": "Bill Williams River below Alamo Dam, AZ",
+      "type": "streamflow",
+      "flow_cfs": 12.5,
+      "timestamp": "2026-10-13T16:30:00.000-07:00",
+      "lat": 34.2310833,
+      "lon": -113.6099306
+    },
+    {
+      "id": "09429100",
+      "name": "Colorado River below Palo Verde Dam, AZ-CA",
+      "type": "streamflow",
+      "flow_cfs": 6030.0,
+      "timestamp": "2026-10-13T16:30:00.000-07:00",
+      "lat": 33.7191361,
+      "lon": -114.4975389
+    },
+    {
+      "id": "09474000",
+      "name": "Gila River at Kelvin, AZ",
+      "type": "streamflow",
+      "flow_cfs": 90.9,
+      "timestamp": "2026-10-13T16:30:00.000-07:00",
+      "lat": 33.1028564,
+      "lon": -110.9765231
+    },
+    {
+      "id": "09498500",
+      "name": "Salt River near Roosevelt, AZ",
+      "type": "streamflow",
+      "flow_cfs": 346.0,
+      "timestamp": "2026-10-13T16:30:00.000-07:00",
+      "lat": 33.61916667,
+      "lon": -110.92208333
+    },
+    {
+      "id": "09511300",
+      "name": "Verde River near Scottsdale, AZ",
+      "type": "streamflow",
+      "flow_cfs": 252.0,
+      "timestamp": "2026-10-13T16:00:00.000-07:00",
+      "lat": 33.5586557,
+      "lon": -111.6693043
+    },
+    {
+      "id": "09520500",
+      "name": "Gila River near Dome, AZ",
+      "type": "streamflow",
+      "flow_cfs": 7.52,
+      "timestamp": "2026-10-13T16:30:00.000-07:00",
+      "lat": 32.7608789,
+      "lon": -114.4205019
+    }
+  ],
+  "tunnels": [
+    {
+      "id": "ADATUNCO",
+      "name": "Alva B. Adams Tunnel",
+      "destination": "Grand Lake -> Estes Park / Northern Water",
+      "type": "diversion_tunnel",
+      "capacity_cfs": 1020,
+      "flow_cfs": 54.8,
+      "timestamp": "2026-10-13T18:00:00",
+      "lat": 40.3283,
+      "lon": -105.5786
+    },
+    {
+      "id": "MOFTUNCO",
+      "name": "Moffat Water Tunnel",
+      "destination": "Fraser River -> Gross Reservoir / Denver Water",
+      "type": "diversion_tunnel",
+      "capacity_cfs": 1280,
+      "flow_cfs": 18.0,
+      "timestamp": "2026-10-13T17:30:00",
+      "lat": 39.9022,
+      "lon": -105.6433
+    },
+    {
+      "id": "ROBTUNCO",
+      "name": "Harold D. Roberts Tunnel",
+      "destination": "Dillon Reservoir -> South Platte / Denver Water",
+      "type": "diversion_tunnel",
+      "capacity_cfs": 1020,
+      "flow_cfs": 220.0,
+      "timestamp": "2026-10-13T17:30:00",
+      "lat": 39.4633,
+      "lon": -105.6797
+    },
+    {
+      "id": "BOUTUNCO",
+      "name": "Charles H. Boustead Tunnel",
+      "destination": "Fryingpan -> Arkansas Basin / Aurora",
+      "type": "diversion_tunnel",
+      "capacity_cfs": 945,
+      "flow_cfs": 0.0,
+      "timestamp": "2026-10-13T17:15:00",
+      "lat": 39.2619,
+      "lon": -106.5297
+    }
+  ],
+  "canals": [
+    {
+      "id": "09424150",
+      "name": "Colorado River Aqueduct near Parker Dam",
+      "type": "diversion_canal",
+      "destination": "Los Angeles / Southern California",
+      "flow_cfs": 1350.0,
+      "timestamp": "2026-10-13T08:00:00.000",
+      "lat": 34.31612564,
+      "lon": -114.1571702
+    },
+    {
+      "id": "09426650",
+      "name": "Central Arizona Project Canal at Havasu Pumping Plant",
+      "type": "diversion_canal",
+      "destination": "Phoenix & Tucson / Central Arizona",
+      "flow_cfs": 1500.0,
+      "timestamp": "2026-09-30T00:00:00.000",
+      "lat": 34.28890386,
+      "lon": -114.1110573
+    },
+    {
+      "id": "09527700",
+      "name": "All-American Canal near Imperial Dam",
+      "type": "diversion_canal",
+      "destination": "Imperial & Coachella Valleys",
+      "flow_cfs": 2120.0,
+      "timestamp": "2026-10-13T16:30:00.000-07:00",
+      "lat": 32.70425,
+      "lon": -115.0481139
+    }
+  ],
+  "reservoirs": [
+    {
+      "id": "lake_powell",
+      "name": "Lake Powell (Glen Canyon Dam)",
+      "river": "Colorado River (AZ/UT)",
+      "type": "reservoir",
+      "elevation_ft": 3518.1,
+      "storage_af": 5205889.0,
+      "capacity_af": 24322000.0,
+      "capacity_pct": 21.4,
+      "role": "Upper Basin Bank & Compact Delivery to Lower Basin",
+      "timestamp": "2026-10-13T18:13:02.502295",
+      "lat": 36.9367,
+      "lon": -111.4839,
+      "category": "system"
+    },
+    {
+      "id": "lake_mead",
+      "name": "Lake Mead (Hoover Dam)",
+      "river": "Colorado River (AZ/NV)",
+      "type": "reservoir",
+      "elevation_ft": 1037.8,
+      "storage_af": 8580000.0,
+      "capacity_af": 26134000.0,
+      "capacity_pct": 32.8,
+      "role": "Lower Basin Primary Storage & Delivery Regulation",
+      "timestamp": "2026-10-13",
+      "lat": 36.0156,
+      "lon": -114.7378,
+      "category": "system"
+    },
+    {
+      "id": "flaming_gorge",
+      "name": "Flaming Gorge Reservoir (Flaming Gorge Dam)",
+      "river": "Green River (UT/WY)",
+      "type": "reservoir",
+      "elevation_ft": 6006.1,
+      "storage_af": 2463941.0,
+      "capacity_af": 3749000.0,
+      "capacity_pct": 65.7,
+      "role": "Green River DROA Drought Relief Releases to Lake Powell",
+      "timestamp": "2026-10-12",
+      "lat": 40.915,
+      "lon": -109.4215,
+      "category": "system"
+    },
+    {
+      "id": "navajo_reservoir",
+      "name": "Navajo Reservoir (Navajo Dam)",
+      "river": "San Juan River (NM/CO)",
+      "type": "reservoir",
+      "elevation_ft": 6015.2,
+      "storage_af": 841808.0,
+      "capacity_af": 1696000.0,
+      "capacity_pct": 49.6,
+      "role": "San Juan Basin & Navajo Nation Irrigation Supply",
+      "timestamp": "2026-10-12",
+      "lat": 36.8042,
+      "lon": -107.6144,
+      "category": "system"
+    },
+    {
+      "id": "lake_mohave",
+      "name": "Lake Mohave (Davis Dam)",
+      "river": "Lower Colorado River (AZ/NV)",
+      "type": "reservoir",
+      "elevation_ft": 638.2,
+      "storage_af": 1570000.0,
+      "capacity_af": 1810000.0,
+      "capacity_pct": 86.7,
+      "role": "Downstream Regulation & Mexican Treaty Deliveries",
+      "timestamp": "2026-10-13",
+      "lat": 35.1989,
+      "lon": -114.5683,
+      "category": "system"
+    },
+    {
+      "id": "blue_mesa",
+      "name": "Blue Mesa Reservoir (Blue Mesa Dam)",
+      "river": "Gunnison River (CO)",
+      "type": "reservoir",
+      "elevation_ft": 7412.2,
+      "storage_af": 140346.0,
+      "capacity_af": 829500.0,
+      "capacity_pct": 16.9,
+      "role": "Largest Lake in Colorado & Gunnison Basin Storage",
+      "timestamp": "2026-10-12",
+      "lat": 38.4528,
+      "lon": -107.3325,
+      "category": "system"
+    },
+    {
+      "id": "lake_havasu",
+      "name": "Lake Havasu (Parker Dam)",
+      "river": "Lower Colorado River (AZ/CA)",
+      "type": "reservoir",
+      "category": "system",
+      "elevation_ft": 448.9,
+      "storage_af": 596800.0,
+      "capacity_af": 619400.0,
+      "capacity_pct": 96.4,
+      "role": "Forebay Pumping Pool for CRA & CAP Aqueducts",
+      "timestamp": "2026-10-13T16:30:00.000-07:00",
+      "lat": 34.2981,
+      "lon": -114.1678
+    },
+    {
+      "id": "dillon_reservoir",
+      "name": "Dillon Reservoir",
+      "river": "Blue River (Summit County, CO)",
+      "type": "reservoir",
+      "category": "front_range",
+      "operator": "Denver Water",
+      "elevation_ft": 8980.8,
+      "stage_ft": null,
+      "feet_below_full": 36.2,
+      "storage_af": 161208.0,
+      "capacity_af": 257114.0,
+      "capacity_pct": 62.7,
+      "role": "Primary West Slope Storage -> Roberts Tunnel to Denver",
+      "timestamp": "2026-10-12",
+      "lat": 39.6183,
+      "lon": -106.0656
+    },
+    {
+      "id": "lake_granby",
+      "name": "Lake Granby",
+      "river": "Upper Colorado River (Grand County, CO)",
+      "type": "reservoir",
+      "category": "front_range",
+      "operator": "USBR / Northern Water",
+      "elevation_ft": 8235.6,
+      "stage_ft": null,
+      "feet_below_full": 44.4,
+      "storage_af": 264294.0,
+      "capacity_af": 539800.0,
+      "capacity_pct": 49.0,
+      "role": "C-BT Project Primary Storage -> Adams Tunnel",
+      "timestamp": "2026-10-12",
+      "lat": 40.1488,
+      "lon": -105.8675
+    },
+    {
+      "id": "green_mountain",
+      "name": "Green Mountain Reservoir",
+      "river": "Blue River (Summit/Grand County, CO)",
+      "type": "reservoir",
+      "category": "front_range",
+      "operator": "USBR",
+      "elevation_ft": 7828.5,
+      "stage_ft": null,
+      "feet_below_full": 121.5,
+      "storage_af": 15932.0,
+      "capacity_af": 153639.0,
+      "capacity_pct": 10.4,
+      "role": "West Slope Compensatory Storage (C-BT Replacement)",
+      "timestamp": "2026-10-12",
+      "lat": 39.8783,
+      "lon": -106.3298
+    },
+    {
+      "id": "homestake_reservoir",
+      "name": "Homestake Reservoir",
+      "river": "Homestake Creek / Eagle River (Eagle County, CO)",
+      "type": "reservoir",
+      "category": "front_range",
+      "operator": "Aurora & Colorado Springs Utilities",
+      "elevation_ft": 10248.6,
+      "stage_ft": 114.6,
+      "feet_below_full": 11.4,
+      "storage_af": 15645.0,
+      "capacity_af": 43600.0,
+      "capacity_pct": 35.9,
+      "role": "Homestake Project Storage -> Homestake Tunnel to Arkansas Basin",
+      "timestamp": "2026-10-12",
+      "lat": 39.369,
+      "lon": -106.463
+    }
+  ]
+}
