@@ -152,9 +152,12 @@ function initMap() {
       toggleTableCollapse();
     }
     if (window.location.search.includes('expand_sidebar=1')) {
-      toggleCardCollapse('outflows-card', 'outflows-body', 'outflows-collapse-icon');
-      toggleCardCollapse('reservoirs-card', 'reservoirs-body', 'reservoirs-collapse-icon');
-      toggleCardCollapse('front-range-card', 'front-range-body', 'front-range-collapse-icon');
+      ['outflows', 'reservoirs', 'front-range'].forEach(prefix => {
+        const body = document.getElementById(`${prefix}-body`);
+        if (body && window.getComputedStyle(body).display === 'none') {
+          toggleCardCollapse(`${prefix}-card`, `${prefix}-body`, `${prefix}-collapse-icon`);
+        }
+      });
     }
     if (window.location.search.includes('show_tunnels=1')) {
       const toggle = document.getElementById("toggle-tunnels");

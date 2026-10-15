@@ -31,7 +31,7 @@
     
     <div class="header-center">
       <div class="quick-nav">
-        <button class="nav-btn active" onclick="zoomToPreset('basin')">Whole Basin</button>
+        <button class="nav-btn active" onclick="zoomToPreset('basin')">Whole System</button>
         <button class="nav-btn" onclick="zoomToPreset('divide')">West Slope & Tunnels</button>
         <button class="nav-btn" onclick="zoomToPreset('lees_ferry')">Lees Ferry</button>
         <button class="nav-btn" onclick="zoomToPreset('reservoirs')">Powell & Mead</button>
@@ -254,14 +254,14 @@
       </section>
 
       <!-- Where Is the Water Going? (Major Basin Outflows & Diversions) -->
-      <section class="card stat-card outflows-card collapsed" id="outflows-card">
+      <section class="card stat-card outflows-card" id="outflows-card">
         <div class="card-header card-header-clickable" onclick="toggleCardCollapse('outflows-card', 'outflows-body', 'outflows-collapse-icon')" title="Click to collapse / expand outflows">
           <h3>Where Is the Water Going?</h3>
           <div class="card-header-actions">
-            <span class="collapse-icon" id="outflows-collapse-icon" style="transform: rotate(-90deg);">▼</span>
+            <span class="collapse-icon" id="outflows-collapse-icon">▼</span>
           </div>
         </div>
-        <div id="outflows-body" style="display: none;">
+        <div id="outflows-body">
           <p class="metric-desc" style="margin-top: 4px; margin-bottom: 8px;">Real-time snapshot of out-of-basin diversions and primary interstate compact deliveries:</p>
           <div class="flow-dest-chart" id="flow-dest-chart">
             <!-- Dynamically populated by updateSidebar() with a horizontal bar chart -->
@@ -270,15 +270,15 @@
       </section>
 
       <!-- Basin-Wide Mega Reservoirs -->
-      <section class="card stat-card reservoirs-card collapsed" id="reservoirs-card">
+      <section class="card stat-card reservoirs-card" id="reservoirs-card">
         <div class="card-header card-header-clickable" onclick="toggleCardCollapse('reservoirs-card', 'reservoirs-body', 'reservoirs-collapse-icon')" title="Click to collapse / expand main storage reservoirs">
           <h3>Basin Storage Reservoirs</h3>
           <div class="card-header-actions">
             <span class="badge stat-badge" id="basin-storage-badge" style="background:#fef3c7; color:#b45309;">28.9% Full</span>
-            <span class="collapse-icon" id="reservoirs-collapse-icon" style="transform: rotate(-90deg);">▼</span>
+            <span class="collapse-icon" id="reservoirs-collapse-icon">▼</span>
           </div>
         </div>
-        <div id="reservoirs-body" style="display: none;">
+        <div id="reservoirs-body">
           <div id="basin-storage-summary" style="font-size: 11px; color: var(--text-muted); margin: 4px 0 8px 0; font-weight: 500;">
             System Total: <strong>17.11M AF</strong> of 59.16M AF Total Capacity
           </div>
