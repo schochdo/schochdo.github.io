@@ -27,21 +27,21 @@ const { projects } = Astro.props;
 const sortedProjects = [...projects].sort((a, b) => (a.data.order || 99) - (b.data.order || 99));
 ---
 
-<section id="projects" class="py-16 md:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-  <div class="max-w-3xl mb-12">
-    <div class="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mb-2">
+<section id="projects" class="pt-6 pb-16 sm:pt-8 sm:pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="max-w-3xl mb-6 sm:mb-8">
+    <div class="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mb-1">
       <span>🗺️</span> Portfolio
     </div>
-    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
       Featured Projects
     </h2>
-    <p class="text-slate-600 dark:text-slate-400 mt-2 text-sm sm:text-base leading-relaxed">
+    <p class="text-slate-600 dark:text-slate-400 mt-1 text-xs sm:text-sm leading-relaxed">
       Interactive web maps, real-time data streaming, and web tools.
     </p>
   </div>
 
   <!-- Projects Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="projects-grid">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-7" id="projects-grid">
     {sortedProjects.map(project => {
       const highRes = project.data.heroImage || project.data.thumbnail;
 
