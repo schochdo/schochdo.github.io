@@ -45,13 +45,13 @@
 
     .loss-path {
       fill: none;
-      stroke-linecap: round;
+      stroke-linecap: butt;
       stroke-linejoin: round;
       cursor: pointer;
       transition: filter 0.2s ease, opacity 0.2s ease;
     }
     .loss-path:hover {
-      filter: drop-shadow(0 0 8px rgba(217, 119, 6, 0.4)) brightness(1.1);
+      filter: drop-shadow(0 0 6px rgba(217, 119, 6, 0.4)) brightness(1.1);
       opacity: 0.95 !important;
     }
 
@@ -187,7 +187,7 @@
           <marker id="arrow-div" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
             <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#ea580c" />
           </marker>
-          <marker id="arrow-loss" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+          <marker id="arrow-loss" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto">
             <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#d97706" />
           </marker>
         </defs>
@@ -195,48 +195,48 @@
         <!-- 1. Background State Boundaries & Regional Watermarks -->
         <g id="state-layer">
           <!-- WY-UT/CO border (41st parallel) - Set north of Yampa reach -->
-          <line x1="500" y1="125" x2="1480" y2="125" class="state-line" />
+          <line x1="350" y1="115" x2="1480" y2="115" class="state-line" />
           <!-- UT-CO border (109th meridian) -->
-          <line x1="900" y1="125" x2="900" y2="505" class="state-line" />
-          <!-- NV-UT border -->
-          <line x1="500" y1="125" x2="500" y2="505" class="state-line" />
+          <line x1="900" y1="115" x2="900" y2="492" class="state-line" />
+          <!-- NV-UT border (114th meridian) -->
+          <line x1="350" y1="115" x2="350" y2="492" class="state-line" />
           <!-- UT/AZ border (37th parallel) - Set south of San Juan, north of Glen Canyon Dam -->
-          <line x1="420" y1="505" x2="1480" y2="505" class="state-line" />
+          <line x1="350" y1="492" x2="900" y2="492" class="state-line" />
           <!-- CO-NM border -->
-          <line x1="900" y1="505" x2="1480" y2="505" class="state-line" />
+          <line x1="900" y1="492" x2="1480" y2="492" class="state-line" />
           <!-- AZ-NM border -->
-          <line x1="900" y1="505" x2="900" y2="940" class="state-line" />
+          <line x1="900" y1="492" x2="900" y2="940" class="state-line" />
           <!-- NV-CA border -->
-          <line x1="500" y1="505" x2="400" y2="620" class="state-line" />
+          <line x1="350" y1="492" x2="260" y2="600" class="state-line" />
           <!-- US-Mexico International Boundary -->
           <line x1="160" y1="940" x2="900" y2="940" class="state-line" stroke-width="1.8" stroke="#fca5a5" />
 
           <!-- State Watermark Names (Positioned in Clear Desert Quadrants) -->
-          <text id="state-wy" x="750" y="45" class="state-name">WYOMING</text>
-          <text id="state-co" x="1220" y="370" class="state-name">COLORADO</text>
-          <text id="state-ut" x="480" y="220" class="state-name">UTAH</text>
-          <text id="state-nm" x="1080" y="580" class="state-name">NEW MEXICO</text>
-          <text id="state-az" x="740" y="590" class="state-name">ARIZONA</text>
-          <text id="state-nv" x="240" y="570" class="state-name">NEVADA</text>
-          <text id="state-ca" x="150" y="670" class="state-name">CALIFORNIA</text>
-          <text id="state-baja" x="240" y="1000" class="state-name text-[11px]">BAJA CALIFORNIA</text>
-          <text id="state-mex" x="830" y="1000" class="state-name text-[11px]">MEXICO</text>
+          <text id="state-wy" x="750" y="45" class="state-name" text-anchor="middle">WYOMING</text>
+          <text id="state-co" x="1220" y="370" class="state-name" text-anchor="middle">COLORADO</text>
+          <text id="state-ut" x="465" y="220" class="state-name" text-anchor="middle">UTAH</text>
+          <text id="state-nm" x="1080" y="580" class="state-name" text-anchor="middle">NEW MEXICO</text>
+          <text id="state-az" x="750" y="780" class="state-name" text-anchor="middle">ARIZONA</text>
+          <text id="state-nv" x="230" y="470" class="state-name" text-anchor="middle">NEVADA</text>
+          <text id="state-ca" x="150" y="670" class="state-name" text-anchor="middle">CALIFORNIA</text>
+          <text id="state-baja" x="240" y="1000" class="state-name text-[11px]" text-anchor="middle">BAJA CALIFORNIA</text>
+          <text id="state-mex" x="830" y="1000" class="state-name text-[11px]" text-anchor="middle">MEXICO</text>
         </g>
 
         <!-- 2. Evaporation & Losses (Background Plumes) -->
         <g id="losses-layer">
           <!-- Lake Powell Evaporation (Plume into Utah desert sky) -->
-          <path id="loss-powell" class="loss-path" d="M 604,475 L 500,415 L 420,415" stroke="#d97706" stroke-width="8" stroke-dasharray="8 4" marker-end="url(#arrow-loss)" />
-          <text x="410" y="407" fill="#d97706" font-size="11" font-weight="700" text-anchor="end">Lake Powell Evaporation &amp; Loss</text>
-          <text x="410" y="421" fill="#b45309" font-size="9.5" font-weight="500" text-anchor="end">0.38 MAF / yr lost to desert sun</text>
+          <path id="loss-powell" class="loss-path" d="M 600,470 L 530,422 L 375,422" stroke="#d97706" stroke-width="3.5" stroke-dasharray="7 5" marker-end="url(#arrow-loss)" />
+          <text x="380" y="404" fill="#d97706" font-size="11" font-weight="700">Lake Powell Evaporation &amp; Loss</text>
+          <text x="380" y="417" fill="#b45309" font-size="9.5" font-weight="500">0.38 MAF / yr lost to desert sun</text>
 
           <!-- Lake Mead Evaporation Plume (Plume into Nevada desert sky) -->
-          <path id="loss-mead" class="loss-path" d="M 444,755 L 360,715 L 300,715" stroke="#d97706" stroke-width="10" stroke-dasharray="8 4" marker-end="url(#arrow-loss)" />
-          <text x="290" y="708" fill="#d97706" font-size="11" font-weight="700" text-anchor="end">Lake Mead Evaporation &amp; Loss</text>
-          <text x="290" y="722" fill="#b45309" font-size="9.5" font-weight="500" text-anchor="end">0.65 MAF / yr lost to desert sun</text>
+          <path id="loss-mead" class="loss-path" d="M 444,755 L 360,715 L 300,715" stroke="#d97706" stroke-width="3.5" stroke-dasharray="7 5" marker-end="url(#arrow-loss)" />
+          <text x="290" y="711" fill="#d97706" font-size="11" font-weight="700" text-anchor="end">Lake Mead Evaporation &amp; Loss</text>
+          <text x="290" y="725" fill="#b45309" font-size="9.5" font-weight="500" text-anchor="end">0.65 MAF / yr lost to desert sun</text>
 
           <!-- Lower Basin Channel Transit & Riparian Loss -->
-          <path id="loss-lower" class="loss-path" d="M 480,880 L 570,880" stroke="#d97706" stroke-width="9" stroke-dasharray="8 4" marker-end="url(#arrow-loss)" />
+          <path id="loss-lower" class="loss-path" d="M 480,880 L 570,880" stroke="#d97706" stroke-width="3.5" stroke-dasharray="7 5" marker-end="url(#arrow-loss)" />
           <text x="585" y="877" fill="#d97706" font-size="11" font-weight="700">Channel Transit &amp; Riparian Loss</text>
           <text x="585" y="891" fill="#b45309" font-size="9.5" font-weight="500">0.55 MAF / yr lower channel depletions</text>
         </g>
@@ -338,20 +338,20 @@
           <text x="1125" y="374" class="maf-badge badge-text-blue text-[9.5px]">2.1 MAF</text>
 
           <!-- San Juan River (CO/NM -> Lake Powell) -->
-          <path id="river-sanjuan" class="river-path" d="M 1080,470 L 665,470" stroke="#0284c7" stroke-width="13" />
+          <path id="river-sanjuan" class="river-path" d="M 1080,470 L 640,470" stroke="#0284c7" stroke-width="13" />
           <text x="1095" y="465" fill="#0284c7" font-size="11.5" font-weight="700">San Juan River</text>
           <text x="1095" y="479" fill="#475569" font-size="10" font-weight="500">Navajo Dam &amp; Animas River</text>
           <rect x="1095" y="485" width="60" height="18" rx="4" class="badge-bg blue" />
           <text x="1125" y="494" class="maf-badge badge-text-blue text-[9.5px]">2.5 MAF</text>
 
           <!-- Cataract Canyon (Combined Flow entering Lake Powell) -->
-          <path id="river-cataract" class="river-path" d="M 640,410 L 640,460" stroke="#0284c7" stroke-width="34" />
+          <path id="river-cataract" class="river-path" d="M 640,410 L 640,470" stroke="#0284c7" stroke-width="30" />
           <text x="700" y="425" fill="#0284c7" font-size="12.5" font-weight="900">Cataract Canyon</text>
           <text x="700" y="441" fill="#0369a1" font-size="10.5" font-weight="700">14.8 MAF Total Powell Inflow</text>
 
-          <!-- Lake Powell Reservoir Body & Core River Reach -->
-          <rect x="604" y="460" width="72" height="60" rx="14" fill="#0284c7" opacity="0.22" stroke="#0284c7" stroke-width="2" />
-          <path id="river-powell-reach" class="river-path" d="M 640,460 L 640,520" stroke="#0284c7" stroke-width="30" />
+          <!-- Lake Powell Reservoir Body & Core River Reach (Expands to 36px upon San Juan inflow) -->
+          <rect x="596" y="455" width="88" height="65" rx="14" fill="#0284c7" opacity="0.22" stroke="#0284c7" stroke-width="2" />
+          <path id="river-powell-reach" class="river-path" d="M 640,470 L 640,520" stroke="#0284c7" stroke-width="36" />
 
           <!-- Grand Canyon Reach: Glen Canyon Dam -> Lees Ferry -> Lake Mead (CONTINUOUS UNBROKEN FLOW) -->
           <path id="river-grandcanyon" class="river-path" d="M 640,520 L 640,600 L 480,760" stroke="#0284c7" stroke-width="24" />
@@ -398,18 +398,18 @@
               <rect x="-24" y="-9" width="48" height="18" rx="3" fill="#ffffff" stroke="#0284c7" stroke-width="2.2" />
               <path d="M -16 -5 L -16 5 M -8 -5 L -8 5 M 0 -5 L 0 5 M 8 -5 L 8 5 M 16 -5 L 16 5" stroke="#0284c7" stroke-width="1.6" />
             </g>
-            <text x="680" y="515" fill="#0f172a" font-size="13" font-weight="900">Lake Powell / Glen Canyon Dam</text>
-            <text x="680" y="531" fill="#0284c7" font-size="10.5" font-weight="600">Capacity: 24.3M AF • Master Storage Bank</text>
+            <text x="680" y="518" fill="#0f172a" font-size="13" font-weight="900">Lake Powell / Glen Canyon Dam</text>
+            <text x="680" y="534" fill="#0284c7" font-size="10.5" font-weight="600">Capacity: 24.3M AF • Master Storage Bank</text>
           </g>
 
           <!-- Lee's Ferry Compact Point Divider (Continuous In-line Checkpoint Station) -->
           <g id="node-leesferry" class="cursor-pointer">
             <!-- In-line station collar straddling the continuous flowing river conduit -->
-            <rect x="612" y="548" width="56" height="24" rx="12" fill="#ffffff" stroke="#d97706" stroke-width="2.5" filter="drop-shadow(0 2px 4px rgba(15, 23, 42, 0.1))" />
-            <circle cx="640" cy="560" r="5" fill="#d97706" />
-            <circle cx="640" cy="560" r="2" fill="#ffffff" />
+            <rect x="612" y="552" width="56" height="24" rx="12" fill="#ffffff" stroke="#d97706" stroke-width="2.5" filter="drop-shadow(0 2px 4px rgba(15, 23, 42, 0.1))" />
+            <circle cx="640" cy="564" r="5" fill="#d97706" />
+            <circle cx="640" cy="564" r="2" fill="#ffffff" />
             <!-- Compact Division Station Card -->
-            <g transform="translate(680, 542)">
+            <g transform="translate(680, 546)">
               <rect x="0" y="0" width="255" height="38" rx="6" fill="#ffffff" stroke="#d97706" stroke-width="1.5" filter="drop-shadow(0 2px 4px rgba(15, 23, 42, 0.08))" />
               <text x="12" y="16" fill="#d97706" font-size="11.5" font-weight="800">Lee's Ferry (Compact Point)</text>
               <text x="12" y="30" fill="#475569" font-size="9.5" font-weight="600">1922 Compact Division Point • 8.23 MAF Release</text>
@@ -472,7 +472,7 @@
           <text x="66" y="118" fill="#1e293b" font-size="11.5" font-weight="600">Major Storage Dams</text>
           
           <!-- Losses -->
-          <line x1="18" y1="140" x2="50" y2="140" stroke="#d97706" stroke-width="5" stroke-linecap="round" marker-end="url(#arrow-loss)" />
+          <line x1="18" y1="140" x2="50" y2="140" stroke="#d97706" stroke-width="3.5" stroke-dasharray="7 5" stroke-linecap="butt" marker-end="url(#arrow-loss)" />
           <text x="66" y="144" fill="#1e293b" font-size="11.5" font-weight="600">Reservoir Evaporation &amp; Loss</text>
 
           <text x="18" y="164" fill="#0284c7" font-size="9.5" font-weight="600">Click any feature to open official data portal ↗</text>
