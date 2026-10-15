@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-10-15T17:09:21.489301",
+  "fetched_at": "2026-10-15T17:10:26.425109",
   "streamflows": [
     {
       "id": "09057500",
@@ -24,7 +24,7 @@
       "name": "Colorado River near Dotsero, CO",
       "type": "streamflow",
       "flow_cfs": 660.0,
-      "timestamp": "2026-10-15T16:00:00.000-06:00",
+      "timestamp": "2026-10-15T17:00:00.000-06:00",
       "lat": 39.6446111,
       "lon": -107.0780139
     },
@@ -104,8 +104,8 @@
       "id": "09315000",
       "name": "Green River at Green River, UT",
       "type": "streamflow",
-      "flow_cfs": 4810.0,
-      "timestamp": "2026-10-15T16:45:00.000-06:00",
+      "flow_cfs": 4840.0,
+      "timestamp": "2026-10-15T17:00:00.000-06:00",
       "lat": 38.98886944,
       "lon": -110.15035556
     },
@@ -122,8 +122,8 @@
       "id": "09379500",
       "name": "San Juan River near Bluff, UT",
       "type": "streamflow",
-      "flow_cfs": 4790.0,
-      "timestamp": "2026-10-15T16:45:00.000-06:00",
+      "flow_cfs": 4820.0,
+      "timestamp": "2026-10-15T17:00:00.000-06:00",
       "lat": 37.15067778,
       "lon": -109.8666889
     },
