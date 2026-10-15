@@ -154,7 +154,7 @@
 
     <!-- Subway Map SVG Container -->
     <div class="relative bg-white rounded-2xl border border-slate-300 shadow-xl overflow-hidden">
-      <svg id="canvas" viewBox="0 0 1560 1020" class="w-full h-auto block select-none">
+      <svg id="canvas" viewBox="0 0 1560 1050" class="w-full h-auto block select-none">
         <defs>
           <!-- Gradients -->
           <linearGradient id="mainstemGrad" x1="100%" y1="0%" x2="0%" y2="100%">
@@ -194,20 +194,20 @@
 
         <!-- 1. Background State Boundaries & Regional Watermarks -->
         <g id="state-layer">
-          <!-- WY-UT/CO border (41st parallel) -->
-          <line x1="500" y1="145" x2="1480" y2="145" class="state-line" />
+          <!-- WY-UT/CO border (41st parallel) - Set north of Yampa reach -->
+          <line x1="500" y1="125" x2="1480" y2="125" class="state-line" />
           <!-- UT-CO border (109th meridian) -->
-          <line x1="900" y1="145" x2="900" y2="480" class="state-line" />
+          <line x1="900" y1="125" x2="900" y2="505" class="state-line" />
           <!-- NV-UT border -->
-          <line x1="500" y1="145" x2="500" y2="480" class="state-line" />
-          <!-- UT/AZ border (37th parallel) -->
-          <line x1="420" y1="480" x2="1480" y2="480" class="state-line" />
+          <line x1="500" y1="125" x2="500" y2="505" class="state-line" />
+          <!-- UT/AZ border (37th parallel) - Set south of San Juan, north of Glen Canyon Dam -->
+          <line x1="420" y1="505" x2="1480" y2="505" class="state-line" />
           <!-- CO-NM border -->
-          <line x1="900" y1="480" x2="1480" y2="480" class="state-line" />
+          <line x1="900" y1="505" x2="1480" y2="505" class="state-line" />
           <!-- AZ-NM border -->
-          <line x1="900" y1="480" x2="900" y2="940" class="state-line" />
+          <line x1="900" y1="505" x2="900" y2="940" class="state-line" />
           <!-- NV-CA border -->
-          <line x1="500" y1="480" x2="400" y2="620" class="state-line" />
+          <line x1="500" y1="505" x2="400" y2="620" class="state-line" />
           <!-- US-Mexico International Boundary -->
           <line x1="160" y1="940" x2="900" y2="940" class="state-line" stroke-width="1.8" stroke="#fca5a5" />
 
@@ -216,11 +216,11 @@
           <text id="state-co" x="1220" y="370" class="state-name">COLORADO</text>
           <text id="state-ut" x="480" y="220" class="state-name">UTAH</text>
           <text id="state-nm" x="1080" y="580" class="state-name">NEW MEXICO</text>
-          <text id="state-az" x="740" y="600" class="state-name">ARIZONA</text>
+          <text id="state-az" x="740" y="590" class="state-name">ARIZONA</text>
           <text id="state-nv" x="240" y="570" class="state-name">NEVADA</text>
           <text id="state-ca" x="150" y="670" class="state-name">CALIFORNIA</text>
-          <text id="state-baja" x="240" y="995" class="state-name text-[11px]">BAJA CALIFORNIA</text>
-          <text id="state-mex" x="660" y="995" class="state-name text-[11px]">MEXICO</text>
+          <text id="state-baja" x="240" y="1000" class="state-name text-[11px]">BAJA CALIFORNIA</text>
+          <text id="state-mex" x="830" y="1000" class="state-name text-[11px]">MEXICO</text>
         </g>
 
         <!-- 2. Evaporation & Losses (Background Plumes) -->
@@ -293,11 +293,11 @@
           </g>
 
           <!-- 1944 Mexican Treaty Delivery (Morelos Dam) -->
-          <text x="45" y="942" fill="#ea580c" font-size="12.5" font-weight="800">1944 Mexican Water Treaty</text>
-          <text x="45" y="956" fill="#475569" font-size="10" font-weight="500">Guaranteed annual delivery at Morelos Dam</text>
-          <rect x="45" y="962" width="68" height="19" rx="4" class="badge-bg orange" />
-          <text x="79" y="971" class="maf-badge badge-text-orange">1.50 MAF</text>
-          <path id="div-mexico" class="diversion-path" d="M 480,960 L 270,960" stroke="#ea580c" stroke-width="15" marker-end="url(#arrow-div)" />
+          <text x="45" y="936" fill="#ea580c" font-size="12.5" font-weight="800">1944 Mexican Water Treaty</text>
+          <text x="45" y="950" fill="#475569" font-size="10" font-weight="500">Guaranteed annual delivery at Morelos Dam</text>
+          <rect x="45" y="956" width="68" height="19" rx="4" class="badge-bg orange" />
+          <text x="79" y="965" class="maf-badge badge-text-orange">1.50 MAF</text>
+          <path id="div-mexico" class="diversion-path" d="M 480,955 L 270,955" stroke="#ea580c" stroke-width="15" marker-end="url(#arrow-div)" />
         </g>
 
         <!-- 4. Main River Channels & Tributaries (Cyan / Cerulean Blue) -->
@@ -310,11 +310,11 @@
           <text x="515" y="97" class="maf-badge badge-text-blue">4.9 MAF</text>
 
           <!-- Yampa River (CO -> Green River) -->
-          <path id="river-yampa" class="river-path" d="M 880,160 L 650,160 L 580,230" stroke="#0284c7" stroke-width="10" />
-          <text x="680" y="115" fill="#0284c7" font-size="11.5" font-weight="700">Yampa River</text>
-          <text x="680" y="129" fill="#475569" font-size="9.5" font-weight="500">Dinosaur National Monument</text>
-          <rect x="680" y="134" width="60" height="17" rx="4" class="badge-bg blue" />
-          <text x="710" y="142" class="maf-badge badge-text-blue text-[9.5px]">1.3 MAF</text>
+          <path id="river-yampa" class="river-path" d="M 880,185 L 650,185 L 580,255" stroke="#0284c7" stroke-width="10" />
+          <text x="670" y="142" fill="#0284c7" font-size="11.5" font-weight="700">Yampa River</text>
+          <text x="670" y="156" fill="#475569" font-size="9.5" font-weight="500">Dinosaur National Monument</text>
+          <rect x="670" y="161" width="60" height="17" rx="4" class="badge-bg blue" />
+          <text x="700" y="169" class="maf-badge badge-text-blue text-[9.5px]">1.3 MAF</text>
 
           <!-- Colorado River Headwaters (Rocky Mountain NP -> Continental Divide) -->
           <path id="river-headwaters" class="river-path" d="M 1000,50 L 1000,210" stroke="#0284c7" stroke-width="16" />
@@ -359,11 +359,11 @@
           <text x="615" y="730" fill="#0369a1" font-size="10" font-weight="600">10.0 MAF Inflow • 8.23 MAF Compact Release</text>
 
           <!-- Little Colorado River -->
-          <path id="river-littleco" class="river-path" d="M 840,670 L 570,670" stroke="#0284c7" stroke-width="7" />
-          <text x="855" y="665" fill="#0284c7" font-size="11.5" font-weight="700">Little Colorado River</text>
-          <text x="855" y="679" fill="#475569" font-size="10" font-weight="500">Northern Arizona Plateau</text>
-          <rect x="855" y="685" width="60" height="18" rx="4" class="badge-bg blue" />
-          <text x="885" y="694" class="maf-badge badge-text-blue text-[9px]">0.25 MAF</text>
+          <path id="river-littleco" class="river-path" d="M 840,675 L 565,675" stroke="#0284c7" stroke-width="7" />
+          <text x="650" y="646" fill="#0284c7" font-size="11.5" font-weight="700">Little Colorado River</text>
+          <text x="650" y="660" fill="#475569" font-size="9.5" font-weight="500">Northern Arizona Plateau</text>
+          <rect x="780" y="637" width="56" height="18" rx="4" class="badge-bg blue" />
+          <text x="808" y="646" class="maf-badge badge-text-blue text-[9px]">0.25 MAF</text>
 
           <!-- Virgin River -->
           <path id="river-virgin" class="river-path" d="M 380,660 L 480,760" stroke="#0284c7" stroke-width="6" />
@@ -376,14 +376,18 @@
           <rect x="444" y="745" width="72" height="42" rx="12" fill="#0284c7" opacity="0.22" stroke="#0284c7" stroke-width="2" />
 
           <!-- Lower Basin Spine: Lake Mead -> Parker -> Imperial -> Morelos -->
-          <path id="river-lower-spine" class="river-path" d="M 480,785 L 480,960" stroke="#0284c7" stroke-width="22" />
+          <path id="river-lower-spine" class="river-path" d="M 480,785 L 480,955" stroke="#0284c7" stroke-width="22" />
 
           <!-- Colorado River Delta (Dry Reach to Gulf of California) -->
-          <path id="river-delta-dry" class="river-path dry-river-channel" d="M 480,960 L 480,1010" stroke="#94a3b8" stroke-width="4.5" stroke-dasharray="6 6" />
-          <text x="510" y="988" fill="#dc2626" font-size="12" font-weight="900">Gulf of California (Dry / No Flow)</text>
-          <text x="510" y="1002" fill="#475569" font-size="9.5" font-weight="500">Historically dewatered delta ecosystem</text>
-          <rect x="715" y="980" width="54" height="17" rx="4" class="badge-bg red" />
-          <text x="742" y="988" class="maf-badge badge-text-red text-[9.5px]">0 MAF</text>
+          <path id="river-delta-dry" class="river-path dry-river-channel" d="M 480,955 L 480,1035" stroke="#94a3b8" stroke-width="4.5" stroke-dasharray="6 6" />
+          <!-- Delta Terminus Station Card -->
+          <g id="node-delta" class="cursor-pointer" transform="translate(510, 985)">
+            <rect x="0" y="0" width="275" height="44" rx="6" fill="#fff5f5" stroke="#fca5a5" stroke-width="1.2" filter="drop-shadow(0 2px 4px rgba(220, 38, 38, 0.06))" />
+            <text x="12" y="18" fill="#dc2626" font-size="12" font-weight="900">Gulf of California (Dry / No Flow)</text>
+            <text x="12" y="33" fill="#64748b" font-size="9.5" font-weight="600">Historically dewatered delta ecosystem</text>
+            <rect x="210" y="12" width="52" height="20" rx="4" class="badge-bg red" />
+            <text x="236" y="22" class="maf-badge badge-text-red text-[10px]">0 MAF</text>
+          </g>
         </g>
 
         <!-- 5. Dams & Major Storage Reservoirs (Architectural Icons & Division Points) -->
@@ -438,9 +442,9 @@
 
           <!-- Morelos Dam -->
           <g id="dam-morelos" class="cursor-pointer">
-            <circle cx="480" cy="960" r="7.5" fill="#ffffff" stroke="#ea580c" stroke-width="2.5" />
-            <text x="510" y="954" fill="#0f172a" font-size="12" font-weight="800">Morelos Dam</text>
-            <text x="510" y="968" fill="#475569" font-size="9.5" font-weight="600">Mexican Treaty Delivery Headworks</text>
+            <circle cx="480" cy="955" r="7.5" fill="#ffffff" stroke="#ea580c" stroke-width="2.5" />
+            <text x="510" y="946" fill="#0f172a" font-size="12" font-weight="800">Morelos Dam</text>
+            <text x="510" y="960" fill="#475569" font-size="9.5" font-weight="600">Mexican Treaty Delivery Headworks</text>
           </g>
         </g>
 
@@ -769,6 +773,15 @@
       });
 
       attachElement('river-delta-dry', 'Colorado River Delta (Historic Channel)', () => `
+        <strong>Status:</strong> 100% dewatered in normal years (0 MAF reaches the sea)<br>
+        <strong>Ecological History:</strong> Once a 2-million-acre lush estuarine ecosystem described by Aldo Leopold<br>
+        <strong>Modern Restoration:</strong> Minute 319 (2014) and Minute 323 (2017) pulse flows provide occasional environmental pulse waters
+      `, {
+        label: 'IBWC / CILA Minute 323 Delta Restoration',
+        url: 'https://www.ibwc.gov/'
+      });
+
+      attachElement('node-delta', 'Colorado River Delta (Historic Channel)', () => `
         <strong>Status:</strong> 100% dewatered in normal years (0 MAF reaches the sea)<br>
         <strong>Ecological History:</strong> Once a 2-million-acre lush estuarine ecosystem described by Aldo Leopold<br>
         <strong>Modern Restoration:</strong> Minute 319 (2014) and Minute 323 (2017) pulse flows provide occasional environmental pulse waters
