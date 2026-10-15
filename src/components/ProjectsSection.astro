@@ -27,7 +27,7 @@ const { projects } = Astro.props;
 const sortedProjects = [...projects].sort((a, b) => (a.data.order || 99) - (b.data.order || 99));
 ---
 
-<section id="projects" class="pt-6 pb-16 sm:pt-8 sm:pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<section id="projects" class="pt-6 pb-6 sm:pt-8 sm:pb-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
   <div class="max-w-3xl mb-6 sm:mb-8">
     <div class="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mb-1">
       <span>🗺️</span> Portfolio
