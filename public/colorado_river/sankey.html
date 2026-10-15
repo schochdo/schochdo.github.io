@@ -195,269 +195,283 @@
         <!-- 1. Background State Boundaries & Regional Watermarks -->
         <g id="state-layer">
           <!-- WY-UT/CO border (41st parallel) -->
-          <line x1="530" y1="145" x2="1480" y2="145" class="state-line" />
+          <line x1="500" y1="145" x2="1480" y2="145" class="state-line" />
           <!-- UT-CO border (109th meridian) -->
           <line x1="900" y1="145" x2="900" y2="480" class="state-line" />
           <!-- NV-UT border -->
-          <line x1="530" y1="145" x2="530" y2="480" class="state-line" />
+          <line x1="500" y1="145" x2="500" y2="480" class="state-line" />
           <!-- UT/AZ border (37th parallel) -->
-          <line x1="460" y1="480" x2="1480" y2="480" class="state-line" />
+          <line x1="420" y1="480" x2="1480" y2="480" class="state-line" />
           <!-- CO-NM border -->
           <line x1="900" y1="480" x2="1480" y2="480" class="state-line" />
           <!-- AZ-NM border -->
-          <line x1="900" y1="480" x2="900" y2="880" class="state-line" />
+          <line x1="900" y1="480" x2="900" y2="940" class="state-line" />
           <!-- NV-CA border -->
-          <line x1="530" y1="480" x2="440" y2="600" class="state-line" />
+          <line x1="500" y1="480" x2="400" y2="620" class="state-line" />
           <!-- US-Mexico International Boundary -->
-          <line x1="160" y1="880" x2="900" y2="880" class="state-line" stroke-width="1.8" stroke="#fca5a5" />
+          <line x1="160" y1="940" x2="900" y2="940" class="state-line" stroke-width="1.8" stroke="#fca5a5" />
 
-          <!-- State Watermark Names -->
-          <text id="state-wy" x="750" y="40" class="state-name">WYOMING</text>
-          <text id="state-co" x="1180" y="380" class="state-name">COLORADO</text>
-          <text id="state-ut" x="560" y="240" class="state-name">UTAH</text>
-          <text id="state-nm" x="1080" y="620" class="state-name">NEW MEXICO</text>
-          <text id="state-az" x="720" y="620" class="state-name">ARIZONA</text>
-          <text id="state-nv" x="340" y="340" class="state-name">NEVADA</text>
+          <!-- State Watermark Names (Positioned in Clear Desert Quadrants) -->
+          <text id="state-wy" x="750" y="45" class="state-name">WYOMING</text>
+          <text id="state-co" x="1220" y="370" class="state-name">COLORADO</text>
+          <text id="state-ut" x="480" y="220" class="state-name">UTAH</text>
+          <text id="state-nm" x="1080" y="580" class="state-name">NEW MEXICO</text>
+          <text id="state-az" x="740" y="600" class="state-name">ARIZONA</text>
+          <text id="state-nv" x="240" y="570" class="state-name">NEVADA</text>
           <text id="state-ca" x="150" y="670" class="state-name">CALIFORNIA</text>
-          <text id="state-baja" x="240" y="940" class="state-name text-[11px]">BAJA CALIFORNIA</text>
-          <text id="state-mex" x="660" y="940" class="state-name text-[11px]">MEXICO</text>
+          <text id="state-baja" x="240" y="995" class="state-name text-[11px]">BAJA CALIFORNIA</text>
+          <text id="state-mex" x="660" y="995" class="state-name text-[11px]">MEXICO</text>
         </g>
 
         <!-- 2. Evaporation & Losses (Background Plumes) -->
         <g id="losses-layer">
-          <!-- Lake Powell Evaporation -->
-          <path id="loss-powell" class="loss-path" d="M 630,430 C 580,380 520,345 460,320" stroke="#d97706" stroke-width="8" stroke-dasharray="8 4" marker-end="url(#arrow-loss)" />
-          <text x="450" y="310" fill="#d97706" font-size="11" font-weight="700" text-anchor="end">Lake Powell Evaporation &amp; Loss</text>
-          <text x="450" y="324" fill="#b45309" font-size="9.5" font-weight="500" text-anchor="end">0.38 MAF / yr lost to desert sun</text>
+          <!-- Lake Powell Evaporation (Plume into Utah desert sky) -->
+          <path id="loss-powell" class="loss-path" d="M 604,475 L 500,415 L 420,415" stroke="#d97706" stroke-width="8" stroke-dasharray="8 4" marker-end="url(#arrow-loss)" />
+          <text x="410" y="407" fill="#d97706" font-size="11" font-weight="700" text-anchor="end">Lake Powell Evaporation &amp; Loss</text>
+          <text x="410" y="421" fill="#b45309" font-size="9.5" font-weight="500" text-anchor="end">0.38 MAF / yr lost to desert sun</text>
 
-          <!-- Lake Mead Evaporation Plume -->
-          <path id="loss-mead" class="loss-path" d="M 480,680 C 420,645 370,625 320,610" stroke="#d97706" stroke-width="10" stroke-dasharray="8 4" marker-end="url(#arrow-loss)" />
-          <text x="310" y="615" fill="#d97706" font-size="11" font-weight="700" text-anchor="end">Lake Mead Evaporation &amp; Loss</text>
-          <text x="310" y="629" fill="#b45309" font-size="9.5" font-weight="500" text-anchor="end">0.65 MAF / yr lost to desert sun</text>
+          <!-- Lake Mead Evaporation Plume (Plume into Nevada desert sky) -->
+          <path id="loss-mead" class="loss-path" d="M 444,755 L 360,715 L 300,715" stroke="#d97706" stroke-width="10" stroke-dasharray="8 4" marker-end="url(#arrow-loss)" />
+          <text x="290" y="708" fill="#d97706" font-size="11" font-weight="700" text-anchor="end">Lake Mead Evaporation &amp; Loss</text>
+          <text x="290" y="722" fill="#b45309" font-size="9.5" font-weight="500" text-anchor="end">0.65 MAF / yr lost to desert sun</text>
 
           <!-- Lower Basin Channel Transit & Riparian Loss -->
-          <path id="loss-lower" class="loss-path" d="M 480,800 C 520,805 570,810 630,815" stroke="#d97706" stroke-width="9" stroke-dasharray="8 4" marker-end="url(#arrow-loss)" />
-          <text x="645" y="812" fill="#d97706" font-size="11" font-weight="700">Channel Transit &amp; Riparian Loss</text>
-          <text x="645" y="826" fill="#b45309" font-size="9.5" font-weight="500">0.55 MAF / yr lower channel depletions</text>
+          <path id="loss-lower" class="loss-path" d="M 480,880 L 570,880" stroke="#d97706" stroke-width="9" stroke-dasharray="8 4" marker-end="url(#arrow-loss)" />
+          <text x="585" y="877" fill="#d97706" font-size="11" font-weight="700">Channel Transit &amp; Riparian Loss</text>
+          <text x="585" y="891" fill="#b45309" font-size="9.5" font-weight="500">0.55 MAF / yr lower channel depletions</text>
         </g>
 
         <!-- 3. Diversions & Aqueducts (Orange / Copper) -->
         <g id="diversions-layer">
           <!-- Denver & Front Range Trans-Mountain Tunnels -->
-          <path id="div-frontrange" class="diversion-path" d="M 1020,200 L 1240,200" stroke="#ea580c" stroke-width="12" marker-end="url(#arrow-div)" />
-          <g transform="translate(1110, 200)">
+          <path id="div-frontrange" class="diversion-path" d="M 1000,210 L 1220,210" stroke="#ea580c" stroke-width="12" marker-end="url(#arrow-div)" />
+          <g transform="translate(1110, 210)">
             <rect x="-8" y="-7" width="16" height="14" rx="3" fill="#ffffff" stroke="#ea580c" stroke-width="1.5" />
             <circle cx="0" cy="0" r="3.5" fill="#ea580c" />
           </g>
-          <text x="1040" y="235" fill="#ea580c" font-size="12.5" font-weight="800">Denver &amp; Front Range Diversions</text>
-          <text x="1040" y="250" fill="#475569" font-size="10" font-weight="500">Moffat, Roberts, Adams &amp; Boustead Tunnels</text>
-          <rect x="1040" y="257" width="68" height="19" rx="4" class="badge-bg orange" />
-          <text x="1074" y="266" class="maf-badge badge-text-orange">0.55 MAF</text>
+          <text x="1025" y="238" fill="#ea580c" font-size="12.5" font-weight="800">Denver &amp; Front Range Diversions</text>
+          <text x="1025" y="253" fill="#475569" font-size="10" font-weight="500">Moffat, Roberts, Adams &amp; Boustead Tunnels</text>
+          <rect x="1025" y="260" width="68" height="19" rx="4" class="badge-bg orange" />
+          <text x="1059" y="269" class="maf-badge badge-text-orange">0.55 MAF</text>
 
           <!-- Central Arizona Project (CAP) - Main Aqueduct to Phoenix & Central AZ -->
-          <path id="div-cap" class="diversion-path" d="M 480,760 L 860,760" stroke="#ea580c" stroke-width="16" marker-end="url(#arrow-div)" />
-          <g transform="translate(600, 760)">
+          <path id="div-cap" class="diversion-path" d="M 480,845 L 880,845" stroke="#ea580c" stroke-width="16" marker-end="url(#arrow-div)" />
+          <g transform="translate(600, 845)">
             <!-- Mark Wilmer Pumping Plant Icon -->
             <rect x="-9" y="-8" width="18" height="16" rx="3" fill="#ffffff" stroke="#ea580c" stroke-width="1.5" />
             <path d="M -4 -3 L 4 3 M -4 3 L 4 -3" stroke="#ea580c" stroke-width="1.5" />
           </g>
           <!-- Secondary branch toward Tucson/Pinal Ag -->
-          <path class="diversion-path opacity-80" d="M 760,760 C 800,780 830,800 860,825" stroke="#ea580c" stroke-width="8" marker-end="url(#arrow-div)" />
-          <text x="875" y="825" fill="#ea580c" font-size="10.5" font-weight="700">Tucson &amp; Pinal Agriculture</text>
+          <path class="diversion-path opacity-80" d="M 770,845 L 830,905" stroke="#ea580c" stroke-width="8" marker-end="url(#arrow-div)" />
+          <text x="845" y="908" fill="#ea580c" font-size="10.5" font-weight="700">Tucson &amp; Pinal Agriculture</text>
 
-          <text x="880" y="752" fill="#ea580c" font-size="13" font-weight="800">Central Arizona Project (CAP)</text>
-          <text x="880" y="767" fill="#475569" font-size="10.5" font-weight="500">Lake Havasu → Phoenix &amp; Central Arizona</text>
-          <rect x="880" y="774" width="68" height="19" rx="4" class="badge-bg orange" />
-          <text x="914" y="783" class="maf-badge badge-text-orange">1.50 MAF</text>
+          <text x="900" y="837" fill="#ea580c" font-size="13" font-weight="800">Central Arizona Project (CAP)</text>
+          <text x="900" y="852" fill="#475569" font-size="10.5" font-weight="500">Lake Havasu → Phoenix &amp; Central Arizona</text>
+          <rect x="900" y="859" width="68" height="19" rx="4" class="badge-bg orange" />
+          <text x="934" y="868" class="maf-badge badge-text-orange">1.50 MAF</text>
 
           <!-- Colorado River Aqueduct (CRA) to SoCal -->
-          <text x="45" y="724" fill="#ea580c" font-size="12.5" font-weight="800">Colorado River Aqueduct (CRA)</text>
-          <text x="45" y="738" fill="#475569" font-size="10" font-weight="500">Metropolitan Water District → Los Angeles &amp; SoCal</text>
-          <rect x="45" y="744" width="68" height="19" rx="4" class="badge-bg orange" />
-          <text x="79" y="753" class="maf-badge badge-text-orange">1.05 MAF</text>
-          <path id="div-cra" class="diversion-path" d="M 480,760 L 270,760" stroke="#ea580c" stroke-width="14" marker-end="url(#arrow-div)" />
-          <g transform="translate(360, 760)">
+          <text x="45" y="810" fill="#ea580c" font-size="12.5" font-weight="800">Colorado River Aqueduct (CRA)</text>
+          <text x="45" y="824" fill="#475569" font-size="10" font-weight="500">Metropolitan Water District → Los Angeles &amp; SoCal</text>
+          <rect x="45" y="830" width="68" height="19" rx="4" class="badge-bg orange" />
+          <text x="79" y="839" class="maf-badge badge-text-orange">1.05 MAF</text>
+          <path id="div-cra" class="diversion-path" d="M 480,845 L 270,845" stroke="#ea580c" stroke-width="14" marker-end="url(#arrow-div)" />
+          <g transform="translate(370, 845)">
             <rect x="-8" y="-7" width="16" height="14" rx="3" fill="#ffffff" stroke="#ea580c" stroke-width="1.5" />
             <circle cx="0" cy="0" r="3.5" fill="#ea580c" />
           </g>
 
           <!-- All-American Canal (AAC) & Imperial Valley -->
-          <text x="45" y="820" fill="#ea580c" font-size="13" font-weight="800">Imperial Valley &amp; All-American Canal</text>
-          <text x="45" y="834" fill="#475569" font-size="10" font-weight="500">Imperial &amp; Coachella Valleys (Largest Single Diversion)</text>
-          <rect x="45" y="840" width="68" height="19" rx="4" class="badge-bg orange" />
-          <text x="79" y="849" class="maf-badge badge-text-orange">2.90 MAF</text>
-          <path id="div-aac" class="diversion-path" d="M 480,855 L 270,855" stroke="#ea580c" stroke-width="22" marker-end="url(#arrow-div)" />
-          <g transform="translate(360, 855)">
+          <text x="45" y="880" fill="#ea580c" font-size="13" font-weight="800">Imperial Valley &amp; All-American Canal</text>
+          <text x="45" y="894" fill="#475569" font-size="10" font-weight="500">Imperial &amp; Coachella Valleys (Largest Single Diversion)</text>
+          <rect x="45" y="900" width="68" height="19" rx="4" class="badge-bg orange" />
+          <text x="79" y="909" class="maf-badge badge-text-orange">2.90 MAF</text>
+          <path id="div-aac" class="diversion-path" d="M 480,915 L 270,915" stroke="#ea580c" stroke-width="22" marker-end="url(#arrow-div)" />
+          <g transform="translate(370, 915)">
             <rect x="-9" y="-8" width="18" height="16" rx="3" fill="#ffffff" stroke="#ea580c" stroke-width="1.5" />
             <line x1="-5" y1="0" x2="5" y2="0" stroke="#ea580c" stroke-width="2" />
           </g>
 
           <!-- 1944 Mexican Treaty Delivery (Morelos Dam) -->
-          <text x="45" y="894" fill="#ea580c" font-size="12.5" font-weight="800">1944 Mexican Water Treaty</text>
-          <text x="45" y="908" fill="#475569" font-size="10" font-weight="500">Guaranteed annual delivery at Morelos Dam</text>
-          <rect x="45" y="914" width="68" height="19" rx="4" class="badge-bg orange" />
-          <text x="79" y="923" class="maf-badge badge-text-orange">1.50 MAF</text>
-          <path id="div-mexico" class="diversion-path" d="M 480,920 L 270,920" stroke="#ea580c" stroke-width="15" marker-end="url(#arrow-div)" />
+          <text x="45" y="942" fill="#ea580c" font-size="12.5" font-weight="800">1944 Mexican Water Treaty</text>
+          <text x="45" y="956" fill="#475569" font-size="10" font-weight="500">Guaranteed annual delivery at Morelos Dam</text>
+          <rect x="45" y="962" width="68" height="19" rx="4" class="badge-bg orange" />
+          <text x="79" y="971" class="maf-badge badge-text-orange">1.50 MAF</text>
+          <path id="div-mexico" class="diversion-path" d="M 480,960 L 270,960" stroke="#ea580c" stroke-width="15" marker-end="url(#arrow-div)" />
         </g>
 
         <!-- 4. Main River Channels & Tributaries (Cyan / Cerulean Blue) -->
         <g id="rivers-layer">
           <!-- Green River (WY -> UT to Confluence) -->
-          <path id="river-green" class="river-path" d="M 660,50 C 660,110 660,175 650,230 C 645,275 640,305 640,340" stroke="#0284c7" stroke-width="19" />
-          <text x="520" y="65" fill="#0284c7" font-size="13" font-weight="800" text-anchor="end">Green River</text>
-          <text x="520" y="80" fill="#475569" font-size="10" font-weight="500" text-anchor="end">Wyoming Headwaters &amp; Flaming Gorge</text>
-          <rect x="450" y="87" width="70" height="20" rx="4" class="badge-bg blue" />
-          <text x="485" y="97" class="maf-badge badge-text-blue">4.9 MAF</text>
+          <path id="river-green" class="river-path" d="M 580,50 L 580,350 L 640,410" stroke="#0284c7" stroke-width="19" />
+          <text x="550" y="65" fill="#0284c7" font-size="13" font-weight="800" text-anchor="end">Green River</text>
+          <text x="550" y="80" fill="#475569" font-size="10" font-weight="500" text-anchor="end">Wyoming Headwaters &amp; Flaming Gorge</text>
+          <rect x="480" y="87" width="70" height="20" rx="4" class="badge-bg blue" />
+          <text x="515" y="97" class="maf-badge badge-text-blue">4.9 MAF</text>
 
           <!-- Yampa River (CO -> Green River) -->
-          <path id="river-yampa" class="river-path" d="M 860,170 C 800,170 740,175 660,185" stroke="#0284c7" stroke-width="10" />
-          <text x="750" y="135" fill="#0284c7" font-size="11.5" font-weight="700">Yampa River</text>
-          <text x="750" y="149" fill="#475569" font-size="9.5" font-weight="500">Dinosaur National Monument</text>
-          <rect x="750" y="154" width="60" height="17" rx="4" class="badge-bg blue" />
-          <text x="780" y="162" class="maf-badge badge-text-blue text-[9.5px]">1.3 MAF</text>
+          <path id="river-yampa" class="river-path" d="M 880,160 L 650,160 L 580,230" stroke="#0284c7" stroke-width="10" />
+          <text x="680" y="115" fill="#0284c7" font-size="11.5" font-weight="700">Yampa River</text>
+          <text x="680" y="129" fill="#475569" font-size="9.5" font-weight="500">Dinosaur National Monument</text>
+          <rect x="680" y="134" width="60" height="17" rx="4" class="badge-bg blue" />
+          <text x="710" y="142" class="maf-badge badge-text-blue text-[9.5px]">1.3 MAF</text>
 
-          <!-- Colorado River Headwaters (Rocky Mountain NP -> Dotsero) -->
-          <path id="river-headwaters" class="river-path" d="M 1020,50 L 1020,200" stroke="#0284c7" stroke-width="16" />
-          <text x="985" y="65" fill="#0284c7" font-size="12.5" font-weight="900" text-anchor="end">COLORADO RIVER HEADWATERS</text>
-          <text x="985" y="80" fill="#475569" font-size="10" font-weight="500" text-anchor="end">Rocky Mountain NP • Continental Divide</text>
-          <rect x="915" y="87" width="70" height="20" rx="4" class="badge-bg blue" />
-          <text x="950" y="97" class="maf-badge badge-text-blue text-[10.5px]">15.0 MAF</text>
+          <!-- Colorado River Headwaters (Rocky Mountain NP -> Continental Divide) -->
+          <path id="river-headwaters" class="river-path" d="M 1000,50 L 1000,210" stroke="#0284c7" stroke-width="16" />
+          <text x="1025" y="65" fill="#0284c7" font-size="12.5" font-weight="900">COLORADO RIVER HEADWATERS</text>
+          <text x="1025" y="80" fill="#475569" font-size="10" font-weight="500">Rocky Mountain NP • Continental Divide</text>
+          <rect x="1025" y="87" width="70" height="20" rx="4" class="badge-bg blue" />
+          <text x="1060" y="97" class="maf-badge badge-text-blue text-[10.5px]">15.0 MAF</text>
 
           <!-- Upper Mainstem Reach (Dotsero -> Grand Junction -> Confluence) -->
-          <path id="river-upper-main" class="river-path" d="M 1020,200 C 960,250 880,285 780,310 C 730,325 680,335 640,340" stroke="#0284c7" stroke-width="18" />
-          <text x="830" y="225" fill="#0284c7" font-size="12" font-weight="800">Colorado River Mainstem</text>
-          <text x="830" y="239" fill="#475569" font-size="10" font-weight="500">Grand Valley &amp; Ruby Canyon</text>
-          <rect x="830" y="245" width="66" height="18" rx="4" class="badge-bg blue" />
-          <text x="863" y="254" class="maf-badge badge-text-blue text-[9.5px]">9.0 MAF</text>
+          <path id="river-upper-main" class="river-path" d="M 1000,210 L 860,350 L 700,350 L 640,410" stroke="#0284c7" stroke-width="18" />
+          <text x="840" y="295" fill="#0284c7" font-size="12.5" font-weight="800" text-anchor="end">Colorado River Mainstem</text>
+          <text x="840" y="310" fill="#475569" font-size="10" font-weight="500" text-anchor="end">Grand Valley &amp; Ruby Canyon</text>
+          <rect x="772" y="317" width="68" height="18" rx="4" class="badge-bg blue" />
+          <text x="806" y="326" class="maf-badge badge-text-blue text-[9.5px]">9.0 MAF</text>
 
           <!-- Gunnison River (CO -> Grand Junction) -->
-          <path id="river-gunnison" class="river-path" d="M 1020,340 C 950,340 880,320 780,310" stroke="#0284c7" stroke-width="12" />
-          <text x="1040" y="335" fill="#0284c7" font-size="11.5" font-weight="700">Gunnison River</text>
-          <text x="1040" y="349" fill="#475569" font-size="10" font-weight="500">Blue Mesa Reservoir</text>
-          <rect x="1040" y="355" width="60" height="18" rx="4" class="badge-bg blue" />
-          <text x="1070" y="364" class="maf-badge badge-text-blue text-[9.5px]">2.1 MAF</text>
+          <path id="river-gunnison" class="river-path" d="M 1080,350 L 860,350" stroke="#0284c7" stroke-width="12" />
+          <text x="1095" y="345" fill="#0284c7" font-size="11.5" font-weight="700">Gunnison River</text>
+          <text x="1095" y="359" fill="#475569" font-size="10" font-weight="500">Blue Mesa Reservoir</text>
+          <rect x="1095" y="365" width="60" height="18" rx="4" class="badge-bg blue" />
+          <text x="1125" y="374" class="maf-badge badge-text-blue text-[9.5px]">2.1 MAF</text>
 
           <!-- San Juan River (CO/NM -> Lake Powell) -->
-          <path id="river-sanjuan" class="river-path" d="M 1020,415 C 900,415 780,415 640,415" stroke="#0284c7" stroke-width="13" />
-          <text x="1040" y="415" fill="#0284c7" font-size="11.5" font-weight="700">San Juan River</text>
-          <text x="1040" y="429" fill="#475569" font-size="10" font-weight="500">Navajo Dam &amp; Animas River</text>
-          <rect x="1040" y="435" width="60" height="18" rx="4" class="badge-bg blue" />
-          <text x="1070" y="444" class="maf-badge badge-text-blue text-[9.5px]">2.5 MAF</text>
+          <path id="river-sanjuan" class="river-path" d="M 1080,470 L 665,470" stroke="#0284c7" stroke-width="13" />
+          <text x="1095" y="465" fill="#0284c7" font-size="11.5" font-weight="700">San Juan River</text>
+          <text x="1095" y="479" fill="#475569" font-size="10" font-weight="500">Navajo Dam &amp; Animas River</text>
+          <rect x="1095" y="485" width="60" height="18" rx="4" class="badge-bg blue" />
+          <text x="1125" y="494" class="maf-badge badge-text-blue text-[9.5px]">2.5 MAF</text>
 
           <!-- Cataract Canyon (Combined Flow entering Lake Powell) -->
-          <path id="river-cataract" class="river-path" d="M 640,340 C 635,370 635,395 630,430" stroke="#0284c7" stroke-width="34" />
-          <text x="700" y="360" fill="#0284c7" font-size="12.5" font-weight="900">Cataract Canyon</text>
-          <text x="700" y="376" fill="#0369a1" font-size="10.5" font-weight="700">14.8 MAF Total Powell Inflow</text>
+          <path id="river-cataract" class="river-path" d="M 640,410 L 640,460" stroke="#0284c7" stroke-width="34" />
+          <text x="700" y="425" fill="#0284c7" font-size="12.5" font-weight="900">Cataract Canyon</text>
+          <text x="700" y="441" fill="#0369a1" font-size="10.5" font-weight="700">14.8 MAF Total Powell Inflow</text>
 
-          <!-- Lake Powell Storage Reach to Glen Canyon Dam -->
-          <path id="river-powell-reach" class="river-path" d="M 630,430 L 630,485" stroke="#0284c7" stroke-width="30" />
+          <!-- Lake Powell Reservoir Body & Core River Reach -->
+          <rect x="604" y="460" width="72" height="60" rx="14" fill="#0284c7" opacity="0.22" stroke="#0284c7" stroke-width="2" />
+          <path id="river-powell-reach" class="river-path" d="M 640,460 L 640,520" stroke="#0284c7" stroke-width="30" />
 
-          <!-- Grand Canyon Reach: Glen Canyon / Lees Ferry -> Lake Mead -->
-          <path id="river-grandcanyon" class="river-path" d="M 600,565 C 560,610 520,645 480,680" stroke="#0284c7" stroke-width="24" />
-          <text x="620" y="675" fill="#0284c7" font-size="12" font-weight="800">Grand Canyon Reach</text>
-          <text x="620" y="690" fill="#0369a1" font-size="10" font-weight="600">10.0 MAF Inflow • 8.23 MAF Compact Release</text>
+          <!-- Grand Canyon Reach: Glen Canyon Dam -> Lees Ferry -> Lake Mead (CONTINUOUS UNBROKEN FLOW) -->
+          <path id="river-grandcanyon" class="river-path" d="M 640,520 L 640,600 L 480,760" stroke="#0284c7" stroke-width="24" />
+          <text x="615" y="715" fill="#0284c7" font-size="12.5" font-weight="800">Grand Canyon Reach</text>
+          <text x="615" y="730" fill="#0369a1" font-size="10" font-weight="600">10.0 MAF Inflow • 8.23 MAF Compact Release</text>
 
           <!-- Little Colorado River -->
-          <path id="river-littleco" class="river-path" d="M 800,630 C 720,630 650,625 570,615" stroke="#0284c7" stroke-width="7" />
-          <text x="815" y="625" fill="#0284c7" font-size="11.5" font-weight="700">Little Colorado River</text>
-          <text x="815" y="639" fill="#475569" font-size="10" font-weight="500">Northern Arizona Plateau</text>
-          <rect x="815" y="645" width="60" height="18" rx="4" class="badge-bg blue" />
-          <text x="845" y="654" class="maf-badge badge-text-blue text-[9px]">0.25 MAF</text>
+          <path id="river-littleco" class="river-path" d="M 840,670 L 570,670" stroke="#0284c7" stroke-width="7" />
+          <text x="855" y="665" fill="#0284c7" font-size="11.5" font-weight="700">Little Colorado River</text>
+          <text x="855" y="679" fill="#475569" font-size="10" font-weight="500">Northern Arizona Plateau</text>
+          <rect x="855" y="685" width="60" height="18" rx="4" class="badge-bg blue" />
+          <text x="885" y="694" class="maf-badge badge-text-blue text-[9px]">0.25 MAF</text>
 
           <!-- Virgin River -->
-          <path id="river-virgin" class="river-path" d="M 410,560 C 440,580 460,620 470,660" stroke="#0284c7" stroke-width="6" />
-          <text x="415" y="535" fill="#0284c7" font-size="11.5" font-weight="700">Virgin River</text>
-          <text x="415" y="549" fill="#475569" font-size="9.5" font-weight="500">Zion NP &amp; Utah/Nevada</text>
-          <rect x="415" y="555" width="60" height="18" rx="4" class="badge-bg blue" />
-          <text x="445" y="564" class="maf-badge badge-text-blue text-[9px]">0.18 MAF</text>
+          <path id="river-virgin" class="river-path" d="M 380,660 L 480,760" stroke="#0284c7" stroke-width="6" />
+          <text x="360" y="645" fill="#0284c7" font-size="11.5" font-weight="700" text-anchor="end">Virgin River</text>
+          <text x="360" y="659" fill="#475569" font-size="9.5" font-weight="500" text-anchor="end">Zion NP &amp; Utah/Nevada</text>
+          <rect x="300" y="665" width="60" height="18" rx="4" class="badge-bg blue" />
+          <text x="330" y="674" class="maf-badge badge-text-blue text-[9px]">0.18 MAF</text>
+
+          <!-- Lake Mead Reservoir Body -->
+          <rect x="444" y="745" width="72" height="42" rx="12" fill="#0284c7" opacity="0.22" stroke="#0284c7" stroke-width="2" />
 
           <!-- Lower Basin Spine: Lake Mead -> Parker -> Imperial -> Morelos -->
-          <path id="river-lower-spine" class="river-path" d="M 480,680 L 480,920" stroke="#0284c7" stroke-width="22" />
+          <path id="river-lower-spine" class="river-path" d="M 480,785 L 480,960" stroke="#0284c7" stroke-width="22" />
 
           <!-- Colorado River Delta (Dry Reach to Gulf of California) -->
-          <path id="river-delta-dry" class="river-path dry-river-channel" d="M 480,920 L 480,995" stroke="#94a3b8" stroke-width="4.5" stroke-dasharray="6 6" />
-          <text x="510" y="965" fill="#dc2626" font-size="12.5" font-weight="900">Gulf of California (Dry / No Flow)</text>
-          <text x="510" y="980" fill="#475569" font-size="10" font-weight="500">Historically dewatered delta ecosystem</text>
-          <rect x="510" y="987" width="60" height="19" rx="4" class="badge-bg red" />
-          <text x="540" y="996" class="maf-badge badge-text-red text-[10.5px]">0 MAF</text>
+          <path id="river-delta-dry" class="river-path dry-river-channel" d="M 480,960 L 480,1010" stroke="#94a3b8" stroke-width="4.5" stroke-dasharray="6 6" />
+          <text x="510" y="988" fill="#dc2626" font-size="12" font-weight="900">Gulf of California (Dry / No Flow)</text>
+          <text x="510" y="1002" fill="#475569" font-size="9.5" font-weight="500">Historically dewatered delta ecosystem</text>
+          <rect x="715" y="980" width="54" height="17" rx="4" class="badge-bg red" />
+          <text x="742" y="988" class="maf-badge badge-text-red text-[9.5px]">0 MAF</text>
         </g>
 
         <!-- 5. Dams & Major Storage Reservoirs (Architectural Icons & Division Points) -->
         <g id="dams-layer">
           <!-- Lake Powell / Glen Canyon Dam -->
           <g id="dam-glencanyon" class="cursor-pointer">
-            <g transform="translate(630, 485)">
-              <rect x="-18" y="-10" width="36" height="20" rx="3" fill="#ffffff" stroke="#0284c7" stroke-width="2" />
-              <path d="M -12 -5 L -12 5 M -6 -5 L -6 5 M 0 -5 L 0 5 M 6 -5 L 6 5 M 12 -5 L 12 5" stroke="#0284c7" stroke-width="1.4" />
+            <g transform="translate(640, 520)">
+              <rect x="-24" y="-9" width="48" height="18" rx="3" fill="#ffffff" stroke="#0284c7" stroke-width="2.2" />
+              <path d="M -16 -5 L -16 5 M -8 -5 L -8 5 M 0 -5 L 0 5 M 8 -5 L 8 5 M 16 -5 L 16 5" stroke="#0284c7" stroke-width="1.6" />
             </g>
-            <text x="670" y="480" fill="#0f172a" font-size="13" font-weight="900">Lake Powell / Glen Canyon Dam</text>
-            <text x="670" y="496" fill="#0284c7" font-size="10.5" font-weight="600">Capacity: 24.3M AF • Master Storage Bank</text>
+            <text x="680" y="515" fill="#0f172a" font-size="13" font-weight="900">Lake Powell / Glen Canyon Dam</text>
+            <text x="680" y="531" fill="#0284c7" font-size="10.5" font-weight="600">Capacity: 24.3M AF • Master Storage Bank</text>
           </g>
 
-          <!-- Lee's Ferry Compact Point Divider -->
+          <!-- Lee's Ferry Compact Point Divider (Continuous In-line Checkpoint Station) -->
           <g id="node-leesferry" class="cursor-pointer">
-            <g transform="translate(600, 565)">
-              <line x1="0" y1="-18" x2="0" y2="18" stroke="#d97706" stroke-width="4" stroke-linecap="round" />
-              <circle cx="0" cy="0" r="5.5" fill="#ffffff" stroke="#d97706" stroke-width="2.5" />
+            <!-- In-line station collar straddling the continuous flowing river conduit -->
+            <rect x="612" y="548" width="56" height="24" rx="12" fill="#ffffff" stroke="#d97706" stroke-width="2.5" filter="drop-shadow(0 2px 4px rgba(15, 23, 42, 0.1))" />
+            <circle cx="640" cy="560" r="5" fill="#d97706" />
+            <circle cx="640" cy="560" r="2" fill="#ffffff" />
+            <!-- Compact Division Station Card -->
+            <g transform="translate(680, 542)">
+              <rect x="0" y="0" width="255" height="38" rx="6" fill="#ffffff" stroke="#d97706" stroke-width="1.5" filter="drop-shadow(0 2px 4px rgba(15, 23, 42, 0.08))" />
+              <text x="12" y="16" fill="#d97706" font-size="11.5" font-weight="800">Lee's Ferry (Compact Point)</text>
+              <text x="12" y="30" fill="#475569" font-size="9.5" font-weight="600">1922 Compact Division Point • 8.23 MAF Release</text>
             </g>
-            <rect x="635" y="542" width="180" height="38" rx="6" fill="#ffffff" stroke="#d97706" stroke-width="1.5" filter="drop-shadow(0 2px 4px rgba(15, 23, 42, 0.08))" />
-            <text x="725" y="558" fill="#d97706" font-size="11" font-weight="800" text-anchor="middle">Lee's Ferry (Compact Point)</text>
-            <text x="725" y="574" fill="#475569" font-size="9.5" font-weight="600" text-anchor="middle">1922 Compact Division Point</text>
           </g>
 
           <!-- Lake Mead / Hoover Dam -->
           <g id="dam-hoover" class="cursor-pointer">
-            <g transform="translate(480, 680)">
-              <rect x="-18" y="-10" width="36" height="20" rx="3" fill="#ffffff" stroke="#0284c7" stroke-width="2" />
-              <path d="M -12 -5 L -12 5 M -6 -5 L -6 5 M 0 -5 L 0 5 M 6 -5 L 6 5 M 12 -5 L 12 5" stroke="#0284c7" stroke-width="1.4" />
+            <g transform="translate(480, 785)">
+              <rect x="-24" y="-9" width="48" height="18" rx="3" fill="#ffffff" stroke="#0284c7" stroke-width="2.2" />
+              <path d="M -16 -5 L -16 5 M -8 -5 L -8 5 M 0 -5 L 0 5 M 8 -5 L 8 5 M 16 -5 L 16 5" stroke="#0284c7" stroke-width="1.6" />
             </g>
-            <text x="430" y="675" fill="#0f172a" font-size="13" font-weight="900" text-anchor="end">Lake Mead / Hoover Dam</text>
-            <text x="430" y="691" fill="#0284c7" font-size="10.5" font-weight="600" text-anchor="end">Capacity: 26.1M AF • Lower Basin Control</text>
+            <text x="445" y="780" fill="#0f172a" font-size="13" font-weight="900" text-anchor="end">Lake Mead / Hoover Dam</text>
+            <text x="445" y="796" fill="#0284c7" font-size="10.5" font-weight="600" text-anchor="end">Capacity: 26.1M AF • Lower Basin Control</text>
           </g>
 
           <!-- Parker Dam / Lake Havasu -->
           <g id="dam-parker" class="cursor-pointer">
-            <circle cx="480" cy="760" r="7" fill="#ffffff" stroke="#ea580c" stroke-width="2.5" />
-            <text x="510" y="736" fill="#0f172a" font-size="12" font-weight="800">Parker Dam / Lake Havasu</text>
-            <text x="510" y="750" fill="#475569" font-size="10" font-weight="500">CRA &amp; CAP Pumping Intakes</text>
+            <circle cx="480" cy="845" r="7.5" fill="#ffffff" stroke="#ea580c" stroke-width="2.5" />
+            <text x="510" y="814" fill="#0f172a" font-size="12" font-weight="800">Parker Dam / Lake Havasu</text>
+            <text x="510" y="828" fill="#475569" font-size="9.5" font-weight="600">CRA &amp; CAP Pumping Intakes</text>
           </g>
 
           <!-- Imperial Dam -->
           <g id="dam-imperial" class="cursor-pointer">
-            <circle cx="480" cy="855" r="7" fill="#ffffff" stroke="#ea580c" stroke-width="2.5" />
-            <text x="510" y="836" fill="#0f172a" font-size="12" font-weight="800">Imperial Dam</text>
-            <text x="510" y="850" fill="#475569" font-size="10" font-weight="500">All-American Canal Intake</text>
+            <circle cx="480" cy="915" r="7.5" fill="#ffffff" stroke="#ea580c" stroke-width="2.5" />
+            <text x="510" y="908" fill="#0f172a" font-size="12" font-weight="800">Imperial Dam</text>
+            <text x="510" y="922" fill="#475569" font-size="9.5" font-weight="600">All-American Canal Intake</text>
+          </g>
+
+          <!-- Morelos Dam -->
+          <g id="dam-morelos" class="cursor-pointer">
+            <circle cx="480" cy="960" r="7.5" fill="#ffffff" stroke="#ea580c" stroke-width="2.5" />
+            <text x="510" y="954" fill="#0f172a" font-size="12" font-weight="800">Morelos Dam</text>
+            <text x="510" y="968" fill="#475569" font-size="9.5" font-weight="600">Mexican Treaty Delivery Headworks</text>
           </g>
         </g>
 
         <!-- 6. Legend Box (Top Right) -->
-        <g id="legend-box" transform="translate(1220, 20)">
-          <rect x="0" y="0" width="310" height="185" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2" filter="drop-shadow(0 4px 16px rgba(15, 23, 42, 0.06))" />
+        <g id="legend-box" transform="translate(1255, 20)">
+          <rect x="0" y="0" width="285" height="175" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2" filter="drop-shadow(0 4px 16px rgba(15, 23, 42, 0.06))" />
           
-          <text x="18" y="26" fill="#0f172a" font-size="13" font-weight="900" letter-spacing="0.04em">Legend</text>
-          <text x="18" y="42" fill="#64748b" font-size="9" font-weight="700" letter-spacing="0.06em">COLORADO RIVER WATER BUDGET FLOW</text>
+          <text x="18" y="24" fill="#0f172a" font-size="13" font-weight="900" letter-spacing="0.04em">Legend</text>
+          <text x="18" y="40" fill="#64748b" font-size="9" font-weight="700" letter-spacing="0.06em">COLORADO RIVER WATER BUDGET FLOW</text>
           
           <!-- Flow Line -->
-          <line x1="18" y1="64" x2="54" y2="64" stroke="#0284c7" stroke-width="6" stroke-linecap="round" />
-          <text x="66" y="68" fill="#1e293b" font-size="11.5" font-weight="600">River Flow / Inflow</text>
+          <line x1="18" y1="62" x2="54" y2="62" stroke="#0284c7" stroke-width="6" stroke-linecap="round" />
+          <text x="66" y="66" fill="#1e293b" font-size="11.5" font-weight="600">River Flow / Inflow</text>
           
           <!-- Diversions -->
-          <line x1="18" y1="92" x2="50" y2="92" stroke="#ea580c" stroke-width="5" stroke-linecap="round" marker-end="url(#arrow-div)" />
-          <text x="66" y="96" fill="#1e293b" font-size="11.5" font-weight="600">Major Diversions &amp; Aqueducts</text>
+          <line x1="18" y1="88" x2="50" y2="88" stroke="#ea580c" stroke-width="5" stroke-linecap="round" marker-end="url(#arrow-div)" />
+          <text x="66" y="92" fill="#1e293b" font-size="11.5" font-weight="600">Major Diversions &amp; Aqueducts</text>
           
           <!-- Dams -->
-          <g transform="translate(32, 120)">
+          <g transform="translate(32, 114)">
             <rect x="-10" y="-7" width="20" height="14" rx="2" fill="#ffffff" stroke="#0284c7" stroke-width="1.8" />
             <line x1="-3" y1="-4" x2="-3" y2="4" stroke="#0284c7" stroke-width="1.2" />
             <line x1="3" y1="-4" x2="3" y2="4" stroke="#0284c7" stroke-width="1.2" />
           </g>
-          <text x="66" y="124" fill="#1e293b" font-size="11.5" font-weight="600">Major Storage Dams</text>
+          <text x="66" y="118" fill="#1e293b" font-size="11.5" font-weight="600">Major Storage Dams</text>
           
           <!-- Losses -->
-          <line x1="18" y1="148" x2="50" y2="148" stroke="#d97706" stroke-width="5" stroke-linecap="round" marker-end="url(#arrow-loss)" />
-          <text x="66" y="152" fill="#1e293b" font-size="11.5" font-weight="600">Reservoir Evaporation &amp; Loss</text>
+          <line x1="18" y1="140" x2="50" y2="140" stroke="#d97706" stroke-width="5" stroke-linecap="round" marker-end="url(#arrow-loss)" />
+          <text x="66" y="144" fill="#1e293b" font-size="11.5" font-weight="600">Reservoir Evaporation &amp; Loss</text>
 
-          <text x="18" y="174" fill="#0284c7" font-size="9.5" font-weight="600">Click any feature to open official data portal ↗</text>
+          <text x="18" y="164" fill="#0284c7" font-size="9.5" font-weight="600">Click any feature to open official data portal ↗</text>
         </g>
       </svg>
 

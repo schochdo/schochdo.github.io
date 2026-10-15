@@ -593,12 +593,21 @@ def main():
         "reservoirs": reservoirs
     }
 
-    out_file = "public/colorado_river/data/latest_metrics.json"
-    os.makedirs(os.path.dirname(out_file), exist_ok=True)
-    with open(out_file, "w") as f:
-        json.dump(payload, f, indent=2)
+    out_candidates = [
+        "web/data/latest_metrics.json",
+        "data/latest_metrics.json",
+        "public/colorado_river/data/latest_metrics.json"
+    ]
+    saved_to = []
+    for out_file in out_candidates:
+        parent = os.path.dirname(out_file)
+        if os.path.exists(parent) or parent in ["web/data", "data"]:
+            os.makedirs(parent, exist_ok=True)
+            with open(out_file, "w") as f:
+                json.dump(payload, f, indent=2)
+            saved_to.append(out_file)
 
-    print(f"\nSuccessfully saved snapshot to {out_file}!\n")
+    print(f"\nSuccessfully saved snapshot to {', '.join(saved_to)}!\n")
     print("=== SUMMARY METRICS ===")
     print("Streamflow (USGS):")
     for s in streamflows:
