@@ -143,12 +143,18 @@
         </h1>
       </div>
 
-      <div class="flex items-center gap-3 text-xs font-medium text-slate-600 bg-white px-3.5 py-2 rounded-lg border border-slate-200 shadow-sm">
-        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span> Modern Runoff: <strong>~12.5 MAF/yr</strong></span>
-        <span class="text-slate-300">|</span>
-        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-orange-500"></span> Total Demand &amp; Losses: <strong>~15.0 MAF/yr</strong></span>
-        <span class="text-slate-300">|</span>
-        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-red-500"></span> Basin Storage Deficit: <strong>~2.5 MAF/yr</strong></span>
+      <div class="flex flex-wrap items-center gap-3">
+        <div id="live-status-pill" class="flex items-center gap-2 text-xs font-semibold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200 shadow-sm">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>Live Telemetry Connected</span>
+        </div>
+        <div class="flex items-center gap-3 text-xs font-medium text-slate-600 bg-white px-3.5 py-2 rounded-lg border border-slate-200 shadow-sm">
+          <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span> Modern Runoff: <strong>~12.5 MAF/yr</strong></span>
+          <span class="text-slate-300">|</span>
+          <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-orange-500"></span> Total Demand &amp; Losses: <strong>~15.0 MAF/yr</strong></span>
+          <span class="text-slate-300">|</span>
+          <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-red-500"></span> Basin Storage Deficit: <strong>~2.5 MAF/yr</strong></span>
+        </div>
       </div>
     </header>
 
@@ -574,6 +580,68 @@
 
   <script>
     const tooltip = document.getElementById('flow-tooltip');
+    let liveMetrics = null;
+
+    async function fetchLiveMetrics() {
+      try {
+        const res = await fetch('./data/latest_metrics.json?t=' + Date.now());
+        if (!res.ok) return;
+        liveMetrics = await res.json();
+        const ind = document.getElementById('live-status-pill');
+        if (ind && liveMetrics && liveMetrics.sync_time) {
+          const dt = new Date(liveMetrics.sync_time);
+          const timeStr = dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          ind.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span><span>Live Telemetry (' + timeStr + ')</span>';
+        }
+      } catch (e) {
+        console.warn('Could not load live metrics for Sankey:', e);
+      }
+    }
+
+    function liveStreamflowBox(siteId, name) {
+      if (!liveMetrics || !liveMetrics.streamflows) return '';
+      const s = liveMetrics.streamflows.find(i => i.id === siteId);
+      if (!s || s.flow_cfs == null) return '';
+      return '<div class="mt-2.5 p-2 bg-sky-50 border border-sky-200 rounded-lg flex justify-between items-center text-[11px]">' +
+        '<span class="text-sky-800 font-bold">' + (name || 'Live USGS Discharge') + ':</span>' +
+        '<span class="text-sky-950 font-black text-xs">' + Math.round(s.flow_cfs).toLocaleString() + ' cfs</span>' +
+      '</div>';
+    }
+
+    function liveDiversionBox(divId, name) {
+      if (!liveMetrics || !liveMetrics.diversions) return '';
+      const d = liveMetrics.diversions.find(i => i.id === divId);
+      if (!d || d.flow_cfs == null) return '';
+      return '<div class="mt-2.5 p-2 bg-orange-50 border border-orange-200 rounded-lg flex justify-between items-center text-[11px]">' +
+        '<span class="text-orange-800 font-bold">' + (name || 'Live Diversion Rate') + ':</span>' +
+        '<span class="text-orange-950 font-black text-xs">' + Math.round(d.flow_cfs).toLocaleString() + ' cfs</span>' +
+      '</div>';
+    }
+
+    function liveTunnelBox() {
+      if (!liveMetrics || !liveMetrics.tunnels) return '';
+      const sum = liveMetrics.tunnels.reduce((acc, t) => acc + (t.flow_cfs || 0), 0);
+      return '<div class="mt-2.5 p-2 bg-orange-50 border border-orange-200 rounded-lg flex justify-between items-center text-[11px]">' +
+        '<span class="text-orange-800 font-bold">Live Front Range Tunnels:</span>' +
+        '<span class="text-orange-950 font-black text-xs">' + Math.round(sum).toLocaleString() + ' cfs</span>' +
+      '</div>';
+    }
+
+    function liveReservoirBox(resId, name) {
+      if (!liveMetrics || !liveMetrics.reservoirs) return '';
+      const r = liveMetrics.reservoirs.find(i => i.id === resId);
+      if (!r) return '';
+      const pct = Math.round((r.storage_af / (r.capacity_af || 1)) * 100);
+      const elev = r.elevation_ft ? ' • Elev: ' + Math.round(r.elevation_ft).toLocaleString() + ' ft' : '';
+      return '<div class="mt-2.5 p-2 bg-sky-50 border border-sky-200 rounded-lg text-[11px]">' +
+        '<div class="flex justify-between items-center">' +
+          '<span class="text-sky-800 font-bold">' + (name || 'Live Storage') + ':</span>' +
+          '<span class="text-sky-950 font-black text-xs">' + (r.storage_af / 1e6).toFixed(2) + 'M AF (' + pct + '%)</span>' +
+        '</div>' +
+        '<div class="text-[10px] text-sky-700 mt-0.5">' + elev + '</div>' +
+      '</div>';
+    }
+
 
     function attachElement(elemId, title, getDetails, portal) {
       const el = document.getElementById(elemId);
@@ -623,7 +691,7 @@
         <strong>Region:</strong> Rocky Mountain National Park / Continental Divide, CO<br>
         <strong>Natural Basin Yield:</strong> ~15.0 MAF/yr aggregate historical basin runoff<br>
         <strong>Headwater Source:</strong> High-altitude snowpack, Blue &amp; Fraser River basins<br>
-        <strong>Accounting:</strong> Feeds Upper Division State apportionments under 1922 &amp; 1948 Compacts
+        <strong>Accounting:</strong> Feeds Upper Division State apportionments under 1922 &amp; 1948 Compacts` + liveStreamflowBox('09070500', 'Live Dotsero Gauge') + `
       `, {
         label: 'USGS Station #09070500 (Dotsero)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09070500/'
@@ -633,7 +701,7 @@
         <strong>Structures:</strong> Adams Tunnel (C-BT), Roberts Tunnel (Denver), Moffat &amp; Boustead Tunnels<br>
         <strong>Annual Diversion:</strong> ~0.55 MAF/yr (~550,000 acre-feet / ~760 cfs)<br>
         <strong>Destination:</strong> Trans-mountain export to Denver, Fort Collins, Boulder, Colorado Springs<br>
-        <strong>Impact:</strong> Transfers wet water out of the Colorado River basin into the South Platte and Arkansas basins
+        <strong>Impact:</strong> Transfers wet water out of the Colorado River basin into the South Platte and Arkansas basins` + liveTunnelBox() + `
       `, {
         label: 'CDSS Telemetry #ROBTUNCO',
         url: 'https://dwr.state.co.us/Tools/Stations?station=ROBTUNCO'
@@ -643,7 +711,7 @@
         <strong>Headwaters:</strong> Wind River Range (WY) and Uinta Mountains (UT)<br>
         <strong>Annual Runoff:</strong> ~4.90 MAF/yr (Delivers ~40% of total flow into Lake Powell)<br>
         <strong>Major Inflow:</strong> Joined by Yampa River in Dinosaur National Monument<br>
-        <strong>Storage:</strong> Regulated by Flaming Gorge Dam (3.78M AF capacity)
+        <strong>Storage:</strong> Regulated by Flaming Gorge Dam (3.78M AF capacity)` + liveStreamflowBox('09315000', 'Live Green River Flow') + `
       `, {
         label: 'USGS Station #09315000 (Green River, UT)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09315000/'
@@ -652,7 +720,7 @@
       attachElement('river-yampa', 'Yampa River (Wild Tributary)', () => `
         <strong>Drainage:</strong> Northwest Colorado (Flat Tops &amp; Park Range)<br>
         <strong>Annual Yield:</strong> ~1.30 MAF/yr<br>
-        <strong>Significance:</strong> The largest remaining free-flowing, undammed major tributary in the Colorado River system
+        <strong>Significance:</strong> The largest remaining free-flowing, undammed major tributary in the Colorado River system` + liveStreamflowBox('09260050', 'Live Yampa River Flow') + `
       `, {
         label: 'USGS Station #09260050 (Deerlodge Park)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09260050/'
@@ -661,7 +729,7 @@
       attachElement('river-upper-main', 'Colorado River Upper Mainstem', () => `
         <strong>Reach:</strong> Dotsero to Grand Valley and Utah State Line<br>
         <strong>Annual Flow:</strong> ~9.0 MAF/yr (before Green River confluence)<br>
-        <strong>Major Inflows:</strong> Roaring Fork, Eagle, and Gunnison Rivers
+        <strong>Major Inflows:</strong> Roaring Fork, Eagle, and Gunnison Rivers` + liveStreamflowBox('09180500', 'Live Cisco Streamflow') + `
       `, {
         label: 'USGS Station #09180500 (Cisco, UT)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09180500/'
@@ -670,7 +738,7 @@
       attachElement('river-gunnison', 'Gunnison River Basin', () => `
         <strong>Drainage:</strong> Central Colorado West Slope (Gunnison, Uncompahgre, Crested Butte)<br>
         <strong>Annual Runoff:</strong> ~2.10 MAF/yr<br>
-        <strong>Regulation:</strong> Blue Mesa, Morrow Point, and Crystal Reservoirs (Aspinall Unit)
+        <strong>Regulation:</strong> Blue Mesa, Morrow Point, and Crystal Reservoirs (Aspinall Unit)` + liveStreamflowBox('09152500', 'Live Gunnison River Flow') + `
       `, {
         label: 'USGS Station #09152500 (Grand Junction)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09152500/'
@@ -679,7 +747,7 @@
       attachElement('river-sanjuan', 'San Juan River Basin', () => `
         <strong>Origin:</strong> San Juan Mountains in Southwest Colorado and Northwest New Mexico<br>
         <strong>Annual Runoff:</strong> ~2.10 - 2.50 MAF/yr (including Animas River)<br>
-        <strong>Regulation:</strong> Navajo Dam (1.70M AF capacity)
+        <strong>Regulation:</strong> Navajo Dam (1.70M AF capacity)` + liveStreamflowBox('09379500', 'Live San Juan River Flow') + `
       `, {
         label: 'USGS Station #09379500 (Bluff, UT)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09379500/'
@@ -688,7 +756,7 @@
       attachElement('river-cataract', 'Cataract Canyon (Combined Powell Inflow)', () => `
         <strong>Reach:</strong> Confluence of Green and Colorado Rivers in Canyonlands NP<br>
         <strong>Annual Inflow:</strong> ~14.8 MAF total combined runoff entering Lake Powell<br>
-        <strong>Significance:</strong> Gatekeeper canyon representing the full combined yield of Upper Basin rivers
+        <strong>Significance:</strong> Gatekeeper canyon representing the full combined yield of Upper Basin rivers` + liveStreamflowBox('09180500', 'Live Mainstem (Cisco)') + liveStreamflowBox('09315000', 'Live Green River') + `
       `, {
         label: 'USGS Station #09180500 (Inflow Control)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09180500/'
@@ -698,7 +766,7 @@
         <strong>Total Capacity:</strong> 24.32 Million Acre-Feet<br>
         <strong>Function:</strong> Master regulatory storage bank for the Upper Basin states<br>
         <strong>Evaporative Loss:</strong> ~0.38 MAF/yr (~380,000 AF) lost to intense desert sunlight<br>
-        <strong>Minimum Power Pool:</strong> Elevation 3,490 ft (threat of losing hydroelectric generation)
+        <strong>Minimum Power Pool:</strong> Elevation 3,490 ft (threat of losing hydroelectric generation)` + liveReservoirBox('lake_powell', 'Lake Powell Live Storage') + `
       `, {
         label: 'USBR Glen Canyon / Lake Powell Portal',
         url: 'https://www.usbr.gov/uc/water/crsp/cs/gcd.html'
@@ -707,7 +775,7 @@
       attachElement('node-leesferry', "Lee's Ferry (1922 Colorado River Compact Point)", () => `
         <strong>Location:</strong> 1 mile downstream of Paria River confluence, Arizona<br>
         <strong>Legal Cornerstone:</strong> Constitutional divider separating Upper Division (CO, UT, WY, NM) from Lower Division (AZ, CA, NV)<br>
-        <strong>Delivery Obligation:</strong> Base 75.0 MAF / 10-yr period (7.50 MAF/yr) + half of Mexico Treaty (0.75 MAF/yr) = <strong>8.25 MAF/yr target</strong> (8.23 MAF normal release under 2007 Guidelines; range 7.0–9.0 MAF).
+        <strong>Delivery Obligation:</strong> Base 75.0 MAF / 10-yr period (7.50 MAF/yr) + half of Mexico Treaty (0.75 MAF/yr) = <strong>8.25 MAF/yr target</strong> (8.23 MAF normal release under 2007 Guidelines; range 7.0–9.0 MAF).` + liveStreamflowBox('09380000', 'Live Lees Ferry Release') + `
       `, {
         label: 'USGS Station #09380000 (Lees Ferry)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09380000/'
@@ -725,7 +793,7 @@
       attachElement('river-littleco', 'Little Colorado River', () => `
         <strong>Origin:</strong> White Mountains of eastern Arizona<br>
         <strong>Annual Runoff:</strong> ~0.25 MAF/yr<br>
-        <strong>Ecological Role:</strong> Critical habitat for endangered Humpback Chub
+        <strong>Ecological Role:</strong> Critical habitat for endangered Humpback Chub` + liveStreamflowBox('09402000', 'Live Little Colorado Discharge') + `
       `, {
         label: 'USGS Station #09402000 (Cameron, AZ)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09402000/'
@@ -734,7 +802,7 @@
       attachElement('river-virgin', 'Virgin River', () => `
         <strong>Origin:</strong> Southwestern Utah (Zion National Park) to Lake Mead<br>
         <strong>Annual Runoff:</strong> ~0.18 MAF/yr<br>
-        <strong>Lower Basin Inflow:</strong> Flow tributary enters Lake Mead Overton Arm
+        <strong>Lower Basin Inflow:</strong> Flow tributary enters Lake Mead Overton Arm` + liveStreamflowBox('09415000', 'Live Virgin River Discharge') + `
       `, {
         label: 'USGS Station #09415000 (Littlefield, AZ)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09415000/'
@@ -744,7 +812,7 @@
         <strong>Total Capacity:</strong> 26.13 Million Acre-Feet (Largest reservoir in the US by volume)<br>
         <strong>Function:</strong> Primary distribution hub for Lower Basin municipal &amp; agricultural deliveries<br>
         <strong>Evaporative Loss:</strong> ~0.65 MAF/yr (~650,000 AF) evaporated annually into desert air<br>
-        <strong>Dead Pool Elevation:</strong> 895 ft (water cannot physically pass through intake towers)
+        <strong>Dead Pool Elevation:</strong> 895 ft (water cannot physically pass through intake towers)` + liveReservoirBox('lake_mead', 'Lake Mead Live Storage') + `
       `, {
         label: 'USBR Hoover Dam / Lake Mead Portal',
         url: 'https://www.usbr.gov/lc/region/g4000/hourly/mead-elv.html'
@@ -763,7 +831,7 @@
         <strong>Intake:</strong> Mark Wilmer Pumping Plant at Lake Havasu / Parker Dam<br>
         <strong>Aqueduct Length:</strong> 336 miles across the Sonoran Desert to Phoenix, Pinal County, and Tucson<br>
         <strong>Annual Diversion:</strong> ~1.50 MAF/yr (~1,500 - 2,200 cfs)<br>
-        <strong>Legal Priority:</strong> Junior priority under the 1968 Colorado River Basin Project Act; absorbs mandatory cuts first during shortages
+        <strong>Legal Priority:</strong> Junior priority under the 1968 Colorado River Basin Project Act; absorbs mandatory cuts first during shortages` + liveDiversionBox('cap', 'Live Central Arizona Project') + `
       `, {
         label: 'USGS Station #09426650 (CAP Intake)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09426650/'
@@ -773,7 +841,7 @@
         <strong>Operator:</strong> Metropolitan Water District of Southern California (MWD)<br>
         <strong>Intake:</strong> Whitsett Intake Pumping Plant at Lake Havasu<br>
         <strong>Aqueduct Length:</strong> 242 miles across Mojave Desert to Lake Mathews<br>
-        <strong>Annual Diversion:</strong> ~1.05 MAF/yr (supplies drinking water to 19 million Southern Californians)
+        <strong>Annual Diversion:</strong> ~1.05 MAF/yr (supplies drinking water to 19 million Southern Californians)` + liveDiversionBox('cra', 'Live Colorado River Aqueduct') + `
       `, {
         label: 'USGS Station #09424150 (CRA Intake)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09424150/'
@@ -792,7 +860,7 @@
         <strong>Capacity:</strong> 26,155 cfs (largest irrigation canal in the world)<br>
         <strong>Annual Diversion:</strong> ~2.90 - 3.10 MAF/yr<br>
         <strong>Beneficiaries:</strong> Imperial Irrigation District (IID) &amp; Coachella Valley (~500,000 acres of high-yield winter agriculture)<br>
-        <strong>Seniority:</strong> Senior Present Perfected Rights (Priority 1 &amp; 2)
+        <strong>Seniority:</strong> Senior Present Perfected Rights (Priority 1 &amp; 2)` + liveDiversionBox('aac', 'Live All-American Canal') + `
       `, {
         label: 'USGS Station #09527700 (All-American Canal)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09527700/'
@@ -854,7 +922,7 @@
       attachElement('river-lower-mid', 'Lower Colorado River (Parker Dam to Transit Loss)', () => `
         <strong>Flow Volume:</strong> ~6.45 MAF/yr (Post-CRA &amp; CAP diversions)<br>
         <strong>Conduit Width:</strong> 20px (Steps down by 8px reflecting 2.55 MAF diverted)<br>
-        <strong>Remaining Uses:</strong> Feeds downstream channel transit, Imperial Valley, and Mexican Treaty delivery
+        <strong>Remaining Uses:</strong> Feeds downstream channel transit, Imperial Valley, and Mexican Treaty delivery` + liveStreamflowBox('09429100', 'Live Flow below Palo Verde') + `
       `, {
         label: 'USGS Station #09427520 (Below Parker Dam)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09427520/'
@@ -899,6 +967,8 @@
 
     // Initialize tooltips & interactive portals
     setupTooltips();
+    fetchLiveMetrics();
+    setInterval(fetchLiveMetrics, 60000);
   </script>
 </body>
 </html>
