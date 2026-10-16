@@ -607,6 +607,23 @@ function applyLiveHydrology(riverNetwork, metrics) {
   const salt = byId["09498500"];
   const verde = byId["09511300"];
 
+  // Secondary tributary fallback mapping to basin sentinel gauge
+  const reachGauges = {
+    price_river: "09302000",
+    little_snake_river: "09260050",
+    uncompahgre_river: "09152500",
+    fryingpan_river: "09085000",
+    san_rafael_river: "09315000",
+    dirty_devil_river: "09180500",
+    escalante_river: "09380000",
+    paria_river: "09380000",
+    muddy_river: "09415000",
+    kanab_creek: "09380000",
+    havasu_creek: "09380000",
+    san_pedro_river: "09474000",
+    fraser_river: "09070500"
+  };
+
   riverNetwork.features.forEach(f => {
     const r = f.properties.reach;
     const cat = f.properties.category || "minor_tributary";
@@ -614,26 +631,31 @@ function applyLiveHydrology(riverNetwork, metrics) {
     let sourceLabel = "Hydrologic Baseflow Estimate";
     let gaugeInfo = f.properties.notes || "";
     let timestamp = null;
+    let gaugeId = null;
 
     if (r === "headwaters") {
       flow = 350;
       sourceLabel = "Snowpack Headwaters Inflow";
       gaugeInfo = "Rocky Mountain NP snowmelt; upstream of Adams Tunnel";
+      gaugeId = "09070500";
     } else if (r === "gore_canyon") {
       flow = dotsero ? dotsero.flow_cfs : 632;
       sourceLabel = "Live USGS Sentinel Gauge";
       gaugeInfo = "USGS #09070500 near Dotsero, CO";
       timestamp = dotsero ? dotsero.timestamp : null;
+      gaugeId = "09070500";
     } else if (r === "glenwood_cameo") {
       flow = cameo ? cameo.flow_cfs : 1280;
       sourceLabel = "Live USGS Sentinel Gauge";
       gaugeInfo = "USGS #09095500 near Cameo, CO (Glenwood Canyon)";
       timestamp = cameo ? cameo.timestamp : null;
+      gaugeId = "09095500";
     } else if (r === "grand_valley_cisco") {
       flow = cisco ? cisco.flow_cfs : 3210;
       sourceLabel = "Live USGS Sentinel Gauge";
       gaugeInfo = "USGS #09180500 near Cisco, UT (CO-UT State Line)";
       timestamp = cisco ? cisco.timestamp : null;
+      gaugeId = "09180500";
     } else if (r === "cataract_canyon") {
       const cFlow = cisco ? cisco.flow_cfs : 3210;
       const gFlow = green ? green.flow_cfs : 3350;
@@ -642,123 +664,171 @@ function applyLiveHydrology(riverNetwork, metrics) {
       sourceLabel = "Confluence Mass Balance (Live)";
       gaugeInfo = "Colorado (Cisco) + Green River + Dolores River into Lake Powell";
       timestamp = cisco ? cisco.timestamp : null;
+      gaugeId = "09180500";
     } else if (r === "lees_ferry") {
       flow = leesFerry ? leesFerry.flow_cfs : 9470;
       sourceLabel = "Live USGS Sentinel Gauge (1922 Compact Divide)";
       gaugeInfo = "USGS #09380000 at Lees Ferry, AZ (Glen Canyon Release)";
       timestamp = leesFerry ? leesFerry.timestamp : null;
+      gaugeId = "09380000";
     } else if (r === "grand_canyon") {
       const lfFlow = leesFerry ? leesFerry.flow_cfs : 9470;
       flow = Math.round(lfFlow + (littleColorado ? littleColorado.flow_cfs : 274));
       sourceLabel = "Controlled Dam Release & Little Colorado Confluence";
       gaugeInfo = "Glen Canyon Dam release through Grand Canyon to Lake Mead";
       timestamp = leesFerry ? leesFerry.timestamp : null;
+      gaugeId = "09380000";
     } else if (r === "lower_basin_upper") {
       flow = paloVerde ? Math.round(paloVerde.flow_cfs + 1200) : 7200;
       sourceLabel = "Regulated Lower Basin Mainstem";
       gaugeInfo = "Hoover & Davis Dam releases for CRA / CAP water orders";
       timestamp = paloVerde ? paloVerde.timestamp : null;
+      gaugeId = "09429100";
     } else if (r === "lower_basin_taper") {
       flow = paloVerde ? Math.round(paloVerde.flow_cfs * 0.25) : 1200;
       sourceLabel = "Residual Channel Flow Below Major Diversions";
       gaugeInfo = "Downstream of Imperial Dam / All-American Canal diversion to Morelos Dam (Mexico)";
       timestamp = paloVerde ? paloVerde.timestamp : null;
+      gaugeId = "09429100";
     } else if (r === "green_river") {
       flow = green ? green.flow_cfs : 3350;
       sourceLabel = "Live USGS Sentinel Gauge";
       gaugeInfo = "USGS #09315000 at Green River, UT";
       timestamp = green ? green.timestamp : null;
+      gaugeId = "09315000";
     } else if (r === "gunnison_river") {
       flow = gunnison ? gunnison.flow_cfs : 1230;
       sourceLabel = "Live USGS Sentinel Gauge";
       gaugeInfo = "USGS #09152500 near Grand Junction, CO";
       timestamp = gunnison ? gunnison.timestamp : null;
+      gaugeId = "09152500";
     } else if (r === "yampa_river") {
       flow = yampa ? yampa.flow_cfs : 146;
       sourceLabel = "Live USGS Sentinel Gauge";
       gaugeInfo = "USGS #09260050 at Deerlodge Park, CO";
       timestamp = yampa ? yampa.timestamp : null;
+      gaugeId = "09260050";
     } else if (r === "white_river") {
       flow = white ? white.flow_cfs : 293;
       sourceLabel = "Live USGS Sentinel Gauge";
       gaugeInfo = "USGS #09306500 near Watson, UT";
       timestamp = white ? white.timestamp : null;
+      gaugeId = "09306500";
     } else if (r === "duchesne_river") {
       flow = duchesne ? duchesne.flow_cfs : 247;
       sourceLabel = "Live USGS Sentinel Gauge";
       gaugeInfo = "USGS #09302000 near Randlett, UT";
       timestamp = duchesne ? duchesne.timestamp : null;
+      gaugeId = "09302000";
     } else if (r === "dolores_river") {
       flow = dolores ? dolores.flow_cfs : 187;
       sourceLabel = "Live USGS Sentinel Gauge";
       gaugeInfo = "USGS #09180000 near Cisco, UT";
       timestamp = dolores ? dolores.timestamp : null;
+      gaugeId = "09180000";
     } else if (r === "sanjuan_river") {
       flow = sanjuan ? sanjuan.flow_cfs : 2460;
       sourceLabel = "Live USGS Sentinel Gauge";
       gaugeInfo = "USGS #09379500 near Bluff, UT";
       timestamp = sanjuan ? sanjuan.timestamp : null;
+      gaugeId = "09379500";
     } else if (r === "animas_river") {
       flow = animas ? animas.flow_cfs : 2120;
       sourceLabel = "Live USGS Sentinel Gauge";
       gaugeInfo = "USGS #09364500 at Farmington, NM";
       timestamp = animas ? animas.timestamp : null;
+      gaugeId = "09364500";
     } else if (r === "roaring_fork_river") {
       flow = roaringFork ? roaringFork.flow_cfs : 449;
       sourceLabel = "Live USGS Sentinel Gauge";
       gaugeInfo = "USGS #09085000 at Glenwood Springs, CO";
       timestamp = roaringFork ? roaringFork.timestamp : null;
+      gaugeId = "09085000";
     } else if (r === "eagle_river") {
       flow = eagle ? eagle.flow_cfs : 133;
       sourceLabel = "Live USGS Sentinel Gauge";
       gaugeInfo = "USGS #09070000 below Gypsum, CO";
       timestamp = eagle ? eagle.timestamp : null;
+      gaugeId = "09070000";
     } else if (r === "blue_river") {
       flow = blue ? blue.flow_cfs : 133;
       sourceLabel = "Live USGS Sentinel Gauge";
       gaugeInfo = "USGS #09057500 below Green Mtn Reservoir, CO";
       timestamp = blue ? blue.timestamp : null;
+      gaugeId = "09057500";
     } else if (r === "little_colorado_river") {
       flow = littleColorado ? littleColorado.flow_cfs : 274;
       sourceLabel = "Live USGS Sentinel Gauge";
       gaugeInfo = "USGS #09402000 near Cameron, AZ";
       timestamp = littleColorado ? littleColorado.timestamp : null;
+      gaugeId = "09402000";
     } else if (r === "virgin_river") {
       flow = virgin ? virgin.flow_cfs : 757;
       sourceLabel = "Live USGS Sentinel Gauge";
       gaugeInfo = "USGS #09415000 at Littlefield, AZ";
       timestamp = virgin ? virgin.timestamp : null;
+      gaugeId = "09415000";
     } else if (r === "bill_williams_river") {
       flow = billWilliams ? billWilliams.flow_cfs : 7.9;
       sourceLabel = "Live USGS Sentinel Gauge";
       gaugeInfo = "USGS #09426000 below Alamo Dam, AZ";
       timestamp = billWilliams ? billWilliams.timestamp : null;
+      gaugeId = "09426000";
     } else if (r === "salt_river") {
       flow = salt ? salt.flow_cfs : 1020;
       sourceLabel = "Live USGS Sentinel Gauge";
       gaugeInfo = "USGS #09498500 near Roosevelt, AZ";
       timestamp = salt ? salt.timestamp : null;
+      gaugeId = "09498500";
     } else if (r === "verde_river") {
       flow = verde ? verde.flow_cfs : 131;
       sourceLabel = "Live USGS Sentinel Gauge";
       gaugeInfo = "USGS #09511300 near Scottsdale, AZ";
       timestamp = verde ? verde.timestamp : null;
+      gaugeId = "09511300";
     } else if (r === "gila_river") {
       flow = gilaKelvin ? gilaKelvin.flow_cfs : 883;
       sourceLabel = "Live USGS Sentinel Gauge";
       gaugeInfo = "USGS #09474000 at Kelvin, AZ";
       timestamp = gilaKelvin ? gilaKelvin.timestamp : null;
+      gaugeId = "09474000";
     }
 
+    if (!gaugeId && reachGauges[r]) {
+      gaugeId = reachGauges[r];
+    }
+
+    f.properties.gauge_id = gaugeId;
     f.properties.flow_cfs = flow;
     f.properties.weight = computeRiverWeight(flow, cat);
     f.properties.source_label = sourceLabel;
     f.properties.gauge_info = gaugeInfo;
     if (timestamp) f.properties.timestamp = timestamp;
+
+    // Calculate flow health vs historical daily mean
+    const norm = gaugeId ? getHistoricalNormal(gaugeId) : null;
+    if (norm && norm > 0 && flow != null) {
+      const pct = Math.round((flow / norm) * 100);
+      f.properties.hist_normal_cfs = norm;
+      f.properties.health_pct = pct;
+      f.properties.health_color = flowHealthColor(pct);
+      f.properties.health_label = flowHealthLabel(pct);
+    } else {
+      f.properties.hist_normal_cfs = null;
+      f.properties.health_pct = null;
+      f.properties.health_color = '#0284c7';
+      f.properties.health_label = 'Baseline';
+    }
   });
 
   if (map && map.getSource('rivers')) {
     map.getSource('rivers').setData(riverNetwork);
+  }
+
+  // If flow health layer is currently enabled, re-apply styling
+  const isFlowHealthActive = document.getElementById('toggle-flow-health')?.checked ?? false;
+  if (isFlowHealthActive) {
+    toggleFlowHealthLayer(true);
   }
 
   if (map && map.getSource('tunnels') && cachedGeography?.tunnels) {
@@ -2087,17 +2157,17 @@ function getHistoricalNormal(siteId) {
 
 // Color scale: critically low → low → below-normal → normal → abundant
 function flowHealthColor(pctOfNormal) {
-  if (pctOfNormal === null) return null;  // no data
+  if (pctOfNormal === null || pctOfNormal === undefined) return '#0284c7';  // fallback / unmonitored baseline
   if (pctOfNormal >= 150) return '#1d4ed8';  // abundant — deep blue
   if (pctOfNormal >= 90)  return '#0ea5e9';  // normal — sky blue
   if (pctOfNormal >= 50)  return '#f59e0b';  // below normal — amber
   if (pctOfNormal >= 25)  return '#ef4444';  // low — red
-  return '#7f1d1d';                           // critically low — dark red
+  return '#991b1b';                           // critically low — dark red
 }
 
 // Label for the health status
 function flowHealthLabel(pct) {
-  if (pct === null) return null;
+  if (pct === null || pct === undefined) return 'Baseline';
   if (pct >= 150) return 'Abundant';
   if (pct >= 90)  return 'Normal';
   if (pct >= 50)  return 'Below Normal';
@@ -2105,84 +2175,53 @@ function flowHealthLabel(pct) {
   return 'Critically Low';
 }
 
-// Build / update the flow-health GeoJSON overlay
+// Build / update the flow-health layer colors directly on continuous river network
 function renderFlowHealthLayer(riverNetwork, metrics) {
-  if (!cachedNormals?.sites || !riverNetwork?.features) return;
-
-  const today = todayKey();
-  // Build a lookup of gauge site_id -> {flow, pct}
-  const gaugeLookup = {};
-  (metrics?.streamflows || []).forEach(g => {
-    const norm = cachedNormals.sites[g.id]?.[today];
-    if (norm && norm > 0) {
-      gaugeLookup[g.id] = { flow: g.flow_cfs, pct: Math.round((g.flow_cfs / norm) * 100) };
-    }
-  });
-
-  // Annotate river features with the nearest gauge's pct
-  const features = riverNetwork.features.map(f => {
-    const gaugeId = f.properties?.gauge_id;
-    const health = gaugeId ? gaugeLookup[gaugeId] : null;
-    const pct = health?.pct ?? null;
-    return {
-      ...f,
-      properties: { ...f.properties, health_pct: pct, health_color: flowHealthColor(pct) }
-    };
-  });
-  const fc = { type: 'FeatureCollection', features };
-
-  if (!map.getSource('rivers-health')) {
-    map.addSource('rivers-health', { type: 'geojson', data: fc });
-
-    // Wide outer glow for the health line
-    map.addLayer({
-      id: 'rivers-health-glow',
-      type: 'line',
-      source: 'rivers-health',
-      filter: ['!=', ['get', 'health_color'], null],
-      layout: { 'line-cap': 'round', 'line-join': 'round', 'visibility': 'none' },
-      paint: {
-        'line-color': ['coalesce', ['get', 'health_color'], '#0ea5e9'],
-        'line-width': ['+', ['*', ['get', 'weight'], 1.5], 8],
-        'line-blur': 6,
-        'line-opacity': 0.7
-      }
-    });
-
-    // Core health line — thicker than base so it reads clearly over the dimmed river
-    map.addLayer({
-      id: 'rivers-health-core',
-      type: 'line',
-      source: 'rivers-health',
-      filter: ['!=', ['get', 'health_color'], null],
-      layout: { 'line-cap': 'round', 'line-join': 'round', 'visibility': 'none' },
-      paint: {
-        'line-color': ['coalesce', ['get', 'health_color'], '#0ea5e9'],
-        'line-width': ['+', ['get', 'weight'], 2],
-        'line-opacity': 1.0
-      }
-    });
-  } else {
-    map.getSource('rivers-health').setData(fc);
-    // Update paint on existing layers if they already exist
-    if (map.getLayer('rivers-health-core')) {
-      map.setPaintProperty('rivers-health-core', 'line-width', ['+', ['get', 'weight'], 2]);
-    }
-  }
+  const isChecked = document.getElementById('toggle-flow-health')?.checked ?? false;
+  toggleFlowHealthLayer(isChecked);
 }
 
 function toggleFlowHealthLayer(show) {
-  const vis = show ? 'visible' : 'none';
-  setLayerVisibility('rivers-health-glow', show);
-  setLayerVisibility('rivers-health-core', show);
-  // Dim normal river layers when health overlay is on — keep some geography visible
-  ['rivers-mainstem-core','rivers-major-core','rivers-minor-core',
-   'rivers-mainstem-glow','rivers-major-glow','rivers-minor-glow'].forEach(id => {
+  if (!map) return;
+
+  const coreColor = show ? ['coalesce', ['get', 'health_color'], '#0284c7'] : '#0284c7';
+  const glowColor = show ? ['coalesce', ['get', 'health_color'], '#38bdf8'] : '#38bdf8';
+
+  // Apply colors directly to the existing river layers without dimming anything
+  ['rivers-mainstem-core', 'rivers-major-core'].forEach(id => {
     if (map.getLayer(id)) {
-      const normalOpacity = id.includes('glow') ? 0.65 : 0.95;
-      map.setPaintProperty(id, 'line-opacity', show ? (id.includes('glow') ? 0.1 : 0.25) : normalOpacity);
+      map.setPaintProperty(id, 'line-color', coreColor);
+      map.setPaintProperty(id, 'line-opacity', 0.95);
     }
   });
+
+  if (map.getLayer('rivers-minor-core')) {
+    map.setPaintProperty('rivers-minor-core', 'line-color', coreColor);
+    map.setPaintProperty('rivers-minor-core', 'line-opacity', 0.75);
+  }
+
+  ['rivers-mainstem-glow', 'rivers-major-glow'].forEach(id => {
+    if (map.getLayer(id)) {
+      map.setPaintProperty(id, 'line-color', glowColor);
+      map.setPaintProperty(id, 'line-opacity', 0.65);
+      map.setPaintProperty(id, 'line-blur', 1.5);
+    }
+  });
+
+  if (map.getLayer('rivers-minor-glow')) {
+    map.setPaintProperty('rivers-minor-glow', 'line-color', glowColor);
+    map.setPaintProperty('rivers-minor-glow', 'line-opacity', 0.35);
+    map.setPaintProperty('rivers-minor-glow', 'line-blur', 0.8);
+  }
+
+  // Remove or hide legacy separate rivers-health layers if present
+  if (map.getLayer('rivers-health-glow')) {
+    map.setLayoutProperty('rivers-health-glow', 'visibility', 'none');
+  }
+  if (map.getLayer('rivers-health-core')) {
+    map.setLayoutProperty('rivers-health-core', 'visibility', 'none');
+  }
+
   // Show/hide health legend in map
   const leg = document.getElementById('flow-health-legend');
   if (leg) leg.style.display = show ? 'block' : 'none';
@@ -2212,6 +2251,21 @@ function renderMetrics(metrics) {
     el.className = 'cfs-marker-wrap';
     el.innerHTML = `<div class="cfs-badge gauge ${highlightClass}"><span class="cfs-val">${s.flow_cfs.toLocaleString()}</span> <span class="cfs-unit">cfs</span></div>`;
 
+    const norm = getHistoricalNormal(s.id);
+    let healthBadgeHtml = '';
+    if (norm && norm > 0) {
+      const pct = Math.round((s.flow_cfs / norm) * 100);
+      const color = flowHealthColor(pct);
+      const label = flowHealthLabel(pct);
+      healthBadgeHtml = `
+        <div style="margin: 6px 0; padding: 5px 8px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:10.5px; color:#64748b; font-weight:600;">vs. Hist. Daily Avg:</span>
+          <span style="font-size:12.5px; font-weight:800; color:${color};">${pct}% <span style="font-size:10px; font-weight:600;">(${label})</span></span>
+        </div>
+        <div style="font-size:10px; color:#94a3b8; margin-bottom:6px;">Avg today: ${Math.round(norm).toLocaleString()} cfs</div>
+      `;
+    }
+
     const popup = new maplibregl.Popup({ offset: 12 }).setHTML(`
       <div style="font-family:'Inter',sans-serif; min-width: 215px; padding: 2px;">
         <div style="display:flex; align-items:center; gap:6px; margin-bottom:6px;">
@@ -2223,6 +2277,7 @@ function renderMetrics(metrics) {
           <span style="font-size:11px; color:#64748b; font-weight:600;">Current Discharge:</span>
           <span style="font-size:16px; font-weight:800; color:#0284c7;">${s.flow_cfs.toLocaleString()} <span style="font-size:11px; font-weight:600; color:#64748b;">cfs</span></span>
         </div>
+        ${healthBadgeHtml}
         <div style="font-size:11px; color:#475569; line-height:1.5;">
           <strong>USGS Station ID:</strong> <a href="https://waterdata.usgs.gov/monitoring-location/${s.id}" target="_blank" style="color:#0284c7; text-decoration:none; font-weight:600;">${s.id} ↗</a><br>
           <strong>Last Measured:</strong> ${formatTimestamp(s.timestamp)}
