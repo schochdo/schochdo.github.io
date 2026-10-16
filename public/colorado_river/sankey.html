@@ -128,7 +128,7 @@
   </style>
 </head>
 <body>
-  <div class="max-w-[1560px] mx-auto">
+  <div class="max-w-[1320px] mx-auto">
     <!-- Header -->
     <header class="flex flex-wrap items-center justify-between gap-4 mb-4 pb-3 border-b border-slate-300">
       <div>
@@ -154,7 +154,7 @@
 
     <!-- Subway Map SVG Container -->
     <div class="relative bg-white rounded-2xl border border-slate-300 shadow-xl overflow-hidden">
-      <svg id="canvas" viewBox="0 0 1560 1050" class="w-full h-auto block select-none">
+      <svg id="canvas" viewBox="0 0 1280 1050" class="w-full h-auto block select-none">
         <defs>
           <!-- Gradients -->
           <linearGradient id="mainstemGrad" x1="100%" y1="0%" x2="0%" y2="100%">
@@ -195,7 +195,7 @@
         <!-- 1. Background State Boundaries & Regional Watermarks -->
         <g id="state-layer">
           <!-- WY-UT/CO border (41st parallel) - Set north of Yampa reach -->
-          <line x1="350" y1="115" x2="1480" y2="115" class="state-line" />
+          <line x1="350" y1="115" x2="1240" y2="115" class="state-line" />
           <!-- UT-CO border (109th meridian) -->
           <line x1="900" y1="115" x2="900" y2="492" class="state-line" />
           <!-- NV-UT border (114th meridian) -->
@@ -203,7 +203,7 @@
           <!-- UT/AZ border (37th parallel) - Set south of San Juan, north of Glen Canyon Dam -->
           <line x1="350" y1="492" x2="900" y2="492" class="state-line" />
           <!-- CO-NM border -->
-          <line x1="900" y1="492" x2="1480" y2="492" class="state-line" />
+          <line x1="900" y1="492" x2="1240" y2="492" class="state-line" />
           <!-- AZ-NM border -->
           <line x1="900" y1="492" x2="900" y2="940" class="state-line" />
           <!-- NV-CA border -->
@@ -213,9 +213,9 @@
 
           <!-- State Watermark Names (Positioned in Clear Desert Quadrants) -->
           <text id="state-wy" x="750" y="45" class="state-name" text-anchor="middle">WYOMING</text>
-          <text id="state-co" x="1220" y="370" class="state-name" text-anchor="middle">COLORADO</text>
+          <text id="state-co" x="1140" y="315" class="state-name" text-anchor="middle">COLORADO</text>
           <text id="state-ut" x="465" y="220" class="state-name" text-anchor="middle">UTAH</text>
-          <text id="state-nm" x="1080" y="580" class="state-name" text-anchor="middle">NEW MEXICO</text>
+          <text id="state-nm" x="1070" y="580" class="state-name" text-anchor="middle">NEW MEXICO</text>
           <text id="state-az" x="750" y="780" class="state-name" text-anchor="middle">ARIZONA</text>
           <text id="state-nv" x="230" y="470" class="state-name" text-anchor="middle">NEVADA</text>
           <text id="state-ca" x="150" y="670" class="state-name" text-anchor="middle">CALIFORNIA</text>
@@ -245,8 +245,8 @@
         <!-- 3. Diversions & Aqueducts (Orange / Copper) - Scaled proportionally to volume -->
         <g id="diversions-layer">
           <!-- Denver & Front Range Trans-Mountain Tunnels (0.55 MAF) -->
-          <path id="div-frontrange" class="diversion-path" d="M 1000,210 L 1220,210" stroke="#ea580c" stroke-width="5.5" marker-end="url(#arrow-div)" />
-          <g transform="translate(1110, 210)">
+          <path id="div-frontrange" class="diversion-path" d="M 1000,210 L 1200,210" stroke="#ea580c" stroke-width="5.5" marker-end="url(#arrow-div)" />
+          <g transform="translate(1100, 210)">
             <rect x="-8" y="-7" width="16" height="14" rx="3" fill="#ffffff" stroke="#ea580c" stroke-width="1.5" />
             <circle cx="0" cy="0" r="3.5" fill="#ea580c" />
           </g>
@@ -331,11 +331,11 @@
           <path id="river-upper-main-pre" class="river-path" d="M 1000,210 L 860,350" stroke="#0284c7" stroke-width="16" />
 
           <!-- Gunnison River (CO -> Grand Junction - 2.1 MAF) -->
-          <path id="river-gunnison" class="river-path" d="M 1080,350 L 860,350" stroke="#0284c7" stroke-width="9" />
-          <text x="1095" y="345" fill="#0284c7" font-size="11.5" font-weight="700">Gunnison River</text>
-          <text x="1095" y="359" fill="#475569" font-size="10" font-weight="500">Blue Mesa Reservoir</text>
-          <rect x="1095" y="365" width="60" height="18" rx="4" class="badge-bg blue" />
-          <text x="1125" y="374" class="maf-badge badge-text-blue text-[9.5px]">2.1 MAF</text>
+          <path id="river-gunnison" class="river-path" d="M 1060,350 L 860,350" stroke="#0284c7" stroke-width="9" />
+          <text x="1075" y="345" fill="#0284c7" font-size="11.5" font-weight="700">Gunnison River</text>
+          <text x="1075" y="359" fill="#475569" font-size="10" font-weight="500">Blue Mesa Reservoir</text>
+          <rect x="1075" y="365" width="60" height="18" rx="4" class="badge-bg blue" />
+          <text x="1105" y="374" class="maf-badge badge-text-blue text-[9.5px]">2.1 MAF</text>
 
           <!-- Upper Mainstem Reach (Post-Gunnison, expands to 22px / 9.55 MAF) -->
           <path id="river-upper-main" class="river-path" d="M 860,350 L 700,350 L 640,410" stroke="#0284c7" stroke-width="22" />
@@ -350,11 +350,11 @@
           <text x="700" y="441" fill="#0369a1" font-size="10.5" font-weight="700">14.8 MAF Total Powell Inflow</text>
 
           <!-- San Juan River (CO/NM -> Lake Powell - 2.5 MAF) -->
-          <path id="river-sanjuan" class="river-path" d="M 1080,470 L 640,470" stroke="#0284c7" stroke-width="10" />
-          <text x="1095" y="465" fill="#0284c7" font-size="11.5" font-weight="700">San Juan River</text>
-          <text x="1095" y="479" fill="#475569" font-size="10" font-weight="500">Navajo Dam &amp; Animas River</text>
-          <rect x="1095" y="485" width="60" height="18" rx="4" class="badge-bg blue" />
-          <text x="1125" y="494" class="maf-badge badge-text-blue text-[9.5px]">2.5 MAF</text>
+          <path id="river-sanjuan" class="river-path" d="M 1060,470 L 640,470" stroke="#0284c7" stroke-width="10" />
+          <text x="1075" y="465" fill="#0284c7" font-size="11.5" font-weight="700">San Juan River</text>
+          <text x="1075" y="479" fill="#475569" font-size="10" font-weight="500">Navajo Dam &amp; Animas River</text>
+          <rect x="1075" y="485" width="60" height="18" rx="4" class="badge-bg blue" />
+          <text x="1105" y="494" class="maf-badge badge-text-blue text-[9.5px]">2.5 MAF</text>
 
           <!-- Lake Powell Reservoir Body & Core Reach (Post-San Juan, expands to 36px / 17.3 MAF) -->
           <rect x="596" y="455" width="88" height="65" rx="14" fill="#0284c7" opacity="0.22" stroke="#0284c7" stroke-width="2" />
@@ -466,8 +466,8 @@
           </g>
         </g>
 
-        <!-- 6. Legend Box (Top Right) -->
-        <g id="legend-box" transform="translate(1255, 20)">
+        <!-- 6. Legend Box (Top Left Open Quadrant) -->
+        <g id="legend-box" transform="translate(45, 25)">
           <rect x="0" y="0" width="285" height="175" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2" filter="drop-shadow(0 4px 16px rgba(15, 23, 42, 0.06))" />
           
           <text x="18" y="24" fill="#0f172a" font-size="13" font-weight="900" letter-spacing="0.04em">Legend</text>
