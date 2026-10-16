@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="style.css?v=4.0">
+  <link rel="stylesheet" href="style.css?v=4.1">
 </head>
 <body>
   <!-- Header Bar -->
@@ -157,32 +157,35 @@
       <div class="trackball-nav-control" id="trackball-nav-control">
         <div class="trackball-wrapper" id="trackball-wrapper" title="Drag center to orbit & tilt • Drag ring to rotate • Click to reset North • Double-click for 2D">
           <svg class="trackball-svg" id="trackball-svg" width="72" height="72" viewBox="-36 -36 72 72">
+            <!-- Subtle outer bezel ring strictly concentric with wrapper -->
+            <circle cx="0" cy="0" r="34.5" fill="none" stroke="#94a3b8" stroke-width="0.8" stroke-opacity="0.45" />
+
             <!-- Rotating Outer Compass Group (North Arrow & Cardinals) -->
             <g id="trackball-compass-ring" class="trackball-compass-ring">
-              <!-- North Red Arrow Indicator (touches r=35 with even spacing) -->
-              <polygon points="0,-35 4,-24 -4,-24" fill="#dc2626" />
-              <!-- Cardinal Degree Ticks (all touch r=35) -->
-              <line x1="35" y1="0" x2="27" y2="0" stroke="#64748b" stroke-width="1.5" stroke-linecap="round" />
-              <line x1="0" y1="35" x2="0" y2="27" stroke="#64748b" stroke-width="1.5" stroke-linecap="round" />
-              <line x1="-35" y1="0" x2="-27" y2="0" stroke="#64748b" stroke-width="1.5" stroke-linecap="round" />
+              <!-- North Red Arrow Indicator (tip touches r=34.5, base at r=25.5) -->
+              <polygon points="0,-34.5 3.6,-25.5 -3.6,-25.5" fill="#dc2626" />
+              <!-- Cardinal Degree Ticks (E, S, W all touch r=34.5 inward to r=27.5) -->
+              <line x1="34.5" y1="0" x2="27.5" y2="0" stroke="#64748b" stroke-width="1.5" stroke-linecap="round" />
+              <line x1="0" y1="34.5" x2="0" y2="27.5" stroke="#64748b" stroke-width="1.5" stroke-linecap="round" />
+              <line x1="-34.5" y1="0" x2="-27.5" y2="0" stroke="#64748b" stroke-width="1.5" stroke-linecap="round" />
 
-              <!-- Cardinal Labels (all positioned at r=19-20 for uniform spacing) -->
-              <text x="0" y="-18" fill="#dc2626" font-family="'Inter', sans-serif" font-size="8.5" font-weight="900" text-anchor="middle" dominant-baseline="central">N</text>
-              <text x="20" y="0" fill="#334155" font-family="'Inter', sans-serif" font-size="7.5" font-weight="800" text-anchor="middle" dominant-baseline="central">E</text>
-              <text x="0" y="20" fill="#334155" font-family="'Inter', sans-serif" font-size="7.5" font-weight="800" text-anchor="middle" dominant-baseline="central">S</text>
-              <text x="-20" y="0" fill="#334155" font-family="'Inter', sans-serif" font-size="7.5" font-weight="800" text-anchor="middle" dominant-baseline="central">W</text>
+              <!-- Cardinal Labels (optically balanced for letter widths and uniform spacing) -->
+              <text x="0" y="-18.8" fill="#dc2626" font-family="'Inter', -apple-system, sans-serif" font-size="8" font-weight="900" text-anchor="middle" dominant-baseline="central">N</text>
+              <text x="19.2" y="0" fill="#334155" font-family="'Inter', -apple-system, sans-serif" font-size="7.5" font-weight="800" text-anchor="middle" dominant-baseline="central">E</text>
+              <text x="0" y="18.8" fill="#334155" font-family="'Inter', -apple-system, sans-serif" font-size="7.5" font-weight="800" text-anchor="middle" dominant-baseline="central">S</text>
+              <text x="-19.5" y="0" fill="#334155" font-family="'Inter', -apple-system, sans-serif" font-size="7.5" font-weight="800" text-anchor="middle" dominant-baseline="central">W</text>
             </g>
 
             <!-- Inner Interactive 3D Trackball Gimbal (Tilt & Orbit) -->
             <g id="trackball-inner-orb" class="trackball-inner-orb">
-              <!-- Inner Ball Surface (Sky Blue Ice theme) -->
-              <circle cx="0" cy="0" r="15" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.2" stroke-dasharray="2,2" stroke-opacity="0.8" />
+              <!-- Inner Ball Surface (Sky Blue Ice theme, centered at 0, 0) -->
+              <circle cx="0" cy="0" r="13" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.2" stroke-dasharray="2,2" stroke-opacity="0.85" />
               <!-- Horizon Bar -->
-              <line x1="-12" y1="0" x2="12" y2="0" stroke="rgba(2, 132, 199, 0.5)" stroke-width="1" />
+              <line x1="-10.5" y1="0" x2="10.5" y2="0" stroke="rgba(2, 132, 199, 0.5)" stroke-width="1" />
               <!-- Perspective Gimbal Ellipse (squashes with pitch) -->
-              <ellipse id="trackball-pitch-ellipse" cx="0" cy="0" rx="12" ry="12" fill="none" stroke="#0284c7" stroke-width="1.5" stroke-opacity="0.9" />
+              <ellipse id="trackball-pitch-ellipse" cx="0" cy="0" rx="10.5" ry="10.5" fill="none" stroke="#0284c7" stroke-width="1.5" stroke-opacity="0.9" />
               <!-- Center Trackball Pivot Dot -->
-              <circle id="trackball-center-pivot" cx="0" cy="0" r="3.5" fill="#0284c7" stroke="#ffffff" stroke-width="1.4" />
+              <circle id="trackball-center-pivot" cx="0" cy="0" r="3" fill="#0284c7" stroke="#ffffff" stroke-width="1.2" />
             </g>
           </svg>
         </div>
@@ -521,6 +524,6 @@
 
   <!-- MapLibre GL JS -->
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-  <script src="app.js?v=21.0"></script>
+  <script src="app.js?v=21.1"></script>
 </body>
 </html>

@@ -3272,14 +3272,14 @@ function initTrackballNavigation() {
     // Squash gimbal ellipse with 3D tilt perspective (Google Earth style)
     const ellipse = document.getElementById('trackball-pitch-ellipse');
     if (ellipse) {
-      const ry = Math.max(2.8, 12 * Math.cos(pitch * Math.PI / 180));
+      const ry = Math.max(2.2, 10.5 * Math.cos(pitch * Math.PI / 180));
       ellipse.setAttribute('ry', ry);
     }
 
     // Shift center pivot dot slightly up when tilted
     const pivot = document.getElementById('trackball-center-pivot');
     if (pivot) {
-      const dy = (pitch / 65) * 5.0;
+      const dy = (pitch / 65) * 3.5;
       pivot.setAttribute('cy', -dy);
     }
   };
