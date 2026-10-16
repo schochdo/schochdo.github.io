@@ -3414,4 +3414,74 @@ window.stepTilt = function(delta) {
   map.easeTo({ pitch: targetPitch, duration: 400 });
 };
 
+// ==========================================================================
+// Mobile & Desktop Collapsible Sidebar & Responsive UI Handlers
+// ==========================================================================
+window.toggleSidebar = function() {
+  const panel = document.getElementById('sidebar-panel');
+  const backdrop = document.getElementById('sidebar-backdrop');
+  const btn = document.getElementById('sidebar-toggle-btn');
+  if (!panel) return;
+
+  const isMobile = window.innerWidth <= 900;
+  if (isMobile) {
+    const willOpen = !panel.classList.contains('mobile-open');
+    panel.classList.toggle('mobile-open', willOpen);
+    if (backdrop) backdrop.classList.toggle('show', willOpen);
+    if (btn) btn.classList.toggle('active', willOpen);
+    document.body.classList.toggle('sidebar-drawer-active', willOpen);
+  } else {
+    // Desktop collapse mode
+    const willCollapse = !panel.classList.contains('desktop-collapsed');
+    panel.classList.toggle('desktop-collapsed', willCollapse);
+    if (btn) btn.classList.toggle('active', !willCollapse);
+  }
+
+  // Trigger MapLibre resize smoothly after transition
+  setTimeout(() => {
+    if (map) map.resize();
+  }, 300);
+};
+
+window.closeSidebar = function() {
+  const panel = document.getElementById('sidebar-panel');
+  const backdrop = document.getElementById('sidebar-backdrop');
+  const btn = document.getElementById('sidebar-toggle-btn');
+  if (panel) {
+    panel.classList.remove('mobile-open');
+  }
+  if (backdrop) {
+    backdrop.classList.remove('show');
+  }
+  if (btn) {
+    btn.classList.remove('active');
+  }
+  document.body.classList.remove('sidebar-drawer-active');
+
+  setTimeout(() => {
+    if (map) map.resize();
+  }, 300);
+};
+
+window.toggleLegendMobile = function() {
+  const legend = document.getElementById('map-legend');
+  if (legend) {
+    legend.classList.toggle('mobile-expanded');
+  }
+};
+
+// Window resize listener to keep MapLibre updated & handle transitions
+window.addEventListener('resize', () => {
+  if (map) {
+    map.resize();
+  }
+  if (window.innerWidth > 900) {
+    const backdrop = document.getElementById('sidebar-backdrop');
+    const panel = document.getElementById('sidebar-panel');
+    if (panel) panel.classList.remove('mobile-open');
+    if (backdrop) backdrop.classList.remove('show');
+    document.body.classList.remove('sidebar-drawer-active');
+  }
+});
+
 

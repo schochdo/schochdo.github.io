@@ -177,6 +177,69 @@ body {
   color: var(--text-main);
 }
 
+/* Sidebar Toggle Button (Desktop & Mobile) */
+.sidebar-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 10px;
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.sidebar-toggle-btn:hover {
+  background: #edf4fa;
+  border-color: #0284c7;
+  color: #0284c7;
+}
+
+.sidebar-toggle-btn.active {
+  background: #e0f2fe;
+  border-color: #0284c7;
+  color: #0284c7;
+}
+
+.sidebar-toggle-btn svg {
+  flex-shrink: 0;
+}
+
+.mobile-text {
+  display: none;
+}
+
+.desktop-text {
+  display: inline;
+}
+
+/* Backdrop for Mobile Sidebar Drawer */
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  z-index: 1999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sidebar-backdrop.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 /* Dashboard Body */
 .dashboard-body {
   flex: 1;
@@ -367,6 +430,16 @@ body {
   font-size: 13px;
 }
 
+.legend-header-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.legend-toggle-chevron {
+  display: none;
+}
+
 .map-legend h4 {
   font-size: 14px;
   font-weight: 800;
@@ -445,6 +518,70 @@ body {
   gap: 14px;
   box-shadow: var(--shadow-sm);
   z-index: 950;
+  transition: width 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              min-width 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              max-width 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              padding 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.22s ease,
+              border-color 0.22s ease;
+}
+
+/* Desktop Collapsed Sidebar */
+.sidebar-panel.desktop-collapsed {
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  padding: 0 !important;
+  border-left-width: 0 !important;
+  border-color: transparent !important;
+  opacity: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Mobile Sidebar Drawer Header */
+.sidebar-mobile-header {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 4px;
+}
+
+.sidebar-mobile-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.sidebar-mobile-title svg {
+  color: var(--color-primary);
+}
+
+.sidebar-close-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sidebar-close-btn:hover {
+  background: #fee2e2;
+  color: #dc2626;
+  border-color: #fca5a5;
 }
 
 .card {
@@ -1709,6 +1846,278 @@ input:checked + .slider:before {
 .legend-attribution a:hover {
   color: var(--color-primary);
   text-decoration: underline;
+}
+
+/* ==========================================================================
+   Responsive Mobile & Tablet Layout (<= 900px)
+   - Full-width Interactive Map
+   - Always-visible 2-row Compact Header with swipeable Quick Nav presets
+   - Slide-out Collapsible Sidebar Drawer with Backdrop
+   - Collapsible Map Legend Pill
+   - Optimized Touch Controls
+   ========================================================================== */
+@media (max-width: 900px) {
+  /* 2-Row Compact Header */
+  .app-header {
+    height: auto;
+    min-height: 50px;
+    padding: 7px 10px 5px 10px;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .header-left {
+    order: 1;
+    flex: 1;
+    min-width: 0;
+    gap: 8px;
+  }
+
+  .title-group h1 {
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .title-group h1 .highlight {
+    display: none;
+  }
+
+  .title-group .subtitle {
+    display: none;
+  }
+
+  .logo-badge {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+
+  .logo-badge svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .header-right {
+    order: 2;
+    flex-shrink: 0;
+    gap: 6px;
+  }
+
+  .sync-badge {
+    padding: 3px 6px;
+    font-size: 11px;
+    gap: 4px;
+  }
+
+  #sync-time {
+    display: none;
+  }
+
+  .sync-badge::after {
+    content: "Live";
+    font-weight: 600;
+  }
+
+  .icon-btn {
+    width: 28px;
+    height: 28px;
+  }
+
+  .sidebar-toggle-btn {
+    height: 28px;
+    padding: 0 8px;
+    font-size: 11.5px;
+    gap: 5px;
+  }
+
+  .desktop-text {
+    display: none;
+  }
+
+  .mobile-text {
+    display: inline;
+  }
+
+  .header-center {
+    order: 3;
+    width: 100%;
+    margin-top: 2px;
+  }
+
+  .header-center .quick-nav {
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    white-space: nowrap;
+    padding: 3px;
+    width: 100%;
+    border-radius: 8px;
+    gap: 4px;
+  }
+
+  .header-center .quick-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-btn {
+    flex-shrink: 0;
+    padding: 5px 10px;
+    font-size: 11px;
+    border-radius: 5px;
+  }
+
+  /* Map Container & Full Canvas */
+  .dashboard-body {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #map-container {
+    width: 100%;
+    height: 100%;
+  }
+
+  .map-menu-container {
+    top: 10px;
+    right: 10px;
+  }
+
+  /* Slide-Out Collapsible Drawer */
+  .sidebar-backdrop {
+    display: block;
+  }
+
+  .sidebar-panel {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: min(88vw, 380px);
+    min-width: 0 !important;
+    max-width: 88vw !important;
+    height: 100%;
+    z-index: 2000;
+    transform: translateX(100%);
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: -8px 0 32px rgba(15, 23, 42, 0.3);
+    border-left: 1px solid var(--border-color);
+    padding: 14px;
+    gap: 12px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .sidebar-panel.mobile-open {
+    transform: translateX(0);
+  }
+
+  .sidebar-mobile-header {
+    display: flex;
+  }
+
+  /* Collapsible Map Legend on Mobile */
+  .map-legend {
+    bottom: 14px;
+    left: 14px;
+    max-width: calc(100vw - 28px);
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    z-index: 910;
+  }
+
+  .legend-toggle-chevron {
+    display: inline-block;
+    font-size: 13px;
+    color: var(--text-muted);
+    transition: transform 0.2s ease;
+    margin-left: 6px;
+  }
+
+  .map-legend:not(.mobile-expanded) {
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  }
+
+  .map-legend:not(.mobile-expanded) .legend-content {
+    display: none;
+  }
+
+  .map-legend:not(.mobile-expanded) h4 {
+    margin-bottom: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+    font-size: 12px;
+  }
+
+  .map-legend.mobile-expanded {
+    padding: 12px 14px;
+    max-height: 55vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.22);
+  }
+
+  .map-legend.mobile-expanded .legend-toggle-chevron {
+    transform: rotate(180deg);
+  }
+
+  .map-legend.mobile-expanded h4 {
+    font-size: 13px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 4px;
+  }
+
+  /* Scaled Trackball on Mobile */
+  .trackball-nav-control {
+    bottom: 18px;
+    right: 14px;
+    transform: scale(0.82);
+    transform-origin: bottom right;
+  }
+
+  /* Hide heavyweight bottom table on mobile */
+  .app-table-panel {
+    display: none !important;
+  }
+
+  /* Law Modal Responsive */
+  .modal-card {
+    max-width: 95vw;
+    max-height: 92vh;
+    border-radius: 12px;
+  }
+
+  .modal-header {
+    padding: 14px 16px;
+  }
+
+  .modal-body {
+    padding: 14px 16px;
+  }
+
+  .modal-title-group h2 {
+    font-size: 15px;
+  }
+
+  .law-stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 420px) {
+  .title-group h1 {
+    font-size: 13px;
+    max-width: 145px;
+  }
+
+  .sidebar-toggle-text {
+    font-size: 11px;
+  }
 }
 
 
