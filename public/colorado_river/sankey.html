@@ -144,11 +144,11 @@
       </div>
 
       <div class="flex items-center gap-3 text-xs font-medium text-slate-600 bg-white px-3.5 py-2 rounded-lg border border-slate-200 shadow-sm">
-        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span> Natural Runoff: <strong>~14.8 MAF/yr</strong></span>
+        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span> Modern Runoff: <strong>~12.5 MAF/yr</strong></span>
         <span class="text-slate-300">|</span>
-        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-orange-500"></span> Consumptive Uses: <strong>~10.5 MAF/yr</strong></span>
+        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-orange-500"></span> Total Demand &amp; Losses: <strong>~15.0 MAF/yr</strong></span>
         <span class="text-slate-300">|</span>
-        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-red-500"></span> Structural Deficit: <strong>~3.3 MAF/yr</strong></span>
+        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-red-500"></span> Basin Storage Deficit: <strong>~2.5 MAF/yr</strong></span>
       </div>
     </header>
 
@@ -502,29 +502,68 @@
     </div>
 
     <!-- Data Summary Cards -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5 mt-4">
-      <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm hover:shadow-md transition">
-        <div class="text-[11px] font-bold text-sky-600 uppercase tracking-wider">Natural Basin Runoff</div>
-        <div class="text-2xl font-black text-slate-900 mt-1">~14.8 MAF/yr</div>
-        <div class="text-xs text-slate-500 mt-0.5">Historical average natural flow (1906–2020)</div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 mt-4">
+      <!-- 1. Supply Card -->
+      <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+        <div>
+          <div class="text-[11px] font-bold text-sky-600 uppercase tracking-wider">Natural Basin Runoff (Supply)</div>
+          <div class="text-2xl font-black text-slate-900 mt-1">~12.5 – 14.8 <span class="text-sm font-semibold text-slate-500">MAF/yr</span></div>
+          <div class="text-[11.5px] text-slate-600 mt-2 space-y-1">
+            <div>• <strong class="text-slate-800">14.8 MAF:</strong> 20th-century historical avg (1906–2020)</div>
+            <div>• <strong class="text-slate-800">12.5 MAF:</strong> Modern megadrought avg (2000–2024)</div>
+          </div>
+        </div>
+        <div class="text-[10px] text-slate-400 mt-2.5 pt-2 border-t border-slate-100 italic">
+          Climate aridification has reduced annual runoff yield by ~15–20%.
+        </div>
       </div>
 
-      <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm hover:shadow-md transition">
-        <div class="text-[11px] font-bold text-sky-600 uppercase tracking-wider">Lee's Ferry Compact Release</div>
-        <div class="text-2xl font-black text-sky-700 mt-1">8.23 – 9.0 MAF/yr</div>
-        <div class="text-xs text-slate-500 mt-0.5">Statutory 75 MAF / 10-yr rolling delivery obligation</div>
+      <!-- 2. Compact Delivery Card -->
+      <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+        <div>
+          <div class="text-[11px] font-bold text-sky-600 uppercase tracking-wider">Lee's Ferry Downstream Release</div>
+          <div class="text-2xl font-black text-sky-700 mt-1">8.23 <span class="text-sm font-semibold text-sky-600">MAF/yr</span> <span class="text-xs font-medium text-slate-400">(7.0–9.0)</span></div>
+          <div class="text-[11.5px] text-slate-600 mt-2 space-y-1">
+            <div>• <strong class="text-slate-800">7.50 MAF:</strong> 1922 Compact base (75 MAF / 10-yr)</div>
+            <div>• <strong class="text-slate-800">+0.75 MAF:</strong> Upper Basin 50% share of Mexico Treaty</div>
+            <div>• <strong class="text-sky-700">= 8.25 MAF:</strong> Statutory target (8.23 under 2007 Rules)</div>
+          </div>
+        </div>
+        <div class="text-[10px] text-slate-400 mt-2.5 pt-2 border-t border-slate-100 italic">
+          Adjusts between 7.0 &amp; 9.0 MAF based on Powell-Mead storage tiers.
+        </div>
       </div>
 
-      <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm hover:shadow-md transition">
-        <div class="text-[11px] font-bold text-orange-600 uppercase tracking-wider">Total Consumptive Outflows</div>
-        <div class="text-2xl font-black text-orange-700 mt-1">~10.5 MAF/yr</div>
-        <div class="text-xs text-slate-500 mt-0.5">AAC (2.9) + CAP (1.5) + CRA (1.05) + Mexico (1.5) + Front Range (0.55)</div>
+      <!-- 3. Total Depletions Card -->
+      <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+        <div>
+          <div class="text-[11px] font-bold text-orange-600 uppercase tracking-wider">Total Basin Depletions (Demand)</div>
+          <div class="text-2xl font-black text-orange-700 mt-1">~15.0 – 15.3 <span class="text-sm font-semibold text-orange-600">MAF/yr</span></div>
+          <div class="text-[11.5px] text-slate-600 mt-2 space-y-1">
+            <div>• <strong class="text-slate-800">7.5 MAF:</strong> Lower Basin (AAC 2.9, CAP 1.5, CRA 1.05)</div>
+            <div>• <strong class="text-slate-800">4.5 MAF:</strong> Upper Basin in-basin ag &amp; municipal use</div>
+            <div>• <strong class="text-slate-800">1.5 MAF:</strong> Mexico Treaty delivery at Morelos Dam</div>
+            <div>• <strong class="text-slate-800">1.6 MAF:</strong> Reservoir evaporation &amp; transit depletions</div>
+          </div>
+        </div>
+        <div class="text-[10px] text-slate-400 mt-2.5 pt-2 border-t border-slate-100 italic">
+          Total real consumption across all 7 states, Mexico &amp; evaporation.
+        </div>
       </div>
 
-      <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm hover:shadow-md transition">
-        <div class="text-[11px] font-bold text-red-600 uppercase tracking-wider">Over-Allocation Deficit</div>
-        <div class="text-2xl font-black text-red-600 mt-1">~3.3 MAF/yr</div>
-        <div class="text-xs text-slate-500 mt-0.5">16.5 MAF apportioned on paper vs ~13.2 MAF modern wet yield</div>
+      <!-- 4. Deficit Card -->
+      <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+        <div>
+          <div class="text-[11px] font-bold text-red-600 uppercase tracking-wider">The System Deficits Explained</div>
+          <div class="text-2xl font-black text-red-600 mt-1">~2.5 / ~3.3 <span class="text-sm font-semibold text-red-500">MAF/yr</span></div>
+          <div class="text-[11.5px] text-slate-600 mt-2 space-y-1">
+            <div>• <strong class="text-red-700">~2.5 MAF Physical Drain:</strong> 15.0 MAF demand minus 12.5 MAF modern runoff drained storage</div>
+            <div>• <strong class="text-red-700">~3.3 MAF Paper Deficit:</strong> 16.5 MAF paper rights allocated vs ~13.2 MAF modern wet yield</div>
+          </div>
+        </div>
+        <div class="text-[10px] text-slate-400 mt-2.5 pt-2 border-t border-slate-100 italic">
+          The river was legally divided for more water than nature provides.
+        </div>
       </div>
     </div>
   </div>
@@ -663,8 +702,8 @@
 
       attachElement('node-leesferry', "Lee's Ferry (1922 Colorado River Compact Point)", () => `
         <strong>Location:</strong> 1 mile downstream of Paria River confluence, Arizona<br>
-        <strong>Legal Cornerstone:</strong> Constitutional divider separating the Upper Division (CO, UT, WY, NM) from the Lower Division (AZ, CA, NV)<br>
-        <strong>Statutory Obligation:</strong> Upper Division must not cause flow at Lee's Ferry to be depleted below 75.0 MAF over any consecutive 10-year period
+        <strong>Legal Cornerstone:</strong> Constitutional divider separating Upper Division (CO, UT, WY, NM) from Lower Division (AZ, CA, NV)<br>
+        <strong>Delivery Obligation:</strong> Base 75.0 MAF / 10-yr period (7.50 MAF/yr) + half of Mexico Treaty (0.75 MAF/yr) = <strong>8.25 MAF/yr target</strong> (8.23 MAF normal release under 2007 Guidelines; range 7.0–9.0 MAF).
       `, {
         label: 'USGS Station #09380000 (Lees Ferry)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09380000/'
