@@ -644,16 +644,18 @@ function applyLiveHydrology(riverNetwork, metrics) {
       gaugeInfo = "USGS #09070500 near Dotsero, CO";
       timestamp = dotsero ? dotsero.timestamp : null;
       gaugeId = "09070500";
-    } else if (r === "glenwood_cameo") {
+    } else if (r === "glenwood_cameo" || r === "cameo_grand_junction") {
       flow = cameo ? cameo.flow_cfs : 1280;
       sourceLabel = "Live USGS Sentinel Gauge";
-      gaugeInfo = "USGS #09095500 near Cameo, CO (Glenwood Canyon)";
+      gaugeInfo = r === "glenwood_cameo"
+        ? "USGS #09095500 near Cameo, CO (Glenwood Canyon to Cameo)"
+        : "USGS #09095500 near Cameo, CO (Grand Valley above Gunnison Confluence)";
       timestamp = cameo ? cameo.timestamp : null;
       gaugeId = "09095500";
     } else if (r === "grand_valley_cisco") {
       flow = cisco ? cisco.flow_cfs : 3210;
-      sourceLabel = "Live USGS Sentinel Gauge";
-      gaugeInfo = "USGS #09180500 near Cisco, UT (CO-UT State Line)";
+      sourceLabel = "Live USGS Sentinel Gauge (Combined Flow)";
+      gaugeInfo = "USGS #09180500 near Cisco, UT (Below Gunnison Confluence to State Line)";
       timestamp = cisco ? cisco.timestamp : null;
       gaugeId = "09180500";
     } else if (r === "cataract_canyon") {
