@@ -552,19 +552,15 @@ async function fetchLiveCDWR() {
 }
 
 function computeRiverWeight(flowCfs, category) {
+  if (!flowCfs || flowCfs <= 0) {
+    return category === "mainstem" ? 2.8 : (category === "major_tributary" ? 1.8 : 1.2);
+  }
   if (category === "mainstem") {
-    if (flowCfs >= 6000) return 7.5;
-    if (flowCfs >= 3000) return 6.0;
-    if (flowCfs >= 1000) return 4.6;
-    return 3.4;
+    return Math.round(Math.min(12.5, Math.max(2.8, 2.0 + Math.sqrt(flowCfs) * 0.08)) * 10) / 10;
   } else if (category === "major_tributary") {
-    if (flowCfs >= 2500) return 3.2;
-    if (flowCfs >= 1000) return 2.5;
-    return 2.0;
+    return Math.round(Math.min(7.5, Math.max(1.8, 1.4 + Math.sqrt(flowCfs) * 0.065)) * 10) / 10;
   } else {
-    if (flowCfs >= 400) return 1.6;
-    if (flowCfs >= 150) return 1.3;
-    return 1.0;
+    return Math.round(Math.min(4.0, Math.max(1.2, 0.8 + Math.sqrt(flowCfs) * 0.05)) * 10) / 10;
   }
 }
 
@@ -610,6 +606,7 @@ function applyLiveHydrology(riverNetwork, metrics) {
   // Secondary tributary fallback mapping to basin sentinel gauge
   const reachGauges = {
     cameo_grand_junction: "09095500",
+    lower_basin_middle: "09429100",
     price_river: "09302000",
     little_snake_river: "09260050",
     uncompahgre_river: "09152500",
@@ -642,53 +639,58 @@ function applyLiveHydrology(riverNetwork, metrics) {
     } else if (r === "gore_canyon") {
       flow = dotsero ? dotsero.flow_cfs : 632;
       sourceLabel = "Live USGS Sentinel Gauge";
-      gaugeInfo = "USGS #09070500 near Dotsero, CO";
+      gaugeInfo = "USGS #09070500 near Dotsero, CO (Kremmling & Glenwood Canyon)";
       timestamp = dotsero ? dotsero.timestamp : null;
       gaugeId = "09070500";
     } else if (r === "glenwood_cameo" || r === "cameo_grand_junction") {
-      flow = cameo ? cameo.flow_cfs : 1280;
+      flow = cameo ? cameo.flow_cfs : 1700;
       sourceLabel = "Live USGS Sentinel Gauge";
       gaugeInfo = r === "glenwood_cameo"
-        ? "USGS #09095500 near Cameo, CO (Glenwood Canyon to Cameo)"
+        ? "USGS #09095500 near Cameo, CO (Glenwood Springs to Cameo)"
         : "USGS #09095500 near Cameo, CO (Grand Valley above Gunnison Confluence)";
       timestamp = cameo ? cameo.timestamp : null;
       gaugeId = "09095500";
     } else if (r === "grand_valley_cisco") {
-      flow = cisco ? cisco.flow_cfs : 3210;
+      flow = cisco ? cisco.flow_cfs : 6020;
       sourceLabel = "Live USGS Sentinel Gauge (Combined Flow)";
-      gaugeInfo = "USGS #09180500 near Cisco, UT (Below Gunnison Confluence to State Line)";
+      gaugeInfo = "USGS #09180500 near Cisco, UT (Below Gunnison Confluence to Green River Confluence)";
       timestamp = cisco ? cisco.timestamp : null;
       gaugeId = "09180500";
     } else if (r === "cataract_canyon") {
-      const cFlow = cisco ? cisco.flow_cfs : 3210;
-      const gFlow = green ? green.flow_cfs : 3350;
-      const dFlow = dolores ? dolores.flow_cfs : 187;
-      flow = Math.round(cFlow + gFlow + dFlow);
+      const cFlow = cisco ? cisco.flow_cfs : 6020;
+      const gFlow = green ? green.flow_cfs : 4900;
+      flow = Math.round(cFlow + gFlow);
       sourceLabel = "Confluence Mass Balance (Live)";
-      gaugeInfo = "Colorado (Cisco) + Green River + Dolores River into Lake Powell";
+      gaugeInfo = "Colorado (Cisco, UT) + Green River (Green River, UT) into Lake Powell";
       timestamp = cisco ? cisco.timestamp : null;
       gaugeId = "09180500";
     } else if (r === "lees_ferry") {
-      flow = leesFerry ? leesFerry.flow_cfs : 9470;
+      flow = leesFerry ? leesFerry.flow_cfs : 7940;
       sourceLabel = "Live USGS Sentinel Gauge (1922 Compact Divide)";
       gaugeInfo = "USGS #09380000 at Lees Ferry, AZ (Glen Canyon Release)";
       timestamp = leesFerry ? leesFerry.timestamp : null;
       gaugeId = "09380000";
     } else if (r === "grand_canyon") {
-      const lfFlow = leesFerry ? leesFerry.flow_cfs : 9470;
-      flow = Math.round(lfFlow + (littleColorado ? littleColorado.flow_cfs : 274));
+      const lfFlow = leesFerry ? leesFerry.flow_cfs : 7940;
+      flow = Math.round(lfFlow + (littleColorado ? littleColorado.flow_cfs : 26));
       sourceLabel = "Controlled Dam Release & Little Colorado Confluence";
       gaugeInfo = "Glen Canyon Dam release through Grand Canyon to Lake Mead";
       timestamp = leesFerry ? leesFerry.timestamp : null;
       gaugeId = "09380000";
     } else if (r === "lower_basin_upper") {
-      flow = paloVerde ? Math.round(paloVerde.flow_cfs + 1200) : 7200;
+      flow = paloVerde ? Math.round(paloVerde.flow_cfs + 2850 + 2120) : 7200;
       sourceLabel = "Regulated Lower Basin Mainstem";
       gaugeInfo = "Hoover & Davis Dam releases for CRA / CAP water orders";
       timestamp = paloVerde ? paloVerde.timestamp : null;
       gaugeId = "09429100";
+    } else if (r === "lower_basin_middle") {
+      flow = paloVerde ? paloVerde.flow_cfs : 2230;
+      sourceLabel = "Live USGS Sentinel Gauge (Post-Havasu Diversions)";
+      gaugeInfo = "USGS #09429100 below Palo Verde Dam, AZ-CA (Downstream of CAP & CRA)";
+      timestamp = paloVerde ? paloVerde.timestamp : null;
+      gaugeId = "09429100";
     } else if (r === "lower_basin_taper") {
-      flow = paloVerde ? Math.round(paloVerde.flow_cfs * 0.25) : 1200;
+      flow = paloVerde ? Math.round(paloVerde.flow_cfs * 0.25) : 550;
       sourceLabel = "Residual Channel Flow Below Major Diversions";
       gaugeInfo = "Downstream of Imperial Dam / All-American Canal diversion to Morelos Dam (Mexico)";
       timestamp = paloVerde ? paloVerde.timestamp : null;
@@ -809,7 +811,23 @@ function applyLiveHydrology(riverNetwork, metrics) {
     if (timestamp) f.properties.timestamp = timestamp;
 
     // Calculate flow health vs historical daily mean
-    const norm = gaugeId ? getHistoricalNormal(gaugeId) : null;
+    let customNorm = null;
+    if (r === "cataract_canyon") {
+      const normCisco = getHistoricalNormal("09180500") || 4240;
+      const normGreen = getHistoricalNormal("09315000") || 2970;
+      customNorm = normCisco + normGreen;
+    } else if (r === "grand_canyon") {
+      const normLF = getHistoricalNormal("09380000") || 10300;
+      const normLCR = getHistoricalNormal("09402000") || 222;
+      customNorm = normLF + normLCR;
+    } else if (r === "headwaters") {
+      customNorm = 350;
+    } else if (r === "lower_basin_taper") {
+      const normPV = getHistoricalNormal("09429100") || 6610;
+      customNorm = Math.round(normPV * 0.25);
+    }
+
+    const norm = customNorm || (gaugeId ? getHistoricalNormal(gaugeId) : null);
     if (norm && norm > 0 && flow != null) {
       const pct = Math.round((flow / norm) * 100);
       f.properties.hist_normal_cfs = norm;
@@ -1623,12 +1641,12 @@ function renderGeography(geo, riverNetwork, lakes) {
 
         // Flow health vs historical normal
         const gaugeId = p.gauge_id;
-        const norm = gaugeId ? getHistoricalNormal(gaugeId) : null;
+        const norm = p.hist_normal_cfs ? Number(p.hist_normal_cfs) : (gaugeId ? getHistoricalNormal(gaugeId) : null);
         let healthHtml = '';
         if (norm && norm > 0 && p.flow_cfs != null) {
-          const pct = Math.round((Number(p.flow_cfs) / norm) * 100);
-          const color = flowHealthColor(pct);
-          const label = flowHealthLabel(pct);
+          const pct = p.health_pct != null ? Number(p.health_pct) : Math.round((Number(p.flow_cfs) / norm) * 100);
+          const color = p.health_color || flowHealthColor(pct);
+          const label = p.health_label || flowHealthLabel(pct);
           healthHtml = `<div style="margin-top:6px;padding:5px 8px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;display:flex;justify-content:space-between;align-items:center;">
             <span style="font-size:10px;color:#64748b;font-weight:600;">vs. Hist. Daily Avg</span>
             <span style="font-size:13px;font-weight:800;color:${color};">${pct}% <span style="font-size:10px;font-weight:600;">(${label})</span></span>
@@ -1676,16 +1694,17 @@ function renderGeography(geo, riverNetwork, lakes) {
         const timeHtml = p.timestamp ? `<div style="font-size:10px;color:#64748b;margin-top:2px;"><strong>Measured:</strong> ${formatTimestamp(p.timestamp)}</div>` : '';
         const notesHtml = p.notes && p.notes !== p.gauge_info ? `<div style="font-size:11px;color:#64748b;margin-top:4px;line-height:1.35;">${p.notes}</div>` : '';
 
-        const norm = gaugeId ? getHistoricalNormal(gaugeId) : null;
+        const norm = p.hist_normal_cfs ? Number(p.hist_normal_cfs) : (gaugeId ? getHistoricalNormal(gaugeId) : null);
         let healthHtml = '';
         if (norm && norm > 0 && p.flow_cfs != null) {
-          const pct = Math.round((Number(p.flow_cfs) / norm) * 100);
-          const color = flowHealthColor(pct);
-          const label = flowHealthLabel(pct);
+          const pct = p.health_pct != null ? Number(p.health_pct) : Math.round((Number(p.flow_cfs) / norm) * 100);
+          const color = p.health_color || flowHealthColor(pct);
+          const label = p.health_label || flowHealthLabel(pct);
           healthHtml = `<div style="margin-top:6px;padding:5px 8px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;display:flex;justify-content:space-between;align-items:center;">
             <span style="font-size:10px;color:#64748b;font-weight:600;">vs. Hist. Daily Avg</span>
             <span style="font-size:13px;font-weight:800;color:${color};">${pct}% <span style="font-size:10px;font-weight:600;">(${label})</span></span>
-          </div>`;
+          </div>
+          <div style="margin-top:3px;font-size:10px;color:#94a3b8;">Avg today: ${Math.round(norm).toLocaleString()} cfs (${new Date().getFullYear()-50}–${new Date().getFullYear()-1} mean)</div>`;
         }
 
         new maplibregl.Popup({ offset: 10 })
