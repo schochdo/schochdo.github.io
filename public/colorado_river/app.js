@@ -609,6 +609,7 @@ function applyLiveHydrology(riverNetwork, metrics) {
 
   // Secondary tributary fallback mapping to basin sentinel gauge
   const reachGauges = {
+    cameo_grand_junction: "09095500",
     price_river: "09302000",
     little_snake_river: "09260050",
     uncompahgre_river: "09152500",
@@ -631,7 +632,7 @@ function applyLiveHydrology(riverNetwork, metrics) {
     let sourceLabel = "Hydrologic Baseflow Estimate";
     let gaugeInfo = f.properties.notes || "";
     let timestamp = null;
-    let gaugeId = null;
+    let gaugeId = f.properties.gauge_id || null;
 
     if (r === "headwaters") {
       flow = 350;

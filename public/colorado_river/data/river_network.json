@@ -9,7 +9,8 @@
         "flow_cfs": 2850,
         "weight": 3.2,
         "category": "major_tributary",
-        "notes": ""
+        "notes": "",
+        "gauge_id": "09315000"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -12645,7 +12646,8 @@
         "flow_cfs": 1280,
         "weight": 4.6,
         "category": "mainstem",
-        "notes": "After Eagle & Roaring Fork/Fryingpan confluences; Shoshone hydro reach"
+        "notes": "After Eagle & Roaring Fork/Fryingpan confluences; Shoshone hydro reach",
+        "gauge_id": "09095500"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -13843,7 +13845,8 @@
         "flow_cfs": 639,
         "weight": 3.4,
         "category": "mainstem",
-        "notes": "After Blue & Williams Fork confluences; Gore Canyon whitewater"
+        "notes": "After Blue & Williams Fork confluences; Gore Canyon whitewater",
+        "gauge_id": "09070500"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -15227,7 +15230,8 @@
         "flow_cfs": 350,
         "weight": 3.4,
         "category": "mainstem",
-        "notes": "Snowpack headwaters in RMNP; upstream of C-BT Adams Tunnel diversions"
+        "notes": "Snowpack headwaters in RMNP; upstream of C-BT Adams Tunnel diversions",
+        "gauge_id": "09070500"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -16841,7 +16845,8 @@
         "flow_cfs": 1700,
         "weight": 4.6,
         "category": "mainstem",
-        "notes": "Grand Valley reach through Palisade & Clifton; upstream of Gunnison River confluence"
+        "notes": "Grand Valley reach through Palisade & Clifton; upstream of Gunnison River confluence",
+        "gauge_id": "09095500"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -17297,7 +17302,8 @@
         "flow_cfs": 6020,
         "weight": 7.5,
         "category": "mainstem",
-        "notes": "After Gunnison River confluence at Grand Junction; enters Utah slickrock"
+        "notes": "After Gunnison River confluence at Grand Junction; enters Utah slickrock",
+        "gauge_id": "09180500"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -18895,7 +18901,8 @@
         "flow_cfs": 6950,
         "weight": 7.5,
         "category": "mainstem",
-        "notes": "After Green River & Dolores River confluences in Canyonlands National Park"
+        "notes": "After Green River & Dolores River confluences in Canyonlands National Park",
+        "gauge_id": "09180500"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -21043,7 +21050,8 @@
         "flow_cfs": 8990,
         "weight": 7.5,
         "category": "mainstem",
-        "notes": "Glen Canyon Dam controlled release; 1922 Compact official divide point"
+        "notes": "Glen Canyon Dam controlled release; 1922 Compact official divide point",
+        "gauge_id": "09380000"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -22759,7 +22767,8 @@
         "flow_cfs": 9240,
         "weight": 7.5,
         "category": "mainstem",
-        "notes": "277-mile canyon reach joined by Paria, Little Colorado, Kanab, and Havasu creeks"
+        "notes": "277-mile canyon reach joined by Paria, Little Colorado, Kanab, and Havasu creeks",
+        "gauge_id": "09380000"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -26237,7 +26246,8 @@
         "flow_cfs": 7200,
         "weight": 7.5,
         "category": "mainstem",
-        "notes": "Lake Mohave & Lake Havasu; CRA & CAP municipal intake pools"
+        "notes": "Lake Mohave & Lake Havasu; CRA & CAP municipal intake pools",
+        "gauge_id": "09429100"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -28841,7 +28851,8 @@
         "flow_cfs": 1200,
         "weight": 4.6,
         "category": "mainstem",
-        "notes": "All-American Canal diversion at Imperial Dam; Morelos Dam diversion to Mexicali"
+        "notes": "All-American Canal diversion at Imperial Dam; Morelos Dam diversion to Mexicali",
+        "gauge_id": "09429100"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -30755,7 +30766,8 @@
         "flow_cfs": 2460,
         "weight": 2.5,
         "category": "major_tributary",
-        "notes": ""
+        "notes": "",
+        "gauge_id": "09379500"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -36809,7 +36821,8 @@
         "flow_cfs": 1230,
         "weight": 2.5,
         "category": "major_tributary",
-        "notes": ""
+        "notes": "",
+        "gauge_id": "09152500"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -39913,7 +39926,8 @@
         "flow_cfs": 146,
         "weight": 2.0,
         "category": "major_tributary",
-        "notes": ""
+        "notes": "",
+        "gauge_id": "09260050"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -44779,7 +44793,8 @@
         "flow_cfs": 520,
         "weight": 2.0,
         "category": "major_tributary",
-        "notes": ""
+        "notes": "",
+        "gauge_id": "09306500"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -49671,7 +49686,8 @@
         "flow_cfs": 310,
         "weight": 1.3,
         "category": "minor_tributary",
-        "notes": ""
+        "notes": "",
+        "gauge_id": "09302000"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -53199,7 +53215,8 @@
         "flow_cfs": 85,
         "weight": 1.0,
         "category": "minor_tributary",
-        "notes": ""
+        "notes": "",
+        "gauge_id": "09302000"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -56449,7 +56466,8 @@
         "flow_cfs": 165,
         "weight": 1.3,
         "category": "minor_tributary",
-        "notes": ""
+        "notes": "",
+        "gauge_id": "09260050"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -60139,7 +60157,8 @@
         "flow_cfs": 280,
         "weight": 2.0,
         "category": "major_tributary",
-        "notes": ""
+        "notes": "",
+        "gauge_id": "09180000"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -64291,7 +64310,8 @@
         "flow_cfs": 380,
         "weight": 1.3,
         "category": "minor_tributary",
-        "notes": ""
+        "notes": "",
+        "gauge_id": "09152500"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -65785,7 +65805,8 @@
         "flow_cfs": 180,
         "weight": 1.3,
         "category": "minor_tributary",
-        "notes": ""
+        "notes": "",
+        "gauge_id": "09085000"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -66417,7 +66438,8 @@
         "flow_cfs": 65,
         "weight": 1.0,
         "category": "minor_tributary",
-        "notes": ""
+        "notes": "",
+        "gauge_id": "09315000"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -70063,7 +70085,8 @@
         "flow_cfs": 30,
         "weight": 1.0,
         "category": "minor_tributary",
-        "notes": ""
+        "notes": "",
+        "gauge_id": "09180500"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -73667,7 +73690,8 @@
         "flow_cfs": 15,
         "weight": 1.0,
         "category": "minor_tributary",
-        "notes": ""
+        "notes": "",
+        "gauge_id": "09380000"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -76565,7 +76589,8 @@
         "flow_cfs": 620,
         "weight": 1.6,
         "category": "minor_tributary",
-        "notes": ""
+        "notes": "",
+        "gauge_id": "09364500"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -78815,7 +78840,8 @@
         "flow_cfs": 190,
         "weight": 2.0,
         "category": "major_tributary",
-        "notes": ""
+        "notes": "",
+        "gauge_id": "09402000"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -85507,7 +85533,8 @@
         "flow_cfs": 15,
         "weight": 1.0,
         "category": "minor_tributary",
-        "notes": ""
+        "notes": "",
+        "gauge_id": "09380000"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -87517,7 +87544,8 @@
         "flow_cfs": 190,
         "weight": 2.0,
         "category": "major_tributary",
-        "notes": ""
+        "notes": "",
+        "gauge_id": "09415000"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -90733,7 +90761,8 @@
         "flow_cfs": 45,
         "weight": 1.0,
         "category": "minor_tributary",
-        "notes": ""
+        "notes": "",
+        "gauge_id": "09415000"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -91901,7 +91930,8 @@
         "flow_cfs": 25,
         "weight": 1.0,
         "category": "minor_tributary",
-        "notes": ""
+        "notes": "",
+        "gauge_id": "09380000"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -94479,7 +94509,8 @@
         "flow_cfs": 65,
         "weight": 1.0,
         "category": "minor_tributary",
-        "notes": ""
+        "notes": "",
+        "gauge_id": "09380000"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -97131,7 +97162,8 @@
         "flow_cfs": 25,
         "weight": 1.0,
         "category": "minor_tributary",
-        "notes": ""
+        "notes": "",
+        "gauge_id": "09426000"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -99529,7 +99561,8 @@
         "flow_cfs": 550,
         "weight": 2.0,
         "category": "major_tributary",
-        "notes": ""
+        "notes": "",
+        "gauge_id": "09474000"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -110389,7 +110422,8 @@
         "flow_cfs": 640,
         "weight": 2.0,
         "category": "major_tributary",
-        "notes": ""
+        "notes": "",
+        "gauge_id": "09498500"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -115917,7 +115951,8 @@
         "flow_cfs": 420,
         "weight": 1.6,
         "category": "minor_tributary",
-        "notes": ""
+        "notes": "",
+        "gauge_id": "09511300"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -120783,7 +120818,8 @@
         "flow_cfs": 140,
         "weight": 1.0,
         "category": "minor_tributary",
-        "notes": ""
+        "notes": "",
+        "gauge_id": "09474000"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -123523,7 +123559,8 @@
         "flow_cfs": 320,
         "weight": 1.3,
         "category": "minor_tributary",
-        "notes": ""
+        "notes": "",
+        "gauge_id": "09070000"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -124593,7 +124630,8 @@
         "flow_cfs": 480,
         "weight": 1.6,
         "category": "minor_tributary",
-        "notes": ""
+        "notes": "",
+        "gauge_id": "09085000"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -125639,7 +125677,8 @@
         "flow_cfs": 210,
         "weight": 1.3,
         "category": "minor_tributary",
-        "notes": ""
+        "notes": "",
+        "gauge_id": "09057500"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -126837,7 +126876,8 @@
         "flow_cfs": 65,
         "weight": 1.0,
         "category": "minor_tributary",
-        "notes": ""
+        "notes": "",
+        "gauge_id": "09070500"
       },
       "geometry": {
         "type": "MultiLineString",
