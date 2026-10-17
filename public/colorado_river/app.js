@@ -13,6 +13,41 @@ const markers = {
 };
 let stationMarkers = {};
 let tooltipPopup;
+let activeFeaturePopup = null;
+
+function showFeaturePopup(popup, lngLat) {
+  if (activeFeaturePopup && activeFeaturePopup.isOpen()) {
+    activeFeaturePopup.remove();
+  }
+  if (tooltipPopup && tooltipPopup.isOpen()) {
+    tooltipPopup.remove();
+  }
+  activeFeaturePopup = popup;
+  popup.on('close', () => {
+    if (activeFeaturePopup === popup) {
+      activeFeaturePopup = null;
+    }
+  });
+  if (lngLat) {
+    popup.setLngLat(lngLat);
+  }
+  popup.addTo(map);
+  return popup;
+}
+
+function hasHigherPriorityFeature(point, layerIds) {
+  if (!map) return false;
+  const existingLayers = layerIds.filter(id => map.getLayer(id));
+  if (!existingLayers.length) return false;
+  try {
+    const bbox = [[point.x - 4, point.y - 4], [point.x + 4, point.y + 4]];
+    const hits = map.queryRenderedFeatures(bbox, { layers: existingLayers });
+    return hits && hits.length > 0;
+  } catch (err) {
+    return false;
+  }
+}
+
 let cachedGeography = null;
 let cachedRiverNetwork = null;
 let cachedLakes = null;
@@ -1473,6 +1508,11 @@ function renderGeography(geo, riverNetwork, lakes) {
 
     map.on('click', 'lakes-fill', (e) => {
       if (!e.features.length) return;
+      if (hasHigherPriorityFeature(e.point, [
+        'streamflow-gauges-hit-buffer', 'dams-layer', 'tunnels-portals-layer', 
+        'tunnels-hit-buffer', 'canals-hit-buffer', 'river-mainstem', 'river-major', 'river-minor'
+      ])) return;
+
       const p = e.features[0].properties;
       const name = p.GNIS_NAME || p.name || "Reservoir";
       const matchRes = activeMetrics?.reservoirs?.find(r => 
@@ -1481,8 +1521,7 @@ function renderGeography(geo, riverNetwork, lakes) {
       );
       const portal = getPortalInfo(matchRes || { name: name });
       if (matchRes) {
-        new maplibregl.Popup({ offset: 8 })
-          .setLngLat(e.lngLat)
+        const popup = new maplibregl.Popup({ offset: 8 })
           .setHTML(`
             <div style="font-family:'Inter',sans-serif; min-width:220px; padding:2px;">
               <span style="font-size:10px; font-weight:700; color:#0369a1; background:#e0f2fe; padding:2px 6px; border-radius:4px; display:inline-block; margin-bottom:4px;">Major Storage Reservoir</span>
@@ -1505,20 +1544,19 @@ function renderGeography(geo, riverNetwork, lakes) {
               </div>
               ${formatPortalHtml(portal, '#0284c7')}
             </div>
-          `)
-          .addTo(map);
+          `);
+        showFeaturePopup(popup, e.lngLat);
       } else {
         const area = p.AREASQKM ? `${Math.round(p.AREASQKM)} sq km` : "";
-        new maplibregl.Popup({ offset: 8 })
-          .setLngLat(e.lngLat)
+        const popup = new maplibregl.Popup({ offset: 8 })
           .setHTML(`
             <div style="font-family:'Inter',sans-serif; min-width:190px; padding:2px;">
               <strong style="font-size:13px; color:#0f172a; display:block;">${name}</strong>
               <span style="font-size:11px; color:#64748b;">USGS NHD Shoreline ${area ? '(' + area + ')' : ''}</span>
               ${formatPortalHtml(portal, '#0284c7')}
             </div>
-          `)
-          .addTo(map);
+          `);
+        showFeaturePopup(popup, e.lngLat);
       }
     });
   }
@@ -1689,6 +1727,11 @@ function renderGeography(geo, riverNetwork, lakes) {
 
       map.on('click', layerId, (e) => {
         if (!e.features.length) return;
+        if (hasHigherPriorityFeature(e.point, [
+          'streamflow-gauges-hit-buffer', 'dams-layer', 'tunnels-portals-layer', 
+          'tunnels-hit-buffer', 'canals-hit-buffer'
+        ])) return;
+
         const p = e.features[0].properties;
         const gaugeId = p.gauge_id;
         const portal = getPortalInfo({ id: gaugeId, name: p.name });
@@ -1716,8 +1759,7 @@ function renderGeography(geo, riverNetwork, lakes) {
           <div style="margin-top:3px;font-size:10px;color:#94a3b8;">Avg today: ${Math.round(norm).toLocaleString()} cfs (${new Date().getFullYear()-50}–${new Date().getFullYear()-1} mean)</div>`;
         }
 
-        new maplibregl.Popup({ offset: 10 })
-          .setLngLat(e.lngLat)
+        const popup = new maplibregl.Popup({ offset: 10 })
           .setHTML(`
             <div style="font-family:'Inter',sans-serif; min-width: 220px; max-width: 280px; padding:2px;">
               <div style="margin-bottom:4px;">${catBadge}</div>
@@ -1733,8 +1775,8 @@ function renderGeography(geo, riverNetwork, lakes) {
               ${notesHtml}
               ${formatPortalHtml(portal, '#0284c7')}
             </div>
-          `)
-          .addTo(map);
+          `);
+        showFeaturePopup(popup, e.lngLat);
       });
     });
   }
@@ -1935,6 +1977,7 @@ function renderGeography(geo, riverNetwork, lakes) {
 
       const handleTunnelClick = (e) => {
         if (!e.features.length) return;
+        if (hasHigherPriorityFeature(e.point, ['streamflow-gauges-hit-buffer', 'dams-layer'])) return;
         const t = e.features[0].properties;
         const flowVal = Number(t.flow_cfs || 0);
         const capDisplay = t.capacity_cfs ? `${Number(t.capacity_cfs).toLocaleString()} cfs` : '1,020 cfs';
@@ -1943,8 +1986,7 @@ function renderGeography(geo, riverNetwork, lakes) {
           : 'Gates Closed / Seasonal Low Flow';
         const portal = getPortalInfo(t);
 
-        new maplibregl.Popup({ offset: 8 })
-          .setLngLat(e.lngLat)
+        const popup = new maplibregl.Popup({ offset: 8 })
           .setHTML(`
             <div style="font-family:'Inter',sans-serif; min-width: 230px;">
               <span style="font-size:10px;font-weight:700;color:#0369a1;background:#e0f2fe;border:1px solid #bae6fd;padding:2px 6px;border-radius:4px;display:inline-block;margin-bottom:4px;">Trans-Mountain Diversion Tunnel</span>
@@ -1966,8 +2008,8 @@ function renderGeography(geo, riverNetwork, lakes) {
               </div>
               ${formatPortalHtml(portal, '#0284c7')}
             </div>
-          `)
-          .addTo(map);
+          `);
+        showFeaturePopup(popup, e.lngLat);
       };
 
       map.on('click', 'tunnels-hit-buffer', handleTunnelClick);
@@ -2059,11 +2101,11 @@ function renderGeography(geo, riverNetwork, lakes) {
 
       map.on('click', 'canals-hit-buffer', (e) => {
         if (!e.features.length) return;
+        if (hasHigherPriorityFeature(e.point, ['streamflow-gauges-hit-buffer', 'dams-layer'])) return;
         const t = e.features[0].properties;
         const flowVal = Number(t.flow_cfs || 0);
         const portal = getPortalInfo(t);
-        new maplibregl.Popup({ offset: 8 })
-          .setLngLat(e.lngLat)
+        const popup = new maplibregl.Popup({ offset: 8 })
           .setHTML(`
             <div style="font-family:'Inter',sans-serif; min-width: 220px;">
               <span style="font-size:10px;font-weight:700;color:#0369a1;background:#e0f2fe;border:1px solid #bae6fd;padding:2px 6px;border-radius:4px;display:inline-block;margin-bottom:4px;">Major Conveyance Canal</span>
@@ -2086,8 +2128,8 @@ function renderGeography(geo, riverNetwork, lakes) {
               </div>
               ${formatPortalHtml(portal, '#0284c7')}
             </div>
-          `)
-          .addTo(map);
+          `);
+        showFeaturePopup(popup, e.lngLat);
       });
     }
   }
@@ -2134,10 +2176,10 @@ function renderGeography(geo, riverNetwork, lakes) {
 
     map.on('click', 'dams-layer', (e) => {
       if (!e.features.length) return;
+      if (hasHigherPriorityFeature(e.point, ['streamflow-gauges-hit-buffer'])) return;
       const d = e.features[0].properties;
       const portal = getPortalInfo(d);
-      new maplibregl.Popup({ offset: 14 })
-        .setLngLat(e.lngLat)
+      const popup = new maplibregl.Popup({ offset: 14 })
         .setHTML(`
           <div style="font-family:'Inter',sans-serif; min-width: 180px;">
             <strong style="font-size:13px;color:#0f172a;">${d.name}</strong><br>
@@ -2150,8 +2192,8 @@ function renderGeography(geo, riverNetwork, lakes) {
             </div>
             ${formatPortalHtml(portal, '#0284c7')}
           </div>
-        `)
-        .addTo(map);
+        `);
+      showFeaturePopup(popup, e.lngLat);
     });
 
     map.on('mousemove', 'dams-layer', (e) => {
@@ -2316,6 +2358,21 @@ function renderMetrics(metrics) {
       </div>
     `);
 
+    popup.on('open', () => {
+      if (tooltipPopup && tooltipPopup.isOpen()) tooltipPopup.remove();
+      if (activeFeaturePopup && activeFeaturePopup !== popup && activeFeaturePopup.isOpen()) {
+        activeFeaturePopup.remove();
+      }
+      activeFeaturePopup = popup;
+    });
+    popup.on('close', () => {
+      if (activeFeaturePopup === popup) activeFeaturePopup = null;
+    });
+
+    el.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+    });
+
     const marker = new maplibregl.Marker({ element: el, anchor: 'center' })
       .setLngLat([s.lon, s.lat])
       .setPopup(popup)
@@ -2455,7 +2512,7 @@ function renderMetrics(metrics) {
         const g = e.features[0].properties;
         const entry = stationMarkers[g.id];
         if (entry && entry.popup) {
-          entry.popup.setLngLat([e.lngLat.lng, e.lngLat.lat]).addTo(map);
+          showFeaturePopup(entry.popup, [e.lngLat.lng, e.lngLat.lat]);
         }
       });
     } else {
@@ -2503,6 +2560,21 @@ function renderMetrics(metrics) {
         ${formatPortalHtml(portal, '#0284c7')}
       </div>
     `);
+
+    popup.on('open', () => {
+      if (tooltipPopup && tooltipPopup.isOpen()) tooltipPopup.remove();
+      if (activeFeaturePopup && activeFeaturePopup !== popup && activeFeaturePopup.isOpen()) {
+        activeFeaturePopup.remove();
+      }
+      activeFeaturePopup = popup;
+    });
+    popup.on('close', () => {
+      if (activeFeaturePopup === popup) activeFeaturePopup = null;
+    });
+
+    el.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+    });
 
     const marker = new maplibregl.Marker({ element: el, anchor: 'center' })
       .setLngLat([t.lon, t.lat])
@@ -2791,7 +2863,7 @@ function flyToNode(id, lat, lon) {
   });
   if (stationMarkers[id]) {
     setTimeout(() => {
-      stationMarkers[id].popup.addTo(map);
+      showFeaturePopup(stationMarkers[id].popup, [lon, lat]);
     }, 1500);
   }
 }
