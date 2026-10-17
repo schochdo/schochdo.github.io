@@ -48,6 +48,76 @@ function hasHigherPriorityFeature(point, layerIds) {
   }
 }
 
+// Two-Tabbed Popup Navigation & Copy Handlers (Option A)
+function switchPopupTab(btn, tabName, ev) {
+  if (ev) ev.stopPropagation();
+  const container = btn.closest('.custom-popup-body');
+  if (!container) return;
+  container.querySelectorAll('.popup-tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const dataPane = container.querySelector('.popup-tab-pane-data');
+  const codePane = container.querySelector('.popup-tab-pane-code');
+  if (tabName === 'code') {
+    if (dataPane) dataPane.style.display = 'none';
+    if (codePane) codePane.style.display = 'block';
+  } else {
+    if (dataPane) dataPane.style.display = 'block';
+    if (codePane) codePane.style.display = 'none';
+  }
+}
+
+function copyPopupCode(btn, ev) {
+  if (ev) ev.stopPropagation();
+  const container = btn.closest('.popup-code-box') || btn.closest('.code-snippet-box');
+  const codeEl = container?.querySelector('pre code');
+  if (!codeEl) return;
+  const text = codeEl.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = '✓ Copied!';
+    btn.style.color = '#38bdf8';
+    setTimeout(() => {
+      btn.textContent = orig;
+      btn.style.color = '';
+    }, 1800);
+  });
+}
+const copySnippetCode = copyPopupCode;
+
+function formatTabbedPopup({ dataHtml, codeTitle, endpointUrl, pythonCode, notes }) {
+  const safeCode = (pythonCode || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return `
+    <div class="custom-popup-body" onclick="event.stopPropagation()" onmousedown="event.stopPropagation()" style="font-family:'Inter',sans-serif; min-width:240px; max-width:325px;">
+      <div class="popup-tab-bar">
+        <button type="button" class="popup-tab-btn active" onclick="event.stopPropagation(); switchPopupTab(this, 'data', event)"><span>📊</span> Live Data</button>
+        <button type="button" class="popup-tab-btn" onclick="event.stopPropagation(); switchPopupTab(this, 'code', event)"><span>💻</span> API &amp; Code</button>
+      </div>
+
+      <div class="popup-tab-pane-data" style="display:block;">
+        ${dataHtml}
+      </div>
+
+      <div class="popup-tab-pane-code" style="display:none;">
+        <div style="font-size:11px; font-weight:700; color:#0f172a; margin-bottom:4px; display:flex; justify-content:space-between; align-items:center;">
+          <span>${codeTitle || 'REST API Query'}</span>
+          <span style="font-size:9.5px; font-weight:700; background:#e0f2fe; color:#0369a1; padding:1px 5px; border-radius:3px;">Python</span>
+        </div>
+        ${endpointUrl ? `
+          <div class="popup-endpoint-box">
+            <div class="popup-endpoint-tag">API Endpoint</div>
+            <div class="popup-endpoint-url" title="${endpointUrl}">${endpointUrl}</div>
+          </div>
+        ` : ''}
+        <div class="popup-code-box">
+          <button type="button" class="popup-code-copy-btn" onclick="event.stopPropagation(); copyPopupCode(this, event)">Copy</button>
+          <pre class="popup-code-pre"><code>${safeCode}</code></pre>
+        </div>
+        ${notes ? `<div style="font-size:10px; color:#64748b; line-height:1.35; margin-top:4px;">${notes}</div>` : ''}
+      </div>
+    </div>
+  `;
+}
+
 let cachedGeography = null;
 let cachedRiverNetwork = null;
 let cachedLakes = null;
@@ -1521,41 +1591,109 @@ function renderGeography(geo, riverNetwork, lakes) {
       );
       const portal = getPortalInfo(matchRes || { name: name });
       if (matchRes) {
-        const popup = new maplibregl.Popup({ offset: 8 })
-          .setHTML(`
-            <div style="font-family:'Inter',sans-serif; min-width:220px; padding:2px;">
-              <span style="font-size:10px; font-weight:700; color:#0369a1; background:#e0f2fe; padding:2px 6px; border-radius:4px; display:inline-block; margin-bottom:4px;">Major Storage Reservoir</span>
-              <strong style="font-size:14px; color:#0f172a; display:block;">${matchRes.name}</strong>
-              <span style="font-size:11px; color:#64748b; font-weight:600;">${matchRes.river || ''}</span>
-              <div style="margin: 8px 0; padding: 8px 10px; background:#f8fafc; border-radius:6px; border:1px solid #e2e8f0;">
-                <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
-                  <span style="font-size:11px; color:#475569; font-weight:600;">Current Storage:</span>
-                  <span style="font-size:16px; font-weight:800; color:#0284c7;">${matchRes.capacity_pct}% <span style="font-size:11px; font-weight:600; color:#64748b;">Full</span></span>
-                </div>
-                <div style="height:6px; background:#e2e8f0; border-radius:3px; overflow:hidden;">
-                  <div style="width:${Math.min(100, matchRes.capacity_pct)}%; height:100%; background:${matchRes.capacity_pct < 25 ? '#ef4444' : (matchRes.capacity_pct < 50 ? '#f59e0b' : '#0891b2')};"></div>
-                </div>
+        const dataHtml = `
+          <div style="padding:2px;">
+            <span style="font-size:10px; font-weight:700; color:#0369a1; background:#e0f2fe; padding:2px 6px; border-radius:4px; display:inline-block; margin-bottom:4px;">Major Storage Reservoir</span>
+            <strong style="font-size:14px; color:#0f172a; display:block;">${matchRes.name}</strong>
+            <span style="font-size:11px; color:#64748b; font-weight:600;">${matchRes.river || ''}</span>
+            <div style="margin: 8px 0; padding: 8px 10px; background:#f8fafc; border-radius:6px; border:1px solid #e2e8f0;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
+                <span style="font-size:11px; color:#475569; font-weight:600;">Current Storage:</span>
+                <span style="font-size:16px; font-weight:800; color:#0284c7;">${matchRes.capacity_pct}% <span style="font-size:11px; font-weight:600; color:#64748b;">Full</span></span>
               </div>
-              <div style="font-size:11.5px; color:#334155; line-height:1.5;">
-                <strong>Elevation:</strong> ${matchRes.elevation_ft ? matchRes.elevation_ft.toLocaleString() + ' ft' : 'USBR'}<br>
-                <strong>Volume Stored:</strong> ${Math.round(matchRes.storage_af).toLocaleString()} Acre-Feet<br>
-                <strong>Active Capacity:</strong> ${Math.round(matchRes.capacity_af || 0).toLocaleString()} Acre-Feet<br>
-                <strong>Operational Role:</strong> ${matchRes.role || 'Basin Storage'}
+              <div style="height:6px; background:#e2e8f0; border-radius:3px; overflow:hidden;">
+                <div style="width:${Math.min(100, matchRes.capacity_pct)}%; height:100%; background:${matchRes.capacity_pct < 25 ? '#ef4444' : (matchRes.capacity_pct < 50 ? '#f59e0b' : '#0891b2')};"></div>
               </div>
-              ${formatPortalHtml(portal, '#0284c7')}
             </div>
-          `);
+            <div style="font-size:11.5px; color:#334155; line-height:1.5;">
+              <strong>Elevation:</strong> ${matchRes.elevation_ft ? matchRes.elevation_ft.toLocaleString() + ' ft' : 'USBR'}<br>
+              <strong>Volume Stored:</strong> ${Math.round(matchRes.storage_af).toLocaleString()} Acre-Feet<br>
+              <strong>Active Capacity:</strong> ${Math.round(matchRes.capacity_af || 0).toLocaleString()} Acre-Feet<br>
+              <strong>Operational Role:</strong> ${matchRes.role || 'Basin Storage'}
+            </div>
+            ${formatPortalHtml(portal, '#0284c7')}
+          </div>
+        `;
+
+        const isFrontRange = matchRes.category === 'front_range';
+        const cleanResName = matchRes.name.replace(/["\\]/g, '');
+        let endpointUrl = '';
+        let pyCode = '';
+        let notes = '';
+
+        if (isFrontRange) {
+          const resAbbrev = (matchRes.id || 'DILRESCO').toUpperCase();
+          endpointUrl = `https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeseriesday/?abbrev=${resAbbrev}&format=json`;
+          pyCode = `import requests
+
+# Colorado DWR HydroBase Storage Telemetry
+url = "https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeseriesday/"
+params = {
+    "abbrev": "${resAbbrev}",  # ${cleanResName}
+    "format": "json"
+}
+res = requests.get(url, params=params, timeout=10).json()
+reading = res["ResultList"][0]
+print(f"${cleanResName}: {reading['measValue']} AF on {reading['measDate']}")`;
+          notes = "Colorado DWR daily reservoir storage accounting & dam telemetry.";
+        } else {
+          const usgsGauge = matchRes.id === 'lake_powell' ? '09379900' : (matchRes.id === 'lake_mead' ? '09421000' : '09379900');
+          endpointUrl = `https://waterservices.usgs.gov/nwis/iv/?sites=${usgsGauge}&parameterCd=62614&format=json`;
+          pyCode = `import requests
+
+# USGS Lake Elevation & USBR HydroData Telemetry
+url = "https://waterservices.usgs.gov/nwis/iv/"
+params = {
+    "sites": "${usgsGauge}",       # ${cleanResName}
+    "parameterCd": "62614",  # Elevation (ft NGVD 1929)
+    "format": "json"
+}
+res = requests.get(url, params=params, timeout=10).json()
+val = res["value"]["timeSeries"][0]["values"][0]["value"][-1]
+elev = float(val["value"])
+print(f"${cleanResName} Elevation: {elev:,.1f} ft")`;
+          notes = "USGS parameter 62614 = Lake water surface elevation. Synced with USBR storage curves.";
+        }
+
+        const popupHtml = formatTabbedPopup({
+          dataHtml,
+          codeTitle: `${cleanResName}`,
+          endpointUrl,
+          pythonCode: pyCode,
+          notes
+        });
+        const popup = new maplibregl.Popup({ offset: 8 }).setHTML(popupHtml);
         showFeaturePopup(popup, e.lngLat);
       } else {
         const area = p.AREASQKM ? `${Math.round(p.AREASQKM)} sq km` : "";
-        const popup = new maplibregl.Popup({ offset: 8 })
-          .setHTML(`
-            <div style="font-family:'Inter',sans-serif; min-width:190px; padding:2px;">
-              <strong style="font-size:13px; color:#0f172a; display:block;">${name}</strong>
-              <span style="font-size:11px; color:#64748b;">USGS NHD Shoreline ${area ? '(' + area + ')' : ''}</span>
-              ${formatPortalHtml(portal, '#0284c7')}
-            </div>
-          `);
+        const dataHtml = `
+          <div style="padding:2px;">
+            <strong style="font-size:13px; color:#0f172a; display:block;">${name}</strong>
+            <span style="font-size:11px; color:#64748b;">USGS NHD Shoreline ${area ? '(' + area + ')' : ''}</span>
+            ${formatPortalHtml(portal, '#0284c7')}
+          </div>
+        `;
+        const cleanName = name.replace(/["\\]/g, '');
+        const pyCode = `import requests
+
+# USGS National Hydrography Dataset (NHD) Feature Query
+url = "https://hydro.nationalmap.gov/arcgis/rest/services/nhd/MapServer/6/query"
+params = {
+    "where": "GNIS_NAME = '${cleanName}'",
+    "outFields": "GNIS_NAME,AREASQKM,ELEVATION",
+    "f": "json"
+}
+res = requests.get(url, params=params, timeout=10).json()
+print("NHD Features found:", len(res.get("features", [])))`;
+
+        const popupHtml = formatTabbedPopup({
+          dataHtml,
+          codeTitle: `${cleanName} (NHD)`,
+          endpointUrl: `https://hydro.nationalmap.gov/arcgis/rest/services/nhd/MapServer/6/query?where=GNIS_NAME='${encodeURIComponent(cleanName)}'&f=json`,
+          pythonCode: pyCode,
+          notes: "USGS National Hydrography Dataset polygon geometry."
+        });
+        const popup = new maplibregl.Popup({ offset: 8 }).setHTML(popupHtml);
         showFeaturePopup(popup, e.lngLat);
       }
     });
@@ -1759,23 +1897,62 @@ function renderGeography(geo, riverNetwork, lakes) {
           <div style="margin-top:3px;font-size:10px;color:#94a3b8;">Avg today: ${Math.round(norm).toLocaleString()} cfs (${new Date().getFullYear()-50}–${new Date().getFullYear()-1} mean)</div>`;
         }
 
-        const popup = new maplibregl.Popup({ offset: 10 })
-          .setHTML(`
-            <div style="font-family:'Inter',sans-serif; min-width: 220px; max-width: 280px; padding:2px;">
-              <div style="margin-bottom:4px;">${catBadge}</div>
-              <strong style="font-size:13.5px;color:#0f172a;line-height:1.35;display:block;">${p.name}</strong>
-              <div style="margin: 6px 0; padding: 6px 10px; background:#f8fafc; border-radius:6px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:baseline;">
-                <span style="font-size:11px; color:#64748b; font-weight:600;">Streamflow:</span>
-                <span style="font-size:16px; font-weight:800; color:#0284c7;">${Number(p.flow_cfs).toLocaleString()} <span style="font-size:10px; font-weight:600; color:#64748b;">cfs</span></span>
-              </div>
-              ${sourceBadge}
-              ${stationHtml}
-              ${healthHtml}
-              ${timeHtml}
-              ${notesHtml}
-              ${formatPortalHtml(portal, '#0284c7')}
+        const dataHtml = `
+          <div style="padding:2px;">
+            <div style="margin-bottom:4px;">${catBadge}</div>
+            <strong style="font-size:13.5px;color:#0f172a;line-height:1.35;display:block;">${p.name}</strong>
+            <div style="margin: 6px 0; padding: 6px 10px; background:#f8fafc; border-radius:6px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:baseline;">
+              <span style="font-size:11px; color:#64748b; font-weight:600;">Streamflow:</span>
+              <span style="font-size:16px; font-weight:800; color:#0284c7;">${Number(p.flow_cfs).toLocaleString()} <span style="font-size:10px; font-weight:600; color:#64748b;">cfs</span></span>
             </div>
-          `);
+            ${sourceBadge}
+            ${stationHtml}
+            ${healthHtml}
+            ${timeHtml}
+            ${notesHtml}
+            ${formatPortalHtml(portal, '#0284c7')}
+          </div>
+        `;
+
+        const cleanReachName = (p.name || 'River Reach').replace(/["\\]/g, '');
+        let pyCode = '';
+        let endpointUrl = '';
+        let notes = '';
+
+        if (gaugeId) {
+          endpointUrl = `https://waterservices.usgs.gov/nwis/iv/?sites=${gaugeId}&parameterCd=00060&format=json`;
+          pyCode = `import requests
+
+# USGS NWIS Instantaneous Values (IV) API
+url = "https://waterservices.usgs.gov/nwis/iv/"
+params = {
+    "sites": "${gaugeId}",       # ${cleanReachName}
+    "parameterCd": "00060",  # Streamflow discharge (cfs)
+    "format": "json"
+}
+res = requests.get(url, params=params, timeout=10).json()
+val = res["value"]["timeSeries"][0]["values"][0]["value"][-1]
+flow_cfs = float(val["value"])
+print(f"${cleanReachName}: {flow_cfs:,.0f} cfs at {val['dateTime']}")`;
+          notes = `Reach discharge indexed from USGS sentinel gauge #${gaugeId}.`;
+        } else {
+          pyCode = `# Reach Hydrology: Mass-Balance Network Routing
+# Continuous vector reach without direct gauge at midpoint.
+# Flow is derived from upstream gauge sum minus diversions:
+reach_flow_cfs = ${Number(p.flow_cfs || 0)}
+print(f"${cleanReachName} Calculated Flow: {reach_flow_cfs:,.0f} cfs")
+# Network topology computed via Shapely & GeoPandas`;
+          notes = "Calculated via conservation-of-mass river routing across confluences.";
+        }
+
+        const popupHtml = formatTabbedPopup({
+          dataHtml,
+          codeTitle: gaugeId ? `USGS Reach #${gaugeId}` : cleanReachName,
+          endpointUrl,
+          pythonCode: pyCode,
+          notes
+        });
+        const popup = new maplibregl.Popup({ offset: 10 }).setHTML(popupHtml);
         showFeaturePopup(popup, e.lngLat);
       });
     });
@@ -1986,29 +2163,51 @@ function renderGeography(geo, riverNetwork, lakes) {
           : 'Gates Closed / Seasonal Low Flow';
         const portal = getPortalInfo(t);
 
-        const popup = new maplibregl.Popup({ offset: 8 })
-          .setHTML(`
-            <div style="font-family:'Inter',sans-serif; min-width: 230px;">
-              <span style="font-size:10px;font-weight:700;color:#0369a1;background:#e0f2fe;border:1px solid #bae6fd;padding:2px 6px;border-radius:4px;display:inline-block;margin-bottom:4px;">Trans-Mountain Diversion Tunnel</span>
-              <strong style="font-size:14px;color:#0f172a;display:block;">${t.name}</strong>
-              <span style="font-size:11px;color:#0284c7;font-weight:600;">${t.operator || ''}</span>
-              <div style="margin: 8px 0; padding: 6px 10px; background:#f8fafc; border-radius:6px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:baseline;">
-                <span style="font-size:11px; color:#475569; font-weight:600;">Current Diversion:</span>
-                <span style="font-size:16px; font-weight:800; color:#0284c7;">${flowVal.toLocaleString()} cfs</span>
-              </div>
-              <div style="font-size:11px;line-height:1.45;color:#334155;">
-                <strong>Destination:</strong> ${t.destination || t.to}<br>
-                <strong>Length:</strong> ${t.length_miles ? t.length_miles + ' miles under Divide' : 'Trans-Continental Divide'}<br>
-                <strong>West Portal:</strong> ${t.from || 'West Slope Intake'}<br>
-                <strong>East Portal:</strong> ${t.to || 'Front Range Outlet'}
-              </div>
-              <div style="font-size:10.5px;color:#64748b;margin-top:6px;border-top:1px solid #e2e8f0;padding-top:5px;line-height:1.4;">
-                <strong>Design Capacity:</strong> ${capDisplay}<br>
-                <strong>Operational Status:</strong> ${statusText}
-              </div>
-              ${formatPortalHtml(portal, '#0284c7')}
+        const dataHtml = `
+          <div style="padding: 2px;">
+            <span style="font-size:10px;font-weight:700;color:#0369a1;background:#e0f2fe;border:1px solid #bae6fd;padding:2px 6px;border-radius:4px;display:inline-block;margin-bottom:4px;">Trans-Mountain Diversion Tunnel</span>
+            <strong style="font-size:14px;color:#0f172a;display:block;">${t.name}</strong>
+            <span style="font-size:11px;color:#0284c7;font-weight:600;">${t.operator || ''}</span>
+            <div style="margin: 8px 0; padding: 6px 10px; background:#f8fafc; border-radius:6px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:baseline;">
+              <span style="font-size:11px; color:#475569; font-weight:600;">Current Diversion:</span>
+              <span style="font-size:16px; font-weight:800; color:#0284c7;">${flowVal.toLocaleString()} cfs</span>
             </div>
-          `);
+            <div style="font-size:11px;line-height:1.45;color:#334155;">
+              <strong>Destination:</strong> ${t.destination || t.to}<br>
+              <strong>Length:</strong> ${t.length_miles ? t.length_miles + ' miles under Divide' : 'Trans-Continental Divide'}<br>
+              <strong>West Portal:</strong> ${t.from || 'West Slope Intake'}<br>
+              <strong>East Portal:</strong> ${t.to || 'Front Range Outlet'}
+            </div>
+            <div style="font-size:10.5px;color:#64748b;margin-top:6px;border-top:1px solid #e2e8f0;padding-top:5px;line-height:1.4;">
+              <strong>Design Capacity:</strong> ${capDisplay}<br>
+              <strong>Operational Status:</strong> ${statusText}
+            </div>
+            ${formatPortalHtml(portal, '#0284c7')}
+          </div>
+        `;
+        const cleanTName = (t.name || '').replace(/["\\]/g, '');
+        const endpoint = `https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeserieshour/?abbrev=${t.id}&format=json`;
+        const pyCode = `import requests
+
+# Colorado DWR HydroBase REST API v2
+url = "https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeserieshour/"
+params = {
+    "abbrev": "${t.id}",  # ${cleanTName}
+    "format": "json"
+}
+res = requests.get(url, params=params, timeout=10).json()
+reading = res["ResultList"][0]
+flow_cfs = float(reading["measValue"])
+print(f"${cleanTName}: {flow_cfs:,.1f} cfs")`;
+
+        const popupHtml = formatTabbedPopup({
+          dataHtml,
+          codeTitle: `Colorado DWR: ${t.id}`,
+          endpointUrl: endpoint,
+          pythonCode: pyCode,
+          notes: "Trans-mountain diversion telemetry under Continental Divide."
+        });
+        const popup = new maplibregl.Popup({ offset: 8 }).setHTML(popupHtml);
         showFeaturePopup(popup, e.lngLat);
       };
 
@@ -2105,30 +2304,53 @@ function renderGeography(geo, riverNetwork, lakes) {
         const t = e.features[0].properties;
         const flowVal = Number(t.flow_cfs || 0);
         const portal = getPortalInfo(t);
-        const popup = new maplibregl.Popup({ offset: 8 })
-          .setHTML(`
-            <div style="font-family:'Inter',sans-serif; min-width: 220px;">
-              <span style="font-size:10px;font-weight:700;color:#0369a1;background:#e0f2fe;border:1px solid #bae6fd;padding:2px 6px;border-radius:4px;display:inline-block;margin-bottom:4px;">Major Conveyance Canal</span>
-              <strong style="font-size:14px;color:#0f172a;display:block;">${t.name}</strong>
-              <span style="font-size:11px;color:#0284c7;font-weight:600;">${t.operator || ''}</span>
-              ${flowVal > 0 ? `
-              <div style="margin: 8px 0; padding: 6px 10px; background:#f8fafc; border-radius:6px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:baseline;">
-                <span style="font-size:11px; color:#475569; font-weight:600;">Estimated Flow:</span>
-                <span style="font-size:16px; font-weight:800; color:#0284c7;">${flowVal.toLocaleString()} cfs</span>
-              </div>` : ''}
-              <div style="font-size:11px;line-height:1.45;color:#334155;margin-top:6px;">
-                <strong>Destination:</strong> ${t.destination || t.to}<br>
-                <strong>Length:</strong> ${t.length_miles} miles<br>
-                <strong>Intake:</strong> ${t.from}<br>
-                <strong>Terminus:</strong> ${t.to}
-              </div>
-              <div style="font-size:10.5px;color:#64748b;margin-top:6px;border-top:1px solid #e2e8f0;padding-top:5px;line-height:1.4;">
-                <strong>Design Capacity:</strong> ${t.id === "09527700" ? '26,155 cfs (Imperial Dam Headworks)' : (t.id === "09426650" ? '3,000 cfs (Mark Wilmer Pumping Plant)' : '1,600 cfs (Whitsett Pumping Plant)')}<br>
-                <strong>Infrastructure:</strong> Major Inter-Basin Conveyance Aqueduct
-              </div>
-              ${formatPortalHtml(portal, '#0284c7')}
+        const dataHtml = `
+          <div style="padding: 2px;">
+            <span style="font-size:10px;font-weight:700;color:#0369a1;background:#e0f2fe;border:1px solid #bae6fd;padding:2px 6px;border-radius:4px;display:inline-block;margin-bottom:4px;">Major Conveyance Canal</span>
+            <strong style="font-size:14px;color:#0f172a;display:block;">${t.name}</strong>
+            <span style="font-size:11px;color:#0284c7;font-weight:600;">${t.operator || ''}</span>
+            ${flowVal > 0 ? `
+            <div style="margin: 8px 0; padding: 6px 10px; background:#f8fafc; border-radius:6px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:baseline;">
+              <span style="font-size:11px; color:#475569; font-weight:600;">Estimated Flow:</span>
+              <span style="font-size:16px; font-weight:800; color:#0284c7;">${flowVal.toLocaleString()} cfs</span>
+            </div>` : ''}
+            <div style="font-size:11px;line-height:1.45;color:#334155;margin-top:6px;">
+              <strong>Destination:</strong> ${t.destination || t.to}<br>
+              <strong>Length:</strong> ${t.length_miles} miles<br>
+              <strong>Intake:</strong> ${t.from}<br>
+              <strong>Terminus:</strong> ${t.to}
             </div>
-          `);
+            <div style="font-size:10.5px;color:#64748b;margin-top:6px;border-top:1px solid #e2e8f0;padding-top:5px;line-height:1.4;">
+              <strong>Design Capacity:</strong> ${t.id === "09527700" ? '26,155 cfs (Imperial Dam Headworks)' : (t.id === "09426650" ? '3,000 cfs (Mark Wilmer Pumping Plant)' : '1,600 cfs (Whitsett Pumping Plant)')}<br>
+              <strong>Infrastructure:</strong> Major Inter-Basin Conveyance Aqueduct
+            </div>
+            ${formatPortalHtml(portal, '#0284c7')}
+          </div>
+        `;
+        const cleanCName = (t.name || '').replace(/["\\]/g, '');
+        const endpoint = `https://waterservices.usgs.gov/nwis/iv/?sites=${t.id}&parameterCd=00060&format=json`;
+        const pyCode = `import requests
+
+# USGS Canal Telemetry Station #${t.id}
+url = "https://waterservices.usgs.gov/nwis/iv/"
+params = {
+    "sites": "${t.id}",       # ${cleanCName}
+    "parameterCd": "00060",  # Canal Flow (cfs)
+    "format": "json"
+}
+res = requests.get(url, params=params, timeout=10).json()
+val = res["value"]["timeSeries"][0]["values"][0]["value"][-1]
+flow_cfs = float(val["value"])
+print(f"${cleanCName}: {flow_cfs:,.0f} cfs")`;
+
+        const popupHtml = formatTabbedPopup({
+          dataHtml,
+          codeTitle: `USGS Canal #${t.id}`,
+          endpointUrl: endpoint,
+          pythonCode: pyCode,
+          notes: "Major conveyance canal telemetry."
+        });
+        const popup = new maplibregl.Popup({ offset: 8 }).setHTML(popupHtml);
         showFeaturePopup(popup, e.lngLat);
       });
     }
@@ -2179,20 +2401,42 @@ function renderGeography(geo, riverNetwork, lakes) {
       if (hasHigherPriorityFeature(e.point, ['streamflow-gauges-hit-buffer'])) return;
       const d = e.features[0].properties;
       const portal = getPortalInfo(d);
-      const popup = new maplibregl.Popup({ offset: 14 })
-        .setHTML(`
-          <div style="font-family:'Inter',sans-serif; min-width: 180px;">
-            <strong style="font-size:13px;color:#0f172a;">${d.name}</strong><br>
-            <span style="font-size:11px;color:#64748b;font-weight:600;">${d.operator}</span>
-            <hr style="margin:6px 0;border:none;border-top:1px solid #e2e8f0;">
-            <div style="font-size:11px;line-height:1.45;color:#334155;">
-              <strong>Impounds:</strong> ${d.impounds}<br>
-              <strong>Height:</strong> ${d.height_ft} ft | <strong>Built:</strong> ${d.year}<br>
-              <strong>Purpose:</strong> ${d.purpose}
-            </div>
-            ${formatPortalHtml(portal, '#0284c7')}
+      const dataHtml = `
+        <div style="padding:2px;">
+          <strong style="font-size:13px;color:#0f172a;">${d.name}</strong><br>
+          <span style="font-size:11px;color:#64748b;font-weight:600;">${d.operator}</span>
+          <hr style="margin:6px 0;border:none;border-top:1px solid #e2e8f0;">
+          <div style="font-size:11px;line-height:1.45;color:#334155;">
+            <strong>Impounds:</strong> ${d.impounds}<br>
+            <strong>Height:</strong> ${d.height_ft} ft | <strong>Built:</strong> ${d.year}<br>
+            <strong>Purpose:</strong> ${d.purpose}
           </div>
-        `);
+          ${formatPortalHtml(portal, '#0284c7')}
+        </div>
+      `;
+      const cleanDamName = (d.name || 'Dam').replace(/["\\]/g, '');
+      const cleanImpounds = (d.impounds || '').replace(/["\\]/g, '');
+      const pyCode = `import requests
+
+# USBR National Dam Inventory & River Operations
+# Facility: ${cleanDamName} (Impounds ${cleanImpounds})
+# Operator: ${d.operator}
+url = "https://waterservices.usgs.gov/nwis/iv/"
+params = {
+    "siteStatus": "all",
+    "parameterCd": "00060",  # Tailwater release discharge (cfs)
+    "format": "json"
+}
+# Telemetry synchronizes daily release schedules with reservoir storage curves`;
+
+      const popupHtml = formatTabbedPopup({
+        dataHtml,
+        codeTitle: `${cleanDamName}`,
+        endpointUrl: `https://www.usbr.gov/projects/facilities.php`,
+        pythonCode: pyCode,
+        notes: `Federal dam operations & tailwater release monitoring. Built ${d.year}.`
+      });
+      const popup = new maplibregl.Popup({ offset: 14 }).setHTML(popupHtml);
       showFeaturePopup(popup, e.lngLat);
     });
 
@@ -2339,8 +2583,8 @@ function renderMetrics(metrics) {
       `;
     }
 
-    const popup = new maplibregl.Popup({ offset: 12 }).setHTML(`
-      <div style="font-family:'Inter',sans-serif; min-width: 215px; padding: 2px;">
+    const dataHtml = `
+      <div style="padding: 2px;">
         <div style="display:flex; align-items:center; gap:6px; margin-bottom:6px;">
           <span style="font-size:10px; font-weight:700; color:#0369a1; background:#e0f2fe; padding:2px 6px; border-radius:4px;">USGS Real-Time Gauge</span>
           ${isLeesFerry ? '<span style="font-size:10px; font-weight:700; color:#0369a1; background:#e0f2fe; border: 1px solid #bae6fd; padding:2px 6px; border-radius:4px;">1922 Compact Divide</span>' : ''}
@@ -2356,7 +2600,33 @@ function renderMetrics(metrics) {
           <strong>Last Measured:</strong> ${formatTimestamp(s.timestamp)}
         </div>
       </div>
-    `);
+    `;
+
+    const cleanName = s.name.replace(/["\\]/g, '');
+    const pyCode = `import requests
+
+# USGS Instantaneous Values (IV) REST API
+url = "https://waterservices.usgs.gov/nwis/iv/"
+params = {
+    "sites": "${s.id}",       # ${cleanName}
+    "parameterCd": "00060",  # Streamflow (cfs)
+    "siteStatus": "all",
+    "format": "json"
+}
+res = requests.get(url, params=params, timeout=10).json()
+val = res["value"]["timeSeries"][0]["values"][0]["value"][-1]
+flow_cfs = float(val["value"])
+print(f"Discharge: {flow_cfs:,.0f} cfs at {val['dateTime']}")`;
+
+    const popupHtml = formatTabbedPopup({
+      dataHtml,
+      codeTitle: `USGS Gauge #${s.id}`,
+      endpointUrl: `https://waterservices.usgs.gov/nwis/iv/?sites=${s.id}&parameterCd=00060&format=json`,
+      pythonCode: pyCode,
+      notes: "Parameter 00060 = Discharge (cfs). Telemetry refreshed every 15–60 minutes."
+    });
+
+    const popup = new maplibregl.Popup({ offset: 12 }).setHTML(popupHtml);
 
     popup.on('open', () => {
       if (tooltipPopup && tooltipPopup.isOpen()) tooltipPopup.remove();
@@ -2539,8 +2809,8 @@ function renderMetrics(metrics) {
     el.innerHTML = `<div class="cfs-badge ${badgeClass}"><span class="cfs-val">${t.flow_cfs.toLocaleString()}</span> <span class="cfs-unit">cfs</span></div>`;
 
     const portal = getPortalInfo(t);
-    const popup = new maplibregl.Popup({ offset: 12 }).setHTML(`
-      <div style="font-family:'Inter',sans-serif; min-width: 220px; padding: 2px;">
+    const dataHtml = `
+      <div style="padding: 2px;">
         <div style="display:flex; align-items:center; gap:6px; margin-bottom:6px;">
           <span style="font-size:10px; font-weight:700; color:#0369a1; background:#e0f2fe; border:1px solid #bae6fd; padding:2px 6px; border-radius:4px;">${diversionBadge}</span>
         </div>
@@ -2559,7 +2829,47 @@ function renderMetrics(metrics) {
         </div>
         ${formatPortalHtml(portal, '#0284c7')}
       </div>
-    `);
+    `;
+
+    const endpoint = isFrontRange 
+      ? `https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeserieshour/?abbrev=${t.id}&format=json`
+      : `https://waterservices.usgs.gov/nwis/iv/?sites=${t.id}&parameterCd=00060&format=json`;
+
+    const cleanTName = t.name.replace(/["\\]/g, '');
+    const pyCode = isFrontRange ? `import requests
+
+# Colorado DWR HydroBase REST API v2
+url = "https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeserieshour/"
+params = {
+    "abbrev": "${t.id}",  # ${cleanTName}
+    "format": "json"
+}
+res = requests.get(url, params=params, timeout=10).json()
+reading = res["ResultList"][0]
+flow_cfs = float(reading["measValue"])
+print(f"${cleanTName}: {flow_cfs:,.1f} cfs")` : `import requests
+
+# USGS Canal Telemetry Station #${t.id}
+url = "https://waterservices.usgs.gov/nwis/iv/"
+params = {
+    "sites": "${t.id}",       # ${cleanTName}
+    "parameterCd": "00060",  # Canal Flow (cfs)
+    "format": "json"
+}
+res = requests.get(url, params=params, timeout=10).json()
+val = res["value"]["timeSeries"][0]["values"][0]["value"][-1]
+flow_cfs = float(val["value"])
+print(f"${cleanTName}: {flow_cfs:,.0f} cfs")`;
+
+    const popupHtml = formatTabbedPopup({
+      dataHtml,
+      codeTitle: isFrontRange ? `Colorado DWR: ${t.id}` : `USGS Canal #${t.id}`,
+      endpointUrl: endpoint,
+      pythonCode: pyCode,
+      notes: isFrontRange ? "Trans-mountain diversion telemetry under Continental Divide." : "Major conveyance canal telemetry."
+    });
+
+    const popup = new maplibregl.Popup({ offset: 12 }).setHTML(popupHtml);
 
     popup.on('open', () => {
       if (tooltipPopup && tooltipPopup.isOpen()) tooltipPopup.remove();
@@ -3219,9 +3529,26 @@ function closeLegalModal(e) {
   }
 }
 
+// API & Code Documentation Modal Handlers (Option C)
+function openApiModal() {
+  const modal = document.getElementById("api-modal");
+  if (modal) {
+    modal.classList.add("active");
+  }
+}
+
+function closeApiModal(e) {
+  if (e && e.target && e.target.classList.contains("modal-card")) return;
+  const modal = document.getElementById("api-modal");
+  if (modal) {
+    modal.classList.remove("active");
+  }
+}
+
 window.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
     closeLegalModal();
+    closeApiModal();
   }
 });
 

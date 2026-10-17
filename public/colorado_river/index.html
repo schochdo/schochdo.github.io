@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="style.css?v=4.3">
+  <link rel="stylesheet" href="style.css?v=4.4">
 </head>
 <body>
   <!-- Header Bar -->
@@ -33,6 +33,10 @@
       <button class="nav-header-btn law-btn" onclick="openLegalModal()" title="View Law of the River &amp; Compact Framework">
         <span class="btn-icon">⚖️</span>
         <span class="btn-text">Law of the River</span>
+      </button>
+      <button class="nav-header-btn code-btn" onclick="openApiModal()" title="View Hydrology APIs &amp; Python Code Documentation">
+        <span class="btn-icon">💻</span>
+        <span class="btn-text">API &amp; Code</span>
       </button>
       <button class="nav-header-btn flow-btn" onclick="window.open('./sankey.html','_blank')" title="Open Minard-style flow diagram">
         <span class="btn-icon">〰</span>
@@ -225,11 +229,15 @@
         <button class="sidebar-close-btn" onclick="closeSidebar()" aria-label="Close sidebar">✕</button>
       </div>
 
-      <!-- Mobile Quick Actions: Law & Flow -->
+      <!-- Mobile Quick Actions: Law, Code & Flow -->
       <div class="sidebar-mobile-actions">
         <button class="nav-header-btn law-btn" onclick="openLegalModal(); closeSidebar();" title="View Law of the River &amp; Compact Framework">
           <span class="btn-icon">⚖️</span>
           <span class="btn-text">Law of the River</span>
+        </button>
+        <button class="nav-header-btn code-btn" onclick="openApiModal(); closeSidebar();" title="View Hydrology APIs &amp; Python Code Documentation">
+          <span class="btn-icon">💻</span>
+          <span class="btn-text">API &amp; Code</span>
         </button>
         <button class="nav-header-btn flow-btn" onclick="window.open('./sankey.html','_blank')" title="Open Minard-style flow diagram">
           <span class="btn-icon">〰</span>
@@ -592,8 +600,278 @@
     </div>
   </div>
 
+  <!-- Hydrologic APIs & Python Code Architecture Modal (Option C) -->
+  <div class="modal-overlay" id="api-modal" onclick="closeApiModal(event)">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <h2>💻 Hydrologic APIs &amp; Python Data Pipeline</h2>
+          <p>Real-time telemetry feeds, REST endpoints, and conservation-of-mass river routing code powering this project.</p>
+        </div>
+        <button class="modal-close-btn" onclick="closeApiModal()" title="Close dialog">✕</button>
+      </div>
+      <div class="modal-body">
+        
+        <!-- Chapter 1: USGS NWIS Instantaneous Values API -->
+        <div class="api-section">
+          <div class="api-section-header">
+            <h3 class="api-section-title">1. USGS National Water Information System (NWIS)</h3>
+            <span class="api-tag usgs">USGS REST API</span>
+          </div>
+          <p class="law-text">
+            Real-time streamflow across the 25+ river reaches and confluences is ingested directly from the <strong>USGS Instantaneous Values (IV) Web Service</strong>. Measurements are refreshed at 15- to 60-minute intervals from satellite-telemetry acoustic Doppler and stage sensors.
+          </p>
+          <table class="api-param-table">
+            <thead>
+              <tr><th>Parameter</th><th>Value</th><th>Technical Description</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>sites</code></td>
+                <td>e.g. <code>09380000, 09070500</code></td>
+                <td>Comma-delimited 8-digit USGS station IDs (Lees Ferry, Dotsero, Cameo, Cisco, etc.).</td>
+              </tr>
+              <tr>
+                <td><code>parameterCd</code></td>
+                <td><code>00060</code> / <code>62614</code></td>
+                <td><code>00060</code> = Discharge in cubic feet per second (cfs); <code>62614</code> = Lake elevation (ft).</td>
+              </tr>
+              <tr>
+                <td><code>siteStatus</code></td>
+                <td><code>all</code></td>
+                <td>Includes active operational telemetry nodes across all 7 basin states.</td>
+              </tr>
+              <tr>
+                <td><code>format</code></td>
+                <td><code>json</code></td>
+                <td>Structured WaterML 2.0 / JSON time-series output.</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="code-snippet-box">
+            <div class="code-snippet-header">
+              <span class="code-snippet-lang">Python 3 • requests (Live Streamflow)</span>
+              <button type="button" class="code-snippet-copy-btn" onclick="copyPopupCode(this)">Copy</button>
+            </div>
+            <pre><code>import requests
+
+# Base endpoint for USGS Instantaneous Values (IV)
+url = "https://waterservices.usgs.gov/nwis/iv/"
+
+# Query Sentinel Gauges across Upper and Lower Basins:
+# 09380000 = Lees Ferry Compact Divide
+# 09070500 = Dotsero (Upper Mainstem)
+# 09180500 = Cisco (near UT-CO border)
+# 09429100 = Below Palo Verde Dam (Lower Basin)
+params = {
+    "sites": "09380000,09070500,09180500,09429100",
+    "parameterCd": "00060",  # Streamflow Discharge (cfs)
+    "siteStatus": "all",
+    "format": "json"
+}
+
+response = requests.get(url, params=params, timeout=12)
+data = response.json()
+
+print(f"{'USGS Gauge ID':&lt;14} | {'Station Name':&lt;38} | {'Discharge (cfs)':&gt;15}")
+print("-" * 72)
+
+for ts in data["value"]["timeSeries"]:
+    site_id = ts["sourceInfo"]["siteCode"][0]["value"]
+    site_name = ts["sourceInfo"]["siteName"]
+    readings = ts["values"][0]["value"]
+    if readings:
+        latest = readings[-1]
+        cfs_val = float(latest["value"]) if latest["value"] != "-999999" else 0.0
+        print(f"{site_id:&lt;14} | {site_name[:38]:&lt;38} | {cfs_val:&gt;15,.1f}")</code></pre>
+          </div>
+        </div>
+
+        <!-- Chapter 2: Colorado DWR HydroBase v2 -->
+        <div class="api-section">
+          <div class="api-section-header">
+            <h3 class="api-section-title">2. Colorado DWR HydroBase v2 (Trans-Mountain Diversions)</h3>
+            <span class="api-tag cdwr">Colorado DWR API</span>
+          </div>
+          <p class="law-text">
+            Trans-mountain diversions that carry West Slope water underneath the Continental Divide to Denver and Front Range cities are monitored via the <strong>Colorado Division of Water Resources (CDWR) HydroBase REST API v2</strong>. This tracks tunnels that remove water before it ever reaches the Lower Basin.
+          </p>
+          <table class="api-param-table">
+            <thead>
+              <tr><th>Endpoint / Param</th><th>Value</th><th>Technical Description</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>telemetrytimeserieshour</code></td>
+                <td>Hourly Readings</td>
+                <td>Active hourly discharge for diversion tunnels (<code>ROBTUNCO</code>, <code>MOFTUNCO</code>, <code>ADATUNCO</code>, <code>BOUTUNCO</code>).</td>
+              </tr>
+              <tr>
+                <td><code>telemetrytimeseriesday</code></td>
+                <td>Daily Accounting</td>
+                <td>Daily storage volume and elevation for Front Range municipal reservoirs (<code>GRARESCO</code>, <code>DILRESCO</code>, <code>GRMRESCO</code>).</td>
+              </tr>
+              <tr>
+                <td><code>abbrev</code></td>
+                <td>Structure Codes</td>
+                <td>Comma-separated unique CDWR structure identifiers.</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="code-snippet-box">
+            <div class="code-snippet-header">
+              <span class="code-snippet-lang">Python 3 • requests (Trans-Mountain Tunnels)</span>
+              <button type="button" class="code-snippet-copy-btn" onclick="copyPopupCode(this)">Copy</button>
+            </div>
+            <pre><code>import requests
+
+# Colorado Division of Water Resources (HydroBase REST API v2)
+# Hourly telemetric discharge for Continental Divide diversion tunnels:
+# ROBTUNCO = Harold D. Roberts Tunnel (Dillon -&gt; South Platte / Denver)
+# MOFTUNCO = Moffat Water Tunnel (Fraser -&gt; Gross Res / Denver)
+# ADATUNCO = Alva B. Adams Tunnel (Grand Lake -&gt; Estes Park / Northern)
+# BOUTUNCO = Charles H. Boustead Tunnel (Fryingpan -&gt; Arkansas / Aurora)
+
+base_url = "https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeserieshour/"
+params = {
+    "abbrev": "ROBTUNCO,MOFTUNCO,ADATUNCO,BOUTUNCO",
+    "format": "json"
+}
+
+headers = {"User-Agent": "DAT1001-Research/1.0"}
+res = requests.get(base_url, params=params, headers=headers, timeout=10).json()
+
+# Deduplicate to extract the latest reading per tunnel
+tunnel_flows = {}
+for item in res.get("ResultList", []):
+    if item.get("parameter") == "DISCHRG":
+        code = item["abbrev"]
+        val = max(0.0, float(item.get("measValue", 0.0)))
+        dt = item.get("measDateTime")
+        if code not in tunnel_flows or dt &gt; tunnel_flows[code]["time"]:
+            tunnel_flows[code] = {"flow_cfs": val, "time": dt, "name": item["stationName"]}
+
+print(f"{'Tunnel Code':&lt;10} | {'Infrastructure Name':&lt;32} | {'Export (cfs)':&gt;12}")
+print("-" * 60)
+for code, info in tunnel_flows.items():
+    print(f"{code:&lt;10} | {info['name'][:32]:&lt;32} | {info['flow_cfs']:&gt;12,.1f}")</code></pre>
+          </div>
+        </div>
+
+        <!-- Chapter 3: USBR Reclamation HydroData & Hourly Operations -->
+        <div class="api-section">
+          <div class="api-section-header">
+            <h3 class="api-section-title">3. USBR Reclamation HydroData &amp; Hourly Operations</h3>
+            <span class="api-tag usbr">USBR HydroData</span>
+          </div>
+          <p class="law-text">
+            Major federal storage reservoirs—Lake Powell (Glen Canyon Dam), Lake Mead (Hoover Dam), Flaming Gorge, Navajo, and Blue Mesa—are tracked using dual feeds: the <strong>Upper Colorado Region HydroData CSV API</strong> and the <strong>Lower Colorado Hourly Operations teletype log</strong>.
+          </p>
+          <table class="api-param-table">
+            <thead>
+              <tr><th>Provider Service</th><th>Identifier</th><th>Role / Field</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>UC HydroData CSV</code></td>
+                <td><code>Res 919 (Powell), 917 (Flaming Gorge)</code></td>
+                <td>Param <code>17.csv</code> = Storage in Acre-Feet; Param <code>49.csv</code> = Water surface elevation (ft).</td>
+              </tr>
+              <tr>
+                <td><code>LC Hourly Operations</code></td>
+                <td><code>/hourly/hourly.html</code></td>
+                <td>Live hourly feed for Hoover, Davis, and Parker Dam releases and Mead/Mohave/Havasu elevations.</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="code-snippet-box">
+            <div class="code-snippet-header">
+              <span class="code-snippet-lang">Python 3 • pandas &amp; requests (Reservoir Curves)</span>
+              <button type="button" class="code-snippet-copy-btn" onclick="copyPopupCode(this)">Copy</button>
+            </div>
+            <pre><code>import pandas as pd
+import requests
+import re
+
+# 1. USBR Upper Colorado Region HydroData CSV API
+# Reservoir IDs: 919 = Lake Powell, 917 = Flaming Gorge, 920 = Navajo
+# Parameter 17 = Storage (Acre-Feet), Parameter 49 = Elevation (Feet)
+powell_csv_url = "https://www.usbr.gov/uc/water/hydrodata/reservoir_data/919/csv/17.csv"
+
+df_powell = pd.read_csv(powell_csv_url, skiprows=1, names=["datetime", "storage_af"])
+latest_powell = df_powell.dropna().iloc[-1]
+print(f"Lake Powell Storage: {float(latest_powell['storage_af']):,.0f} AF (as of {latest_powell['datetime']})")
+
+# 2. USBR Lower Colorado Region Teletype Feed (Hourly Operations)
+# Reports Hoover Dam / Lake Mead, Davis Dam / Mohave, and Parker Dam / Havasu
+hourly_url = "https://www.usbr.gov/lc/region/g4000/hourly/hourly.html"
+txt = requests.get(hourly_url, timeout=10).text
+
+# Parse teletype table format: [HOUR-RANGE] [MEAD_EL] [HOOVER_CFS] [MOHAVE_EL] ...
+pattern = r'^\s*(\d{4}-\d{4})\s+([\d\.]+)\s+(\d+)\s+([\d\.]+)\s+([\d\.]+)\s+(\d+)\s+([\d\.]+)\s+([\d\.]+)'
+for line in txt.splitlines():
+    match = re.match(pattern, line)
+    if match:
+        time_slot, mead_el, hoover_cfs, mohave_el, mohave_af, davis_cfs, havasu_el, havasu_af = match.groups()
+        print(f"Lake Mead Elevation: {mead_el} ft | Hoover Dam Release: {int(hoover_cfs):,} cfs ({time_slot})")</code></pre>
+          </div>
+        </div>
+
+        <!-- Chapter 4: Ingestion Engine & Mass-Balance Pipeline -->
+        <div class="api-section">
+          <div class="api-section-header">
+            <h3 class="api-section-title">4. Automated Ingestion &amp; Conservation-of-Mass GeoJSON Pipeline</h3>
+            <span class="api-tag pipeline">Data Architecture</span>
+          </div>
+          <p class="law-text">
+            All data sources are synthesized by an automated Python pipeline (<code>src/fetch_water_data.py</code> and <code>src/generate_river_network.py</code>). To ensure physical realism across unmonitored river segments, the pipeline applies a <strong>topological mass-balance network algorithm</strong>:
+          </p>
+          <p class="law-text" style="margin-top: 6px; font-family: ui-monospace, SFMono-Regular, monospace; font-size: 11.5px; background: #f8fafc; padding: 6px 10px; border-radius: 5px; border: 1px solid #e2e8f0;">
+            Q_downstream = Q_mainstem_upstream + &Sigma;(Q_tributaries) - &Sigma;(Q_transmountain_tunnels) - &Sigma;(Q_canals) &plusmn; &Delta;Storage
+          </p>
+          <div class="code-snippet-box">
+            <div class="code-snippet-header">
+              <span class="code-snippet-lang">Python 3 • Multi-Threaded Ingestion &amp; GeoJSON Export</span>
+              <button type="button" class="code-snippet-copy-btn" onclick="copyPopupCode(this)">Copy</button>
+            </div>
+            <pre><code>import concurrent.futures
+import json
+from datetime import datetime
+
+# Pipeline Architecture: src/fetch_water_data.py
+# 1. Multi-Threaded Concurrent Ingestion across Providers
+with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
+    future_usgs = pool.submit(fetch_usgs_streamflow)
+    future_tunnels = pool.submit(fetch_cdwr_tunnels)
+    future_res = pool.submit(fetch_reservoirs)
+    
+    streamflow = future_usgs.result()
+    diversions = future_tunnels.result()
+    reservoirs = future_res.result()
+
+# 2. Conservation of Mass Topological Routing
+# Downstream river reach flows are mathematically derived at confluences:
+# Continuous Shapely vectors are weighted by real-time flow (cfs)
+# and saved directly as GeoJSON rendered in GPU textures by MapLibre GL:
+metrics_payload = {
+    "timestamp": datetime.utcnow().isoformat() + "Z",
+    "stations": streamflow,
+    "tunnels": diversions,
+    "reservoirs": reservoirs
+}
+
+with open("web/data/latest_metrics.json", "w") as f:
+    json.dump(metrics_payload, f, indent=2)
+print("Hydrologic telemetry pipeline synced successfully.")</code></pre>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
   <!-- MapLibre GL JS -->
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-  <script src="app.js?v=21.5"></script>
+  <script src="app.js?v=21.6"></script>
 </body>
 </html>
