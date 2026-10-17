@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="style.css?v=4.1">
+  <link rel="stylesheet" href="style.css?v=4.2">
 </head>
 <body>
   <!-- Header Bar -->
@@ -29,18 +29,16 @@
       </div>
     </div>
     
-    <div class="header-center">
-      <div class="quick-nav">
-        <button class="nav-btn active" onclick="zoomToPreset('basin')">Whole System</button>
-        <button class="nav-btn" onclick="zoomToPreset('divide')">West Slope & Tunnels</button>
-        <button class="nav-btn" onclick="zoomToPreset('lees_ferry')">Lees Ferry</button>
-        <button class="nav-btn" onclick="zoomToPreset('reservoirs')">Powell & Mead</button>
-        <button class="nav-btn law-btn" onclick="openLegalModal()" title="View Law of the River & Compact Framework">⚖️ Law of the River</button>
-        <button class="nav-btn" onclick="window.open('./sankey.html','_blank')" title="Open Minard-style flow diagram" style="background:rgba(14,165,233,0.1);border:1px solid #0ea5e9;color:#38bdf8;font-weight:700;">〰 Flow Diagram</button>
-      </div>
-    </div>
-
     <div class="header-right">
+      <button class="nav-header-btn law-btn" onclick="openLegalModal()" title="View Law of the River &amp; Compact Framework">
+        <span class="btn-icon">⚖️</span>
+        <span class="btn-text">Law of the River</span>
+      </button>
+      <button class="nav-header-btn flow-btn" onclick="window.open('./sankey.html','_blank')" title="Open Minard-style flow diagram">
+        <span class="btn-icon">〰</span>
+        <span class="btn-text">Flow Diagram</span>
+      </button>
+
       <div class="sync-badge">
         <span class="status-dot"></span>
         <span id="sync-time">Loading live feeds...</span>
@@ -73,6 +71,26 @@
     <!-- Map Canvas -->
     <div id="map-container">
       <div id="map"></div>
+
+      <!-- Floating Map Camera Presets (Top Center of Map) -->
+      <nav class="map-presets-bar" id="map-presets-bar" aria-label="Map camera presets">
+        <button class="map-preset-btn active" data-preset="basin" onclick="zoomToPreset('basin')" title="Fly to whole basin system">
+          <span class="preset-icon">🌐</span>
+          <span class="preset-label">Whole System</span>
+        </button>
+        <button class="map-preset-btn" data-preset="divide" onclick="zoomToPreset('divide')" title="Fly to Continental Divide &amp; trans-mountain tunnels">
+          <span class="preset-icon">🏔️</span>
+          <span class="preset-label">West Slope &amp; Tunnels</span>
+        </button>
+        <button class="map-preset-btn" data-preset="lees_ferry" onclick="zoomToPreset('lees_ferry')" title="Fly to Lees Ferry Compact division point">
+          <span class="preset-icon">📍</span>
+          <span class="preset-label">Lees Ferry</span>
+        </button>
+        <button class="map-preset-btn" data-preset="reservoirs" onclick="zoomToPreset('reservoirs')" title="Fly to Lake Powell &amp; Lake Mead">
+          <span class="preset-icon">🌊</span>
+          <span class="preset-label">Powell &amp; Mead</span>
+        </button>
+      </nav>
 
       <!-- Floating Map Menu (Basemap Selector) -->
       <div class="map-menu-container" id="map-menu-container">
@@ -206,6 +224,58 @@
         </div>
         <button class="sidebar-close-btn" onclick="closeSidebar()" aria-label="Close sidebar">✕</button>
       </div>
+
+      <!-- Mobile Quick Actions: Law & Flow -->
+      <div class="sidebar-mobile-actions">
+        <button class="nav-header-btn law-btn" onclick="openLegalModal(); closeSidebar();" title="View Law of the River &amp; Compact Framework">
+          <span class="btn-icon">⚖️</span>
+          <span class="btn-text">Law of the River</span>
+        </button>
+        <button class="nav-header-btn flow-btn" onclick="window.open('./sankey.html','_blank')" title="Open Minard-style flow diagram">
+          <span class="btn-icon">〰</span>
+          <span class="btn-text">Flow Diagram</span>
+        </button>
+      </div>
+      <!-- Camera Presets in Sidebar -->
+      <section class="card camera-presets-card collapsed" id="camera-presets-card">
+        <div class="card-header card-header-clickable" onclick="toggleCardCollapse('camera-presets-card', 'camera-presets-body', 'camera-presets-icon')" title="Click to view camera presets">
+          <h3>Basin Views &amp; Camera Presets</h3>
+          <div class="card-header-actions">
+            <span class="collapse-icon" id="camera-presets-icon" style="transform: rotate(-90deg);">▼</span>
+          </div>
+        </div>
+        <div class="preset-list-body" id="camera-presets-body" style="display: none;">
+          <button class="preset-item-btn active" data-preset="basin" onclick="zoomToPreset('basin')">
+            <span class="preset-item-icon">🌐</span>
+            <div class="preset-item-info">
+              <span class="preset-item-title">Whole System</span>
+              <span class="preset-item-sub">Full Upper &amp; Lower Basin perspective</span>
+            </div>
+          </button>
+          <button class="preset-item-btn" data-preset="divide" onclick="zoomToPreset('divide')">
+            <span class="preset-item-icon">🏔️</span>
+            <div class="preset-item-info">
+              <span class="preset-item-title">West Slope &amp; Tunnels</span>
+              <span class="preset-item-sub">Continental Divide &amp; Front Range diversions</span>
+            </div>
+          </button>
+          <button class="preset-item-btn" data-preset="lees_ferry" onclick="zoomToPreset('lees_ferry')">
+            <span class="preset-item-icon">📍</span>
+            <div class="preset-item-info">
+              <span class="preset-item-title">Lees Ferry</span>
+              <span class="preset-item-sub">1922 Compact boundary &amp; Marble Canyon</span>
+            </div>
+          </button>
+          <button class="preset-item-btn" data-preset="reservoirs" onclick="zoomToPreset('reservoirs')">
+            <span class="preset-item-icon">🌊</span>
+            <div class="preset-item-info">
+              <span class="preset-item-title">Powell &amp; Mead</span>
+              <span class="preset-item-sub">System storage reservoirs &amp; Hoover Dam</span>
+            </div>
+          </button>
+        </div>
+      </section>
+
       <!-- Layer Control Card -->
       <section class="card layer-card collapsed" id="layer-card">
         <div class="card-header card-header-clickable" onclick="toggleCardCollapse('layer-card', 'layer-toggle-group', 'layer-collapse-icon')" title="Click to collapse / expand layer controls">
@@ -524,6 +594,6 @@
 
   <!-- MapLibre GL JS -->
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-  <script src="app.js?v=21.1"></script>
+  <script src="app.js?v=21.2"></script>
 </body>
 </html>

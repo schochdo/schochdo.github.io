@@ -2786,8 +2786,8 @@ const BASIN_BOUNDS = [
 
 // Preset Zoom Navigation with mode-sensitive pitch
 function zoomToPreset(preset) {
-  document.querySelectorAll(".nav-btn").forEach(btn => {
-    if (btn.getAttribute("onclick")?.includes(preset)) {
+  document.querySelectorAll(".map-preset-btn, .preset-item-btn, .nav-btn").forEach(btn => {
+    if (btn.dataset?.preset === preset || btn.getAttribute("onclick")?.includes(`'${preset}'`)) {
       btn.classList.add("active");
     } else if (!btn.classList.contains("law-btn") && !btn.getAttribute("onclick")?.includes("sankey")) {
       btn.classList.remove("active");
