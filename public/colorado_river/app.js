@@ -913,6 +913,15 @@ async function loadData(forceLive = false) {
     const metricsPromise = fetch(`./data/latest_metrics.json?t=${t}`)
       .then(r => r.json())
       .then(metrics => {
+        if (metrics.reservoirs && Array.isArray(metrics.reservoirs)) {
+          const getCap = r => Number(r.capacity_af) || (r.storage_af && r.capacity_pct ? (r.storage_af / (r.capacity_pct / 100)) : 0) || 0;
+          metrics.reservoirs.sort((a, b) => {
+            const catA = a.category === 'front_range' ? 1 : 0;
+            const catB = b.category === 'front_range' ? 1 : 0;
+            if (catA !== catB) return catA - catB;
+            return getCap(b) - getCap(a);
+          });
+        }
         cachedMetrics = metrics;
         populateTelemetryTable(metrics);
         updateSidebar(metrics);
@@ -2578,9 +2587,11 @@ function updateSidebar(metrics) {
   }
 
   // 2. Major Storage Reservoirs Panel (Separated into Basin-Wide vs. Front Range & Denver)
+  // Sorted descending by reservoir size in AF (capacity) within each category
+  const getResCapacity = r => Number(r.capacity_af) || (r.storage_af && r.capacity_pct ? (r.storage_af / (r.capacity_pct / 100)) : 0) || 0;
   const allRes = metrics.reservoirs || [];
-  const systemRes = allRes.filter(r => r.category !== 'front_range');
-  const frontRangeRes = allRes.filter(r => r.category === 'front_range');
+  const systemRes = allRes.filter(r => r.category !== 'front_range').sort((a, b) => getResCapacity(b) - getResCapacity(a));
+  const frontRangeRes = allRes.filter(r => r.category === 'front_range').sort((a, b) => getResCapacity(b) - getResCapacity(a));
 
   // Basin System Summary
   const sysTotalCap = systemRes.reduce((sum, r) => sum + (r.capacity_af || (r.storage_af / (r.capacity_pct / 100))), 0);
@@ -2725,7 +2736,14 @@ function populateTelemetryTable(metrics) {
       lat: c.lat,
       lon: c.lon
     })),
-    ...metrics.reservoirs.map(r => ({
+    ...[...(metrics.reservoirs || [])].sort((a, b) => {
+      const catA = a.category === 'front_range' ? 1 : 0;
+      const catB = b.category === 'front_range' ? 1 : 0;
+      if (catA !== catB) return catA - catB;
+      const capA = Number(a.capacity_af) || 0;
+      const capB = Number(b.capacity_af) || 0;
+      return capB - capA;
+    }).map(r => ({
       id: r.id,
       name: r.name,
       type: "reservoir",

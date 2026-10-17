@@ -289,21 +289,6 @@
   ],
   "reservoirs": [
     {
-      "id": "lake_powell",
-      "name": "Lake Powell (Glen Canyon Dam)",
-      "river": "Colorado River (AZ/UT)",
-      "type": "reservoir",
-      "category": "system",
-      "elevation_ft": 3519.2,
-      "storage_af": 5223099.0,
-      "capacity_af": 24322000.0,
-      "capacity_pct": 21.5,
-      "role": "Upper Basin Bank & Compact Delivery to Lower Basin",
-      "timestamp": "2026-10-15T16:45:00.000-07:00",
-      "lat": 36.9367,
-      "lon": -111.4839
-    },
-    {
       "id": "lake_mead",
       "name": "Lake Mead (Hoover Dam)",
       "river": "Colorado River (AZ/NV)",
@@ -317,6 +302,21 @@
       "timestamp": "2026-10-15T17:00:00",
       "lat": 36.0156,
       "lon": -114.7378
+    },
+    {
+      "id": "lake_powell",
+      "name": "Lake Powell (Glen Canyon Dam)",
+      "river": "Colorado River (AZ/UT)",
+      "type": "reservoir",
+      "category": "system",
+      "elevation_ft": 3519.2,
+      "storage_af": 5223099.0,
+      "capacity_af": 24322000.0,
+      "capacity_pct": 21.5,
+      "role": "Upper Basin Bank & Compact Delivery to Lower Basin",
+      "timestamp": "2026-10-15T16:45:00.000-07:00",
+      "lat": 36.9367,
+      "lon": -111.4839
     },
     {
       "id": "flaming_gorge",
@@ -334,21 +334,6 @@
       "lon": -109.4215
     },
     {
-      "id": "navajo_reservoir",
-      "name": "Navajo Reservoir (Navajo Dam)",
-      "river": "San Juan River (NM/CO)",
-      "type": "reservoir",
-      "category": "system",
-      "elevation_ft": 6018.9,
-      "storage_af": 856394.0,
-      "capacity_af": 1696000.0,
-      "capacity_pct": 50.5,
-      "role": "San Juan Basin & Navajo Nation Irrigation Supply",
-      "timestamp": "2026-10-14",
-      "lat": 36.8042,
-      "lon": -107.6144
-    },
-    {
       "id": "lake_mohave",
       "name": "Lake Mohave (Davis Dam)",
       "river": "Lower Colorado River (AZ/NV)",
@@ -362,6 +347,21 @@
       "timestamp": "2026-10-15T16:45:00.000-07:00",
       "lat": 35.1989,
       "lon": -114.5683
+    },
+    {
+      "id": "navajo_reservoir",
+      "name": "Navajo Reservoir (Navajo Dam)",
+      "river": "San Juan River (NM/CO)",
+      "type": "reservoir",
+      "category": "system",
+      "elevation_ft": 6018.9,
+      "storage_af": 856394.0,
+      "capacity_af": 1696000.0,
+      "capacity_pct": 50.5,
+      "role": "San Juan Basin & Navajo Nation Irrigation Supply",
+      "timestamp": "2026-10-14",
+      "lat": 36.8042,
+      "lon": -107.6144
     },
     {
       "id": "blue_mesa",
@@ -394,24 +394,6 @@
       "lon": -114.1678
     },
     {
-      "id": "dillon_reservoir",
-      "name": "Dillon Reservoir",
-      "river": "Blue River (Summit County, CO)",
-      "type": "reservoir",
-      "category": "front_range",
-      "operator": "Denver Water",
-      "elevation_ft": 8980.3,
-      "stage_ft": null,
-      "feet_below_full": 36.7,
-      "storage_af": 160161.0,
-      "capacity_af": 257114.0,
-      "capacity_pct": 62.3,
-      "role": "Primary West Slope Storage -> Roberts Tunnel to Denver",
-      "timestamp": "2026-10-15T17:00:00",
-      "lat": 39.6183,
-      "lon": -106.0656
-    },
-    {
       "id": "lake_granby",
       "name": "Lake Granby",
       "river": "Upper Colorado River (Grand County, CO)",
@@ -428,6 +410,24 @@
       "timestamp": "2026-10-15T16:00:00",
       "lat": 40.1488,
       "lon": -105.8675
+    },
+    {
+      "id": "dillon_reservoir",
+      "name": "Dillon Reservoir",
+      "river": "Blue River (Summit County, CO)",
+      "type": "reservoir",
+      "category": "front_range",
+      "operator": "Denver Water",
+      "elevation_ft": 8980.3,
+      "stage_ft": null,
+      "feet_below_full": 36.7,
+      "storage_af": 160161.0,
+      "capacity_af": 257114.0,
+      "capacity_pct": 62.3,
+      "role": "Primary West Slope Storage -> Roberts Tunnel to Denver",
+      "timestamp": "2026-10-15T17:00:00",
+      "lat": 39.6183,
+      "lon": -106.0656
     },
     {
       "id": "green_mountain",
