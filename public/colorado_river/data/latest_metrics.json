@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-10-17T22:46:15.288874",
+  "fetched_at": "2026-10-17T23:05:06.191502",
   "streamflows": [
     {
       "id": "09057500",
@@ -41,8 +41,8 @@
       "id": "09095500",
       "name": "Colorado River near Cameo, CO",
       "type": "streamflow",
-      "flow_cfs": 1490.0,
-      "timestamp": "2026-10-17T22:15:00.000-06:00",
+      "flow_cfs": 1510.0,
+      "timestamp": "2026-10-17T22:30:00.000-06:00",
       "lat": 39.2391463,
       "lon": -108.2661946
     },
@@ -50,8 +50,8 @@
       "id": "09152500",
       "name": "Gunnison River near Grand Junction, CO",
       "type": "streamflow",
-      "flow_cfs": 1310.0,
-      "timestamp": "2026-10-17T21:30:00.000-06:00",
+      "flow_cfs": 1280.0,
+      "timestamp": "2026-10-17T22:30:00.000-06:00",
       "lat": 38.98331575,
       "lon": -108.4506446
     },
@@ -60,7 +60,7 @@
       "name": "Dolores River near Cisco, UT",
       "type": "streamflow",
       "flow_cfs": 308.0,
-      "timestamp": "2026-10-17T22:15:00.000-06:00",
+      "timestamp": "2026-10-17T22:30:00.000-06:00",
       "lat": 38.79720805,
       "lon": -109.1951142
     },
@@ -77,8 +77,8 @@
       "id": "09260050",
       "name": "Yampa River at Deerlodge Park, CO",
       "type": "streamflow",
-      "flow_cfs": 874.0,
-      "timestamp": "2026-10-17T21:15:00.000-06:00",
+      "flow_cfs": 859.0,
+      "timestamp": "2026-10-17T22:15:00.000-06:00",
       "lat": 40.45161747,
       "lon": -108.52512937
     },
@@ -104,8 +104,8 @@
       "id": "09315000",
       "name": "Green River at Green River, UT",
       "type": "streamflow",
-      "flow_cfs": 4480.0,
-      "timestamp": "2026-10-17T22:15:00.000-06:00",
+      "flow_cfs": 4500.0,
+      "timestamp": "2026-10-17T22:30:00.000-06:00",
       "lat": 38.98886944,
       "lon": -110.15035556
     },
@@ -113,8 +113,8 @@
       "id": "09364500",
       "name": "Animas River at Farmington, NM",
       "type": "streamflow",
-      "flow_cfs": 1280.0,
-      "timestamp": "2026-10-17T21:30:00.000-06:00",
+      "flow_cfs": 1270.0,
+      "timestamp": "2026-10-17T22:30:00.000-06:00",
       "lat": 36.7225,
       "lon": -108.20175
     },
@@ -122,8 +122,8 @@
       "id": "09379500",
       "name": "San Juan River near Bluff, UT",
       "type": "streamflow",
-      "flow_cfs": 2250.0,
-      "timestamp": "2026-10-17T22:15:00.000-06:00",
+      "flow_cfs": 2230.0,
+      "timestamp": "2026-10-17T22:30:00.000-06:00",
       "lat": 37.15067778,
       "lon": -109.8666889
     },
@@ -158,8 +158,8 @@
       "id": "09426000",
       "name": "Bill Williams River below Alamo Dam, AZ",
       "type": "streamflow",
-      "flow_cfs": 12.1,
-      "timestamp": "2026-10-17T20:30:00.000-07:00",
+      "flow_cfs": 12.5,
+      "timestamp": "2026-10-17T21:30:00.000-07:00",
       "lat": 34.2310833,
       "lon": -113.6099306
     },
@@ -167,8 +167,8 @@
       "id": "09429100",
       "name": "Colorado River below Palo Verde Dam, AZ-CA",
       "type": "streamflow",
-      "flow_cfs": 10900.0,
-      "timestamp": "2026-10-17T20:30:00.000-07:00",
+      "flow_cfs": 10500.0,
+      "timestamp": "2026-10-17T21:30:00.000-07:00",
       "lat": 33.7191361,
       "lon": -114.4975389
     },
@@ -177,7 +177,7 @@
       "name": "Gila River at Kelvin, AZ",
       "type": "streamflow",
       "flow_cfs": 86.7,
-      "timestamp": "2026-10-17T20:30:00.000-07:00",
+      "timestamp": "2026-10-17T21:30:00.000-07:00",
       "lat": 33.1028564,
       "lon": -110.9765231
     },
@@ -185,8 +185,8 @@
       "id": "09498500",
       "name": "Salt River near Roosevelt, AZ",
       "type": "streamflow",
-      "flow_cfs": 579.0,
-      "timestamp": "2026-10-17T20:30:00.000-07:00",
+      "flow_cfs": 574.0,
+      "timestamp": "2026-10-17T21:30:00.000-07:00",
       "lat": 33.61916667,
       "lon": -110.92208333
     },
@@ -281,8 +281,8 @@
       "name": "All-American Canal near Imperial Dam",
       "type": "diversion_canal",
       "destination": "Imperial & Coachella Valleys",
-      "flow_cfs": 2380.0,
-      "timestamp": "2026-10-17T20:30:00.000-07:00",
+      "flow_cfs": 2050.0,
+      "timestamp": "2026-10-17T21:30:00.000-07:00",
       "lat": 32.70425,
       "lon": -115.0481139
     }
@@ -385,11 +385,11 @@
       "type": "reservoir",
       "category": "system",
       "elevation_ft": 448.4,
-      "storage_af": 589900.0,
+      "storage_af": 590300.0,
       "capacity_af": 619400.0,
-      "capacity_pct": 95.2,
+      "capacity_pct": 95.3,
       "role": "Forebay Pumping Pool for CRA & CAP Aqueducts",
-      "timestamp": "2026-10-17T20:30:00.000-07:00",
+      "timestamp": "2026-10-17T21:30:00.000-07:00",
       "lat": 34.2981,
       "lon": -114.1678
     },
@@ -421,11 +421,11 @@
       "elevation_ft": 8980.0,
       "stage_ft": null,
       "feet_below_full": 37.0,
-      "storage_af": 159622.0,
+      "storage_af": 159631.0,
       "capacity_af": 257114.0,
       "capacity_pct": 62.1,
       "role": "Primary West Slope Storage -> Roberts Tunnel to Denver",
-      "timestamp": "2026-10-17T21:00:00",
+      "timestamp": "2026-10-17T22:00:00",
       "lat": 39.6183,
       "lon": -106.0656
     },
@@ -461,7 +461,7 @@
       "capacity_af": 43600.0,
       "capacity_pct": 35.7,
       "role": "Homestake Project Storage -> Homestake Tunnel to Arkansas Basin",
-      "timestamp": "2026-10-17T21:00:00",
+      "timestamp": "2026-10-17T22:00:00",
       "lat": 39.369,
       "lon": -106.463
     }

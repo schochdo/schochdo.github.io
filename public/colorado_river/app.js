@@ -1083,7 +1083,7 @@ async function loadData(forceLive = false) {
       });
 
     // 2. Fetch static base geometries on first load
-    if (!cachedGeography || !cachedRiverNetwork || !cachedLakes || !cachedPowellContours) {
+    if (!cachedGeography || !cachedRiverNetwork || !cachedLakes) {
       const [geoRes, riverRes, lakesRes, powellContoursRes, normalsRes] = await Promise.all([
         fetch(`./data/geography.json?t=${t}`),
         fetch(`./data/river_network.json?t=${t}`),
@@ -1576,7 +1576,7 @@ function renderGeography(geo, riverNetwork, lakes, powellContours) {
       id: 'lakes-fill',
       type: 'fill',
       source: 'lakes',
-      filter: powellContours ? ['!=', ['get', 'GNIS_NAME'], 'Lake Powell'] : ['has', 'GNIS_NAME'],
+      filter: ['has', 'GNIS_NAME'],
       paint: {
         'fill-color': '#0284c7',
         'fill-opacity': 0.85
@@ -1586,7 +1586,7 @@ function renderGeography(geo, riverNetwork, lakes, powellContours) {
       id: 'lakes-stroke',
       type: 'line',
       source: 'lakes',
-      filter: powellContours ? ['!=', ['get', 'GNIS_NAME'], 'Lake Powell'] : ['has', 'GNIS_NAME'],
+      filter: ['has', 'GNIS_NAME'],
       paint: {
         'line-color': '#0369a1',
         'line-width': 1.5
@@ -1753,207 +1753,7 @@ print("NHD Features found:", len(res.get("features", [])))`;
     });
   }
 
-  // 3b. Lake Powell Dynamic Reservoir Deck (Dual-Boundary Shoreline Engine)
-  if (powellContours && powellContours.features && !map.getSource('powell-contours')) {
-    map.addSource('powell-contours', { type: 'geojson', data: powellContours });
-
-    // 1. Bathtub Ring Ghost Fill (3,700 ft Full Pool boundary, faint ghost tint)
-    map.addLayer({
-      id: 'lake-powell-bathtub-ring',
-      type: 'fill',
-      source: 'powell-contours',
-      filter: ['==', ['get', 'pool_elev_ft'], 3700],
-      paint: {
-        'fill-color': '#0284c7',
-        'fill-opacity': 0.08
-      }
-    });
-
-    // 2. Bathtub Ring Dashed Ghost Stroke (White/Slate chalk line marking 1983 high water mark)
-    map.addLayer({
-      id: 'lake-powell-bathtub-stroke',
-      type: 'line',
-      source: 'powell-contours',
-      filter: ['==', ['get', 'pool_elev_ft'], 3700],
-      paint: {
-        'line-color': '#94a3b8',
-        'line-width': 1.6,
-        'line-dasharray': [4, 4],
-        'line-opacity': 0.85
-      }
-    });
-
-    // 3. Dynamic Active Pool Fill (filtered to active water surface elevation, colored by drought/storage capacity tier)
-    const activeContourSlice = getClosestPowellContourElevation(getActivePowellElevation());
-    map.addLayer({
-      id: 'lake-powell-active-pool',
-      type: 'fill',
-      source: 'powell-contours',
-      filter: ['==', ['get', 'pool_elev_ft'], activeContourSlice],
-      paint: {
-        'fill-color': [
-          'case',
-          ['<', ['get', 'capacity_pct'], 25], '#dc2626', // Crimson (<25%)
-          ['<=', ['get', 'capacity_pct'], 50], '#d97706', // Amber (25-50%)
-          '#0284c7'                                     // River Blue (>50%)
-        ],
-        'fill-opacity': 0.85
-      }
-    });
-
-    // 4. Active Pool Shoreline Stroke
-    map.addLayer({
-      id: 'lake-powell-active-stroke',
-      type: 'line',
-      source: 'powell-contours',
-      filter: ['==', ['get', 'pool_elev_ft'], activeContourSlice],
-      paint: {
-        'line-color': [
-          'case',
-          ['<', ['get', 'capacity_pct'], 25], '#991b1b',
-          ['<=', ['get', 'capacity_pct'], 50], '#b45309',
-          '#0369a1'
-        ],
-        'line-width': 1.5
-      }
-    });
-
-    // Active Pool Tooltip
-    map.on('mousemove', 'lake-powell-active-pool', (e) => {
-      if (!e.features.length) return;
-      map.getCanvas().style.cursor = 'pointer';
-      const powellRes = activeMetrics?.reservoirs?.find(r => r.id === 'lake_powell');
-      const elev = powellRes?.elevation_ft || getActivePowellElevation();
-      const capPct = powellRes?.capacity_pct || 35.7;
-      const storAf = powellRes?.storage_af || 8680000;
-      const deficitFt = (3700.0 - elev).toFixed(1);
-      const tierColor = capPct < 25 ? '#dc2626' : (capPct <= 50 ? '#d97706' : '#0284c7');
-      const tierLabel = capPct < 25 ? 'Critical Tier' : (capPct <= 50 ? 'Moderate Drought Tier' : 'Normal Operating Pool');
-
-      tooltipPopup.setLngLat(e.lngLat).setHTML(`
-        <div style="font-family:'Inter',sans-serif; min-width:210px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-            <span style="font-size:10px; font-weight:700; color:#0369a1; background:#e0f2fe; padding:2px 6px; border-radius:4px;">Active Storage Pool</span>
-            <span style="font-size:10px; font-weight:700; color:${tierColor}; background:#fffbeb; border:1px solid ${tierColor}; padding:1px 5px; border-radius:3px;">${tierLabel}</span>
-          </div>
-          <strong style="font-size:13px; color:#0f172a; display:block;">Lake Powell (Glen Canyon)</strong>
-          <div style="margin: 6px 0; padding: 6px 8px; background:#f8fafc; border-radius:6px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:baseline;">
-            <span style="font-size:11px; color:#475569; font-weight:600;">Current Storage:</span>
-            <span style="font-size:15px; font-weight:800; color:${tierColor};">${capPct}% <span style="font-size:11px; font-weight:600; color:#64748b;">Full</span></span>
-          </div>
-          <div style="font-size:11px; color:#475569; line-height:1.45;">
-            <strong>Water Surface:</strong> ${elev.toLocaleString()} ft NGVD29<br>
-            <strong>Bathtub Deficit:</strong> ${deficitFt} ft below 3,700' rim<br>
-            <strong>Active Volume:</strong> ${(storAf / 1e6).toFixed(2)}M Acre-Feet<br>
-            <span style="font-size:10px; color:#64748b; font-style:italic;">Cataract Canyon rapids re-emerged free-flowing above pool.</span>
-          </div>
-        </div>
-      `, e.lngLat);
-    });
-
-    map.on('mouseleave', 'lake-powell-active-pool', () => {
-      hideHoverTooltip();
-    });
-
-    // Bathtub Ring Tooltip (when hovering outside the active pool)
-    map.on('mousemove', 'lake-powell-bathtub-ring', (e) => {
-      if (!e.features.length) return;
-      if (hasHigherPriorityFeature(e.point, ['lake-powell-active-pool'])) return;
-      map.getCanvas().style.cursor = 'pointer';
-      const powellRes = activeMetrics?.reservoirs?.find(r => r.id === 'lake_powell');
-      const elev = powellRes?.elevation_ft || getActivePowellElevation();
-      const deficitFt = (3700.0 - elev).toFixed(1);
-
-      showHoverTooltip(`
-        <div style="font-family:'Inter',sans-serif; min-width:210px;">
-          <span style="font-size:10px; font-weight:700; color:#475569; background:#f1f5f9; padding:2px 6px; border-radius:4px; display:inline-block; margin-bottom:4px;">Ghost Boundary</span>
-          <strong style="font-size:13px; color:#0f172a; display:block;">Lake Powell "Bathtub Ring" (3,700')</strong>
-          <div style="font-size:11px; color:#475569; line-height:1.45; margin-top:4px;">
-            <strong>Full Pool Elevation:</strong> 3,700 ft NGVD29<br>
-            <strong>Exposed White Ring:</strong> ${deficitFt} ft of chalk cliff face<br>
-            <strong>Total Capacity:</strong> 24.32M Acre-Feet (1983 Peak)
-          </div>
-        </div>
-      `, e.lngLat);
-    });
-
-    map.on('mouseleave', 'lake-powell-bathtub-ring', () => {
-      hideHoverTooltip();
-    });
-
-    // Lake Powell Active Pool Click Popup
-    map.on('click', 'lake-powell-active-pool', (e) => {
-      if (e.originalEvent && e.originalEvent._handled) return;
-      if (!e.features.length) return;
-      if (hasHigherPriorityFeature(e.point, [
-        'streamflow-gauges-hit-buffer', 'dams-layer', 'tunnels-portals-layer', 
-        'tunnels-hit-buffer', 'canals-hit-buffer', 'rivers-mainstem-hit', 'rivers-major-hit', 'rivers-minor-hit'
-      ])) return;
-      if (e.originalEvent) e.originalEvent._handled = true;
-
-      const powellRes = activeMetrics?.reservoirs?.find(r => r.id === 'lake_powell') || {
-        name: 'Lake Powell (Glen Canyon Dam)',
-        storage_af: 8680000,
-        capacity_af: 24322000,
-        capacity_pct: 35.7,
-        elevation_ft: 3574.0,
-        role: 'Upper Basin Compact Bank & Hydropower Generation'
-      };
-      const portal = getPortalInfo({ id: 'lake_powell', name: 'Lake Powell' });
-      const elev = powellRes.elevation_ft || 3574.0;
-      const deficitFt = (3700.0 - elev).toFixed(1);
-      const capPct = powellRes.capacity_pct || 35.7;
-
-      const dataHtml = `
-        <div style="padding:2px;">
-          <span style="font-size:10px; font-weight:700; color:#0369a1; background:#e0f2fe; padding:2px 6px; border-radius:4px; display:inline-block; margin-bottom:4px;">Dynamic Reservoir Deck</span>
-          <strong style="font-size:14px; color:#0f172a; display:block;">Lake Powell (Glen Canyon Dam)</strong>
-          <span style="font-size:11px; color:#64748b; font-weight:600;">Colorado River &bull; Utah-Arizona Border</span>
-          <div style="margin: 8px 0; padding: 8px 10px; background:#f8fafc; border-radius:6px; border:1px solid #e2e8f0;">
-            <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
-              <span style="font-size:11px; color:#475569; font-weight:600;">Active Pool Storage:</span>
-              <span style="font-size:16px; font-weight:800; color:#d97706;">${capPct}% <span style="font-size:11px; font-weight:600; color:#64748b;">Full</span></span>
-            </div>
-            <div style="height:6px; background:#e2e8f0; border-radius:3px; overflow:hidden;">
-              <div style="width:${Math.min(100, capPct)}%; height:100%; background:${capPct < 25 ? '#ef4444' : (capPct <= 50 ? '#f59e0b' : '#0284c7')};"></div>
-            </div>
-          </div>
-          <div style="font-size:11.5px; color:#334155; line-height:1.5;">
-            <strong>Water Surface:</strong> ${elev.toLocaleString()} ft NGVD29<br>
-            <strong>Bathtub Ring Deficit:</strong> ${deficitFt} ft below 3,700' rim<br>
-            <strong>Active Volume:</strong> ${Math.round(powellRes.storage_af).toLocaleString()} Acre-Feet<br>
-            <strong>Full Pool Volume:</strong> 24,322,000 Acre-Feet<br>
-            <strong>Dynamic Status:</strong> Cataract Canyon rapids re-emerged free-flowing above active pool.<br>
-            <strong>Operational Role:</strong> ${powellRes.role || 'CRSP Storage'}
-          </div>
-          ${formatPortalHtml(portal, '#0284c7')}
-        </div>
-      `;
-
-      const pyCode = `import dataretrieval.nwis as nwis
-import pandas as pd
-
-# Lake Powell Water Surface Elevation & Topobathymetric Slicing
-# USGS Sentinel Gauge 09379900 (Lake Powell at Glen Canyon Dam)
-df_iv, _ = nwis.get_iv(sites="09379900", parameterCd="62614")  # Elevation (ft)
-elev = float(df_iv["62614"].dropna().iloc[-1])
-print(f"Lake Powell Elevation: {elev:,.1f} ft")
-print(f"Bathtub Ring Exposed: {3700.0 - elev:.1f} ft below full pool")
-
-# Dynamic Shoreline Slicing Rule:
-# Flowlines with bed_elevation > {elev:.1f} ft re-emerge as free-flowing rapids.`;
-
-      const popupHtml = formatTabbedPopup({
-        dataHtml,
-        codeTitle: "Lake Powell (USGS 09379900)",
-        endpointUrl: "https://waterservices.usgs.gov/nwis/iv/?sites=09379900&parameterCd=62614&format=json",
-        pythonCode: pyCode,
-        notes: "Real-time water surface elevation drives dynamic topobathymetric polygon slicing."
-      });
-      const popup = new maplibregl.Popup({ offset: 8 }).setHTML(popupHtml);
-      showFeaturePopup(popup, e.lngLat);
-    });
-  }
+  // 3b. Lake Powell Shoreline & Bathymetry: Rendered natively via lakes-fill and lakes-stroke (USGS NHD)
 
   // 4. CFS-Weighted River Network (Shapely-Welded Continuous Vectors)
   if (riverNetwork && !map.getSource('rivers')) {
