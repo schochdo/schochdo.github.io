@@ -121,8 +121,43 @@ function formatTabbedPopup({ dataHtml, codeTitle, endpointUrl, pythonCode, notes
 let cachedGeography = null;
 let cachedRiverNetwork = null;
 let cachedLakes = null;
+let cachedPowellContours = null;
 let cachedNormals = null;
 let cachedMetrics = null;
+let activeMetrics = null;
+
+function getActivePowellElevation() {
+  const p = (cachedMetrics?.reservoirs || activeMetrics?.reservoirs)?.find(r => r.id === 'lake_powell');
+  return (p && p.elevation_ft) ? p.elevation_ft : 3574.0;
+}
+
+function getClosestPowellContourElevation(targetElev) {
+  const slices = [3490, 3510, 3530, 3550, 3570, 3590, 3610, 3630, 3650, 3670, 3700];
+  let closest = slices[0];
+  let minDiff = Math.abs(targetElev - closest);
+  for (const s of slices) {
+    const diff = Math.abs(targetElev - s);
+    if (diff < minDiff) {
+      minDiff = diff;
+      closest = s;
+    }
+  }
+  return closest;
+}
+
+function updatePowellActiveLayers(metrics) {
+  if (!map || !map.getLayer('lake-powell-active-pool')) return;
+  const targetElev = metrics?.reservoirs?.find(r => r.id === 'lake_powell')?.elevation_ft || getActivePowellElevation();
+  const closestSlice = getClosestPowellContourElevation(targetElev);
+  try {
+    map.setFilter('lake-powell-active-pool', ['==', ['get', 'pool_elev_ft'], closestSlice]);
+    if (map.getLayer('lake-powell-active-stroke')) {
+      map.setFilter('lake-powell-active-stroke', ['==', ['get', 'pool_elev_ft'], closestSlice]);
+    }
+  } catch (err) {
+    console.warn('Error updating Powell active contour layers:', err);
+  }
+}
 
 // Basemap configurations: default to National Geographic (Warm Physical Style)
 const basemapLayerKeys = [
@@ -769,6 +804,12 @@ function applyLiveHydrology(riverNetwork, metrics) {
       gaugeInfo = "Colorado (Cisco, UT) + Green River (Green River, UT) into Lake Powell";
       timestamp = cisco ? cisco.timestamp : null;
       gaugeId = "09180500";
+    } else if (r === "powell_submerged_path" || f.properties.reach_type === "submerged_path") {
+      flow = 0;
+      sourceLabel = "Submerged Thalweg (Impounded Pool)";
+      gaugeInfo = "Submerged Colorado River canyon bed impounded behind Glen Canyon Dam";
+      timestamp = null;
+      gaugeId = null;
     } else if (r === "lees_ferry") {
       flow = leesFerry ? leesFerry.flow_cfs : 7940;
       sourceLabel = "Live USGS Sentinel Gauge (1922 Compact Divide)";
@@ -932,18 +973,25 @@ function applyLiveHydrology(riverNetwork, metrics) {
       customNorm = Math.round(normPV * 0.25);
     }
 
-    const norm = customNorm || (gaugeId ? getHistoricalNormal(gaugeId) : null);
-    if (norm && norm > 0 && flow != null) {
-      const pct = Math.round((flow / norm) * 100);
-      f.properties.hist_normal_cfs = norm;
-      f.properties.health_pct = pct;
-      f.properties.health_color = flowHealthColor(pct);
-      f.properties.health_label = flowHealthLabel(pct);
-    } else {
+    if (r === "powell_submerged_path" || f.properties.reach_type === "submerged_path") {
       f.properties.hist_normal_cfs = null;
       f.properties.health_pct = null;
-      f.properties.health_color = '#0284c7';
-      f.properties.health_label = 'Baseline';
+      f.properties.health_color = '#0369a1';
+      f.properties.health_label = 'Submerged Reservoir Thalweg';
+    } else {
+      const norm = customNorm || (gaugeId ? getHistoricalNormal(gaugeId) : null);
+      if (norm && norm > 0 && flow != null) {
+        const pct = Math.round((flow / norm) * 100);
+        f.properties.hist_normal_cfs = norm;
+        f.properties.health_pct = pct;
+        f.properties.health_color = flowHealthColor(pct);
+        f.properties.health_label = flowHealthLabel(pct);
+      } else {
+        f.properties.hist_normal_cfs = null;
+        f.properties.health_pct = null;
+        f.properties.health_color = '#0284c7';
+        f.properties.health_label = 'Baseline';
+      }
     }
   });
 
@@ -1028,6 +1076,7 @@ async function loadData(forceLive = false) {
           });
         }
         cachedMetrics = metrics;
+        activeMetrics = metrics;
         populateTelemetryTable(metrics);
         updateSidebar(metrics);
         const initialDateStr = formatTimestamp(metrics.fetched_at);
@@ -1036,25 +1085,31 @@ async function loadData(forceLive = false) {
       });
 
     // 2. Fetch static base geometries on first load
-    if (!cachedGeography || !cachedRiverNetwork || !cachedLakes) {
-      const [geoRes, riverRes, lakesRes, normalsRes] = await Promise.all([
+    if (!cachedGeography || !cachedRiverNetwork || !cachedLakes || !cachedPowellContours) {
+      const [geoRes, riverRes, lakesRes, powellContoursRes, normalsRes] = await Promise.all([
         fetch(`./data/geography.json?t=${t}`),
         fetch(`./data/river_network.json?t=${t}`),
         fetch(`./data/lakes.geojson?t=${t}`),
+        fetch(`./data/powell_contours.geojson?t=${t}`).catch(() => null),
         fetch(`./data/historical_normals.json?t=${t}`).catch(() => null)
       ]);
       cachedGeography = await geoRes.json();
       cachedRiverNetwork = await riverRes.json();
       cachedLakes = await lakesRes.json();
-      if (normalsRes) cachedNormals = await normalsRes.json();
-      renderGeography(cachedGeography, cachedRiverNetwork, cachedLakes);
+      if (powellContoursRes && powellContoursRes.ok) {
+        cachedPowellContours = await powellContoursRes.json();
+      }
+      if (normalsRes && normalsRes.ok) cachedNormals = await normalsRes.json();
+      renderGeography(cachedGeography, cachedRiverNetwork, cachedLakes, cachedPowellContours);
     }
 
     const metrics = await metricsPromise;
+    activeMetrics = metrics;
 
     // 3. Immediately render cached metrics on map layers
     applyLiveHydrology(cachedRiverNetwork, metrics);
     renderMetrics(metrics);
+    updatePowellActiveLayers(metrics);
     renderFlowHealthLayer(cachedRiverNetwork, metrics);
     updateBadgePlacements();
 
@@ -1412,7 +1467,7 @@ function formatPortalHtml(portal, accentColor = '#0284c7') {
   `;
 }
 
-function renderGeography(geo, riverNetwork, lakes) {
+function renderGeography(geo, riverNetwork, lakes, powellContours) {
   // 1. Basin Boundaries (Upper vs Lower)
   const basinsGeoJSON = {
     type: 'FeatureCollection',
@@ -1525,6 +1580,7 @@ function renderGeography(geo, riverNetwork, lakes) {
       id: 'lakes-fill',
       type: 'fill',
       source: 'lakes',
+      filter: powellContours ? ['!=', ['get', 'GNIS_NAME'], 'Lake Powell'] : ['has', 'GNIS_NAME'],
       paint: {
         'fill-color': '#0284c7',
         'fill-opacity': 0.85
@@ -1534,6 +1590,7 @@ function renderGeography(geo, riverNetwork, lakes) {
       id: 'lakes-stroke',
       type: 'line',
       source: 'lakes',
+      filter: powellContours ? ['!=', ['get', 'GNIS_NAME'], 'Lake Powell'] : ['has', 'GNIS_NAME'],
       paint: {
         'line-color': '#0369a1',
         'line-width': 1.5
@@ -1699,16 +1756,232 @@ print("NHD Features found:", len(res.get("features", [])))`;
     });
   }
 
+  // 3b. Lake Powell Dynamic Reservoir Deck (Dual-Boundary Shoreline Engine)
+  if (powellContours && powellContours.features && !map.getSource('powell-contours')) {
+    map.addSource('powell-contours', { type: 'geojson', data: powellContours });
+
+    // 1. Bathtub Ring Ghost Fill (3,700 ft Full Pool boundary, faint ghost tint)
+    map.addLayer({
+      id: 'lake-powell-bathtub-ring',
+      type: 'fill',
+      source: 'powell-contours',
+      filter: ['==', ['get', 'pool_elev_ft'], 3700],
+      paint: {
+        'fill-color': '#0284c7',
+        'fill-opacity': 0.08
+      }
+    });
+
+    // 2. Bathtub Ring Dashed Ghost Stroke (White/Slate chalk line marking 1983 high water mark)
+    map.addLayer({
+      id: 'lake-powell-bathtub-stroke',
+      type: 'line',
+      source: 'powell-contours',
+      filter: ['==', ['get', 'pool_elev_ft'], 3700],
+      paint: {
+        'line-color': '#94a3b8',
+        'line-width': 1.6,
+        'line-dasharray': [4, 4],
+        'line-opacity': 0.85
+      }
+    });
+
+    // 3. Dynamic Active Pool Fill (filtered to active water surface elevation, colored by drought/storage capacity tier)
+    const activeContourSlice = getClosestPowellContourElevation(getActivePowellElevation());
+    map.addLayer({
+      id: 'lake-powell-active-pool',
+      type: 'fill',
+      source: 'powell-contours',
+      filter: ['==', ['get', 'pool_elev_ft'], activeContourSlice],
+      paint: {
+        'fill-color': [
+          'case',
+          ['<', ['get', 'capacity_pct'], 25], '#dc2626', // Crimson (<25%)
+          ['<=', ['get', 'capacity_pct'], 50], '#d97706', // Amber (25-50%)
+          '#0284c7'                                     // River Blue (>50%)
+        ],
+        'fill-opacity': 0.85
+      }
+    });
+
+    // 4. Active Pool Shoreline Stroke
+    map.addLayer({
+      id: 'lake-powell-active-stroke',
+      type: 'line',
+      source: 'powell-contours',
+      filter: ['==', ['get', 'pool_elev_ft'], activeContourSlice],
+      paint: {
+        'line-color': [
+          'case',
+          ['<', ['get', 'capacity_pct'], 25], '#991b1b',
+          ['<=', ['get', 'capacity_pct'], 50], '#b45309',
+          '#0369a1'
+        ],
+        'line-width': 1.5
+      }
+    });
+
+    // Active Pool Tooltip
+    map.on('mousemove', 'lake-powell-active-pool', (e) => {
+      if (!e.features.length) return;
+      map.getCanvas().style.cursor = 'pointer';
+      const powellRes = activeMetrics?.reservoirs?.find(r => r.id === 'lake_powell');
+      const elev = powellRes?.elevation_ft || getActivePowellElevation();
+      const capPct = powellRes?.capacity_pct || 35.7;
+      const storAf = powellRes?.storage_af || 8680000;
+      const deficitFt = (3700.0 - elev).toFixed(1);
+      const tierColor = capPct < 25 ? '#dc2626' : (capPct <= 50 ? '#d97706' : '#0284c7');
+      const tierLabel = capPct < 25 ? 'Critical Tier' : (capPct <= 50 ? 'Moderate Drought Tier' : 'Normal Operating Pool');
+
+      tooltipPopup.setLngLat(e.lngLat).setHTML(`
+        <div style="font-family:'Inter',sans-serif; min-width:210px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <span style="font-size:10px; font-weight:700; color:#0369a1; background:#e0f2fe; padding:2px 6px; border-radius:4px;">Active Storage Pool</span>
+            <span style="font-size:10px; font-weight:700; color:${tierColor}; background:#fffbeb; border:1px solid ${tierColor}; padding:1px 5px; border-radius:3px;">${tierLabel}</span>
+          </div>
+          <strong style="font-size:13px; color:#0f172a; display:block;">Lake Powell (Glen Canyon)</strong>
+          <div style="margin: 6px 0; padding: 6px 8px; background:#f8fafc; border-radius:6px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:baseline;">
+            <span style="font-size:11px; color:#475569; font-weight:600;">Current Storage:</span>
+            <span style="font-size:15px; font-weight:800; color:${tierColor};">${capPct}% <span style="font-size:11px; font-weight:600; color:#64748b;">Full</span></span>
+          </div>
+          <div style="font-size:11px; color:#475569; line-height:1.45;">
+            <strong>Water Surface:</strong> ${elev.toLocaleString()} ft NGVD29<br>
+            <strong>Bathtub Deficit:</strong> ${deficitFt} ft below 3,700' rim<br>
+            <strong>Active Volume:</strong> ${(storAf / 1e6).toFixed(2)}M Acre-Feet<br>
+            <span style="font-size:10px; color:#64748b; font-style:italic;">Cataract Canyon rapids re-emerged free-flowing above pool.</span>
+          </div>
+        </div>
+      `).addTo(map);
+    });
+
+    map.on('mouseleave', 'lake-powell-active-pool', () => {
+      map.getCanvas().style.cursor = '';
+      tooltipPopup.remove();
+    });
+
+    // Bathtub Ring Tooltip (when hovering outside the active pool)
+    map.on('mousemove', 'lake-powell-bathtub-ring', (e) => {
+      if (!e.features.length) return;
+      if (hasHigherPriorityFeature(e.point, ['lake-powell-active-pool'])) return;
+      map.getCanvas().style.cursor = 'pointer';
+      const powellRes = activeMetrics?.reservoirs?.find(r => r.id === 'lake_powell');
+      const elev = powellRes?.elevation_ft || getActivePowellElevation();
+      const deficitFt = (3700.0 - elev).toFixed(1);
+
+      tooltipPopup.setLngLat(e.lngLat).setHTML(`
+        <div style="font-family:'Inter',sans-serif; min-width:210px;">
+          <span style="font-size:10px; font-weight:700; color:#475569; background:#f1f5f9; padding:2px 6px; border-radius:4px; display:inline-block; margin-bottom:4px;">Ghost Boundary</span>
+          <strong style="font-size:13px; color:#0f172a; display:block;">Lake Powell "Bathtub Ring" (3,700')</strong>
+          <div style="font-size:11px; color:#475569; line-height:1.45; margin-top:4px;">
+            <strong>Full Pool Elevation:</strong> 3,700 ft NGVD29<br>
+            <strong>Exposed White Ring:</strong> ${deficitFt} ft of chalk cliff face<br>
+            <strong>Total Capacity:</strong> 24.32M Acre-Feet (1983 Peak)
+          </div>
+        </div>
+      `).addTo(map);
+    });
+
+    map.on('mouseleave', 'lake-powell-bathtub-ring', () => {
+      map.getCanvas().style.cursor = '';
+      tooltipPopup.remove();
+    });
+
+    // Lake Powell Active Pool Click Popup
+    map.on('click', 'lake-powell-active-pool', (e) => {
+      if (!e.features.length) return;
+      if (hasHigherPriorityFeature(e.point, [
+        'streamflow-gauges-hit-buffer', 'dams-layer', 'tunnels-portals-layer', 
+        'tunnels-hit-buffer', 'canals-hit-buffer', 'river-mainstem-hit'
+      ])) return;
+
+      const powellRes = activeMetrics?.reservoirs?.find(r => r.id === 'lake_powell') || {
+        name: 'Lake Powell (Glen Canyon Dam)',
+        storage_af: 8680000,
+        capacity_af: 24322000,
+        capacity_pct: 35.7,
+        elevation_ft: 3574.0,
+        role: 'Upper Basin Compact Bank & Hydropower Generation'
+      };
+      const portal = getPortalInfo({ id: 'lake_powell', name: 'Lake Powell' });
+      const elev = powellRes.elevation_ft || 3574.0;
+      const deficitFt = (3700.0 - elev).toFixed(1);
+      const capPct = powellRes.capacity_pct || 35.7;
+
+      const dataHtml = `
+        <div style="padding:2px;">
+          <span style="font-size:10px; font-weight:700; color:#0369a1; background:#e0f2fe; padding:2px 6px; border-radius:4px; display:inline-block; margin-bottom:4px;">Dynamic Reservoir Deck</span>
+          <strong style="font-size:14px; color:#0f172a; display:block;">Lake Powell (Glen Canyon Dam)</strong>
+          <span style="font-size:11px; color:#64748b; font-weight:600;">Colorado River &bull; Utah-Arizona Border</span>
+          <div style="margin: 8px 0; padding: 8px 10px; background:#f8fafc; border-radius:6px; border:1px solid #e2e8f0;">
+            <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
+              <span style="font-size:11px; color:#475569; font-weight:600;">Active Pool Storage:</span>
+              <span style="font-size:16px; font-weight:800; color:#d97706;">${capPct}% <span style="font-size:11px; font-weight:600; color:#64748b;">Full</span></span>
+            </div>
+            <div style="height:6px; background:#e2e8f0; border-radius:3px; overflow:hidden;">
+              <div style="width:${Math.min(100, capPct)}%; height:100%; background:${capPct < 25 ? '#ef4444' : (capPct <= 50 ? '#f59e0b' : '#0284c7')};"></div>
+            </div>
+          </div>
+          <div style="font-size:11.5px; color:#334155; line-height:1.5;">
+            <strong>Water Surface:</strong> ${elev.toLocaleString()} ft NGVD29<br>
+            <strong>Bathtub Ring Deficit:</strong> ${deficitFt} ft below 3,700' rim<br>
+            <strong>Active Volume:</strong> ${Math.round(powellRes.storage_af).toLocaleString()} Acre-Feet<br>
+            <strong>Full Pool Volume:</strong> 24,322,000 Acre-Feet<br>
+            <strong>Dynamic Status:</strong> Cataract Canyon rapids re-emerged free-flowing above active pool.<br>
+            <strong>Operational Role:</strong> ${powellRes.role || 'CRSP Storage'}
+          </div>
+          ${formatPortalHtml(portal, '#0284c7')}
+        </div>
+      `;
+
+      const pyCode = `import dataretrieval.nwis as nwis
+import pandas as pd
+
+# Lake Powell Water Surface Elevation & Topobathymetric Slicing
+# USGS Sentinel Gauge 09379900 (Lake Powell at Glen Canyon Dam)
+df_iv, _ = nwis.get_iv(sites="09379900", parameterCd="62614")  # Elevation (ft)
+elev = float(df_iv["62614"].dropna().iloc[-1])
+print(f"Lake Powell Elevation: {elev:,.1f} ft")
+print(f"Bathtub Ring Exposed: {3700.0 - elev:.1f} ft below full pool")
+
+# Dynamic Shoreline Slicing Rule:
+# Flowlines with bed_elevation > {elev:.1f} ft re-emerge as free-flowing rapids.`;
+
+      const popupHtml = formatTabbedPopup({
+        dataHtml,
+        codeTitle: "Lake Powell (USGS 09379900)",
+        endpointUrl: "https://waterservices.usgs.gov/nwis/iv/?sites=09379900&parameterCd=62614&format=json",
+        pythonCode: pyCode,
+        notes: "Real-time water surface elevation drives dynamic topobathymetric polygon slicing."
+      });
+      const popup = new maplibregl.Popup({ offset: 8 }).setHTML(popupHtml);
+      showFeaturePopup(popup, e.lngLat);
+    });
+  }
+
   // 4. CFS-Weighted River Network (Shapely-Welded Continuous Vectors)
   if (riverNetwork && !map.getSource('rivers')) {
     map.addSource('rivers', { type: 'geojson', data: riverNetwork });
 
-    // 4a. Mainstem - Outer Glow
+    // 4a. Submerged Artificial Path Layer (Faint bathymetric centerlines inside reservoirs)
+    map.addLayer({
+      id: 'rivers-submerged-path',
+      type: 'line',
+      source: 'rivers',
+      filter: ['==', ['get', 'reach_type'], 'submerged_path'],
+      paint: {
+        'line-color': '#0369a1',
+        'line-width': 1.4,
+        'line-dasharray': [2, 3],
+        'line-opacity': 0.25
+      }
+    });
+
+    // 4b. Mainstem - Outer Glow (Excludes submerged reservoir centerlines)
     map.addLayer({
       id: 'rivers-mainstem-glow',
       type: 'line',
       source: 'rivers',
-      filter: ['==', ['get', 'category'], 'mainstem'],
+      filter: ['all', ['==', ['get', 'category'], 'mainstem'], ['!=', ['get', 'reach_type'], 'submerged_path']],
       paint: {
         'line-color': '#38bdf8',
         'line-width': ['+', ['get', 'weight'], 2.0],
@@ -1716,12 +1989,12 @@ print("NHD Features found:", len(res.get("features", [])))`;
         'line-opacity': 0.65
       }
     });
-    // 4b. Mainstem - Core Flowline
+    // 4c. Mainstem - Core Flowline (Excludes submerged reservoir centerlines)
     map.addLayer({
       id: 'rivers-mainstem-core',
       type: 'line',
       source: 'rivers',
-      filter: ['==', ['get', 'category'], 'mainstem'],
+      filter: ['all', ['==', ['get', 'category'], 'mainstem'], ['!=', ['get', 'reach_type'], 'submerged_path']],
       layout: { 'line-cap': 'round', 'line-join': 'round' },
       paint: {
         'line-color': '#0284c7',
@@ -1729,12 +2002,12 @@ print("NHD Features found:", len(res.get("features", [])))`;
         'line-opacity': 0.95
       }
     });
-    // Mainstem Hit Buffer
+    // Mainstem Hit Buffer (Excludes submerged reservoir centerlines)
     map.addLayer({
       id: 'rivers-mainstem-hit',
       type: 'line',
       source: 'rivers',
-      filter: ['==', ['get', 'category'], 'mainstem'],
+      filter: ['all', ['==', ['get', 'category'], 'mainstem'], ['!=', ['get', 'reach_type'], 'submerged_path']],
       layout: { 'line-cap': 'round', 'line-join': 'round' },
       paint: { 'line-color': '#000000', 'line-width': 24, 'line-opacity': 0.0001 }
     });
@@ -2501,8 +2774,17 @@ function renderFlowHealthLayer(riverNetwork, metrics) {
 function toggleFlowHealthLayer(show) {
   if (!map) return;
 
-  const coreColor = show ? ['coalesce', ['get', 'health_color'], '#0284c7'] : '#0284c7';
-  const glowColor = show ? ['coalesce', ['get', 'health_color'], '#38bdf8'] : '#38bdf8';
+  const coreColor = show ? [
+    'case',
+    ['==', ['get', 'reach_type'], 'submerged_path'], '#0369a1',
+    ['coalesce', ['get', 'health_color'], '#0284c7']
+  ] : '#0284c7';
+
+  const glowColor = show ? [
+    'case',
+    ['==', ['get', 'reach_type'], 'submerged_path'], 'rgba(0,0,0,0)',
+    ['coalesce', ['get', 'health_color'], '#38bdf8']
+  ] : '#38bdf8';
 
   // Apply colors directly to the existing river layers without dimming anything
   ['rivers-mainstem-core', 'rivers-major-core'].forEach(id => {

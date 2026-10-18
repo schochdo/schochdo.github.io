@@ -464,18 +464,6 @@ def fetch_reservoirs():
     # --- Front Range & Denver Collection Reservoirs ---
     front_range_res = [
         {
-            "id": "dillon_reservoir",
-            "abbrev": "DILRESCO",
-            "name": "Dillon Reservoir",
-            "river": "Blue River (Summit County, CO)",
-            "capacity_af": 257114.0,
-            "full_pool_elev": 9017.0,
-            "operator": "Denver Water",
-            "role": "Primary West Slope Storage -> Roberts Tunnel to Denver",
-            "lat": 39.6183,
-            "lon": -106.0656
-        },
-        {
             "id": "lake_granby",
             "abbrev": "GRARESCO",
             "name": "Lake Granby",
@@ -486,6 +474,18 @@ def fetch_reservoirs():
             "role": "C-BT Project Primary Storage -> Adams Tunnel",
             "lat": 40.1488,
             "lon": -105.8675
+        },
+        {
+            "id": "dillon_reservoir",
+            "abbrev": "DILRESCO",
+            "name": "Dillon Reservoir",
+            "river": "Blue River (Summit County, CO)",
+            "capacity_af": 257114.0,
+            "full_pool_elev": 9017.0,
+            "operator": "Denver Water",
+            "role": "Primary West Slope Storage -> Roberts Tunnel to Denver",
+            "lat": 39.6183,
+            "lon": -106.0656
         },
         {
             "id": "green_mountain",
@@ -571,7 +571,10 @@ def fetch_reservoirs():
             "lon": fr["lon"]
         })
 
-    return results
+    # Sort reservoirs descending by capacity_af within each category
+    system_res = sorted([r for r in results if r.get("category") != "front_range"], key=lambda x: x.get("capacity_af", 0), reverse=True)
+    fr_res = sorted([r for r in results if r.get("category") == "front_range"], key=lambda x: x.get("capacity_af", 0), reverse=True)
+    return system_res + fr_res
 
 def main():
     print("Fetching Colorado River hydrologic data...")

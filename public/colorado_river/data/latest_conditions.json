@@ -1,0 +1,229 @@
+{
+  "generated_at": "2026-10-18T00:02:35.782052Z",
+  "powell_active_elevation_ft": 3520.0,
+  "reservoirs": {
+    "lake_powell": {
+      "site_no": "09379900",
+      "name": "Lake Powell (Glen Canyon Dam)",
+      "elevation_ft": 3520.0,
+      "full_pool_elev_ft": 3700.0,
+      "feet_below_full": 180.0,
+      "storage_af": 10750000.0,
+      "capacity_af": 24322000,
+      "capacity_pct": 44.2,
+      "status_tier": "amber",
+      "timestamp": "2026-10-17 23:45:00+00:00"
+    },
+    "lake_mead": {
+      "site_no": "09421000",
+      "name": "Lake Mead (Hoover Dam)",
+      "elevation_ft": 1037.6,
+      "full_pool_elev_ft": 1229.0,
+      "feet_below_full": 191.4,
+      "storage_af": 8610000.0,
+      "capacity_af": 26134000,
+      "capacity_pct": 32.9,
+      "status_tier": "amber",
+      "timestamp": "2026-10-17T18:02:35.773301"
+    }
+  },
+  "stations": {
+    "09070500": {
+      "flow_cfs": 2270.0,
+      "stage_ft": 42.47,
+      "timestamp": "('09527700', Timestamp('2026-10-17 23:30:00+0000', tz='UTC'))",
+      "name": "Colorado River near Dotsero, CO",
+      "river": "Colorado Mainstem",
+      "historical_median_cfs": 850,
+      "pct_of_median": 267.1,
+      "health_label": "Above Normal",
+      "health_color": "#2563EB",
+      "health_tier": "above_normal"
+    },
+    "09095500": {
+      "flow_cfs": 2270.0,
+      "stage_ft": 42.47,
+      "timestamp": "('09527700', Timestamp('2026-10-17 23:30:00+0000', tz='UTC'))",
+      "name": "Colorado River near Cameo, CO",
+      "river": "Colorado Mainstem",
+      "historical_median_cfs": 2100,
+      "pct_of_median": 108.1,
+      "health_label": "Normal Flow",
+      "health_color": "#16A34A",
+      "health_tier": "normal"
+    },
+    "09180500": {
+      "flow_cfs": 2270.0,
+      "stage_ft": 42.47,
+      "timestamp": "('09527700', Timestamp('2026-10-17 23:30:00+0000', tz='UTC'))",
+      "name": "Colorado River near Cisco, UT",
+      "river": "Colorado Mainstem",
+      "historical_median_cfs": 4240,
+      "pct_of_median": 53.5,
+      "health_label": "Below Normal",
+      "health_color": "#D97706",
+      "health_tier": "below_normal"
+    },
+    "09315000": {
+      "flow_cfs": 2270.0,
+      "stage_ft": 42.47,
+      "timestamp": "('09527700', Timestamp('2026-10-17 23:30:00+0000', tz='UTC'))",
+      "name": "Green River at Green River, UT",
+      "river": "Green River",
+      "historical_median_cfs": 2970,
+      "pct_of_median": 76.4,
+      "health_label": "Below Normal",
+      "health_color": "#D97706",
+      "health_tier": "below_normal"
+    },
+    "09152500": {
+      "flow_cfs": 2270.0,
+      "stage_ft": 42.47,
+      "timestamp": "('09527700', Timestamp('2026-10-17 23:30:00+0000', tz='UTC'))",
+      "name": "Gunnison River near Grand Junction, CO",
+      "river": "Gunnison River",
+      "historical_median_cfs": 1150,
+      "pct_of_median": 197.4,
+      "health_label": "Above Normal",
+      "health_color": "#2563EB",
+      "health_tier": "above_normal"
+    },
+    "09260050": {
+      "flow_cfs": 2270.0,
+      "stage_ft": 42.47,
+      "timestamp": "('09527700', Timestamp('2026-10-17 23:30:00+0000', tz='UTC'))",
+      "name": "Yampa River at Deerlodge Park, CO",
+      "river": "Yampa River",
+      "historical_median_cfs": 2497.0,
+      "pct_of_median": 90.9,
+      "health_label": "Normal Flow",
+      "health_color": "#16A34A",
+      "health_tier": "normal"
+    },
+    "09306500": {
+      "flow_cfs": 2270.0,
+      "stage_ft": 42.47,
+      "timestamp": "('09527700', Timestamp('2026-10-17 23:30:00+0000', tz='UTC'))",
+      "name": "White River near Watson, UT",
+      "river": "White River",
+      "historical_median_cfs": 2497.0,
+      "pct_of_median": 90.9,
+      "health_label": "Normal Flow",
+      "health_color": "#16A34A",
+      "health_tier": "normal"
+    },
+    "09180000": {
+      "flow_cfs": 2270.0,
+      "stage_ft": 42.47,
+      "timestamp": "('09527700', Timestamp('2026-10-17 23:30:00+0000', tz='UTC'))",
+      "name": "Dolores River near Cisco, UT",
+      "river": "Dolores River",
+      "historical_median_cfs": 2497.0,
+      "pct_of_median": 90.9,
+      "health_label": "Normal Flow",
+      "health_color": "#16A34A",
+      "health_tier": "normal"
+    },
+    "09379500": {
+      "flow_cfs": 2270.0,
+      "stage_ft": 42.47,
+      "timestamp": "('09527700', Timestamp('2026-10-17 23:30:00+0000', tz='UTC'))",
+      "name": "San Juan River near Bluff, UT",
+      "river": "San Juan River",
+      "historical_median_cfs": 2497.0,
+      "pct_of_median": 90.9,
+      "health_label": "Normal Flow",
+      "health_color": "#16A34A",
+      "health_tier": "normal"
+    },
+    "09380000": {
+      "flow_cfs": 2270.0,
+      "stage_ft": 42.47,
+      "timestamp": "('09527700', Timestamp('2026-10-17 23:30:00+0000', tz='UTC'))",
+      "name": "Colorado River at Lees Ferry, AZ",
+      "river": "Colorado Mainstem (Divide)",
+      "historical_median_cfs": 10300,
+      "pct_of_median": 22.0,
+      "health_label": "Critically Low",
+      "health_color": "#DC2626",
+      "health_tier": "critical"
+    },
+    "09402000": {
+      "flow_cfs": 2270.0,
+      "stage_ft": 42.47,
+      "timestamp": "('09527700', Timestamp('2026-10-17 23:30:00+0000', tz='UTC'))",
+      "name": "Little Colorado River near Cameron, AZ",
+      "river": "Little Colorado River",
+      "historical_median_cfs": 2497.0,
+      "pct_of_median": 90.9,
+      "health_label": "Normal Flow",
+      "health_color": "#16A34A",
+      "health_tier": "normal"
+    },
+    "09415000": {
+      "flow_cfs": 2270.0,
+      "stage_ft": 42.47,
+      "timestamp": "('09527700', Timestamp('2026-10-17 23:30:00+0000', tz='UTC'))",
+      "name": "Virgin River at Littlefield, AZ",
+      "river": "Virgin River",
+      "historical_median_cfs": 2497.0,
+      "pct_of_median": 90.9,
+      "health_label": "Normal Flow",
+      "health_color": "#16A34A",
+      "health_tier": "normal"
+    },
+    "09429100": {
+      "flow_cfs": 2270.0,
+      "stage_ft": 42.47,
+      "timestamp": "('09527700', Timestamp('2026-10-17 23:30:00+0000', tz='UTC'))",
+      "name": "Colorado River below Palo Verde Dam, AZ-CA",
+      "river": "Colorado Lower Mainstem",
+      "historical_median_cfs": 2497.0,
+      "pct_of_median": 90.9,
+      "health_label": "Normal Flow",
+      "health_color": "#16A34A",
+      "health_tier": "normal"
+    },
+    "09527700": {
+      "flow_cfs": 2270.0,
+      "stage_ft": 42.47,
+      "timestamp": "('09527700', Timestamp('2026-10-17 23:30:00+0000', tz='UTC'))",
+      "name": "All-American Canal near Imperial Dam",
+      "river": "Canal Diversion",
+      "historical_median_cfs": 2497.0,
+      "pct_of_median": 90.9,
+      "health_label": "Normal Flow",
+      "health_color": "#16A34A",
+      "health_tier": "normal"
+    }
+  },
+  "reach_deltas": [
+    {
+      "upstream_station": "09070500",
+      "downstream_station": "09095500",
+      "description": "Gore Canyon -> Cameo (Eagle & Roaring Fork inflows)",
+      "upstream_cfs": 2270.0,
+      "downstream_cfs": 2270.0,
+      "delta_cfs": 0.0,
+      "interpretation": "Tributary Net Accretion: +0 cfs"
+    },
+    {
+      "upstream_station": "09095500",
+      "downstream_station": "09180500",
+      "description": "Cameo -> Cisco (Gunnison River confluence & Grand Valley diversions)",
+      "upstream_cfs": 2270.0,
+      "downstream_cfs": 2270.0,
+      "delta_cfs": 0.0,
+      "interpretation": "Tributary Net Accretion: +0 cfs"
+    },
+    {
+      "upstream_station": "09180500",
+      "downstream_station": "09380000",
+      "description": "Cisco (+ Green River) -> Lees Ferry (Lake Powell storage retention)",
+      "upstream_cfs": 2270.0,
+      "downstream_cfs": 2270.0,
+      "delta_cfs": -2270.0,
+      "interpretation": "Lake Powell Net Storage Retention: 2,270 cfs"
+    }
+  ]
+}
