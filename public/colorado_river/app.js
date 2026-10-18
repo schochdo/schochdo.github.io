@@ -16,11 +16,11 @@ let tooltipPopup;
 let activeFeaturePopup = null;
 
 function showFeaturePopup(popup, lngLat) {
-  if (activeFeaturePopup && activeFeaturePopup.isOpen()) {
-    activeFeaturePopup.remove();
-  }
   if (tooltipPopup && tooltipPopup.isOpen()) {
     tooltipPopup.remove();
+  }
+  if (activeFeaturePopup && activeFeaturePopup.isOpen() && activeFeaturePopup !== popup) {
+    activeFeaturePopup.remove();
   }
   activeFeaturePopup = popup;
   popup.on('close', () => {
@@ -33,6 +33,23 @@ function showFeaturePopup(popup, lngLat) {
   }
   popup.addTo(map);
   return popup;
+}
+
+function showHoverTooltip(html, lngLat) {
+  // If an active feature card is currently open, suppress hover tooltips to avoid chaotic dual popups
+  if (activeFeaturePopup && activeFeaturePopup.isOpen()) {
+    if (tooltipPopup && tooltipPopup.isOpen()) tooltipPopup.remove();
+    return;
+  }
+  if (!tooltipPopup) return;
+  tooltipPopup.setLngLat(lngLat).setHTML(html).addTo(map);
+}
+
+function hideHoverTooltip() {
+  if (map && map.getCanvas()) map.getCanvas().style.cursor = '';
+  if (tooltipPopup && tooltipPopup.isOpen()) {
+    tooltipPopup.remove();
+  }
 }
 
 function hasHigherPriorityFeature(point, layerIds) {
@@ -48,23 +65,7 @@ function hasHigherPriorityFeature(point, layerIds) {
   }
 }
 
-// Two-Tabbed Popup Navigation & Copy Handlers (Option A)
-function switchPopupTab(btn, tabName, ev) {
-  if (ev) ev.stopPropagation();
-  const container = btn.closest('.custom-popup-body');
-  if (!container) return;
-  container.querySelectorAll('.popup-tab-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const dataPane = container.querySelector('.popup-tab-pane-data');
-  const codePane = container.querySelector('.popup-tab-pane-code');
-  if (tabName === 'code') {
-    if (dataPane) dataPane.style.display = 'none';
-    if (codePane) codePane.style.display = 'block';
-  } else {
-    if (dataPane) dataPane.style.display = 'block';
-    if (codePane) codePane.style.display = 'none';
-  }
-}
+function switchPopupTab() {}
 
 function copyPopupCode(btn, ev) {
   if (ev) ev.stopPropagation();
@@ -85,34 +86,14 @@ function copyPopupCode(btn, ev) {
 const copySnippetCode = copyPopupCode;
 
 function formatTabbedPopup({ dataHtml, codeTitle, endpointUrl, pythonCode, notes }) {
-  const safeCode = (pythonCode || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   return `
-    <div class="custom-popup-body" onclick="event.stopPropagation()" onmousedown="event.stopPropagation()" style="font-family:'Inter',sans-serif; min-width:240px; max-width:325px;">
-      <div class="popup-tab-bar">
-        <button type="button" class="popup-tab-btn active" onclick="event.stopPropagation(); switchPopupTab(this, 'data', event)"><span>📊</span> Live Data</button>
-        <button type="button" class="popup-tab-btn" onclick="event.stopPropagation(); switchPopupTab(this, 'code', event)"><span>💻</span> API &amp; Code</button>
-      </div>
-
-      <div class="popup-tab-pane-data" style="display:block;">
+    <div class="custom-popup-body popup-single-card" onclick="event.stopPropagation()" onmousedown="event.stopPropagation()" style="font-family:'Inter',sans-serif; min-width:240px; max-width:320px;">
+      <div class="popup-pane-data">
         ${dataHtml}
       </div>
-
-      <div class="popup-tab-pane-code" style="display:none;">
-        <div style="font-size:11px; font-weight:700; color:#0f172a; margin-bottom:4px; display:flex; justify-content:space-between; align-items:center;">
-          <span>${codeTitle || 'REST API Query'}</span>
-          <span style="font-size:9.5px; font-weight:700; background:#e0f2fe; color:#0369a1; padding:1px 5px; border-radius:3px;">Python</span>
-        </div>
-        ${endpointUrl ? `
-          <div class="popup-endpoint-box">
-            <div class="popup-endpoint-tag">API Endpoint</div>
-            <div class="popup-endpoint-url" title="${endpointUrl}">${endpointUrl}</div>
-          </div>
-        ` : ''}
-        <div class="popup-code-box">
-          <button type="button" class="popup-code-copy-btn" onclick="event.stopPropagation(); copyPopupCode(this, event)">Copy</button>
-          <pre class="popup-code-pre"><code>${safeCode}</code></pre>
-        </div>
-        ${notes ? `<div style="font-size:10px; color:#64748b; line-height:1.35; margin-top:4px;">${notes}</div>` : ''}
+      <div class="popup-footer-action" style="margin-top:8px; padding-top:6px; border-top:1px solid #e2e8f0; font-size:10px; color:#64748b; display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-weight:500;">API &amp; Pipeline Code</span>
+        <a href="#" onclick="event.preventDefault(); openApiModal();" style="color:#0284c7; text-decoration:none; font-weight:600; display:inline-flex; align-items:center; gap:3px;">View in Code Modal ↗</a>
       </div>
     </div>
   `;
@@ -272,6 +253,14 @@ function initMap() {
     closeButton: false,
     closeOnClick: false,
     offset: 12
+  });
+
+  map.on('click', (e) => {
+    if (e.originalEvent && e.originalEvent._handled) return;
+    if (activeFeaturePopup && activeFeaturePopup.isOpen()) {
+      activeFeaturePopup.remove();
+      activeFeaturePopup = null;
+    }
   });
 
   map.on('load', () => {
@@ -547,7 +536,7 @@ async function fetchLiveUSGS() {
   const timeoutId = setTimeout(() => controller.abort(), 6000);
 
   try {
-    const sites = "09070500,09095500,09180500,09380000,09429100,09315000,09260050,09306500,09302000,09152500,09180000,09379500,09364500,09085000,09070000,09057500,09402000,09415000,09426000,09474000,09520500,09498500,09511300,09527700,09379900,09422500,09427500";
+    const sites = "09070500,09095500,09180500,09380000,09429100,09315000,09260050,09306500,09302000,09152500,09180000,09355500,09379500,09364500,09085000,09070000,09057500,09402000,09415000,09426000,09474000,09520500,09498500,09511300,09527700,09379900,09422500,09427500";
     const url = `https://waterservices.usgs.gov/nwis/iv/?format=json&sites=${sites}&parameterCd=00060,62614,00054&siteStatus=all`;
     const res = await fetch(url, { headers: { 'Accept': 'application/json' }, signal: controller.signal });
     clearTimeout(timeoutId);
@@ -567,6 +556,7 @@ async function fetchLiveUSGS() {
       "09302000": "Duchesne River near Randlett, UT",
       "09152500": "Gunnison River near Grand Junction, CO",
       "09180000": "Dolores River near Cisco, UT",
+      "09355500": "San Juan River near Archuleta, NM",
       "09379500": "San Juan River near Bluff, UT",
       "09364500": "Animas River at Farmington, NM",
       // Headwaters & West Slope Tributaries
@@ -729,6 +719,7 @@ function applyLiveHydrology(riverNetwork, metrics) {
   const duchesne = byId["09302000"];
   const gunnison = byId["09152500"];
   const dolores = byId["09180000"];
+  const sanjuanUpper = byId["09355500"];
   const sanjuan = byId["09379500"];
   const animas = byId["09364500"];
 
@@ -745,6 +736,7 @@ function applyLiveHydrology(riverNetwork, metrics) {
 
   // Secondary tributary fallback mapping to basin sentinel gauge
   const reachGauges = {
+    sanjuan_upper: "09355500",
     cameo_grand_junction: "09095500",
     lower_basin_middle: "09429100",
     price_river: "09302000",
@@ -877,14 +869,20 @@ function applyLiveHydrology(riverNetwork, metrics) {
       gaugeInfo = "USGS #09180000 near Cisco, UT";
       timestamp = dolores ? dolores.timestamp : null;
       gaugeId = "09180000";
+    } else if (r === "sanjuan_upper") {
+      flow = sanjuanUpper ? sanjuanUpper.flow_cfs : 272;
+      sourceLabel = "Live USGS Sentinel Gauge";
+      gaugeInfo = "USGS #09355500 near Archuleta, NM (Navajo Dam Release)";
+      timestamp = sanjuanUpper ? sanjuanUpper.timestamp : null;
+      gaugeId = "09355500";
     } else if (r === "sanjuan_river") {
-      flow = sanjuan ? sanjuan.flow_cfs : 2460;
+      flow = sanjuan ? sanjuan.flow_cfs : 2230;
       sourceLabel = "Live USGS Sentinel Gauge";
       gaugeInfo = "USGS #09379500 near Bluff, UT";
       timestamp = sanjuan ? sanjuan.timestamp : null;
       gaugeId = "09379500";
     } else if (r === "animas_river") {
-      flow = animas ? animas.flow_cfs : 2120;
+      flow = animas ? animas.flow_cfs : 1290;
       sourceLabel = "Live USGS Sentinel Gauge";
       gaugeInfo = "USGS #09364500 at Farmington, NM";
       timestamp = animas ? animas.timestamp : null;
@@ -1514,11 +1512,10 @@ function renderGeography(geo, riverNetwork, lakes, powellContours) {
     map.on('mousemove', 'basin-line-hit-buffer', (e) => {
       if (!e.features.length) return;
       map.getCanvas().style.cursor = 'pointer';
-      tooltipPopup.setLngLat(e.lngLat).setHTML(`<strong>${e.features[0].properties.name} Boundary</strong>`).addTo(map);
+      showHoverTooltip(`<strong>${e.features[0].properties.name} Boundary</strong>`, e.lngLat);
     });
     map.on('mouseleave', 'basin-line-hit-buffer', () => {
-      map.getCanvas().style.cursor = '';
-      tooltipPopup.remove();
+      hideHoverTooltip();
     });
   }
 
@@ -1565,11 +1562,10 @@ function renderGeography(geo, riverNetwork, lakes, powellContours) {
 
     map.on('mousemove', 'divide-line-hit-buffer', (e) => {
       map.getCanvas().style.cursor = 'pointer';
-      tooltipPopup.setLngLat(e.lngLat).setHTML(`<strong>Continental Divide of the Americas</strong><br><span style="font-size:11px;color:#64748b;">Hydrologic Boundary between Pacific & Atlantic Slopes</span>`).addTo(map);
+      showHoverTooltip(`<strong>Continental Divide of the Americas</strong><br><span style="font-size:11px;color:#64748b;">Hydrologic Boundary between Pacific & Atlantic Slopes</span>`, e.lngLat);
     });
     map.on('mouseleave', 'divide-line-hit-buffer', () => {
-      map.getCanvas().style.cursor = '';
-      tooltipPopup.remove();
+      hideHoverTooltip();
     });
   }
 
@@ -1607,7 +1603,7 @@ function renderGeography(geo, riverNetwork, lakes, powellContours) {
         name.toLowerCase().includes(r.name.split('(')[0].trim().toLowerCase())
       );
       if (matchRes) {
-        tooltipPopup.setLngLat(e.lngLat).setHTML(`
+        showHoverTooltip(`
           <div style="font-family:'Inter',sans-serif; min-width:200px;">
             <span style="font-size:10px; font-weight:700; color:#0369a1; background:#e0f2fe; padding:2px 6px; border-radius:4px; display:inline-block; margin-bottom:4px;">Major Storage Reservoir</span>
             <strong style="font-size:13px; color:#0f172a; display:block;">${matchRes.name}</strong>
@@ -1621,24 +1617,25 @@ function renderGeography(geo, riverNetwork, lakes, powellContours) {
               <strong>Role:</strong> ${matchRes.role || 'Basin Storage'}
             </div>
           </div>
-        `).addTo(map);
+        `, e.lngLat);
       } else {
         const area = p.AREASQKM ? `${Math.round(p.AREASQKM)} sq km` : "";
-        tooltipPopup.setLngLat(e.lngLat).setHTML(`<strong>${name}</strong><br><span style="font-size:11px;color:#64748b;">USGS NHD Shoreline (${area})</span>`).addTo(map);
+        showHoverTooltip(`<strong>${name}</strong><br><span style="font-size:11px;color:#64748b;">USGS NHD Shoreline (${area})</span>`, e.lngLat);
       }
     });
 
     map.on('mouseleave', 'lakes-fill', () => {
-      map.getCanvas().style.cursor = '';
-      tooltipPopup.remove();
+      hideHoverTooltip();
     });
 
     map.on('click', 'lakes-fill', (e) => {
+      if (e.originalEvent && e.originalEvent._handled) return;
       if (!e.features.length) return;
       if (hasHigherPriorityFeature(e.point, [
         'streamflow-gauges-hit-buffer', 'dams-layer', 'tunnels-portals-layer', 
-        'tunnels-hit-buffer', 'canals-hit-buffer', 'river-mainstem', 'river-major', 'river-minor'
+        'tunnels-hit-buffer', 'canals-hit-buffer', 'rivers-mainstem-hit', 'rivers-major-hit', 'rivers-minor-hit'
       ])) return;
+      if (e.originalEvent) e.originalEvent._handled = true;
 
       const p = e.features[0].properties;
       const name = p.GNIS_NAME || p.name || "Reservoir";
@@ -1851,12 +1848,11 @@ print("NHD Features found:", len(res.get("features", [])))`;
             <span style="font-size:10px; color:#64748b; font-style:italic;">Cataract Canyon rapids re-emerged free-flowing above pool.</span>
           </div>
         </div>
-      `).addTo(map);
+      `, e.lngLat);
     });
 
     map.on('mouseleave', 'lake-powell-active-pool', () => {
-      map.getCanvas().style.cursor = '';
-      tooltipPopup.remove();
+      hideHoverTooltip();
     });
 
     // Bathtub Ring Tooltip (when hovering outside the active pool)
@@ -1868,7 +1864,7 @@ print("NHD Features found:", len(res.get("features", [])))`;
       const elev = powellRes?.elevation_ft || getActivePowellElevation();
       const deficitFt = (3700.0 - elev).toFixed(1);
 
-      tooltipPopup.setLngLat(e.lngLat).setHTML(`
+      showHoverTooltip(`
         <div style="font-family:'Inter',sans-serif; min-width:210px;">
           <span style="font-size:10px; font-weight:700; color:#475569; background:#f1f5f9; padding:2px 6px; border-radius:4px; display:inline-block; margin-bottom:4px;">Ghost Boundary</span>
           <strong style="font-size:13px; color:#0f172a; display:block;">Lake Powell "Bathtub Ring" (3,700')</strong>
@@ -1878,21 +1874,22 @@ print("NHD Features found:", len(res.get("features", [])))`;
             <strong>Total Capacity:</strong> 24.32M Acre-Feet (1983 Peak)
           </div>
         </div>
-      `).addTo(map);
+      `, e.lngLat);
     });
 
     map.on('mouseleave', 'lake-powell-bathtub-ring', () => {
-      map.getCanvas().style.cursor = '';
-      tooltipPopup.remove();
+      hideHoverTooltip();
     });
 
     // Lake Powell Active Pool Click Popup
     map.on('click', 'lake-powell-active-pool', (e) => {
+      if (e.originalEvent && e.originalEvent._handled) return;
       if (!e.features.length) return;
       if (hasHigherPriorityFeature(e.point, [
         'streamflow-gauges-hit-buffer', 'dams-layer', 'tunnels-portals-layer', 
-        'tunnels-hit-buffer', 'canals-hit-buffer', 'river-mainstem-hit'
+        'tunnels-hit-buffer', 'canals-hit-buffer', 'rivers-mainstem-hit', 'rivers-major-hit', 'rivers-minor-hit'
       ])) return;
+      if (e.originalEvent) e.originalEvent._handled = true;
 
       const powellRes = activeMetrics?.reservoirs?.find(r => r.id === 'lake_powell') || {
         name: 'Lake Powell (Glen Canyon Dam)',
@@ -2112,7 +2109,7 @@ print(f"Bathtub Ring Exposed: {3700.0 - elev:.1f} ft below full pool")
           <div style="margin-top:3px;font-size:10px;color:#94a3b8;">Avg today: ${Math.round(norm).toLocaleString()} cfs (${new Date().getFullYear()-50}–${new Date().getFullYear()-1} mean)</div>`;
         }
 
-        tooltipPopup.setLngLat(e.lngLat).setHTML(`
+        showHoverTooltip(`
           <div style="font-family:'Inter',sans-serif; min-width: 190px; max-width: 270px;">
             <div style="margin-bottom:4px;">${catBadge}</div>
             <strong style="font-size:13px;color:#0f172a;line-height:1.35;display:block;">${p.name}</strong>
@@ -2128,20 +2125,21 @@ print(f"Bathtub Ring Exposed: {3700.0 - elev:.1f} ft below full pool")
             </div>
             ${notesHtml}
           </div>
-        `).addTo(map);
+        `, e.lngLat);
       });
 
       map.on('mouseleave', layerId, () => {
-        map.getCanvas().style.cursor = '';
-        tooltipPopup.remove();
+        hideHoverTooltip();
       });
 
       map.on('click', layerId, (e) => {
+        if (e.originalEvent && e.originalEvent._handled) return;
         if (!e.features.length) return;
         if (hasHigherPriorityFeature(e.point, [
           'streamflow-gauges-hit-buffer', 'dams-layer', 'tunnels-portals-layer', 
           'tunnels-hit-buffer', 'canals-hit-buffer'
         ])) return;
+        if (e.originalEvent) e.originalEvent._handled = true;
 
         const p = e.features[0].properties;
         const gaugeId = p.gauge_id;
@@ -2390,7 +2388,7 @@ print(f"${cleanReachName} Calculated Flow: {reach_flow_cfs:,.0f} cfs")
           ? (flowVal >= (Number(t.capacity_cfs) || 1000) * 0.8 ? 'Near Peak Trans-Divide Conveyance' : 'Active Trans-Divide Conveyance')
           : 'Gates Closed / Seasonal Low Flow';
 
-        tooltipPopup.setLngLat(e.lngLat).setHTML(`
+        showHoverTooltip(`
           <div style="font-family:'Inter',sans-serif; min-width: 220px; max-width: 290px;">
             <div style="display:flex; align-items:center; gap:6px; margin-bottom:5px;">
               <span style="font-size:10px;font-weight:700;color:#0369a1;background:#e0f2fe;border:1px solid #bae6fd;padding:2px 6px;border-radius:4px;">Trans-Mountain Diversion Tunnel</span>
@@ -2412,22 +2410,23 @@ print(f"${cleanReachName} Calculated Flow: {reach_flow_cfs:,.0f} cfs")
               <strong>Operational Status:</strong> ${statusText}
             </div>
           </div>
-        `).addTo(map);
+        `, e.lngLat);
       };
 
       map.on('mousemove', 'tunnels-hit-buffer', handleTunnelHover);
       map.on('mousemove', 'tunnels-portals-layer', handleTunnelHover);
 
       const handleTunnelLeave = () => {
-        map.getCanvas().style.cursor = '';
-        tooltipPopup.remove();
+        hideHoverTooltip();
       };
       map.on('mouseleave', 'tunnels-hit-buffer', handleTunnelLeave);
       map.on('mouseleave', 'tunnels-portals-layer', handleTunnelLeave);
 
       const handleTunnelClick = (e) => {
+        if (e.originalEvent && e.originalEvent._handled) return;
         if (!e.features.length) return;
         if (hasHigherPriorityFeature(e.point, ['streamflow-gauges-hit-buffer', 'dams-layer'])) return;
+        if (e.originalEvent) e.originalEvent._handled = true;
         const t = e.features[0].properties;
         const flowVal = Number(t.flow_cfs || 0);
         const capDisplay = t.capacity_cfs ? `${Number(t.capacity_cfs).toLocaleString()} cfs` : '1,020 cfs';
@@ -2563,17 +2562,18 @@ print(f"${cleanTName}: {flow_cfs:,.1f} cfs")`;
               <strong>Infrastructure:</strong> Major Inter-Basin Conveyance Aqueduct
             </div>
           </div>
-        `).addTo(map);
+        `, e.lngLat);
       });
 
       map.on('mouseleave', 'canals-hit-buffer', () => {
-        map.getCanvas().style.cursor = '';
-        tooltipPopup.remove();
+        hideHoverTooltip();
       });
 
       map.on('click', 'canals-hit-buffer', (e) => {
+        if (e.originalEvent && e.originalEvent._handled) return;
         if (!e.features.length) return;
         if (hasHigherPriorityFeature(e.point, ['streamflow-gauges-hit-buffer', 'dams-layer'])) return;
+        if (e.originalEvent) e.originalEvent._handled = true;
         const t = e.features[0].properties;
         const flowVal = Number(t.flow_cfs || 0);
         const portal = getPortalInfo(t);
@@ -2670,8 +2670,10 @@ print(f"${cleanCName}: {flow_cfs:,.0f} cfs")`;
     img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(damSvg);
 
     map.on('click', 'dams-layer', (e) => {
+      if (e.originalEvent && e.originalEvent._handled) return;
       if (!e.features.length) return;
       if (hasHigherPriorityFeature(e.point, ['streamflow-gauges-hit-buffer'])) return;
+      if (e.originalEvent) e.originalEvent._handled = true;
       const d = e.features[0].properties;
       const portal = getPortalInfo(d);
       const dataHtml = `
@@ -2717,15 +2719,14 @@ params = {
       if (!e.features.length) return;
       map.getCanvas().style.cursor = 'pointer';
       const d = e.features[0].properties;
-      tooltipPopup.setLngLat(e.lngLat).setHTML(`
+      showHoverTooltip(`
         <strong>${d.name}</strong><br>
         <span style="font-size:11px;color:#64748b;">${d.operator} • Impounds ${d.impounds}</span>
-      `).addTo(map);
+      `, e.lngLat);
     });
 
     map.on('mouseleave', 'dams-layer', () => {
-      map.getCanvas().style.cursor = '';
-      tooltipPopup.remove();
+      hideHoverTooltip();
     });
   }
 }
@@ -3041,7 +3042,7 @@ print(f"Discharge: {flow_cfs:,.0f} cfs at {val['dateTime']}")`;
         if (!e.features.length) return;
         map.getCanvas().style.cursor = 'pointer';
         const g = e.features[0].properties;
-        tooltipPopup.setLngLat(e.lngLat).setHTML(`
+        showHoverTooltip(`
           <div style="font-family:'Inter',sans-serif; min-width: 190px;">
             <span style="font-size:10px; font-weight:700; color:#0369a1; background:#e0f2fe; padding:2px 6px; border-radius:4px; display:inline-block; margin-bottom:4px;">USGS Real-Time Gauge</span>
             <strong style="font-size:13px; color:#0f172a; display:block;">${g.name}</strong>
@@ -3051,16 +3052,17 @@ print(f"Discharge: {flow_cfs:,.0f} cfs at {val['dateTime']}")`;
             </div>
             <div style="font-size:10.5px; color:#64748b;">USGS Station ID: #${g.id}</div>
           </div>
-        `).addTo(map);
+        `, e.lngLat);
       });
 
       map.on('mouseleave', 'streamflow-gauges-hit-buffer', () => {
-        map.getCanvas().style.cursor = '';
-        tooltipPopup.remove();
+        hideHoverTooltip();
       });
 
       map.on('click', 'streamflow-gauges-hit-buffer', (e) => {
+        if (e.originalEvent && e.originalEvent._handled) return;
         if (!e.features.length) return;
+        if (e.originalEvent) e.originalEvent._handled = true;
         const g = e.features[0].properties;
         const entry = stationMarkers[g.id];
         if (entry && entry.popup) {

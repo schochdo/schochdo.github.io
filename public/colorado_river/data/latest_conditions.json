@@ -125,16 +125,16 @@
       "health_tier": "normal"
     },
     "09379500": {
-      "flow_cfs": 2270.0,
-      "stage_ft": 42.47,
-      "timestamp": "('09527700', Timestamp('2026-10-17 23:30:00+0000', tz='UTC'))",
+      "flow_cfs": 2230.0,
+      "stage_ft": 6.1,
+      "timestamp": "2026-10-17 21:15:00-06:00",
       "name": "San Juan River near Bluff, UT",
-      "river": "San Juan River",
-      "historical_median_cfs": 2497.0,
-      "pct_of_median": 90.9,
-      "health_label": "Normal Flow",
-      "health_color": "#16A34A",
-      "health_tier": "normal"
+      "river": "Lower San Juan River",
+      "historical_median_cfs": 1400.0,
+      "pct_of_median": 159.3,
+      "health_label": "Above Normal",
+      "health_color": "#2563EB",
+      "health_tier": "above_normal"
     },
     "09380000": {
       "flow_cfs": 2270.0,
@@ -195,6 +195,30 @@
       "health_label": "Normal Flow",
       "health_color": "#16A34A",
       "health_tier": "normal"
+    },
+    "09355500": {
+      "flow_cfs": 272.0,
+      "stage_ft": 3.15,
+      "timestamp": "2026-10-17 21:00:00-06:00",
+      "name": "San Juan River near Archuleta, NM",
+      "river": "Upper San Juan River (Navajo Release)",
+      "historical_median_cfs": 731.0,
+      "pct_of_median": 37.2,
+      "health_label": "Below Normal",
+      "health_color": "#D97706",
+      "health_tier": "below_normal"
+    },
+    "09364500": {
+      "flow_cfs": 1290.0,
+      "stage_ft": 4.82,
+      "timestamp": "2026-10-17 21:00:00-06:00",
+      "name": "Animas River at Farmington, NM",
+      "river": "Animas River",
+      "historical_median_cfs": 419.0,
+      "pct_of_median": 307.9,
+      "health_label": "High Flow",
+      "health_color": "#1D4ED8",
+      "health_tier": "high"
     }
   },
   "reach_deltas": [
@@ -224,6 +248,17 @@
       "downstream_cfs": 2270.0,
       "delta_cfs": -2270.0,
       "interpretation": "Lake Powell Net Storage Retention: 2,270 cfs"
+    },
+    {
+      "upstream_station": "09355500",
+      "tributary_station": "09364500",
+      "downstream_station": "09379500",
+      "description": "Navajo Dam Release (Archuleta) + Animas River -> Bluff, UT (San Juan Confluence Mass-Balance)",
+      "upstream_cfs": 272.0,
+      "tributary_cfs": 1290.0,
+      "downstream_cfs": 2230.0,
+      "delta_cfs": 668.0,
+      "interpretation": "Tributary Accretion: +1,290 cfs from Animas River + 668 cfs Four Corners basin runoff"
     }
   ]
 }
