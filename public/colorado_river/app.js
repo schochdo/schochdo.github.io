@@ -14,18 +14,39 @@ const markers = {
 let stationMarkers = {};
 let tooltipPopup;
 let activeFeaturePopup = null;
+let selectedReachId = null;
+
+function highlightSelectedReach(reachId) {
+  selectedReachId = reachId || null;
+  if (!map) return;
+  const filter = selectedReachId ? ['==', ['get', 'reach'], selectedReachId] : ['==', ['get', 'reach'], ''];
+  if (map.getLayer('rivers-selected-highlight-casing')) {
+    map.setFilter('rivers-selected-highlight-casing', filter);
+  }
+  if (map.getLayer('rivers-selected-highlight-core')) {
+    map.setFilter('rivers-selected-highlight-core', filter);
+  }
+}
+
+function clearReachHighlight() {
+  highlightSelectedReach(null);
+}
 
 function showFeaturePopup(popup, lngLat) {
   if (tooltipPopup && tooltipPopup.isOpen()) {
     tooltipPopup.remove();
   }
   if (activeFeaturePopup && activeFeaturePopup.isOpen() && activeFeaturePopup !== popup) {
-    activeFeaturePopup.remove();
+    const oldPopup = activeFeaturePopup;
+    activeFeaturePopup = popup;
+    oldPopup.remove();
+  } else {
+    activeFeaturePopup = popup;
   }
-  activeFeaturePopup = popup;
   popup.on('close', () => {
     if (activeFeaturePopup === popup) {
       activeFeaturePopup = null;
+      clearReachHighlight();
     }
   });
   if (lngLat) {
@@ -257,6 +278,7 @@ function initMap() {
 
   map.on('click', (e) => {
     if (e.originalEvent && e.originalEvent._handled) return;
+    clearReachHighlight();
     if (activeFeaturePopup && activeFeaturePopup.isOpen()) {
       activeFeaturePopup.remove();
       activeFeaturePopup = null;
@@ -536,7 +558,7 @@ async function fetchLiveUSGS() {
   const timeoutId = setTimeout(() => controller.abort(), 6000);
 
   try {
-    const sites = "09070500,09095500,09180500,09380000,09429100,09315000,09260050,09306500,09302000,09152500,09180000,09355500,09379500,09364500,09085000,09070000,09057500,09402000,09415000,09426000,09474000,09520500,09498500,09511300,09527700,09379900,09422500,09427500";
+    const sites = "09058000,09070500,09095500,09163500,09180500,09380000,09429100,09234500,09261000,09315000,09260050,09306500,09302000,09128000,09152500,09180000,09355500,09379500,09364500,09085000,09070000,09057500,09402000,09415000,09426000,09474000,09520500,09498500,09511300,09527700,09379900,09422500,09427500";
     const url = `https://waterservices.usgs.gov/nwis/iv/?format=json&sites=${sites}&parameterCd=00060,62614,00054&siteStatus=all`;
     const res = await fetch(url, { headers: { 'Accept': 'application/json' }, signal: controller.signal });
     clearTimeout(timeoutId);
@@ -544,16 +566,21 @@ async function fetchLiveUSGS() {
     const data = await res.json();
     const siteNames = {
       // Mainstem Sentinel Gauges
+      "09058000": "Colorado River near Kremmling, CO",
       "09070500": "Colorado River near Dotsero, CO",
       "09095500": "Colorado River near Cameo, CO",
+      "09163500": "Colorado River near CO-UT State Line",
       "09180500": "Colorado River near Cisco, UT",
       "09380000": "Colorado River at Lees Ferry, AZ",
       "09429100": "Colorado River below Palo Verde Dam, AZ-CA",
       // Major Upper Basin Tributaries
+      "09234500": "Green River near Greendale, UT (Flaming Gorge Dam)",
+      "09261000": "Green River near Jensen, UT (below Yampa)",
       "09315000": "Green River at Green River, UT",
       "09260050": "Yampa River at Deerlodge Park, CO",
       "09306500": "White River near Watson, UT",
       "09302000": "Duchesne River near Randlett, UT",
+      "09128000": "Gunnison River below Gunnison Tunnel, CO",
       "09152500": "Gunnison River near Grand Junction, CO",
       "09180000": "Dolores River near Cisco, UT",
       "09355500": "San Juan River near Archuleta, NM",
@@ -707,16 +734,21 @@ function applyLiveHydrology(riverNetwork, metrics) {
   const byId = {};
   streamflows.forEach(s => { byId[s.id] = s; });
 
+  const kremmling = byId["09058000"];
   const dotsero = byId["09070500"];
   const cameo = byId["09095500"];
+  const stateLine = byId["09163500"];
   const cisco = byId["09180500"];
   const leesFerry = byId["09380000"];
   const paloVerde = byId["09429100"];
 
+  const greenUpper = byId["09234500"];
+  const greenJensen = byId["09261000"];
   const green = byId["09315000"];
   const yampa = byId["09260050"];
   const white = byId["09306500"];
   const duchesne = byId["09302000"];
+  const gunnisonUpper = byId["09128000"];
   const gunnison = byId["09152500"];
   const dolores = byId["09180000"];
   const sanjuanUpper = byId["09355500"];
@@ -736,8 +768,24 @@ function applyLiveHydrology(riverNetwork, metrics) {
 
   // Secondary tributary fallback mapping to basin sentinel gauge
   const reachGauges = {
-    sanjuan_upper: "09355500",
+    headwaters: "09070500",
+    colorado_granby_kremmling: "09058000",
+    gore_canyon: "09058000",
+    colorado_glenwood_canyon: "09070500",
+    glenwood_cameo: "09095500",
     cameo_grand_junction: "09095500",
+    colorado_stateline_cisco: "09163500",
+    grand_valley_cisco: "09180500",
+    green_upper: "09234500",
+    green_middle: "09261000",
+    green_river: "09315000",
+    gunnison_upper: "09128000",
+    gunnison_river: "09152500",
+    roaring_fork_upper: "09085000",
+    roaring_fork_river: "09085000",
+    sanjuan_upper: "09355500",
+    sanjuan_river: "09379500",
+    animas_river: "09364500",
     lower_basin_middle: "09429100",
     price_river: "09302000",
     little_snake_river: "09260050",
@@ -762,40 +810,103 @@ function applyLiveHydrology(riverNetwork, metrics) {
     let gaugeInfo = f.properties.notes || "";
     let timestamp = null;
     let gaugeId = f.properties.gauge_id || null;
+    let confluenceInfo = null;
 
     if (r === "headwaters") {
       flow = 350;
       sourceLabel = "Snowpack Headwaters Inflow";
-      gaugeInfo = "Rocky Mountain NP snowmelt; upstream of Adams Tunnel";
+      gaugeInfo = "Rocky Mountain NP snowmelt; upstream of Adams Tunnel & Granby";
       gaugeId = "09070500";
-    } else if (r === "gore_canyon") {
-      flow = dotsero ? dotsero.flow_cfs : 632;
+    } else if (r === "colorado_granby_kremmling") {
+      flow = kremmling ? kremmling.flow_cfs : 429;
       sourceLabel = "Live USGS Sentinel Gauge";
-      gaugeInfo = "USGS #09070500 near Dotsero, CO (Kremmling & Glenwood Canyon)";
+      gaugeInfo = "USGS #09058000 near Kremmling, CO (below Fraser & Williams Fork)";
+      timestamp = kremmling ? kremmling.timestamp : null;
+      gaugeId = "09058000";
+      confluenceInfo = {
+        confluence_name: "Fraser River Confluence at Granby",
+        mainstem_upstream: { name: "Headwaters (Granby)", cfs: 350 },
+        tributary: { name: "Fraser River & local runoff", cfs: kremmling ? Math.max(0, Math.round(kremmling.flow_cfs - 350)) : 79 }
+      };
+    } else if (r === "gore_canyon") {
+      const kFlow = kremmling ? kremmling.flow_cfs : 429;
+      const bFlow = blue ? blue.flow_cfs : 133;
+      flow = Math.round(kFlow + bFlow);
+      sourceLabel = "Confluence Accounting (Live)";
+      gaugeInfo = "Kremmling Sentinel (#09058000) + Blue River (#09057500) through Gore Canyon";
+      timestamp = kremmling ? kremmling.timestamp : null;
+      gaugeId = "09058000";
+      confluenceInfo = {
+        confluence_name: "Blue River Confluence at Kremmling",
+        mainstem_upstream: { name: "Granby to Kremmling", cfs: kFlow },
+        tributary: { name: "Blue River", cfs: bFlow }
+      };
+    } else if (r === "colorado_glenwood_canyon") {
+      flow = dotsero ? dotsero.flow_cfs : 660;
+      sourceLabel = "Live USGS Sentinel Gauge";
+      gaugeInfo = "USGS #09070500 near Dotsero, CO (Glenwood Canyon below Eagle River)";
       timestamp = dotsero ? dotsero.timestamp : null;
       gaugeId = "09070500";
-    } else if (r === "glenwood_cameo" || r === "cameo_grand_junction") {
+      const goreFlow = Math.round((kremmling ? kremmling.flow_cfs : 429) + (blue ? blue.flow_cfs : 133));
+      confluenceInfo = {
+        confluence_name: "Eagle River Confluence at Dotsero",
+        mainstem_upstream: { name: "Gore Canyon", cfs: goreFlow },
+        tributary: { name: "Eagle River", cfs: eagle ? eagle.flow_cfs : 133 }
+      };
+    } else if (r === "glenwood_cameo") {
+      const gcFlow = dotsero ? dotsero.flow_cfs : 660;
+      const rfFlow = roaringFork ? roaringFork.flow_cfs : 512;
+      flow = cameo ? Math.round(cameo.flow_cfs * 0.75) : Math.round(gcFlow + rfFlow + 110);
+      sourceLabel = "Confluence Accounting (Live)";
+      gaugeInfo = "Dotsero Gauge (#09070500) + Roaring Fork (#09085000) through De Beque Canyon";
+      timestamp = dotsero ? dotsero.timestamp : null;
+      gaugeId = "09070500";
+      confluenceInfo = {
+        confluence_name: "Roaring Fork Confluence at Glenwood Springs",
+        mainstem_upstream: { name: "Glenwood Canyon", cfs: gcFlow },
+        tributary: { name: "Roaring Fork River", cfs: rfFlow }
+      };
+    } else if (r === "cameo_grand_junction") {
       flow = cameo ? cameo.flow_cfs : 1700;
       sourceLabel = "Live USGS Sentinel Gauge";
-      gaugeInfo = r === "glenwood_cameo"
-        ? "USGS #09095500 near Cameo, CO (Glenwood Springs to Cameo)"
-        : "USGS #09095500 near Cameo, CO (Grand Valley above Gunnison Confluence)";
+      gaugeInfo = "USGS #09095500 near Cameo, CO (Grand Valley above Gunnison Confluence)";
       timestamp = cameo ? cameo.timestamp : null;
       gaugeId = "09095500";
+    } else if (r === "colorado_stateline_cisco") {
+      flow = stateLine ? stateLine.flow_cfs : 2820;
+      sourceLabel = "Live USGS Sentinel Gauge";
+      gaugeInfo = "USGS #09163500 near CO-UT State Line (below Gunnison Confluence)";
+      timestamp = stateLine ? stateLine.timestamp : null;
+      gaugeId = "09163500";
+      confluenceInfo = {
+        confluence_name: "Gunnison River Confluence at Grand Junction",
+        mainstem_upstream: { name: "Colorado River (Cameo)", cfs: cameo ? cameo.flow_cfs : 1700 },
+        tributary: { name: "Gunnison River", cfs: gunnison ? gunnison.flow_cfs : 1230 }
+      };
     } else if (r === "grand_valley_cisco") {
-      flow = cisco ? cisco.flow_cfs : 6020;
-      sourceLabel = "Live USGS Sentinel Gauge (Combined Flow)";
-      gaugeInfo = "USGS #09180500 near Cisco, UT (Below Gunnison Confluence to Green River Confluence)";
+      flow = cisco ? cisco.flow_cfs : 3150;
+      sourceLabel = "Live USGS Sentinel Gauge";
+      gaugeInfo = "USGS #09180500 near Cisco, UT (below Dolores River Confluence)";
       timestamp = cisco ? cisco.timestamp : null;
       gaugeId = "09180500";
+      confluenceInfo = {
+        confluence_name: "Dolores River Confluence near Dewey",
+        mainstem_upstream: { name: "Colorado River at State Line", cfs: stateLine ? stateLine.flow_cfs : 2820 },
+        tributary: { name: "Dolores River", cfs: dolores ? dolores.flow_cfs : 187 }
+      };
     } else if (r === "cataract_canyon") {
-      const cFlow = cisco ? cisco.flow_cfs : 6020;
-      const gFlow = green ? green.flow_cfs : 4900;
+      const cFlow = cisco ? cisco.flow_cfs : 3150;
+      const gFlow = green ? green.flow_cfs : 4500;
       flow = Math.round(cFlow + gFlow);
       sourceLabel = "Confluence Mass Balance (Live)";
-      gaugeInfo = "Colorado (Cisco, UT) + Green River (Green River, UT) into Lake Powell";
+      gaugeInfo = "Colorado River (Cisco, UT) + Green River (Green River, UT) into Lake Powell";
       timestamp = cisco ? cisco.timestamp : null;
       gaugeId = "09180500";
+      confluenceInfo = {
+        confluence_name: "Green River Confluence (Canyonlands The Maze)",
+        mainstem_upstream: { name: "Colorado River above Confluence", cfs: cFlow },
+        tributary: { name: "Green River", cfs: gFlow }
+      };
     } else if (r === "powell_submerged_path" || f.properties.reach_type === "submerged_path") {
       flow = 0;
       sourceLabel = "Submerged Thalweg (Impounded Pool)";
@@ -833,18 +944,51 @@ function applyLiveHydrology(riverNetwork, metrics) {
       gaugeInfo = "Downstream of Imperial Dam / All-American Canal diversion to Morelos Dam (Mexico)";
       timestamp = paloVerde ? paloVerde.timestamp : null;
       gaugeId = "09429100";
-    } else if (r === "green_river") {
-      flow = green ? green.flow_cfs : 3350;
+    } else if (r === "green_upper") {
+      flow = greenUpper ? greenUpper.flow_cfs : 1880;
       sourceLabel = "Live USGS Sentinel Gauge";
-      gaugeInfo = "USGS #09315000 at Green River, UT";
+      gaugeInfo = "USGS #09234500 near Greendale, UT (Flaming Gorge Dam Release)";
+      timestamp = greenUpper ? greenUpper.timestamp : null;
+      gaugeId = "09234500";
+    } else if (r === "green_middle") {
+      flow = greenJensen ? greenJensen.flow_cfs : 3640;
+      sourceLabel = "Live USGS Sentinel Gauge";
+      gaugeInfo = "USGS #09261000 near Jensen, UT (below Yampa River Confluence at Echo Park)";
+      timestamp = greenJensen ? greenJensen.timestamp : null;
+      gaugeId = "09261000";
+      confluenceInfo = {
+        confluence_name: "Yampa River Confluence at Echo Park",
+        mainstem_upstream: { name: "Upper Green River (Flaming Gorge)", cfs: greenUpper ? greenUpper.flow_cfs : 1880 },
+        tributary: { name: "Yampa River", cfs: yampa ? yampa.flow_cfs : 146 }
+      };
+    } else if (r === "green_river") {
+      flow = green ? green.flow_cfs : 4500;
+      sourceLabel = "Live USGS Sentinel Gauge";
+      gaugeInfo = "USGS #09315000 at Green River, UT (below White & Duchesne Confluences)";
       timestamp = green ? green.timestamp : null;
       gaugeId = "09315000";
-    } else if (r === "gunnison_river") {
-      flow = gunnison ? gunnison.flow_cfs : 1230;
+      confluenceInfo = {
+        confluence_name: "White & Duchesne Confluences at Ouray",
+        mainstem_upstream: { name: "Middle Green River (Jensen)", cfs: greenJensen ? greenJensen.flow_cfs : 3600 },
+        tributary: { name: "White & Duchesne Rivers", cfs: (white ? white.flow_cfs : 293) + (duchesne ? duchesne.flow_cfs : 247) }
+      };
+    } else if (r === "gunnison_upper") {
+      flow = gunnisonUpper ? gunnisonUpper.flow_cfs : 850;
       sourceLabel = "Live USGS Sentinel Gauge";
-      gaugeInfo = "USGS #09152500 near Grand Junction, CO";
+      gaugeInfo = "USGS #09128000 below Gunnison Tunnel, CO (Black Canyon of the Gunnison)";
+      timestamp = gunnisonUpper ? gunnisonUpper.timestamp : null;
+      gaugeId = "09128000";
+    } else if (r === "gunnison_river") {
+      flow = gunnison ? gunnison.flow_cfs : 1270;
+      sourceLabel = "Live USGS Sentinel Gauge";
+      gaugeInfo = "USGS #09152500 near Grand Junction, CO (below Uncompahgre Confluence)";
       timestamp = gunnison ? gunnison.timestamp : null;
       gaugeId = "09152500";
+      confluenceInfo = {
+        confluence_name: "Uncompahgre River Confluence at Delta",
+        mainstem_upstream: { name: "Upper Gunnison (Black Canyon)", cfs: gunnisonUpper ? gunnisonUpper.flow_cfs : 213 },
+        tributary: { name: "Uncompahgre River", cfs: 380 }
+      };
     } else if (r === "yampa_river") {
       flow = yampa ? yampa.flow_cfs : 146;
       sourceLabel = "Live USGS Sentinel Gauge";
@@ -878,21 +1022,36 @@ function applyLiveHydrology(riverNetwork, metrics) {
     } else if (r === "sanjuan_river") {
       flow = sanjuan ? sanjuan.flow_cfs : 2230;
       sourceLabel = "Live USGS Sentinel Gauge";
-      gaugeInfo = "USGS #09379500 near Bluff, UT";
+      gaugeInfo = "USGS #09379500 near Bluff, UT (below Animas River Confluence)";
       timestamp = sanjuan ? sanjuan.timestamp : null;
       gaugeId = "09379500";
+      confluenceInfo = {
+        confluence_name: "Animas River Confluence at Farmington",
+        mainstem_upstream: { name: "Upper San Juan (Navajo Dam)", cfs: sanjuanUpper ? sanjuanUpper.flow_cfs : 268 },
+        tributary: { name: "Animas River", cfs: animas ? animas.flow_cfs : 1290 }
+      };
     } else if (r === "animas_river") {
       flow = animas ? animas.flow_cfs : 1290;
       sourceLabel = "Live USGS Sentinel Gauge";
-      gaugeInfo = "USGS #09364500 at Farmington, NM";
+      gaugeInfo = "USGS #09364500 at Farmington, NM (above San Juan Confluence)";
       timestamp = animas ? animas.timestamp : null;
       gaugeId = "09364500";
+    } else if (r === "roaring_fork_upper") {
+      flow = roaringFork ? Math.round(roaringFork.flow_cfs * 0.65) : 340;
+      sourceLabel = "Headwaters Baseflow Estimate";
+      gaugeInfo = "Roaring Fork headwaters above Fryingpan confluence at Basalt";
+      gaugeId = "09085000";
     } else if (r === "roaring_fork_river") {
-      flow = roaringFork ? roaringFork.flow_cfs : 449;
+      flow = roaringFork ? roaringFork.flow_cfs : 512;
       sourceLabel = "Live USGS Sentinel Gauge";
-      gaugeInfo = "USGS #09085000 at Glenwood Springs, CO";
+      gaugeInfo = "USGS #09085000 at Glenwood Springs, CO (below Fryingpan Confluence)";
       timestamp = roaringFork ? roaringFork.timestamp : null;
       gaugeId = "09085000";
+      confluenceInfo = {
+        confluence_name: "Fryingpan River Confluence at Basalt",
+        mainstem_upstream: { name: "Upper Roaring Fork (Aspen)", cfs: roaringFork ? Math.round(roaringFork.flow_cfs * 0.65) : 340 },
+        tributary: { name: "Fryingpan River", cfs: 180 }
+      };
     } else if (r === "eagle_river") {
       flow = eagle ? eagle.flow_cfs : 133;
       sourceLabel = "Live USGS Sentinel Gauge";
@@ -952,6 +1111,7 @@ function applyLiveHydrology(riverNetwork, metrics) {
     f.properties.weight = computeRiverWeight(flow, cat);
     f.properties.source_label = sourceLabel;
     f.properties.gauge_info = gaugeInfo;
+    f.properties.confluence_info = confluenceInfo;
     if (timestamp) f.properties.timestamp = timestamp;
 
     // Calculate flow health vs historical daily mean
@@ -960,6 +1120,18 @@ function applyLiveHydrology(riverNetwork, metrics) {
       const normCisco = getHistoricalNormal("09180500") || 4240;
       const normGreen = getHistoricalNormal("09315000") || 2970;
       customNorm = normCisco + normGreen;
+    } else if (r === "green_middle") {
+      const normGU = getHistoricalNormal("09234500") || 1780;
+      const normYampa = getHistoricalNormal("09260050") || 180;
+      customNorm = normGU + normYampa;
+    } else if (r === "colorado_stateline_cisco") {
+      const normCameo = getHistoricalNormal("09095500") || 1850;
+      const normGunn = getHistoricalNormal("09152500") || 1150;
+      customNorm = normCameo + normGunn;
+    } else if (r === "sanjuan_river") {
+      const normSJ = getHistoricalNormal("09355500") || 310;
+      const normAnimas = getHistoricalNormal("09364500") || 1100;
+      customNorm = normSJ + normAnimas;
     } else if (r === "grand_canyon") {
       const normLF = getHistoricalNormal("09380000") || 10300;
       const normLCR = getHistoricalNormal("09402000") || 222;
@@ -1868,6 +2040,34 @@ print("NHD Features found:", len(res.get("features", [])))`;
         'line-opacity': 0.65
       }
     });
+
+    // 4d. Selected River Reach Highlight (Luminous Casing & Vibrant Core)
+    map.addLayer({
+      id: 'rivers-selected-highlight-casing',
+      type: 'line',
+      source: 'rivers',
+      filter: ['==', ['get', 'reach'], ''],
+      layout: { 'line-cap': 'round', 'line-join': 'round' },
+      paint: {
+        'line-color': '#00f0ff',
+        'line-width': ['+', ['get', 'weight'], 8.0],
+        'line-blur': 2.0,
+        'line-opacity': 0.90
+      }
+    });
+    map.addLayer({
+      id: 'rivers-selected-highlight-core',
+      type: 'line',
+      source: 'rivers',
+      filter: ['==', ['get', 'reach'], ''],
+      layout: { 'line-cap': 'round', 'line-join': 'round' },
+      paint: {
+        'line-color': '#ffffff',
+        'line-width': ['+', ['get', 'weight'], 2.5],
+        'line-opacity': 1.0
+      }
+    });
+
     map.addLayer({
       id: 'rivers-minor-hit',
       type: 'line',
@@ -1968,6 +2168,43 @@ print("NHD Features found:", len(res.get("features", [])))`;
           <div style="margin-top:3px;font-size:10px;color:#94a3b8;">Avg today: ${Math.round(norm).toLocaleString()} cfs (${new Date().getFullYear()-50}–${new Date().getFullYear()-1} mean)</div>`;
         }
 
+        highlightSelectedReach(p.reach);
+
+        let conf = p.confluence_info;
+        if (typeof conf === 'string') {
+          try { conf = JSON.parse(conf); } catch (e) { conf = null; }
+        }
+        let confluenceHtml = '';
+        if (conf && conf.confluence_name) {
+          confluenceHtml = `
+            <div style="margin-top:7px; padding:7px 9px; background:#f0f9ff; border:1px solid #bae6fd; border-radius:6px;">
+              <div style="font-size:9.5px; font-weight:800; color:#0369a1; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:3px;">
+                Confluence Mass Balance
+              </div>
+              <div style="font-size:11px; font-weight:700; color:#0f172a; margin-bottom:4px;">
+                ${conf.confluence_name}
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:10.5px; color:#475569; margin-bottom:2px;">
+                <span>↑ Upstream Mainstem:</span>
+                <strong style="color:#0369a1;">${Number(conf.mainstem_upstream.cfs).toLocaleString()} cfs</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:10.5px; color:#475569; margin-bottom:4px;">
+                <span>+ Tributary Inflow (${conf.tributary.name}):</span>
+                <strong style="color:#0284c7;">${Number(conf.tributary.cfs).toLocaleString()} cfs</strong>
+              </div>
+              <div style="border-top:1px dashed #93c5fd; padding-top:3px; display:flex; justify-content:space-between; font-size:11px; font-weight:800; color:#0f172a;">
+                <span>= Reach Discharge:</span>
+                <span style="color:#0284c7;">${Number(p.flow_cfs).toLocaleString()} cfs</span>
+              </div>
+            </div>
+          `;
+        }
+
+        const highlightBadge = `<div style="font-size:9.5px; font-weight:700; color:#0e7490; background:#cffafe; border:1px solid #a5f3fc; padding:2px 6px; border-radius:4px; display:inline-flex; align-items:center; gap:4px; margin-top:5px;">
+          <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#06b6d4;"></span>
+          Segment Isolated &amp; Highlighted
+        </div>`;
+
         const dataHtml = `
           <div style="padding:2px;">
             <div style="margin-bottom:4px;">${catBadge}</div>
@@ -1979,6 +2216,8 @@ print("NHD Features found:", len(res.get("features", [])))`;
             ${sourceBadge}
             ${stationHtml}
             ${healthHtml}
+            ${confluenceHtml}
+            ${highlightBadge}
             ${timeHtml}
             ${notesHtml}
             ${formatPortalHtml(portal, '#0284c7')}
@@ -2744,8 +2983,14 @@ print(f"Discharge: {flow_cfs:,.0f} cfs at {val['dateTime']}")`;
         s.id === "09180500" ? 680 : // Colorado R near Cisco UT
         s.id === "09402500" ? 650 : // Colorado R above Diamond Creek / Grand Canyon
         s.id === "09070500" ? 600 : // Colorado R near Dotsero CO
+        s.id === "09163500" ? 590 : // Colorado R near State Line
+        s.id === "09261000" ? 580 : // Green River near Jensen UT
+        s.id === "09234500" ? 570 : // Green River near Greendale UT
         s.id === "09521100" ? 550 : // Colorado R at Yuma
+        s.id === "09128000" ? 540 : // Gunnison River below Gunnison Tunnel
+        s.id === "09355500" ? 530 : // San Juan River near Archuleta NM
         s.id === "09427520" ? 520 : // Colorado R below Parker Dam
+        s.id === "09058000" ? 510 : // Colorado River near Kremmling CO
         s.id === "09423000" ? 500 : // Colorado R below Davis Dam
         (s.flow_cfs >= 1000 ? 400 : 200)
       )

@@ -13,21 +13,27 @@ def fetch_usgs_streamflow():
     """
     sites = {
         # Mainstem Sentinel Gauges
+        "09058000": "Colorado River near Kremmling, CO",
         "09070500": "Colorado River near Dotsero, CO",
         "09095500": "Colorado River near Cameo, CO",
+        "09163500": "Colorado River near CO-UT State Line",
         "09180500": "Colorado River near Cisco, UT",
         "09380000": "Colorado River at Lees Ferry, AZ",
         "09429100": "Colorado River below Palo Verde Dam, AZ-CA",
         
-        # Major Upper Basin Tributaries
-        "09315000": "Green River at Green River, UT",
+        # Major Upper Basin Tributaries & Confluences
+        "09234500": "Green River near Greendale, UT (Flaming Gorge Dam)",
         "09260050": "Yampa River at Deerlodge Park, CO",
+        "09261000": "Green River near Jensen, UT (below Yampa)",
         "09306500": "White River near Watson, UT",
         "09302000": "Duchesne River near Randlett, UT",
+        "09315000": "Green River at Green River, UT",
+        "09128000": "Gunnison River below Gunnison Tunnel, CO",
         "09152500": "Gunnison River near Grand Junction, CO",
         "09180000": "Dolores River near Cisco, UT",
-        "09379500": "San Juan River near Bluff, UT",
+        "09355500": "San Juan River near Archuleta, NM (Navajo Dam)",
         "09364500": "Animas River at Farmington, NM",
+        "09379500": "San Juan River near Bluff, UT",
         
         # Headwaters & West Slope Tributaries
         "09085000": "Roaring Fork River at Glenwood Springs, CO",
