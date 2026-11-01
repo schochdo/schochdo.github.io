@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Colorado River Basin Data Portal | Academic Research Edition</title>
+  
+  <!-- Inter & JetBrains Mono Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Chart.js CDN for responsive, publication-quality academic charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #e5e5e0;
+      color: #1a1a1a;
+      -webkit-font-smoothing: antialiased;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    /* Academic editorial palette matching Tufte / data science presentation */
+    .portal-bg {
+      background-color: #efeee9;
+    }
+    .card-academic {
+      background-color: #faf9f5;
+      border: 1px solid #dcdad1;
+    }
+    .sidebar-academic {
+      background-color: #2b353b;
+      color: #cbd5e1;
+    }
+    .sidebar-link {
+      color: #94a3b8;
+      transition: all 0.15s ease;
+    }
+    .sidebar-link:hover, .sidebar-link.active {
+      color: #ffffff;
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    /* Custom scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #e2e8f0;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #94a3b8;
+      border-radius: 3px;
+    }
+
+    /* Heatmap grid styles */
+    .heatmap-cell {
+      transition: transform 0.1s ease, filter 0.1s ease;
+    }
+    .heatmap-cell:hover {
+      transform: scale(1.15);
+      z-index: 10;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    }
+  </style>
+</head>
+<body class="min-h-screen portal-bg flex flex-col antialiased">
+
+  <!-- Main Academic Shell (Navbar + Layout) -->
+  <div class="flex-1 flex flex-col md:flex-row">
+    
+    <!-- Left Dark Rail (As shown in screenshot) -->
+    <aside class="sidebar-academic w-full md:w-56 flex-shrink-0 flex flex-col justify-between p-4 border-r border-slate-700">
+      <div>
+        <!-- Brand / Portal Title -->
+        <div class="pb-5 mb-4 border-b border-slate-600/60">
+          <div class="text-[10px] font-bold text-sky-400 uppercase tracking-widest">Research Workspace</div>
+          <div class="text-sm font-extrabold text-white tracking-tight mt-0.5">COLORADO BASIN</div>
+          <div class="text-[11px] text-slate-400 font-medium">Data Science Capstone</div>
+        </div>
+
+        <!-- Navigation items -->
+        <nav class="space-y-1">
+          <button onclick="setTab('overview')" id="tab-btn-overview" class="sidebar-link active w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold text-left">
+            <svg class="w-4 h-4 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+            </svg>
+            <span>Overview</span>
+          </button>
+
+          <button onclick="setTab('reservoirs')" id="tab-btn-reservoirs" class="sidebar-link w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold text-left">
+            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+            </svg>
+            <span>Reservoirs (1935–Today)</span>
+          </button>
+
+          <button onclick="setTab('streamflow')" id="tab-btn-streamflow" class="sidebar-link w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold text-left">
+            <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+            </svg>
+            <span>Streamflow &amp; SWE</span>
+          </button>
+
+          <button onclick="setTab('diversions')" id="tab-btn-diversions" class="sidebar-link w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold text-left">
+            <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+            </svg>
+            <span>Diversions &amp; States</span>
+          </button>
+
+          <button onclick="setTab('research')" id="tab-btn-research" class="sidebar-link w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold text-left">
+            <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <span>The Allocation Deficit</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Outbound Links to Map & Telemetry Registry -->
+      <div class="pt-4 border-t border-slate-700/60 space-y-2">
+        <a href="./" class="flex items-center gap-2 text-[11px] text-slate-300 hover:text-white px-2 py-1.5 rounded transition">
+          <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+          </svg>
+          <span>Geographic GIS Map</span>
+        </a>
+        <a href="./sankey.html" class="flex items-center gap-2 text-[11px] text-slate-300 hover:text-white px-2 py-1.5 rounded transition">
+          <svg class="w-3.5 h-3.5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+          </svg>
+          <span>Sankey Water Budget</span>
+        </a>
+        <a href="./telemetry.html" class="flex items-center gap-2 text-[11px] text-slate-300 hover:text-white px-2 py-1.5 rounded transition">
+          <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+          </svg>
+          <span>Gage Telemetry Registry</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 p-4 md:p-6 lg:p-7 max-w-7xl mx-auto w-full">
+      
+      <!-- Top Academic Header Banner (Exact wording from screenshot) -->
+      <header class="mb-6 pb-4 border-b border-stone-300">
+        <h1 class="text-2xl md:text-3xl font-black text-stone-900 tracking-tight">
+          COLORADO RIVER BASIN DATA PORTAL
+        </h1>
+        <p class="text-sm font-semibold text-stone-600 mt-1">
+          Sub-basins, Flow, Diversions, &amp; The Allocation Deficit
+        </p>
+      </header>
+
+      <!-- TAB 1: OVERVIEW (3-COLUMN LAYOUT MATCHING USER MOCKUP) -->
+      <div id="section-overview" class="space-y-6">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+          
+          <!-- Column 1: STREAMFLOW & RUNOFF (Col Span 3.5) -->
+          <div class="lg:col-span-4 flex flex-col gap-4">
+            
+            <div class="text-xs font-black uppercase tracking-wider text-emerald-800 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-600"></span>
+              Streamflow &amp; Runoff
+            </div>
+
+            <!-- Card 1: Basin Snow Water Equivalent (SWE) Area Chart -->
+            <div class="card-academic rounded-lg p-3.5 shadow-sm">
+              <div class="flex justify-between items-start mb-2">
+                <div>
+                  <h3 class="text-xs font-bold text-stone-900">1. Basin Snow Water Equivalent</h3>
+                  <p class="text-[10px] text-stone-500 font-medium">Upper Basin peak runoff index (in. SWE, 1977–2026)</p>
+                </div>
+                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300">NRCS SNOTEL</span>
+              </div>
+              <div class="h-36 w-full relative">
+                <canvas id="chart-swe"></canvas>
+              </div>
+              <div class="flex justify-between text-[10px] font-semibold text-stone-500 mt-1 border-t border-stone-200 pt-1">
+                <span>1977 Record Low: 7.2"</span>
+                <span>Historic Mean: ~15.8"</span>
+                <span>2011 Record High: 26.2"</span>
+              </div>
+            </div>
+
+            <!-- Card 2: Colorado River Flow at Lee's Ferry Daily Sparkline -->
+            <div class="card-academic rounded-lg p-3.5 shadow-sm">
+              <div class="flex justify-between items-start mb-2">
+                <div>
+                  <h3 class="text-xs font-bold text-stone-900">2. Colorado River Flow at Lee's Ferry</h3>
+                  <p class="text-[10px] text-stone-500 font-medium">Daily discharge sparkline / flow rate (cfs)</p>
+                </div>
+                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-sky-100 text-sky-800 border border-sky-300">USGS #09380000</span>
+              </div>
+              <div class="h-36 w-full relative">
+                <canvas id="chart-leesferry"></canvas>
+              </div>
+              <div class="flex justify-between text-[10px] font-semibold text-stone-500 mt-1 border-t border-stone-200 pt-1">
+                <span>Baseflow: ~7,000 cfs</span>
+                <span>Compact Target: 8.23 MAF/yr (11,368 cfs)</span>
+              </div>
+            </div>
+
+            <!-- Card 3: Key Reservoir Storage Summary Bar Chart -->
+            <div class="card-academic rounded-lg p-3.5 shadow-sm">
+              <div class="flex justify-between items-start mb-2">
+                <div>
+                  <h3 class="text-xs font-bold text-stone-900">Key Reservoir Storage</h3>
+                  <p class="text-[10px] text-stone-500 font-medium">Current active storage vs. full capacity (%)</p>
+                </div>
+                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 border border-blue-300">USBR Hydros</span>
+              </div>
+              <div class="h-32 w-full relative">
+                <canvas id="chart-reservoirs-mini"></canvas>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Column 2: GEOGRAPHIC BASIN OVERVIEW (Col Span 4) -->
+          <div class="lg:col-span-4 flex flex-col gap-4">
+            
+            <div class="text-xs font-black uppercase tracking-wider text-stone-800 flex items-center justify-between">
+              <span class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-stone-700"></span>
+                Geographic Basin Overview
+              </span>
+              <a href="./" class="text-[10px] font-semibold text-sky-700 hover:underline">Interactive GIS ↗</a>
+            </div>
+
+            <!-- Stylized Academic Basin Map SVG (Clean Cartographic Rendering matching screenshot) -->
+            <div class="card-academic rounded-lg p-3 shadow-sm flex flex-col h-full justify-between">
+              <div class="relative w-full h-[470px] bg-stone-100/60 rounded border border-stone-200 overflow-hidden flex items-center justify-center">
+                
+                <svg id="schematic-map" viewBox="0 0 500 620" class="w-full h-full select-none">
+                  <!-- State Outlines & Borders (Cartographic schematic) -->
+                  <!-- WY, UT, CO, NV, AZ, NM, CA -->
+                  <path d="M 120,40 L 440,40 L 440,160 L 120,160 Z" fill="none" stroke="#d6d3c7" stroke-width="1.2" stroke-dasharray="3 3"/>
+                  <text x="310" y="70" fill="#a8a29e" font-size="11" font-weight="700">WY</text>
+
+                  <path d="M 240,160 L 440,160 L 440,340 L 240,340 Z" fill="none" stroke="#d6d3c7" stroke-width="1.2" stroke-dasharray="3 3"/>
+                  <text x="350" y="240" fill="#a8a29e" font-size="11" font-weight="700">CO</text>
+
+                  <path d="M 120,160 L 240,160 L 240,340 L 120,340 Z" fill="none" stroke="#d6d3c7" stroke-width="1.2" stroke-dasharray="3 3"/>
+                  <text x="175" y="240" fill="#a8a29e" font-size="11" font-weight="700">UT</text>
+
+                  <path d="M 240,340 L 440,340 L 440,540 L 240,540 Z" fill="none" stroke="#d6d3c7" stroke-width="1.2" stroke-dasharray="3 3"/>
+                  <text x="360" y="440" fill="#a8a29e" font-size="11" font-weight="700">NM</text>
+
+                  <path d="M 120,340 L 240,340 L 240,540 L 120,540 Z" fill="none" stroke="#d6d3c7" stroke-width="1.2" stroke-dasharray="3 3"/>
+                  <text x="160" y="440" fill="#a8a29e" font-size="11" font-weight="700">AZ</text>
+
+                  <text x="80" y="230" fill="#a8a29e" font-size="11" font-weight="700">NV</text>
+                  <text x="75" y="420" fill="#a8a29e" font-size="11" font-weight="700">CA</text>
+
+                  <!-- Basin Watershed Boundary (Generalized) -->
+                  <path d="M 260,50 C 320,60 400,100 410,180 C 420,250 390,320 370,360 C 350,400 300,500 250,560 C 200,580 160,520 150,460 C 130,400 110,320 140,240 C 160,180 200,80 260,50 Z" 
+                        fill="#f3f2eb" stroke="#a8a29e" stroke-width="1.2" stroke-dasharray="5 4" opacity="0.8"/>
+
+                  <!-- Mainstem River Network (Green lines / Blue lakes) -->
+                  <!-- Green River (WY -> UT) -->
+                  <path d="M 270,60 Q 280,120 260,180 T 250,260 L 245,310" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round"/>
+                  <text x="285" y="140" fill="#15803d" font-size="8.5" font-weight="700">Green River</text>
+
+                  <!-- Upper Colorado Mainstem (CO -> UT) -->
+                  <path d="M 400,170 Q 340,210 290,240 L 245,310" fill="none" stroke="#16a34a" stroke-width="3" stroke-linecap="round"/>
+                  <text x="340" y="195" fill="#15803d" font-size="8.5" font-weight="700">Upper Mainstem</text>
+
+                  <!-- San Juan River (NM -> UT) -->
+                  <path d="M 370,350 Q 300,340 245,340" fill="none" stroke="#16a34a" stroke-width="1.8" stroke-linecap="round"/>
+                  <text x="325" y="360" fill="#15803d" font-size="8" font-weight="600">San Juan River</text>
+
+                  <!-- Lake Powell (Blue reservoir polygon) -->
+                  <path d="M 245,310 C 235,320 230,345 235,355 C 245,355 255,335 245,310 Z" fill="#0284c7" stroke="#0369a1" stroke-width="1.5"/>
+                  <circle cx="235" cy="355" r="4" fill="#ffffff" stroke="#0284c7" stroke-width="2"/>
+                  <text x="210" y="348" fill="#0369a1" font-size="9" font-weight="800" text-anchor="end">Lake Powell</text>
+
+                  <!-- Grand Canyon Reach to Lake Mead -->
+                  <path d="M 235,355 Q 180,365 160,385 L 145,410" fill="none" stroke="#0284c7" stroke-width="3.5" stroke-linecap="round"/>
+                  
+                  <!-- Lake Mead (Blue reservoir polygon) -->
+                  <path d="M 145,405 C 135,400 120,410 130,425 C 145,430 155,420 145,405 Z" fill="#0284c7" stroke="#0369a1" stroke-width="1.5"/>
+                  <circle cx="130" cy="425" r="4" fill="#ffffff" stroke="#0284c7" stroke-width="2"/>
+                  <text x="115" y="420" fill="#0369a1" font-size="9" font-weight="800" text-anchor="end">Lake Mead</text>
+
+                  <!-- Lower River Mainstem: Hoover to Gulf -->
+                  <path d="M 130,425 L 140,480 L 150,540 L 145,580" fill="none" stroke="#0284c7" stroke-width="3" stroke-linecap="round"/>
+
+                  <!-- Key Diversions (Red lines in user mockup) -->
+                  <!-- Grand Ditch / Front Range -->
+                  <path d="M 385,160 L 415,145" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round"/>
+                  <text x="420" y="145" fill="#dc2626" font-size="7.5" font-weight="700">Front Range Tunnels</text>
+
+                  <!-- Central Arizona Project (CAP Canal from Lake Havasu across Sonoran Desert) -->
+                  <path d="M 140,480 Q 210,500 230,520" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round"/>
+                  <text x="220" y="495" fill="#dc2626" font-size="8" font-weight="800">Central Arizona Project</text>
+
+                  <!-- All-American Canal to Imperial Valley -->
+                  <path d="M 150,540 L 105,548" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round"/>
+                  <text x="75" y="562" fill="#dc2626" font-size="8" font-weight="800">All-American Canal</text>
+
+                  <!-- Map Legend -->
+                  <g transform="translate(20, 480)">
+                    <rect x="0" y="0" width="115" height="75" rx="4" fill="#ffffff" fill-opacity="0.9" stroke="#dcdad1" stroke-width="1"/>
+                    <line x1="10" y1="16" x2="30" y2="16" stroke="#16a34a" stroke-width="2.5"/>
+                    <text x="36" y="19" fill="#44403c" font-size="8" font-weight="600">Natural Rivers</text>
+                    
+                    <line x1="10" y1="32" x2="30" y2="32" stroke="#0284c7" stroke-width="3"/>
+                    <text x="36" y="35" fill="#44403c" font-size="8" font-weight="600">Regulated Stem</text>
+
+                    <line x1="10" y1="48" x2="30" y2="48" stroke="#dc2626" stroke-width="2"/>
+                    <text x="36" y="51" fill="#44403c" font-size="8" font-weight="600">Canal Diversion</text>
+
+                    <rect x="10" y="59" width="16" height="8" rx="2" fill="#0284c7"/>
+                    <text x="36" y="66" fill="#44403c" font-size="8" font-weight="600">Major Reservoirs</text>
+                  </g>
+                </svg>
+
+              </div>
+              <div class="text-[10px] text-stone-500 font-medium mt-2 flex justify-between">
+                <span>Cartographic schematic: 7 Compact Basin States</span>
+                <span class="font-bold text-stone-700">Area: ~246,000 sq mi</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Column 3: DIVERSIONS & CONSUMPTION + THE DEFICIT (Col Span 4.5) -->
+          <div class="lg:col-span-4 flex flex-col gap-4">
+            
+            <div class="text-xs font-black uppercase tracking-wider text-amber-800 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-amber-600"></span>
+              Diversions &amp; Consumption
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <!-- Sub-card: Active Canals & Pipelines -->
+              <div class="card-academic rounded-lg p-3 shadow-sm">
+                <h3 class="text-[11px] font-bold text-stone-900 leading-tight">1. Active Canals &amp; Pipelines</h3>
+                <p class="text-[9.5px] text-stone-500 font-medium">Diversion capacity / typical flow (cfs)</p>
+                <div class="h-32 w-full relative mt-1">
+                  <canvas id="chart-canals"></canvas>
+                </div>
+              </div>
+
+              <!-- Sub-card: Consumptive Water Use by State -->
+              <div class="card-academic rounded-lg p-3 shadow-sm">
+                <h3 class="text-[11px] font-bold text-stone-900 leading-tight">2. Consumptive Use by State</h3>
+                <p class="text-[9.5px] text-stone-500 font-medium">Average diversion volume (MAF/yr)</p>
+                <div class="h-32 w-full relative mt-1">
+                  <canvas id="chart-states"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <!-- The Highlight Research Question: THE DEFICIT (Paper Water vs. Wet Water) -->
+            <div class="card-academic rounded-lg p-4 shadow-sm border-l-4 border-l-amber-600 bg-white">
+              
+              <div class="text-[10px] font-bold text-stone-500 uppercase tracking-wider">Research Question</div>
+              <h2 class="text-sm font-black text-stone-900 tracking-tight mt-0.5">
+                THE DEFICIT: "PAPER" WATER vs. "WET" WATER
+              </h2>
+
+              <!-- Paper Water Bar -->
+              <div class="mt-3">
+                <div class="flex justify-between items-baseline text-xs mb-1">
+                  <span class="font-bold text-stone-700">Paper Water <span class="font-normal text-stone-500">(Historical Legal Rights)</span></span>
+                  <span class="mono font-black text-stone-900 text-sm">17.5 MAF</span>
+                </div>
+                <div class="w-full bg-stone-200 rounded-sm h-7 overflow-hidden relative">
+                  <div class="bg-slate-700 h-full flex items-center px-2 text-white text-[11px] font-bold mono" style="width: 100%;">
+                    17.5 MAF/yr Statutory Allocations
+                  </div>
+                </div>
+              </div>
+
+              <!-- Wet Water Bar -->
+              <div class="mt-2.5">
+                <div class="flex justify-between items-baseline text-xs mb-1">
+                  <span class="font-bold text-emerald-800">Wet Water <span class="font-normal text-stone-500">(Actual 2000–2026 Average Inflow)</span></span>
+                  <span class="mono font-black text-emerald-800 text-sm">12.4 MAF</span>
+                </div>
+                <div class="w-full bg-stone-200 rounded-sm h-7 overflow-hidden relative">
+                  <div class="bg-gradient-to-r from-teal-700 to-emerald-600 h-full flex items-center px-2 text-white text-[11px] font-bold mono" style="width: 70.8%;">
+                    12.4 MAF Physical Flow
+                  </div>
+                </div>
+              </div>
+
+              <!-- The Over-Allocation Gap -->
+              <div class="mt-3.5 p-3 rounded bg-amber-50 border border-amber-200 flex items-center justify-between">
+                <div>
+                  <div class="text-[10px] font-extrabold text-amber-800 uppercase tracking-wider">The Deficit (Over-Allocation Gap)</div>
+                  <div class="text-xs text-amber-900 font-medium mt-0.5">Physical water shortage mined from reservoir storage bank</div>
+                </div>
+                <div class="text-right">
+                  <div class="text-xl font-black text-amber-700 mono leading-none">-5.1 MAF</div>
+                  <div class="text-[9px] font-bold text-amber-600 mt-0.5">Annual Deficit</div>
+                </div>
+              </div>
+
+              <p class="text-[10.5px] text-stone-600 mt-2.5 leading-relaxed">
+                The 1922 Compact negotiators assumed an average virgin flow of ~17.5–18.0 MAF during an anomalously wet decade (1905–1922). Modern hydrology establishes true sustainable yield at ~12.4 MAF, producing an annual structural overdraft of <strong>~5.1 Million Acre-Feet</strong>.
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- TAB 2: HISTORICAL RESERVOIR LEVELS (1935–TODAY) -->
+      <div id="section-reservoirs" class="space-y-6 hidden">
+        
+        <div class="card-academic rounded-xl p-5 shadow-sm bg-white">
+          <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-stone-200">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-sky-600"></span>
+                <span class="text-xs font-bold text-sky-800 uppercase tracking-wider">Long-Term Storage Analysis</span>
+              </div>
+              <h2 class="text-xl font-black text-stone-900 tracking-tight mt-0.5">
+                Lake Mead Elevation: 1935 to Present (92-Year Continuous Record)
+              </h2>
+              <p class="text-xs text-stone-600 mt-1">
+                Visualizing the <strong>initial fill (1935–1941)</strong>, the <strong>high intra-annual seasonal swings pre-Glen Canyon Dam (1935–1963)</strong>, the <strong>1983 historical high spill</strong>, and the <strong>2000–2026 megadrought structural drawdown</strong>.
+              </p>
+            </div>
+
+            <!-- Visualization Mode Selector -->
+            <div class="flex items-center gap-2 bg-stone-100 p-1.5 rounded-lg border border-stone-300">
+              <button onclick="setReservoirView('envelope')" id="btn-view-envelope" class="px-3 py-1 text-xs font-bold rounded bg-white text-stone-900 shadow-sm border border-stone-300">
+                Seasonal Envelope (Clean)
+              </button>
+              <button onclick="setReservoirView('heatmap')" id="btn-view-heatmap" class="px-3 py-1 text-xs font-medium rounded text-stone-600 hover:text-stone-900">
+                Monthly Heatmap (All 12 Months)
+              </button>
+            </div>
+          </div>
+
+          <!-- Key Operational Threshold Reference Badges -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 my-4">
+            <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
+              <span class="text-[10px] font-bold text-stone-500 uppercase block">Spillway Crest</span>
+              <span class="text-sm font-black text-stone-900 mono">1,221.4 ft</span>
+              <span class="text-[10px] text-stone-500 block">Peak 1983: 1,225.4 ft</span>
+            </div>
+            <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
+              <span class="text-[10px] font-bold text-sky-600 uppercase block">Shortage Tier 1 Trigger</span>
+              <span class="text-sm font-black text-sky-900 mono">1,075.0 ft</span>
+              <span class="text-[10px] text-stone-500 block">Mandatory Lower Basin cuts</span>
+            </div>
+            <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
+              <span class="text-[10px] font-bold text-amber-600 uppercase block">Minimum Power Pool</span>
+              <span class="text-sm font-black text-amber-800 mono">950.0 ft</span>
+              <span class="text-[10px] text-stone-500 block">Hoover Dam turbines cease</span>
+            </div>
+            <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
+              <span class="text-[10px] font-bold text-red-600 uppercase block">Dead Pool (No Flow)</span>
+              <span class="text-sm font-black text-red-800 mono">895.0 ft</span>
+              <span class="text-[10px] text-stone-500 block">Intake sill limit (0 release)</span>
+            </div>
+          </div>
+
+          <!-- Envelope View Container -->
+          <div id="container-envelope-view">
+            <div class="h-80 w-full relative">
+              <canvas id="chart-mead-history"></canvas>
+            </div>
+            <div class="text-[11px] text-stone-500 flex justify-between items-center mt-2 pt-2 border-t border-stone-200">
+              <span>Shaded band shows <strong>monthly seasonal range (Min to Max)</strong> within each calendar year. Notice how the band narrows after 1963 when Glen Canyon Dam began dampening upstream runoff pulses.</span>
+              <span class="font-bold text-stone-700">Source: USBR Hoover Dam Teletype Records</span>
+            </div>
+          </div>
+
+          <!-- Heatmap View Container (Month vs. Year) -->
+          <div id="container-heatmap-view" class="hidden">
+            <div class="overflow-x-auto pb-2">
+              <div class="min-w-[850px]">
+                <div class="text-xs font-bold text-stone-800 mb-2">Month-by-Month Elevation Matrix (ft NGVD29): High Elevation (Blue) vs. Severe Depletion (Red)</div>
+                <div id="heatmap-grid" class="space-y-0.5"></div>
+              </div>
+            </div>
+            <div class="flex items-center justify-between text-xs text-stone-500 mt-3 pt-2 border-t border-stone-200">
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold">Color Scale:</span>
+                <span class="w-4 h-3 bg-red-600 inline-block rounded-xs"></span> <span class="text-[10px]">&lt; 1,040 ft</span>
+                <span class="w-4 h-3 bg-amber-500 inline-block rounded-xs"></span> <span class="text-[10px]">1,075 ft</span>
+                <span class="w-4 h-3 bg-sky-400 inline-block rounded-xs"></span> <span class="text-[10px]">1,150 ft</span>
+                <span class="w-4 h-3 bg-blue-700 inline-block rounded-xs"></span> <span class="text-[10px]">&gt; 1,200 ft</span>
+              </div>
+              <span class="text-[10px]">Hover any cell to inspect exact monthly elevation</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    // Tab switching logic
+    let currentTab = 'overview';
+    function setTab(tabId) {
+      currentTab = tabId;
+      document.querySelectorAll('.sidebar-link').forEach(el => el.classList.remove('active'));
+      const activeBtn = document.getElementById('tab-btn-' + tabId);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      if (tabId === 'overview') {
+        document.getElementById('section-overview').classList.remove('hidden');
+        document.getElementById('section-reservoirs').classList.add('hidden');
+      } else if (tabId === 'reservoirs') {
+        document.getElementById('section-overview').classList.add('hidden');
+        document.getElementById('section-reservoirs').classList.remove('hidden');
+        renderMeadHistoricalCharts();
+      } else {
+        // Diversions / Research / Streamflow can scroll or highlight on Overview
+        document.getElementById('section-overview').classList.remove('hidden');
+        document.getElementById('section-reservoirs').classList.add('hidden');
+      }
+    }
+
+    // Toggle between Clean Seasonal Envelope and Full 12-Month Heatmap
+    function setReservoirView(mode) {
+      const btnEnv = document.getElementById('btn-view-envelope');
+      const btnHeat = document.getElementById('btn-view-heatmap');
+      const contEnv = document.getElementById('container-envelope-view');
+      const contHeat = document.getElementById('container-heatmap-view');
+
+      if (mode === 'envelope') {
+        btnEnv.className = 'px-3 py-1 text-xs font-bold rounded bg-white text-stone-900 shadow-sm border border-stone-300';
+        btnHeat.className = 'px-3 py-1 text-xs font-medium rounded text-stone-600 hover:text-stone-900';
+        contEnv.classList.remove('hidden');
+        contHeat.classList.add('hidden');
+      } else {
+        btnHeat.className = 'px-3 py-1 text-xs font-bold rounded bg-white text-stone-900 shadow-sm border border-stone-300';
+        btnEnv.className = 'px-3 py-1 text-xs font-medium rounded text-stone-600 hover:text-stone-900';
+        contEnv.classList.add('hidden');
+        contHeat.classList.remove('hidden');
+        renderHeatmap();
+      }
+    }
+
+    let portalData = null;
+
+    async function loadPortalData() {
+      try {
+        const res = await fetch('./data/portal_historical.json');
+        portalData = await res.json();
+        
+        // Render charts once data is loaded
+        initOverviewCharts();
+      } catch (err) {
+        console.error('Failed loading portal data:', err);
+      }
+    }
+
+    function initOverviewCharts() {
+      if (!portalData) return;
+
+      // 1. Basin SWE Area Chart (1977 - 2026)
+      const sweCtx = document.getElementById('chart-swe').getContext('2d');
+      new Chart(sweCtx, {
+        type: 'line',
+        data: {
+          labels: portalData.swe_history.map(d => d.year),
+          datasets: [{
+            label: 'Peak SWE (in)',
+            data: portalData.swe_history.map(d => d.swe_in),
+            borderColor: '#15803d',
+            backgroundColor: 'rgba(22, 163, 74, 0.25)',
+            fill: true,
+            tension: 0.25,
+            pointRadius: 0,
+            pointHoverRadius: 4,
+            borderWidth: 1.8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { maxTicksLimit: 7, font: { size: 9, family: 'JetBrains Mono' } }
+            },
+            y: {
+              min: 0,
+              max: 30,
+              ticks: { stepSize: 10, font: { size: 9, family: 'JetBrains Mono' } },
+              grid: { color: 'rgba(0,0,0,0.06)' }
+            }
+          }
+        }
+      });
+
+      // 2. Lee's Ferry Daily Streamflow Sparkline
+      const lfCtx = document.getElementById('chart-leesferry').getContext('2d');
+      const sampledLees = portalData.lees_ferry_daily.filter((_, idx) => idx % 3 === 0);
+      new Chart(lfCtx, {
+        type: 'line',
+        data: {
+          labels: sampledLees.map(d => d.date.slice(5)),
+          datasets: [{
+            label: 'Discharge (cfs)',
+            data: sampledLees.map(d => d.cfs),
+            borderColor: '#0284c7',
+            backgroundColor: 'rgba(2, 132, 199, 0.18)',
+            fill: true,
+            tension: 0.2,
+            pointRadius: 0,
+            borderWidth: 1.5
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { maxTicksLimit: 6, font: { size: 9, family: 'JetBrains Mono' } }
+            },
+            y: {
+              min: 0,
+              ticks: { maxTicksLimit: 4, font: { size: 9, family: 'JetBrains Mono' } },
+              grid: { color: 'rgba(0,0,0,0.06)' }
+            }
+          }
+        }
+      });
+
+      // 3. Key Reservoir Storage Mini Bar
+      const resCtx = document.getElementById('chart-reservoirs-mini').getContext('2d');
+      new Chart(resCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Lake Powell', 'Lake Mead', 'Flaming Gorge'],
+          datasets: [{
+            label: '% Full',
+            data: [24.5, 33.3, 64.6],
+            backgroundColor: ['#0284c7', '#0369a1', '#0ea5e9'],
+            borderRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => `${ctx.parsed.y}% Capacity`
+              }
+            }
+          },
+          scales: {
+            y: {
+              min: 0,
+              max: 100,
+              ticks: { font: { size: 9, family: 'JetBrains Mono' }, callback: v => v + '%' },
+              grid: { color: 'rgba(0,0,0,0.06)' }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { font: { size: 9.5, weight: 'bold' } }
+            }
+          }
+        }
+      });
+
+      // 4. Canals & Pipelines Flow Rates
+      const canalCtx = document.getElementById('chart-canals').getContext('2d');
+      new Chart(canalCtx, {
+        type: 'bar',
+        data: {
+          labels: ['AAC', 'CAP', 'CRA', 'Gila', 'Front Rg'],
+          datasets: [{
+            data: [115, 21, 14.5, 12, 7.6], // in 100s of cfs for clean readability
+            backgroundColor: '#ea580c',
+            borderRadius: 3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => `${ctx.parsed.y * 100} cfs Typical Flow`
+              }
+            }
+          },
+          scales: {
+            y: {
+              ticks: { font: { size: 8, family: 'JetBrains Mono' } },
+              grid: { color: 'rgba(0,0,0,0.06)' }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { font: { size: 8, weight: 'bold' } }
+            }
+          }
+        }
+      });
+
+      // 5. Consumptive Use by State
+      const stateCtx = document.getElementById('chart-states').getContext('2d');
+      new Chart(stateCtx, {
+        type: 'bar',
+        data: {
+          labels: ['CA', 'AZ', 'UT', 'CO', 'NV', 'NM', 'WY'],
+          datasets: [{
+            data: [4.95, 2.65, 1.02, 2.50, 0.24, 0.48, 0.58],
+            backgroundColor: '#d97706',
+            borderRadius: 3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => `${ctx.parsed.y} MAF/yr Consumptive Use`
+              }
+            }
+          },
+          scales: {
+            y: {
+              ticks: { font: { size: 8, family: 'JetBrains Mono' } },
+              grid: { color: 'rgba(0,0,0,0.06)' }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { font: { size: 8.5, weight: 'bold' } }
+            }
+          }
+        }
+      });
+    }
+
+    let meadChartInstance = null;
+    function renderMeadHistoricalCharts() {
+      if (!portalData || meadChartInstance) return;
+
+      const records = portalData.lake_mead_historical;
+      const ctx = document.getElementById('chart-mead-history').getContext('2d');
+
+      meadChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: records.map(r => r.year),
+          datasets: [
+            {
+              label: 'Annual Max Elevation (ft)',
+              data: records.map(r => r.max),
+              borderColor: 'rgba(2, 132, 199, 0.4)',
+              borderWidth: 1,
+              pointRadius: 0,
+              fill: '+1',
+              backgroundColor: 'rgba(2, 132, 199, 0.15)'
+            },
+            {
+              label: 'Annual Min Elevation (ft)',
+              data: records.map(r => r.min),
+              borderColor: 'rgba(2, 132, 199, 0.4)',
+              borderWidth: 1,
+              pointRadius: 0,
+              fill: false
+            },
+            {
+              label: 'Annual Mean Elevation (ft)',
+              data: records.map(r => r.mean),
+              borderColor: '#0284c7',
+              borderWidth: 2.2,
+              pointRadius: 0,
+              pointHoverRadius: 5
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: { font: { size: 10, weight: 'bold' } }
+            },
+            tooltip: {
+              callbacks: {
+                afterBody: (items) => {
+                  const idx = items[0].dataIndex;
+                  const rec = records[idx];
+                  return [
+                    `Seasonal Range: ${rec.range} ft`,
+                    rec.year === 1983 ? '★ 1983 Record High Runoff' : '',
+                    rec.year === 1963 ? '⚡ 1963 Glen Canyon Dam Closure' : '',
+                    rec.year === 2022 ? '⚠ 2022 Megadrought Historic Low' : ''
+                  ].filter(Boolean);
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { maxTicksLimit: 14, font: { size: 9, family: 'JetBrains Mono' } }
+            },
+            y: {
+              min: 700,
+              max: 1250,
+              ticks: { stepSize: 50, font: { size: 9, family: 'JetBrains Mono' } },
+              grid: { color: 'rgba(0,0,0,0.06)' }
+            }
+          }
+        }
+      });
+    }
+
+    function renderHeatmap() {
+      const container = document.getElementById('heatmap-grid');
+      if (container.children.length > 0) return; // already rendered
+
+      const records = portalData.lake_mead_historical;
+      const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+
+      // Header row
+      let headerHtml = `<div class="flex items-center text-[10px] font-bold text-stone-500 pb-1 border-b border-stone-200">
+        <div class="w-12 text-left">YEAR</div>
+        <div class="flex-1 grid grid-cols-12 gap-1 text-center">
+          ${months.map(m => `<div>${m}</div>`).join('')}
+        </div>
+      </div>`;
+      container.innerHTML = headerHtml;
+
+      // Color mapping for elevation
+      function getColor(elev) {
+        if (!elev) return '#e2e8f0';
+        if (elev >= 1200) return '#1d4ed8'; // deep blue
+        if (elev >= 1150) return '#0284c7'; // ocean blue
+        if (elev >= 1100) return '#38bdf8'; // sky blue
+        if (elev >= 1075) return '#f59e0b'; // amber trigger
+        if (elev >= 1050) return '#ea580c'; // orange
+        return '#dc2626'; // red
+      }
+
+      records.forEach(r => {
+        const row = document.createElement('div');
+        row.className = 'flex items-center text-[10px] py-0.5 hover:bg-stone-200/50 rounded';
+        
+        let colsHtml = `<div class="w-12 font-bold mono text-stone-700">${r.year}</div><div class="flex-1 grid grid-cols-12 gap-1">`;
+        
+        months.forEach(m => {
+          const val = r.elevations[m];
+          const color = getColor(val);
+          const txt = val ? `${val.toFixed(1)} ft` : 'N/A';
+          colsHtml += `<div class="heatmap-cell h-4 rounded-xs text-[9px] flex items-center justify-center font-bold text-white cursor-pointer" 
+                            style="background-color: ${color};" 
+                            title="${m} ${r.year}: ${txt}">
+                       </div>`;
+        });
+        colsHtml += `</div>`;
+        row.innerHTML = colsHtml;
+        container.appendChild(row);
+      });
+    }
+
+    // Load data on boot
+    loadPortalData();
+  </script>
+</body>
+</html>

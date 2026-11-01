@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-11-01T16:29:07.717986",
+  "fetched_at": "2026-11-01T16:34:54.691877",
   "streamflows": [
     {
       "id": "09034250",
@@ -23,8 +23,8 @@
       "id": "09058000",
       "name": "Colorado River near Kremmling, CO",
       "type": "streamflow",
-      "flow_cfs": 490.0,
-      "timestamp": "2026-11-01T15:45:00.000-07:00",
+      "flow_cfs": 493.0,
+      "timestamp": "2026-11-01T16:15:00.000-07:00",
       "lat": 40.036667,
       "lon": -106.439444
     },
@@ -59,8 +59,8 @@
       "id": "09085100",
       "name": "Colorado River below Glenwood Springs, CO",
       "type": "streamflow",
-      "flow_cfs": 1390.0,
-      "timestamp": "2026-11-01T15:15:00.000-07:00",
+      "flow_cfs": 1470.0,
+      "timestamp": "2026-11-01T16:15:00.000-07:00",
       "lat": 39.5549819,
       "lon": -107.337554
     },
@@ -149,8 +149,8 @@
       "id": "09260050",
       "name": "Yampa River at Deerlodge Park, CO",
       "type": "streamflow",
-      "flow_cfs": 303.0,
-      "timestamp": "2026-11-01T15:15:00.000-07:00",
+      "flow_cfs": 307.0,
+      "timestamp": "2026-11-01T16:15:00.000-07:00",
       "lat": 40.45161747,
       "lon": -108.52512937
     },
