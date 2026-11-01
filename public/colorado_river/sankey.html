@@ -361,8 +361,10 @@
           <rect x="1075" y="485" width="60" height="18" rx="4" class="badge-bg blue" />
           <text x="1105" y="494" class="maf-badge badge-text-blue text-[9.5px]">2.5 MAF</text>
 
-          <!-- Lake Powell Reservoir Body & Core Reach (Post-San Juan, expands to 36px / 17.3 MAF) -->
-          <rect x="596" y="455" width="88" height="65" rx="14" fill="#0284c7" opacity="0.22" stroke="#0284c7" stroke-width="2" />
+          <!-- Lake Powell Reservoir Body & Core Reach (Capacity scaled to ~24.3M AF: 70x42) -->
+          <rect id="body-powell" class="cursor-pointer" x="605" y="470" width="70" height="42" rx="10" fill="#0284c7" fill-opacity="0.22" stroke="#0284c7" stroke-width="1.8" />
+          <text x="640" y="488" fill="#0369a1" font-size="9" font-weight="800" text-anchor="middle">LAKE POWELL</text>
+          <text x="640" y="499" fill="#0284c7" font-size="8.5" font-weight="700" text-anchor="middle">24.3M AF</text>
           <path id="river-powell-reach" class="river-path" d="M 640,470 L 640,520" stroke="#0284c7" stroke-width="36" />
 
           <!-- Grand Canyon Reach: Glen Canyon Dam -> Lees Ferry -> Lake Mead (8.23 MAF Compact Release) -->
@@ -384,18 +386,20 @@
           <rect x="300" y="665" width="60" height="18" rx="4" class="badge-bg blue" />
           <text x="330" y="674" class="maf-badge badge-text-blue text-[9px]">0.18 MAF</text>
 
-          <!-- Lake Mead Reservoir Body -->
-          <rect x="444" y="745" width="72" height="42" rx="12" fill="#0284c7" opacity="0.22" stroke="#0284c7" stroke-width="2" />
+          <!-- Lake Mead Reservoir Body (Capacity scaled to ~26.1M AF: 72x44) -->
+          <rect id="body-mead" class="cursor-pointer" x="444" y="742" width="72" height="44" rx="10" fill="#0284c7" fill-opacity="0.22" stroke="#0284c7" stroke-width="1.8" />
+          <text x="480" y="760" fill="#0369a1" font-size="9" font-weight="800" text-anchor="middle">LAKE MEAD</text>
+          <text x="480" y="771" fill="#0284c7" font-size="8.5" font-weight="700" text-anchor="middle">26.1M AF</text>
 
           <!-- Lower Basin Spine: Dynamically Shrinks as Diversions & Losses Exit -->
-          <!-- Reach 1: Hoover Dam to Parker Dam (Full managed release: 9.0 MAF) -->
-          <path id="river-lower-spine" class="river-path" d="M 480,785 L 480,845" stroke="#0284c7" stroke-width="28" />
+          <!-- Reach 1: Hoover Dam to Parker Dam (Full managed release: 9.0 MAF, conserved width 21px narrower than 24px Grand Canyon inflow) -->
+          <path id="river-lower-spine" class="river-path" d="M 480,785 L 480,845" stroke="#0284c7" stroke-width="21" />
 
           <!-- Reach 2: Parker Dam to Transit Loss (Post-CRA & CAP: 6.45 MAF remaining) -->
-          <path id="river-lower-mid" class="river-path" d="M 480,845 L 480,880" stroke="#0284c7" stroke-width="20" />
+          <path id="river-lower-mid" class="river-path" d="M 480,845 L 480,880" stroke="#0284c7" stroke-width="16" />
 
           <!-- Reach 3: Transit Loss to Imperial Dam (Post-Loss: 5.90 MAF remaining) -->
-          <path id="river-lower-canal" class="river-path" d="M 480,880 L 480,915" stroke="#0284c7" stroke-width="18" />
+          <path id="river-lower-canal" class="river-path" d="M 480,880 L 480,915" stroke="#0284c7" stroke-width="14.5" />
 
           <!-- Reach 4: Imperial Dam to Morelos Dam (Post-AAC: 1.50 MAF treaty water) -->
           <path id="river-lower-treaty" class="river-path" d="M 480,915 L 480,955" stroke="#0284c7" stroke-width="8" />
@@ -415,6 +419,35 @@
 
         <!-- 5. Dams & Major Storage Reservoirs (Architectural Icons & Division Points) -->
         <g id="dams-layer">
+          <!-- Flaming Gorge Dam & Reservoir (3.75M AF capacity: 28x18 body) -->
+          <g id="dam-flaminggorge" class="cursor-pointer">
+            <rect id="body-flaminggorge" x="566" y="145" width="28" height="18" rx="5" fill="#0284c7" fill-opacity="0.22" stroke="#0284c7" stroke-width="1.5" />
+            <g transform="translate(580, 160)">
+              <rect x="-11" y="-5" width="22" height="10" rx="2" fill="#ffffff" stroke="#0284c7" stroke-width="1.6" />
+              <path d="M -7 -3 L -7 3 M 0 -3 L 0 3 M 7 -3 L 7 3" stroke="#0284c7" stroke-width="1.2" />
+            </g>
+            <text x="560" y="152" fill="#0f172a" font-size="11" font-weight="800" text-anchor="end">Flaming Gorge Dam</text>
+            <text x="560" y="164" fill="#0284c7" font-size="9" font-weight="600" text-anchor="end">3.75M AF Storage</text>
+          </g>
+
+          <!-- Blue Mesa Dam & Reservoir (0.83M AF capacity: 18x12 body) -->
+          <g id="dam-bluemesa" class="cursor-pointer">
+            <rect id="body-bluemesa" x="971" y="344" width="18" height="12" rx="4" fill="#0284c7" fill-opacity="0.22" stroke="#0284c7" stroke-width="1.3" />
+            <g transform="translate(980, 350)">
+              <rect x="-8" y="-4" width="16" height="8" rx="2" fill="#ffffff" stroke="#0284c7" stroke-width="1.4" />
+              <path d="M -4 -2 L -4 2 M 4 -2 L 4 2" stroke="#0284c7" stroke-width="1" />
+            </g>
+          </g>
+
+          <!-- Navajo Dam & Reservoir (1.70M AF capacity: 22x14 body) -->
+          <g id="dam-navajo" class="cursor-pointer">
+            <rect id="body-navajo" x="959" y="463" width="22" height="14" rx="4" fill="#0284c7" fill-opacity="0.22" stroke="#0284c7" stroke-width="1.4" />
+            <g transform="translate(970, 470)">
+              <rect x="-9" y="-5" width="18" height="10" rx="2" fill="#ffffff" stroke="#0284c7" stroke-width="1.5" />
+              <path d="M -5 -3 L -5 3 M 0 -3 L 0 3 M 5 -3 L 5 3" stroke="#0284c7" stroke-width="1" />
+            </g>
+          </g>
+
           <!-- Lake Powell / Glen Canyon Dam -->
           <g id="dam-glencanyon" class="cursor-pointer">
             <g transform="translate(640, 520)">
@@ -449,11 +482,12 @@
             <text x="432" y="796" fill="#0284c7" font-size="10.5" font-weight="600" text-anchor="end">Capacity: 26.1M AF • Lower Basin Control</text>
           </g>
 
-          <!-- Parker Dam / Lake Havasu -->
+          <!-- Parker Dam / Lake Havasu (0.62M AF Forebay Pool: 16x11 body) -->
           <g id="dam-parker" class="cursor-pointer">
+            <rect id="body-havasu" x="472" y="839" width="16" height="12" rx="3" fill="#0284c7" fill-opacity="0.25" stroke="#0284c7" stroke-width="1.2" />
             <circle cx="480" cy="845" r="7.5" fill="#ffffff" stroke="#ea580c" stroke-width="2.5" />
             <text x="510" y="814" fill="#0f172a" font-size="12" font-weight="800">Parker Dam / Lake Havasu</text>
-            <text x="510" y="828" fill="#475569" font-size="9.5" font-weight="600">CRA &amp; CAP Pumping Intakes</text>
+            <text x="510" y="828" fill="#475569" font-size="9.5" font-weight="600">CRA &amp; CAP Intakes • 0.62M AF Forebay</text>
           </g>
 
           <!-- Imperial Dam -->
@@ -473,32 +507,34 @@
 
         <!-- 6. Legend Box (Top Left Open Quadrant) -->
         <g id="legend-box" transform="translate(45, 25)">
-          <rect x="0" y="0" width="285" height="175" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2" filter="drop-shadow(0 4px 16px rgba(15, 23, 42, 0.06))" />
+          <rect x="0" y="0" width="285" height="195" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2" filter="drop-shadow(0 4px 16px rgba(15, 23, 42, 0.06))" />
           
           <text x="18" y="24" fill="#0f172a" font-size="13" font-weight="900" letter-spacing="0.04em">Legend</text>
-          <text x="18" y="40" fill="#64748b" font-size="8.5" font-weight="700" letter-spacing="0.04em">FLOW-PROPORTIONAL SANKEY WIDTHS (MAF)</text>
+          <text x="18" y="39" fill="#64748b" font-size="8.5" font-weight="700" letter-spacing="0.04em">FLOW WIDTHS (MAF/YR) &amp; RESERVOIR BODIES (MAF)</text>
           
           <!-- Flow Line -->
-          <line x1="18" y1="62" x2="54" y2="62" stroke="#0284c7" stroke-width="6" stroke-linecap="round" />
-          <text x="66" y="66" fill="#1e293b" font-size="11.5" font-weight="600">River Flow / Inflow</text>
+          <line x1="18" y1="58" x2="54" y2="58" stroke="#0284c7" stroke-width="6" stroke-linecap="round" />
+          <text x="66" y="62" fill="#1e293b" font-size="11.5" font-weight="600">River Flow / Inflow (MAF/yr)</text>
           
           <!-- Diversions -->
-          <line x1="18" y1="88" x2="50" y2="88" stroke="#ea580c" stroke-width="5" stroke-linecap="round" marker-end="url(#arrow-div)" />
-          <text x="66" y="92" fill="#1e293b" font-size="11.5" font-weight="600">Major Diversions &amp; Aqueducts</text>
+          <line x1="18" y1="82" x2="50" y2="82" stroke="#ea580c" stroke-width="5" stroke-linecap="round" marker-end="url(#arrow-div)" />
+          <text x="66" y="86" fill="#1e293b" font-size="11.5" font-weight="600">Major Diversions &amp; Aqueducts</text>
           
-          <!-- Dams -->
-          <g transform="translate(32, 114)">
-            <rect x="-10" y="-7" width="20" height="14" rx="2" fill="#ffffff" stroke="#0284c7" stroke-width="1.8" />
-            <line x1="-3" y1="-4" x2="-3" y2="4" stroke="#0284c7" stroke-width="1.2" />
-            <line x1="3" y1="-4" x2="3" y2="4" stroke="#0284c7" stroke-width="1.2" />
+          <!-- Dams & Reservoir Storage Indicator -->
+          <g transform="translate(24, 102)">
+            <rect x="0" y="0" width="22" height="14" rx="3" fill="#0284c7" fill-opacity="0.22" stroke="#0284c7" stroke-width="1.2" />
+            <rect x="4" y="2" width="14" height="10" rx="1.5" fill="#ffffff" stroke="#0284c7" stroke-width="1.2" />
+            <line x1="9" y1="4" x2="9" y2="10" stroke="#0284c7" stroke-width="0.9" />
+            <line x1="13" y1="4" x2="13" y2="10" stroke="#0284c7" stroke-width="0.9" />
           </g>
-          <text x="66" y="118" fill="#1e293b" font-size="11.5" font-weight="600">Major Storage Dams</text>
+          <text x="66" y="112" fill="#1e293b" font-size="11.5" font-weight="600">Dam &amp; Capacity Reservoir (MAF)</text>
           
           <!-- Losses -->
-          <line x1="18" y1="140" x2="50" y2="140" stroke="#d97706" stroke-width="3.5" stroke-dasharray="7 5" stroke-linecap="butt" marker-end="url(#arrow-loss)" />
-          <text x="66" y="144" fill="#1e293b" font-size="11.5" font-weight="600">Reservoir Evaporation &amp; Loss</text>
+          <line x1="18" y1="136" x2="50" y2="136" stroke="#d97706" stroke-width="3.5" stroke-dasharray="7 5" stroke-linecap="butt" marker-end="url(#arrow-loss)" />
+          <text x="66" y="140" fill="#1e293b" font-size="11.5" font-weight="600">Reservoir Evaporation &amp; Loss</text>
 
-          <text x="18" y="164" fill="#0284c7" font-size="9.5" font-weight="600">Click any feature to open official data portal ↗</text>
+          <text x="18" y="162" fill="#0369a1" font-size="9.5" font-weight="700">Dimensions: River = Flow Rate • Pools = Max Capacity</text>
+          <text x="18" y="178" fill="#64748b" font-size="9" font-weight="500">Click any feature to inspect live operational data ↗</text>
         </g>
       </svg>
 
@@ -861,6 +897,31 @@
         url: 'https://waterdata.usgs.gov/monitoring-location/09180500/'
       });
 
+      attachElement('dam-flaminggorge', 'Flaming Gorge Dam & Reservoir', () => `
+        <strong>Total Capacity:</strong> 3.75 Million Acre-Feet (Primary drought response buffer reservoir)<br>
+        <strong>Function:</strong> Regulates the upper Green River; utilized under the Drought Response Operations Agreement (DROA) to support Lake Powell<br>
+        <strong>Active Storage:</strong> Key federal storage asset under Upper Colorado River Commission operations` + reservoirStorageBox('flaming_gorge', 'DROA operational reserve supporting Lake Powell. Capacity: 3.75M AF.') + `
+      `, {
+        label: 'USBR Flaming Gorge Operations Portal',
+        url: 'https://www.usbr.gov/uc/water/crsp/cs/fgd.html'
+      });
+
+      attachElement('dam-bluemesa', 'Blue Mesa Dam & Reservoir (Aspinall Unit)', () => `
+        <strong>Total Capacity:</strong> 829,500 Acre-Feet (Largest body of water in Colorado)<br>
+        <strong>Function:</strong> Headwater regulation on the Gunnison River; DROA emergency release source` + reservoirStorageBox('blue_mesa', 'Aspinall Unit master reservoir. Capacity: 829,500 AF.') + `
+      `, {
+        label: 'USBR Blue Mesa Dashboard',
+        url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/924/dashboard.html'
+      });
+
+      attachElement('dam-navajo', 'Navajo Dam & Reservoir', () => `
+        <strong>Total Capacity:</strong> 1.70 Million Acre-Feet (San Juan River basin)<br>
+        <strong>Function:</strong> Regulates San Juan River and supplies the San Juan-Chama trans-mountain diversion and Navajo Indian Irrigation Project (NIIP)` + reservoirStorageBox('navajo_reservoir', 'San Juan River regulation and DROA support. Capacity: 1.70M AF.') + `
+      `, {
+        label: 'USBR Navajo Dam Portal',
+        url: 'https://www.usbr.gov/uc/water/crsp/cs/nvd.html'
+      });
+
       attachElement('dam-glencanyon', 'Lake Powell & Glen Canyon Dam', () => `
         <strong>Total Capacity:</strong> 24.32 Million Acre-Feet<br>
         <strong>Function:</strong> Master regulatory storage bank for the Upper Basin states<br>
@@ -1011,7 +1072,7 @@
 
       attachElement('river-lower-spine', 'Lower Basin Mainstem (Hoover to Parker Dam)', () => `
         <strong>Flow Volume:</strong> ~9.00 MAF/yr (Full managed release from Lake Mead)<br>
-        <strong>Conduit Width:</strong> 28px (Main Lower Basin trunk conduit)<br>
+        <strong>Conduit Width:</strong> 21px (Mass-conserved flow width, narrower than 24px Grand Canyon inflow after 0.65 MAF evaporative loss)<br>
         <strong>Destination:</strong> Delivers full statutory supply downstream to Parker Dam pumping intakes
       `, {
         label: 'USGS Station #09421500 (Hoover Dam Tailrace)',
@@ -1020,7 +1081,7 @@
 
       attachElement('river-lower-mid', 'Lower Colorado River (Parker Dam to Transit Loss)', () => `
         <strong>Flow Volume:</strong> ~6.45 MAF/yr (Post-CRA &amp; CAP diversions)<br>
-        <strong>Conduit Width:</strong> 20px (Steps down by 8px reflecting 2.55 MAF diverted)<br>
+        <strong>Conduit Width:</strong> 16px (Steps down by 5px reflecting 2.55 MAF diverted to CRA &amp; CAP)<br>
         <strong>Remaining Uses:</strong> Feeds downstream channel transit, Imperial Valley, and Mexican Treaty delivery` + flowComparisonBox('09429100', 6.45, 'USGS #09429100 Below Palo Verde Flow', 'Managed reach below Parker Dam delivering agricultural supplies to Palo Verde and Imperial Valleys.') + `
       `, {
         label: 'USGS Station #09427520 (Below Parker Dam)',
@@ -1029,7 +1090,7 @@
 
       attachElement('river-lower-canal', 'Lower Colorado River (Transit Loss to Imperial Dam)', () => `
         <strong>Flow Volume:</strong> ~5.90 MAF/yr (Post-channel depletion)<br>
-        <strong>Conduit Width:</strong> 18px (Steps down by 2px reflecting 0.55 MAF channel loss)<br>
+        <strong>Conduit Width:</strong> 14.5px (Steps down reflecting 0.55 MAF channel transit and phreatophyte loss)<br>
         <strong>Next Headworks:</strong> Approaches Imperial Dam desilting works
       `, {
         label: 'USGS Station #09429490 (Cibola, AZ)',
