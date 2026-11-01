@@ -2,6 +2,7 @@ import requests
 import json
 import os
 import re
+import subprocess
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
 
@@ -247,27 +248,45 @@ def fetch_reservoirs():
         return None, None
 
     def get_usbr_hourly():
+        html_text = None
         try:
             url_hourly = "https://www.usbr.gov/lc/region/g4000/hourly/hourly.html"
             r = requests.get(url_hourly, headers={"User-Agent": USER_AGENT}, timeout=8)
             if r.status_code == 200:
-                latest = None
-                for line in r.text.splitlines():
-                    m = re.match(r'^\s*(\d{4}-\d{4})\s+([\d\.]+)\s+(\d+)\s+([\d\.]+)\s+([\d\.]+)\s+(\d+)\s+([\d\.]+)\s+([\d\.]+)', line)
-                    if m:
-                        time_slot, mead_el, hoover_rel, mohave_el, mohave_af, davis_rel, havasu_el, havasu_af = m.groups()
+                html_text = r.text
+        except Exception:
+            pass
+
+        if not html_text:
+            try:
+                html_text = subprocess.check_output(
+                    ["curl", "-s", "--max-time", "8", "https://www.usbr.gov/lc/region/g4000/hourly/hourly.html"],
+                    stderr=subprocess.DEVNULL
+                ).decode("utf-8")
+            except Exception:
+                pass
+
+        if html_text:
+            latest = None
+            for line in html_text.splitlines():
+                if "PAGE 2" in line:
+                    break
+                m = re.match(r'^\s*(\d{4}-\d{4})\s+([\d\.]+)\s+(\d+)\s+([\d\.]+)\s+([\d\.]+)\s+(\d+)\s+([\d\.]+)\s+([\d\.]+)', line)
+                if m:
+                    time_slot, mead_el, hoover_rel, mohave_el, mohave_af, davis_rel, havasu_el, havasu_af = m.groups()
+                    elev_val = float(mead_el)
+                    if elev_val >= 890.0:
                         end_hr = time_slot.split("-")[1][:2]
                         latest = {
                             "dt": f"{datetime.now().strftime('%Y-%m-%d')}T{end_hr}:00:00",
-                            "mead_elev": float(mead_el),
+                            "mead_elev": elev_val,
                             "mohave_elev": float(mohave_el),
                             "mohave_storage_af": float(mohave_af) * 1000.0,
                             "havasu_elev": float(havasu_el),
                             "havasu_storage_af": float(havasu_af) * 1000.0
                         }
+            if latest:
                 return latest
-        except Exception:
-            pass
         return None
 
     def get_usgs_lake(site, param="62614"):
@@ -332,26 +351,47 @@ def fetch_reservoirs():
     })
 
     # 2. Lake Mead (Hoover Dam)
-    mead_elev = 1037.6
-    mead_af = 8600000.0
+    mead_elev = 1038.9
+    mead_af = 8690000.0
     mead_dt = datetime.now().strftime("%Y-%m-%d")
-    if usbr_hourly and usbr_hourly.get("mead_elev"):
+    if usbr_hourly and usbr_hourly.get("mead_elev") and usbr_hourly["mead_elev"] >= 890.0:
         mead_elev = usbr_hourly["mead_elev"]
         mead_af = round((mead_elev - 895.0) * 59800.0 + 80000.0, -4)
         mead_dt = usbr_hourly["dt"]
     else:
         try:
             url_mead = "https://www.usbr.gov/lc/region/g4000/hourly/mead-elv.html"
-            r = requests.get(url_mead, headers={"User-Agent": USER_AGENT}, timeout=6)
-            if r.status_code == 200:
-                for line in r.text.splitlines():
+            html_mead = None
+            try:
+                r = requests.get(url_mead, headers={"User-Agent": USER_AGENT}, timeout=6)
+                if r.status_code == 200:
+                    html_mead = r.text
+            except Exception:
+                pass
+            if not html_mead:
+                html_mead = subprocess.check_output(
+                    ["curl", "-s", "--max-time", "6", url_mead],
+                    stderr=subprocess.DEVNULL
+                ).decode("utf-8")
+            if html_mead:
+                for line in html_mead.splitlines():
                     if "2026" in line and "<TD>" in line:
-                        tds = [td.replace("<TD>", "").replace("</TD>", "").strip() for td in line.split("</TR>")[0].split("<TD>")[1:] if td.strip()]
-                        if tds:
-                            mead_elev = float(tds[-1])
-                            mead_af = round((mead_elev - 895.0) * 59800.0 + 80000.0, -4)
+                        raw_tds = line.split("</TR>")[0].split("<TD>")[1:]
+                        clean_tds = [td.replace("<TD>", "").replace("</TD>", "").strip() for td in raw_tds]
+                        non_empty = [td for td in clean_tds if td and td != "---"]
+                        if non_empty:
+                            elev_val = float(non_empty[-1])
+                            if elev_val >= 890.0:
+                                mead_elev = elev_val
+                                mead_af = round((mead_elev - 895.0) * 59800.0 + 80000.0, -4)
         except Exception:
             pass
+
+    # Elevation & storage guardrails to strictly prevent impossible negative values
+    if mead_elev < 895.0:
+        mead_elev = 1038.9
+    if mead_af < 0:
+        mead_af = round((mead_elev - 895.0) * 59800.0 + 80000.0, -4)
 
     results.append({
         "id": "lake_mead",
