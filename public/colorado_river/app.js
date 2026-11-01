@@ -533,6 +533,26 @@ function toggleMapMenu(e) {
   }
 }
 
+function switchMapMenuTab(tabName, e) {
+  if (e) e.stopPropagation();
+  const tabLayers = document.getElementById("tab-btn-layers");
+  const tabBasemaps = document.getElementById("tab-btn-basemaps");
+  const paneLayers = document.getElementById("pane-layers");
+  const paneBasemaps = document.getElementById("pane-basemaps");
+
+  if (tabName === "layers") {
+    if (tabLayers) tabLayers.classList.add("active");
+    if (tabBasemaps) tabBasemaps.classList.remove("active");
+    if (paneLayers) paneLayers.style.display = "flex";
+    if (paneBasemaps) paneBasemaps.style.display = "none";
+  } else {
+    if (tabLayers) tabLayers.classList.remove("active");
+    if (tabBasemaps) tabBasemaps.classList.add("active");
+    if (paneLayers) paneLayers.style.display = "none";
+    if (paneBasemaps) paneBasemaps.style.display = "flex";
+  }
+}
+
 // Close map menu on click outside or escape key
 document.addEventListener("click", (e) => {
   const container = document.getElementById("map-menu-container");

@@ -344,7 +344,8 @@ body {
   top: calc(100% + 8px);
   right: 0;
   left: auto;
-  width: 230px;
+  width: 290px;
+  max-height: calc(100vh - 120px);
   background: var(--bg-panel);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -361,6 +362,49 @@ body {
 .map-menu-dropdown.show {
   display: flex;
   animation: mapMenuSlide 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.map-menu-nav-tabs {
+  display: flex;
+  background: rgba(226, 232, 240, 0.65);
+  padding: 3px;
+  border-radius: 8px;
+  gap: 3px;
+}
+
+.map-menu-tab-btn {
+  flex: 1;
+  padding: 5px 8px;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: center;
+}
+
+.map-menu-tab-btn:hover {
+  color: var(--text-main);
+}
+
+.map-menu-tab-btn.active {
+  background: #ffffff;
+  color: #0284c7;
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.map-menu-tab-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  max-height: calc(100vh - 190px);
+  padding-right: 2px;
 }
 
 @keyframes mapMenuSlide {

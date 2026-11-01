@@ -58,13 +58,14 @@
           <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
         </svg>
       </button>
-      <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" onclick="toggleSidebar()" title="Toggle Metrics &amp; Layers Panel" aria-label="Toggle Metrics and Layers">
+      <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" onclick="toggleSidebar()" title="Toggle Basin Metrics Panel" aria-label="Toggle Basin Metrics">
         <svg class="sidebar-toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-          <line x1="15" y1="3" x2="15" y2="21"></line>
+          <line x1="18" y1="20" x2="18" y2="10"></line>
+          <line x1="12" y1="20" x2="12" y2="4"></line>
+          <line x1="6" y1="20" x2="6" y2="14"></line>
         </svg>
         <span class="sidebar-toggle-text">
-          <span class="desktop-text">Data &amp; Layers</span>
+          <span class="desktop-text">Basin Metrics</span>
           <span class="mobile-text">Metrics</span>
         </span>
       </button>
@@ -80,45 +81,130 @@
     <div id="map-container">
       <div id="map"></div>
 
-      <!-- Floating Map Menu (Basemap Selector) -->
+      <!-- Floating Map Menu (Layers & Basemap Selector) -->
       <div class="map-menu-container" id="map-menu-container">
-        <button class="map-menu-btn" id="map-menu-btn" onclick="toggleMapMenu(event)" title="Choose Basemap">
+        <button class="map-menu-btn" id="map-menu-btn" onclick="toggleMapMenu(event)" title="Choose Layers and Basemap">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
-            <line x1="8" y1="2" x2="8" y2="18"></line>
-            <line x1="16" y1="6" x2="16" y2="22"></line>
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
           </svg>
-          <span id="map-menu-label">Basemap</span>
+          <span id="map-menu-label">Layers &amp; Basemap</span>
         </button>
 
         <div class="map-menu-dropdown" id="map-menu-dropdown">
+          <!-- Navigation Tabs: Layers | Basemap -->
+          <div class="map-menu-nav-tabs">
+            <button class="map-menu-tab-btn active" id="tab-btn-layers" onclick="switchMapMenuTab('layers', event)">
+              <span>🗺️ Layers</span>
+            </button>
+            <button class="map-menu-tab-btn" id="tab-btn-basemaps" onclick="switchMapMenuTab('basemaps', event)">
+              <span>🎨 Basemap</span>
+            </button>
+          </div>
 
-          <!-- Basemap Style -->
-          <div class="map-menu-section">
-            <div class="map-menu-section-title">Basemap Style</div>
-            <div class="basemap-list">
-              <button class="basemap-item-btn active" data-value="esriNatGeo" onclick="selectBasemap('esriNatGeo')">
-                <span class="basemap-icon">🗺️</span>
-                <span class="basemap-name">National Geographic</span>
-                <span class="basemap-check">✓</span>
-              </button>
-              <button class="basemap-item-btn" data-value="esriWorldTopo" onclick="selectBasemap('esriWorldTopo')">
-                <span class="basemap-icon">🏔️</span>
-                <span class="basemap-name">World Topo (High Res)</span>
-                <span class="basemap-check">✓</span>
-              </button>
-              <button class="basemap-item-btn" data-value="esriTerrain" onclick="selectBasemap('esriTerrain')">
-                <span class="basemap-icon">🌄</span>
-                <span class="basemap-name">Terrain with Labels</span>
-                <span class="basemap-check">✓</span>
-              </button>
-              <button class="basemap-item-btn" data-value="openTopo" onclick="selectBasemap('openTopo')">
-                <span class="basemap-icon">🧭</span>
-                <span class="basemap-name">OpenTopoMap (Contours)</span>
-                <span class="basemap-check">✓</span>
-              </button>
+          <!-- Tab Pane 1: Layer Controls -->
+          <div class="map-menu-tab-pane" id="pane-layers">
+            <div class="toggle-group" id="layer-toggle-group">
+              <label class="toggle-label">
+                <span>River &amp; Lake Network</span>
+                <input type="checkbox" id="toggle-river-network" checked onchange="toggleLayer('river-network')">
+                <span class="slider"></span>
+              </label>
+              <label class="toggle-label" style="padding-left: 14px; font-size: 11px; color: var(--text-muted);">
+                <span>↳ Mainstem Colorado</span>
+                <input type="checkbox" id="toggle-river-mainstem" checked onchange="toggleLayer('river-mainstem')">
+                <span class="slider"></span>
+              </label>
+              <label class="toggle-label" style="padding-left: 14px; font-size: 11px; color: var(--text-muted);">
+                <span>↳ Major Tributaries</span>
+                <input type="checkbox" id="toggle-river-major" checked onchange="toggleLayer('river-major')">
+                <span class="slider"></span>
+              </label>
+              <label class="toggle-label" style="padding-left: 14px; font-size: 11px; color: var(--text-muted);">
+                <span>↳ Secondary Streams</span>
+                <input type="checkbox" id="toggle-river-minor" checked onchange="toggleLayer('river-minor')">
+                <span class="slider"></span>
+              </label>
+              <label class="toggle-label" style="padding-left: 14px; font-size: 11px; color: var(--text-muted);">
+                <span>↳ Reservoirs &amp; Lakes</span>
+                <input type="checkbox" id="toggle-reservoirs" checked onchange="toggleLayer('reservoirs')">
+                <span class="slider"></span>
+              </label>
+              <label class="toggle-label">
+                <span>Major Storage Dams (16)</span>
+                <input type="checkbox" id="toggle-dams" checked onchange="toggleLayer('dams')">
+                <span class="slider"></span>
+              </label>
+              <label class="toggle-label">
+                <span>Continental Divide</span>
+                <input type="checkbox" id="toggle-divide" checked onchange="toggleLayer('divide')">
+                <span class="slider"></span>
+              </label>
+              <label class="toggle-label">
+                <span>Basin Boundaries</span>
+                <input type="checkbox" id="toggle-basin" checked onchange="toggleLayer('basin')">
+                <span class="slider"></span>
+              </label>
+              <label class="toggle-label">
+                <span>Flow Health Overlay</span>
+                <input type="checkbox" id="toggle-flow-health" onchange="toggleLayer('flow-health')">
+                <span class="slider"></span>
+              </label>
+              <label class="toggle-label" style="padding-left: 14px; font-size: 11px; color: var(--text-muted);">
+                <span>↳ % of Daily Average</span>
+              </label>
+              <label class="toggle-label">
+                <span>Streamflow Gauges (USGS)</span>
+                <input type="checkbox" id="toggle-streamflow-gauges" checked onchange="toggleLayer('streamflow-gauges')">
+                <span class="slider"></span>
+              </label>
+              <label class="toggle-label" style="padding-left: 14px; font-size: 11px; color: var(--text-muted);">
+                <span>↳ Flow Data Badges</span>
+                <input type="checkbox" id="toggle-all-badges" onchange="toggleLayer('all-badges')">
+                <span class="slider"></span>
+              </label>
+              <label class="toggle-label">
+                <span>Trans-Mountain Tunnels</span>
+                <input type="checkbox" id="toggle-tunnels" checked onchange="toggleLayer('tunnels')">
+                <span class="slider"></span>
+              </label>
+              <label class="toggle-label">
+                <span>Conveyance Canals (AAC/CAP/CRA)</span>
+                <input type="checkbox" id="toggle-canals" checked onchange="toggleLayer('canals')">
+                <span class="slider"></span>
+              </label>
             </div>
           </div>
+
+          <!-- Tab Pane 2: Basemap Selector -->
+          <div class="map-menu-tab-pane" id="pane-basemaps" style="display: none;">
+            <div class="map-menu-section">
+              <div class="basemap-list">
+                <button class="basemap-item-btn active" data-value="esriNatGeo" onclick="selectBasemap('esriNatGeo')">
+                  <span class="basemap-icon">🗺️</span>
+                  <span class="basemap-name">National Geographic</span>
+                  <span class="basemap-check">✓</span>
+                </button>
+                <button class="basemap-item-btn" data-value="esriWorldTopo" onclick="selectBasemap('esriWorldTopo')">
+                  <span class="basemap-icon">🏔️</span>
+                  <span class="basemap-name">World Topo (High Res)</span>
+                  <span class="basemap-check">✓</span>
+                </button>
+                <button class="basemap-item-btn" data-value="esriTerrain" onclick="selectBasemap('esriTerrain')">
+                  <span class="basemap-icon">🌄</span>
+                  <span class="basemap-name">Terrain with Labels</span>
+                  <span class="basemap-check">✓</span>
+                </button>
+                <button class="basemap-item-btn" data-value="openTopo" onclick="selectBasemap('openTopo')">
+                  <span class="basemap-icon">🧭</span>
+                  <span class="basemap-name">OpenTopoMap (Contours)</span>
+                  <span class="basemap-check">✓</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -198,7 +284,7 @@
       </div>
     </div>
 
-    <!-- Right Sidebar: Controls & Basin Metrics -->
+    <!-- Right Sidebar: Basin Metrics & Outflows -->
     <aside class="sidebar-panel" id="sidebar-panel">
       <!-- Mobile Sidebar Header with Close Button -->
       <div class="sidebar-mobile-header">
@@ -208,7 +294,7 @@
             <line x1="12" y1="20" x2="12" y2="4"></line>
             <line x1="6" y1="20" x2="6" y2="14"></line>
           </svg>
-          <span>Basin Metrics &amp; Layers</span>
+          <span>Basin Telemetry &amp; Storage</span>
         </div>
         <button class="sidebar-close-btn" onclick="closeSidebar()" aria-label="Close sidebar">✕</button>
       </div>
@@ -232,86 +318,6 @@
           <span class="btn-text">Gage Registry</span>
         </button>
       </div>
-      <!-- Layer Control Card -->
-      <section class="card layer-card collapsed" id="layer-card">
-        <div class="card-header card-header-clickable" onclick="toggleCardCollapse('layer-card', 'layer-toggle-group', 'layer-collapse-icon')" title="Click to collapse / expand layer controls">
-          <h3>Layer Controls</h3>
-          <div class="card-header-actions">
-            <span class="collapse-icon" id="layer-collapse-icon" style="transform: rotate(-90deg);">▼</span>
-          </div>
-        </div>
-        <div class="toggle-group" id="layer-toggle-group" style="display: none;">
-          <label class="toggle-label">
-            <span>River &amp; Lake Network</span>
-            <input type="checkbox" id="toggle-river-network" checked onchange="toggleLayer('river-network')">
-            <span class="slider"></span>
-          </label>
-          <label class="toggle-label" style="padding-left: 16px; font-size: 11px; color: var(--text-muted);">
-            <span>↳ Mainstem Colorado River</span>
-            <input type="checkbox" id="toggle-river-mainstem" checked onchange="toggleLayer('river-mainstem')">
-            <span class="slider"></span>
-          </label>
-          <label class="toggle-label" style="padding-left: 16px; font-size: 11px; color: var(--text-muted);">
-            <span>↳ Major Tributaries</span>
-            <input type="checkbox" id="toggle-river-major" checked onchange="toggleLayer('river-major')">
-            <span class="slider"></span>
-          </label>
-          <label class="toggle-label" style="padding-left: 16px; font-size: 11px; color: var(--text-muted);">
-            <span>↳ Secondary Streams</span>
-            <input type="checkbox" id="toggle-river-minor" checked onchange="toggleLayer('river-minor')">
-            <span class="slider"></span>
-          </label>
-          <label class="toggle-label" style="padding-left: 16px; font-size: 11px; color: var(--text-muted);">
-            <span>↳ Reservoirs &amp; Lakes</span>
-            <input type="checkbox" id="toggle-reservoirs" checked onchange="toggleLayer('reservoirs')">
-            <span class="slider"></span>
-          </label>
-          <label class="toggle-label">
-            <span>Major Storage Dams (16)</span>
-            <input type="checkbox" id="toggle-dams" checked onchange="toggleLayer('dams')">
-            <span class="slider"></span>
-          </label>
-          <label class="toggle-label">
-            <span>Continental Divide</span>
-            <input type="checkbox" id="toggle-divide" checked onchange="toggleLayer('divide')">
-            <span class="slider"></span>
-          </label>
-          <label class="toggle-label">
-            <span>Basin Boundaries</span>
-            <input type="checkbox" id="toggle-basin" checked onchange="toggleLayer('basin')">
-            <span class="slider"></span>
-          </label>
-          <label class="toggle-label">
-            <span>Flow Health Overlay</span>
-            <input type="checkbox" id="toggle-flow-health" onchange="toggleLayer('flow-health')">
-            <span class="slider"></span>
-          </label>
-          <label class="toggle-label" style="padding-left: 16px; font-size: 11px; color: var(--text-muted);">
-            <span>↳ % of Historical Daily Average</span>
-          </label>
-          <label class="toggle-label">
-            <span>Streamflow Gauges (USGS)</span>
-            <input type="checkbox" id="toggle-streamflow-gauges" checked onchange="toggleLayer('streamflow-gauges')">
-            <span class="slider"></span>
-          </label>
-          <label class="toggle-label" style="padding-left: 16px; font-size: 11px; color: var(--text-muted);">
-            <span>↳ Flow Data Badges (All)</span>
-            <input type="checkbox" id="toggle-all-badges" onchange="toggleLayer('all-badges')">
-            <span class="slider"></span>
-          </label>
-          <label class="toggle-label">
-            <span>Trans-Mountain Tunnels</span>
-            <input type="checkbox" id="toggle-tunnels" checked onchange="toggleLayer('tunnels')">
-            <span class="slider"></span>
-          </label>
-          <label class="toggle-label">
-            <span>Conveyance Canals (AAC / CAP / CRA)</span>
-            <input type="checkbox" id="toggle-canals" checked onchange="toggleLayer('canals')">
-            <span class="slider"></span>
-          </label>
-        </div>
-      </section>
-
       <!-- Where Is the Water Going? (Major Basin Outflows & Diversions) -->
       <section class="card stat-card outflows-card" id="outflows-card">
         <div class="card-header card-header-clickable" onclick="toggleCardCollapse('outflows-card', 'outflows-body', 'outflows-collapse-icon')" title="Click to collapse / expand outflows">
