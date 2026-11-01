@@ -42,6 +42,10 @@
         <span class="btn-icon">〰</span>
         <span class="btn-text">Flow Diagram</span>
       </button>
+      <button class="nav-header-btn telemetry-btn" onclick="window.open('./telemetry.html','_blank')" title="Open Gage &amp; Telemetry Registry Table">
+        <span class="btn-icon">📊</span>
+        <span class="btn-text">Gage Registry</span>
+      </button>
 
       <div class="sync-badge">
         <span class="status-dot"></span>
@@ -229,7 +233,7 @@
         <button class="sidebar-close-btn" onclick="closeSidebar()" aria-label="Close sidebar">✕</button>
       </div>
 
-      <!-- Mobile Quick Actions: Law, Code & Flow -->
+      <!-- Mobile Quick Actions: Law, Code, Flow & Gage Registry -->
       <div class="sidebar-mobile-actions">
         <button class="nav-header-btn law-btn" onclick="openLegalModal(); closeSidebar();" title="View Law of the River &amp; Compact Framework">
           <span class="btn-icon">⚖️</span>
@@ -242,6 +246,10 @@
         <button class="nav-header-btn flow-btn" onclick="window.open('./sankey.html','_blank')" title="Open Minard-style flow diagram">
           <span class="btn-icon">〰</span>
           <span class="btn-text">Flow Diagram</span>
+        </button>
+        <button class="nav-header-btn telemetry-btn" onclick="window.open('./telemetry.html','_blank')" title="Open Gage &amp; Telemetry Registry Table">
+          <span class="btn-icon">📊</span>
+          <span class="btn-text">Gage Registry</span>
         </button>
       </div>
       <!-- Camera Presets in Sidebar -->
@@ -421,40 +429,6 @@
 
     </aside>
   </main>
-
-  <!-- Bottom Collapsible & Resizable Station Table (Hidden by Default) -->
-  <footer class="app-table-panel" id="table-panel">
-    <div class="panel-resizer" id="table-resizer" title="Drag up or down to resize table panel">
-      <div class="resizer-handle"></div>
-    </div>
-    <div class="table-header" id="table-header">
-      <div class="table-title">
-        <h3>ACTIVE TELEMETRY NODES (<span id="node-count">30</span>)</h3>
-        <span class="table-sub" id="table-hint">Hidden by default • Click to expand table &amp; click any row to fly to gauge</span>
-      </div>
-      <button class="collapse-btn" id="collapse-btn" title="Toggle telemetry table">
-        <span id="collapse-icon">▲</span>
-      </button>
-    </div>
-    
-    <div class="table-container collapsed" id="table-wrap">
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Station / Structure</th>
-            <th>Type</th>
-            <th>Basin / Region</th>
-            <th>Flow / Storage Reading</th>
-            <th>Notes / Destination</th>
-            <th>Latest Timestamp</th>
-          </tr>
-        </thead>
-        <tbody id="telemetry-rows">
-          <tr><td colspan="6" style="text-align:center; padding: 20px;">Loading telemetry nodes...</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </footer>
 
   <!-- Law of the River & Institutional Framework Modal -->
   <div class="modal-overlay" id="legal-modal" onclick="closeLegalModal(event)">

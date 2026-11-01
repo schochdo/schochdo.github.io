@@ -146,6 +146,18 @@ body {
   border-color: #0284c7;
 }
 
+.nav-header-btn.telemetry-btn {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid #10b981;
+  color: #047857;
+  font-weight: 700;
+}
+
+.nav-header-btn.telemetry-btn:hover {
+  background: rgba(16, 185, 129, 0.18);
+  border-color: #059669;
+}
+
 /* Floating Map Camera Presets Bar (Top Center of Map Canvas) */
 .map-presets-bar {
   position: absolute;

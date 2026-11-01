@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Colorado River Basin: Telemetry & Station Registry</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .data-table th {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: #f1f5f9;
+    }
+    .type-pill {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+    .type-pill.streamflow { background: #e0f2fe; color: #0369a1; }
+    .type-pill.diversion_tunnel { background: #e0f2fe; color: #0369a1; }
+    .type-pill.diversion_canal { background: #ecfdf5; color: #047857; }
+    .type-pill.reservoir { background: #fee2e2; color: #b91c1c; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Top Navigation Bar -->
+  <header class="bg-white border-b border-slate-200 px-6 py-3.5 shadow-sm sticky top-0 z-20">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <a href="./" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition border border-slate-300">
+          <span>← Back to Map</span>
+        </a>
+        <div class="h-4 w-px bg-slate-300"></div>
+        <div>
+          <h1 class="text-base font-bold text-slate-900 leading-tight">
+            Active Hydrologic Telemetry Nodes &amp; Station Registry
+          </h1>
+          <p class="text-xs text-slate-500">
+            Real-time acoustic stage, trans-mountain acoustic flow meters &amp; reservoir water balance sensors
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <a href="./sankey.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-sky-50 hover:bg-sky-100 text-sky-700 text-xs font-semibold border border-sky-200 transition">
+          <span>〰 Flow Diagram</span>
+        </a>
+        <button id="refresh-btn" onclick="fetchData()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold border border-slate-300 shadow-sm transition">
+          <svg id="refresh-icon" class="w-3.5 h-3.5 text-slate-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <polyline points="1 20 1 14 7 14"></polyline>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+          </svg>
+          <span id="sync-label">Sync Live Feeds</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Body Content -->
+  <main class="max-w-7xl mx-auto w-full px-6 py-6 flex-1 flex flex-col gap-6">
+
+    <!-- KPI / Metric Highlights Grid -->
+    <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Active Nodes</span>
+        <div class="flex items-baseline gap-2 mt-1">
+          <span class="text-2xl font-black text-slate-800" id="stat-total-nodes">-</span>
+          <span class="text-xs font-medium text-slate-500">instrumented facilities</span>
+        </div>
+        <span class="text-[11px] text-slate-400 mt-2">USGS, CDSS &amp; USBR APIs</span>
+      </div>
+
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Streamflow Gages</span>
+        <div class="flex items-baseline gap-2 mt-1">
+          <span class="text-2xl font-black text-sky-700" id="stat-streamflow-count">-</span>
+          <span class="text-xs font-medium text-slate-500">river reaches</span>
+        </div>
+        <span class="text-[11px] text-slate-400 mt-2">USGS NWIS Instantaneous Values</span>
+      </div>
+
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Diversions &amp; Tunnels</span>
+        <div class="flex items-baseline gap-2 mt-1">
+          <span class="text-2xl font-black text-emerald-700" id="stat-diversion-count">-</span>
+          <span class="text-xs font-medium text-slate-500">export routes</span>
+        </div>
+        <span class="text-[11px] text-slate-400 mt-2">CDSS Trans-Mountain &amp; Canal Gages</span>
+      </div>
+
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Storage Reservoirs</span>
+        <div class="flex items-baseline gap-2 mt-1">
+          <span class="text-2xl font-black text-red-700" id="stat-reservoir-count">-</span>
+          <span class="text-xs font-medium text-slate-500">dams &amp; impoundments</span>
+        </div>
+        <span class="text-[11px] text-slate-400 mt-2">USBR Upper/Lower Basin &amp; CDSS</span>
+      </div>
+    </div>
+
+    <!-- Troubleshooting Controls: Search, Filters & Stats -->
+    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-4">
+      <div class="flex flex-wrap items-center gap-3 flex-1 min-w-[280px]">
+        <div class="relative flex-1 min-w-[240px]">
+          <input 
+            type="text" 
+            id="search-input" 
+            placeholder="Search by station name, ID, river, basin or state..." 
+            class="w-full pl-9 pr-4 py-2 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:bg-white transition"
+            oninput="handleSearchChange()"
+          />
+          <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </div>
+
+        <select id="type-filter" onchange="applyFilters()" class="text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500 font-medium">
+          <option value="all">All Facility Types</option>
+          <option value="streamflow">Streamflow (USGS)</option>
+          <option value="diversion_tunnel">Trans-Mountain Tunnel</option>
+          <option value="diversion_canal">Conveyance Canal</option>
+          <option value="reservoir">Storage Reservoir</option>
+        </select>
+
+        <select id="basin-filter" onchange="applyFilters()" class="text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500 font-medium">
+          <option value="all">All Basins &amp; Regions</option>
+          <option value="Upper Basin">Upper Basin</option>
+          <option value="Upper/Lower Divide">Upper/Lower Divide (Lee Ferry)</option>
+          <option value="Lower Basin">Lower Basin</option>
+          <option value="Continental Divide">Continental Divide (Trans-Mountain)</option>
+          <option value="Lower Basin Conveyance">Lower Basin Conveyance</option>
+          <option value="Upper Basin Storage">Upper Basin Storage</option>
+          <option value="Lower Basin Storage">Lower Basin Storage</option>
+          <option value="Front Range Storage">Front Range Storage</option>
+        </select>
+
+        <select id="health-filter" onchange="applyFilters()" class="text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500 font-medium">
+          <option value="all">All Historical Statuses</option>
+          <option value="abundant">Abundant (≥150%)</option>
+          <option value="normal">Normal (90–150%)</option>
+          <option value="below">Below Normal (50–90%)</option>
+          <option value="low">Low Flow (25–50%)</option>
+          <option value="critical">Critically Low (<25%)</option>
+        </select>
+      </div>
+
+      <div class="text-xs text-slate-500 font-medium whitespace-nowrap">
+        Showing <span id="visible-count" class="font-bold text-slate-800">0</span> of <span id="total-count" class="font-bold text-slate-800">0</span> nodes
+      </div>
+    </div>
+
+    <!-- Telemetry Table Card -->
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex-1 flex flex-col">
+      <div class="overflow-x-auto flex-1">
+        <table class="w-full text-left text-xs border-collapse data-table">
+          <thead>
+            <tr class="border-b border-slate-200 text-slate-600 font-bold text-[11px] uppercase tracking-wider">
+              <th class="px-4 py-3 cursor-pointer hover:text-slate-900" onclick="sortTable('name')">Station / Structure ↕</th>
+              <th class="px-4 py-3 cursor-pointer hover:text-slate-900" onclick="sortTable('id')">Station ID ↕</th>
+              <th class="px-4 py-3 cursor-pointer hover:text-slate-900" onclick="sortTable('type')">Type ↕</th>
+              <th class="px-4 py-3 cursor-pointer hover:text-slate-900" onclick="sortTable('basin')">Basin / Region ↕</th>
+              <th class="px-4 py-3 text-right cursor-pointer hover:text-slate-900" onclick="sortTable('reading_num')">Reading ↕</th>
+              <th class="px-4 py-3">Historical Normal</th>
+              <th class="px-4 py-3">Notes / Operational Context</th>
+              <th class="px-4 py-3 cursor-pointer hover:text-slate-900" onclick="sortTable('timestamp')">Latest Timestamp ↕</th>
+              <th class="px-4 py-3 text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="telemetry-rows" class="divide-y divide-slate-100">
+            <tr>
+              <td colspan="9" class="text-center py-12 text-slate-400">Loading telemetry feeds...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Sticky Footer Domain Note -->
+  <footer class="bg-white border-t border-slate-200 px-6 py-3 text-xs text-slate-500 text-center">
+    Data Sources: USGS National Water Information System (NWIS), Colorado Division of Water Resources (CDSS), and US Bureau of Reclamation (USBR). Instantaneous rate $Q = dV/dt$ (cfs); Cumulative storage $V$ (Acre-Feet).
+  </footer>
+
+  <script>
+    let allNodes = [];
+    let cachedNormals = null;
+    let sortColumn = 'basin';
+    let sortAsc = true;
+
+    function todayKey() {
+      const now = new Date();
+      return `${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    }
+
+    function getHistoricalNormal(siteId) {
+      if (!cachedNormals?.sites) return null;
+      const site = cachedNormals.sites[siteId];
+      if (!site) return null;
+      return site[todayKey()] ?? null;
+    }
+
+    function formatTimestamp(isoString) {
+      if (!isoString) return "Today";
+      try {
+        if (/^\d{4}-\d{2}-\d{2}$/.test(isoString)) {
+          const [y, m, d] = isoString.split('-').map(Number);
+          const dateObj = new Date(y, m - 1, d, 12, 0, 0);
+          return dateObj.toLocaleDateString('en-US', {
+            month: 'short', day: 'numeric', year: 'numeric'
+          }) + " (Daily Close)";
+        }
+        const d = new Date(isoString);
+        if (isNaN(d.getTime())) return "Today";
+        return d.toLocaleString('en-US', {
+          month: 'short', day: 'numeric',
+          hour: 'numeric', minute: '2-digit', timeZoneName: 'short'
+        });
+      } catch (e) {
+        return "Today";
+      }
+    }
+
+    function getPortalInfo(item) {
+      if (!item) return null;
+      const id = String(item.id || item.gauge_id || item.station_id || '');
+      const name = String(item.name || '').toLowerCase();
+
+      if (id === '09527700' || name.includes('all-american')) {
+        return {
+          name: 'USGS NWIS',
+          url: 'https://waterdata.usgs.gov/monitoring-location/09527700/',
+          label: 'USGS All-American Canal Station #09527700'
+        };
+      }
+      if (id === '09424150' || name.includes('colorado river aqueduct')) {
+        return {
+          name: 'USGS NWIS',
+          url: 'https://waterdata.usgs.gov/monitoring-location/09424150/',
+          label: 'USGS Colorado River Aqueduct Station #09424150'
+        };
+      }
+      if (id === '09426650' || name.includes('central arizona project') || name.includes('cap')) {
+        return {
+          name: 'USGS NWIS',
+          url: 'https://waterdata.usgs.gov/monitoring-location/09426650/',
+          label: 'USGS Central Arizona Project Station #09426650'
+        };
+      }
+      if (/^\d{8}$/.test(id)) {
+        return {
+          name: 'USGS NWIS',
+          url: `https://waterdata.usgs.gov/monitoring-location/${id}/`,
+          label: `USGS Station #${id}`
+        };
+      }
+      if (id.endsWith('CO') || id.endsWith('TUNCO') || id.endsWith('DIVCO') || name.includes('front range tunnels') || name.includes('trans-mountain')) {
+        const stationId = (id.endsWith('CO') || id.endsWith('TUNCO') || id.endsWith('DIVCO')) ? id : 'ROBTUNCO';
+        return {
+          name: 'Colorado DWR',
+          url: `https://dwr.state.co.us/Tools/Stations?station=${encodeURIComponent(stationId)}`,
+          label: `CDSS Telemetry #${stationId}`
+        };
+      }
+      const resUrls = {
+        lake_powell: {
+          name: 'USBR UC',
+          url: 'https://www.usbr.gov/uc/water/crsp/cs/gcd.html',
+          label: 'USBR Glen Canyon / Lake Powell'
+        },
+        lake_mead: {
+          name: 'USBR LC',
+          url: 'https://www.usbr.gov/lc/region/g4000/hourly/mead-elv.html',
+          label: 'USBR Hoover Dam / Lake Mead'
+        },
+        flaming_gorge: {
+          name: 'USBR UC',
+          url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/917/dashboard.html',
+          label: 'USBR Flaming Gorge Reservoir'
+        },
+        navajo_reservoir: {
+          name: 'USBR UC',
+          url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/924/dashboard.html',
+          label: 'USBR Navajo Reservoir'
+        },
+        lake_mohave: {
+          name: 'USBR LC',
+          url: 'https://www.usbr.gov/lc/region/g4000/hourly/mohave-elv.html',
+          label: 'USBR Lake Mohave / Davis Dam'
+        },
+        blue_mesa: {
+          name: 'USBR UC',
+          url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/913/dashboard.html',
+          label: 'USBR Blue Mesa Reservoir'
+        },
+        lake_havasu: {
+          name: 'USBR LC',
+          url: 'https://www.usbr.gov/lc/region/g4000/hourly/havasu-elv.html',
+          label: 'USBR Lake Havasu / Parker Dam'
+        }
+      };
+      if (resUrls[id]) return resUrls[id];
+      if (id.includes('dillon') || id.includes('green_mountain') || id.includes('shadow_mountain') || id.includes('granby')) {
+        return {
+          name: 'Colorado DWR',
+          url: `https://dwr.state.co.us/Tools/Stations?station=${encodeURIComponent(id.toUpperCase())}`,
+          label: 'Colorado DWR HydroBase'
+        };
+      }
+      return null;
+    }
+
+    async function fetchData() {
+      const syncLabel = document.getElementById('sync-label');
+      syncLabel.textContent = 'Syncing...';
+      try {
+        const [metricsRes, normalsRes] = await Promise.all([
+          fetch('./data/latest_metrics.json?t=' + Date.now()),
+          fetch('./data/historical_normals.json?t=' + Date.now()).catch(() => null)
+        ]);
+
+        if (!metricsRes.ok) throw new Error('Failed to load latest_metrics.json');
+        const metrics = await metricsRes.json();
+        if (normalsRes && normalsRes.ok) {
+          cachedNormals = await normalsRes.json();
+        }
+
+        buildNodeList(metrics);
+        updateKpis(metrics);
+        applyFilters();
+
+        const ts = formatTimestamp(metrics.fetched_at);
+        syncLabel.textContent = `Synced (${ts})`;
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        syncLabel.textContent = 'Sync Failed (Offline)';
+      }
+    }
+
+    function buildNodeList(metrics) {
+      allNodes = [
+        ...metrics.streamflows.map(s => {
+          let b = "Upper Basin";
+          if (s.id === "09380000") b = "Upper/Lower Divide";
+          else if (["09402000", "09415000", "09426000", "09429100", "09474000", "09520500", "09498500", "09511300"].includes(s.id)) b = "Lower Basin";
+          
+          const norm = getHistoricalNormal(s.id);
+          let healthStatus = 'unmonitored';
+          let healthPct = null;
+          if (norm && norm > 0 && s.flow_cfs != null) {
+            healthPct = Math.round((s.flow_cfs / norm) * 100);
+            if (healthPct >= 150) healthStatus = 'abundant';
+            else if (healthPct >= 90) healthStatus = 'normal';
+            else if (healthPct >= 50) healthStatus = 'below';
+            else if (healthPct >= 25) healthStatus = 'low';
+            else healthStatus = 'critical';
+          }
+
+          return {
+            id: s.id,
+            name: s.name,
+            type: "streamflow",
+            basin: b,
+            reading: `${s.flow_cfs.toLocaleString()} cfs`,
+            reading_num: s.flow_cfs,
+            norm_cfs: norm,
+            health_pct: healthPct,
+            health_status: healthStatus,
+            notes: "USGS NWIS Real-Time Gauge",
+            timestamp: s.timestamp,
+            lat: s.lat,
+            lon: s.lon
+          };
+        }),
+        ...metrics.tunnels.map(t => ({
+          id: t.id,
+          name: t.name,
+          type: "diversion_tunnel",
+          basin: "Continental Divide",
+          reading: `${t.flow_cfs.toLocaleString()} cfs`,
+          reading_num: t.flow_cfs,
+          norm_cfs: null,
+          health_pct: null,
+          health_status: 'unmonitored',
+          notes: t.destination,
+          timestamp: t.timestamp,
+          lat: t.lat,
+          lon: t.lon
+        })),
+        ...(metrics.canals || []).map(c => ({
+          id: c.id,
+          name: c.name,
+          type: "diversion_canal",
+          basin: "Lower Basin Conveyance",
+          reading: `${c.flow_cfs.toLocaleString()} cfs`,
+          reading_num: c.flow_cfs,
+          norm_cfs: null,
+          health_pct: null,
+          health_status: 'unmonitored',
+          notes: c.destination,
+          timestamp: c.timestamp,
+          lat: c.lat,
+          lon: c.lon
+        })),
+        ...[...(metrics.reservoirs || [])].sort((a, b) => {
+          const capA = Number(a.capacity_af) || 0;
+          const capB = Number(b.capacity_af) || 0;
+          return capB - capA;
+        }).map(r => {
+          const pct = (r.capacity_pct !== undefined && r.capacity_pct !== null) 
+            ? r.capacity_pct 
+            : ((r.storage_af / r.capacity_af) * 100);
+          return {
+            id: r.id,
+            name: r.name,
+            type: "reservoir",
+            basin: r.category === "front_range" ? "Front Range Storage" : (["lake_powell", "flaming_gorge", "navajo", "blue_mesa"].includes(r.id) ? "Upper Basin Storage" : "Lower Basin Storage"),
+            reading: `${pct.toFixed(1)}% (${Math.round(r.storage_af / 1000).toLocaleString()}k AF)`,
+            reading_num: r.storage_af,
+            norm_cfs: null,
+            health_pct: null,
+            health_status: 'unmonitored',
+            notes: r.feet_below_full ? `${r.feet_below_full} ft down (Elev: ${r.elevation_ft ? r.elevation_ft.toLocaleString() : 'N/A'} ft)` : `Elevation: ${r.elevation_ft ? r.elevation_ft.toLocaleString() : 'N/A'} ft`,
+            timestamp: r.timestamp,
+            lat: r.lat,
+            lon: r.lon
+          };
+        })
+      ];
+    }
+
+    function updateKpis(metrics) {
+      document.getElementById('stat-total-nodes').textContent = allNodes.length;
+      document.getElementById('stat-streamflow-count').textContent = metrics.streamflows?.length || 0;
+      document.getElementById('stat-diversion-count').textContent = (metrics.tunnels?.length || 0) + (metrics.canals?.length || 0);
+      document.getElementById('stat-reservoir-count').textContent = metrics.reservoirs?.length || 0;
+    }
+
+    function handleSearchChange() {
+      applyFilters();
+    }
+
+    function applyFilters() {
+      const q = document.getElementById('search-input').value.toLowerCase().trim();
+      const typeFilter = document.getElementById('type-filter').value;
+      const basinFilter = document.getElementById('basin-filter').value;
+      const healthFilter = document.getElementById('health-filter').value;
+
+      let filtered = allNodes.filter(node => {
+        if (typeFilter !== 'all' && node.type !== typeFilter) return false;
+        if (basinFilter !== 'all' && node.basin !== basinFilter) return false;
+        if (healthFilter !== 'all' && node.health_status !== healthFilter) return false;
+        if (q) {
+          const match = node.name.toLowerCase().includes(q) ||
+                        node.id.toLowerCase().includes(q) ||
+                        node.basin.toLowerCase().includes(q) ||
+                        node.notes.toLowerCase().includes(q);
+          if (!match) return false;
+        }
+        return true;
+      });
+
+      // Sort
+      filtered.sort((a, b) => {
+        let valA = a[sortColumn];
+        let valB = b[sortColumn];
+        if (valA === undefined || valA === null) valA = '';
+        if (valB === undefined || valB === null) valB = '';
+        if (typeof valA === 'string') {
+          return sortAsc ? valA.localeCompare(valB) : valB.localeCompare(valA);
+        }
+        return sortAsc ? valA - valB : valB - valA;
+      });
+
+      renderTable(filtered);
+    }
+
+    function sortTable(col) {
+      if (sortColumn === col) {
+        sortAsc = !sortAsc;
+      } else {
+        sortColumn = col;
+        sortAsc = true;
+      }
+      applyFilters();
+    }
+
+    function renderTable(nodes) {
+      const tbody = document.getElementById('telemetry-rows');
+      document.getElementById('visible-count').textContent = nodes.length;
+      document.getElementById('total-count').textContent = allNodes.length;
+
+      if (nodes.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="9" class="text-center py-8 text-slate-400">No telemetry stations match the current filter criteria.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = nodes.map(node => {
+        const portal = getPortalInfo(node);
+        const portalLink = portal 
+          ? `<a href="${portal.url}" target="_blank" rel="noopener" class="text-sky-600 hover:text-sky-800 font-semibold ml-1.5" title="Open official ${portal.name} portal">↗</a>` 
+          : '';
+
+        let healthHtml = '<span class="text-slate-400 text-[11px]">—</span>';
+        if (node.norm_cfs) {
+          let badgeColor = 'bg-slate-100 text-slate-700';
+          if (node.health_status === 'abundant') badgeColor = 'bg-blue-100 text-blue-800 font-bold';
+          else if (node.health_status === 'normal') badgeColor = 'bg-sky-100 text-sky-800 font-semibold';
+          else if (node.health_status === 'below') badgeColor = 'bg-amber-100 text-amber-800 font-semibold';
+          else if (node.health_status === 'low') badgeColor = 'bg-red-100 text-red-800 font-semibold';
+          else if (node.health_status === 'critical') badgeColor = 'bg-red-200 text-red-900 font-bold';
+
+          healthHtml = `
+            <div class="flex items-center gap-2">
+              <span class="text-[11px] px-2 py-0.5 rounded ${badgeColor}">
+                ${node.health_pct}%
+              </span>
+              <span class="text-[11px] text-slate-500 font-mono">(${node.norm_cfs.toLocaleString()} cfs normal)</span>
+            </div>
+          `;
+        }
+
+        const mapFlyUrl = `./?station=${encodeURIComponent(node.id)}`;
+
+        return `
+          <tr class="hover:bg-sky-50/50 transition cursor-default">
+            <td class="px-4 py-3 font-semibold text-slate-900">
+              ${node.name}
+              ${portalLink}
+            </td>
+            <td class="px-4 py-3 font-mono text-slate-600 text-[11px]">
+              ${node.id}
+            </td>
+            <td class="px-4 py-3 whitespace-nowrap">
+              <span class="type-pill ${node.type}">${node.type.replace('_', ' ')}</span>
+            </td>
+            <td class="px-4 py-3 text-slate-600 whitespace-nowrap">
+              ${node.basin}
+            </td>
+            <td class="px-4 py-3 text-right font-bold text-slate-900 whitespace-nowrap">
+              ${node.reading}
+            </td>
+            <td class="px-4 py-3 whitespace-nowrap">
+              ${healthHtml}
+            </td>
+            <td class="px-4 py-3 text-slate-500 text-[11px] max-w-[260px]">
+              ${node.notes}
+            </td>
+            <td class="px-4 py-3 text-slate-500 text-[11px] whitespace-nowrap">
+              ${formatTimestamp(node.timestamp)}
+            </td>
+            <td class="px-4 py-3 text-center whitespace-nowrap">
+              <a href="${mapFlyUrl}" target="_blank" class="inline-flex items-center gap-1 text-[11px] px-2.5 py-1 rounded bg-slate-100 hover:bg-sky-100 text-slate-700 hover:text-sky-800 font-medium transition border border-slate-200" title="Fly to this gauge on the interactive 3D map">
+                <span>View on Map ↗</span>
+              </a>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Initialize on page load
+    fetchData();
+  </script>
+</body>
+</html>

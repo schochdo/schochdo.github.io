@@ -13,18 +13,26 @@ def fetch_usgs_streamflow():
     """
     sites = {
         # Mainstem Sentinel Gauges
+        "09034250": "Colorado River at Windy Gap near Granby, CO",
         "09058000": "Colorado River near Kremmling, CO",
         "09070500": "Colorado River near Dotsero, CO",
+        "09085100": "Colorado River below Glenwood Springs, CO",
         "09095500": "Colorado River near Cameo, CO",
         "09163500": "Colorado River near CO-UT State Line",
         "09180500": "Colorado River near Cisco, UT",
         "09380000": "Colorado River at Lees Ferry, AZ",
+        "09402500": "Colorado River near Grand Canyon, AZ (Phantom Ranch)",
+        "09404200": "Colorado River above Diamond Creek near Peach Springs, AZ",
         "09429100": "Colorado River below Palo Verde Dam, AZ-CA",
+        "09429500": "Colorado River below Imperial Dam, AZ-CA",
         
         # Major Upper Basin Tributaries & Confluences
+        "09211200": "Green River below Fontenelle Reservoir, WY",
+        "09217000": "Green River near Green River, WY",
         "09234500": "Green River near Greendale, UT (Flaming Gorge Dam)",
         "09260050": "Yampa River at Deerlodge Park, CO",
         "09261000": "Green River near Jensen, UT (below Yampa)",
+        "09307000": "Green River near Ouray, UT",
         "09306500": "White River near Watson, UT",
         "09302000": "Duchesne River near Randlett, UT",
         "09315000": "Green River at Green River, UT",
@@ -33,6 +41,8 @@ def fetch_usgs_streamflow():
         "09180000": "Dolores River near Cisco, UT",
         "09355500": "San Juan River near Archuleta, NM (Navajo Dam)",
         "09364500": "Animas River at Farmington, NM",
+        "09365000": "San Juan River at Farmington, NM",
+        "09368000": "San Juan River at Shiprock, NM",
         "09379500": "San Juan River near Bluff, UT",
         
         # Headwaters & West Slope Tributaries
@@ -41,6 +51,7 @@ def fetch_usgs_streamflow():
         "09057500": "Blue River below Green Mtn Reservoir, CO",
         
         # Grand Canyon, Desert & Lower Basin Tributaries
+        "09382000": "Paria River at Lees Ferry, AZ",
         "09402000": "Little Colorado River near Cameron, AZ",
         "09415000": "Virgin River at Littlefield, AZ",
         "09426000": "Bill Williams River below Alamo Dam, AZ",
