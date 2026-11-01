@@ -1,12 +1,12 @@
 {
-  "fetched_at": "2026-11-01T15:01:50.401179",
+  "fetched_at": "2026-11-01T15:08:31.345845",
   "streamflows": [
     {
       "id": "09034250",
       "name": "Colorado River at Windy Gap near Granby, CO",
       "type": "streamflow",
       "flow_cfs": 72.0,
-      "timestamp": "2026-11-01T13:45:00.000-07:00",
+      "timestamp": "2026-11-01T14:45:00.000-07:00",
       "lat": 40.108319,
       "lon": -106.0041847
     },
@@ -104,8 +104,8 @@
       "id": "09180000",
       "name": "Dolores River near Cisco, UT",
       "type": "streamflow",
-      "flow_cfs": 680.0,
-      "timestamp": "2026-11-01T14:45:00.000-07:00",
+      "flow_cfs": 674.0,
+      "timestamp": "2026-11-01T15:00:00.000-07:00",
       "lat": 38.79720805,
       "lon": -109.1951142
     },
@@ -176,8 +176,8 @@
       "id": "09306500",
       "name": "White River near Watson, UT",
       "type": "streamflow",
-      "flow_cfs": 296.0,
-      "timestamp": "2026-11-01T13:45:00.000-07:00",
+      "flow_cfs": 299.0,
+      "timestamp": "2026-11-01T14:45:00.000-07:00",
       "lat": 39.97885629,
       "lon": -109.1787269
     },
