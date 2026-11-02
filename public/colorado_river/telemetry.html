@@ -35,6 +35,17 @@
     .type-pill.diversion_tunnel { background: #e0f2fe; color: #0369a1; }
     .type-pill.diversion_canal { background: #ecfdf5; color: #047857; }
     .type-pill.reservoir { background: #fee2e2; color: #b91c1c; }
+
+    /* Clean embed mode when loaded inside index.html iframe */
+    body.in-iframe #btn-back-workspace {
+      display: none !important;
+    }
+    body.in-iframe #btn-flow-diagram {
+      display: none !important;
+    }
+    body.in-iframe #divider-workspace {
+      display: none !important;
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -43,10 +54,10 @@
   <header class="bg-white border-b border-slate-200 px-6 py-3.5 shadow-sm sticky top-0 z-20">
     <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
       <div class="flex items-center gap-3">
-        <a href="./" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition border border-slate-300">
+        <a id="btn-back-workspace" href="./" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition border border-slate-300">
           <span>← Back to Research Workspace</span>
         </a>
-        <div class="h-4 w-px bg-slate-300"></div>
+        <div id="divider-workspace" class="h-4 w-px bg-slate-300"></div>
         <div>
           <h1 class="text-base font-bold text-slate-900 leading-tight">
             Active Hydrologic Telemetry Nodes &amp; Station Registry
@@ -58,7 +69,7 @@
       </div>
 
       <div class="flex items-center gap-2">
-        <a href="./sankey.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-sky-50 hover:bg-sky-100 text-sky-700 text-xs font-semibold border border-sky-200 transition">
+        <a id="btn-flow-diagram" href="./sankey.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-sky-50 hover:bg-sky-100 text-sky-700 text-xs font-semibold border border-sky-200 transition">
           <span>〰 Flow Diagram</span>
         </a>
         <button id="refresh-btn" onclick="fetchData()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold border border-slate-300 shadow-sm transition">
@@ -575,6 +586,11 @@
           </tr>
         `;
       }).join('');
+    }
+
+    // Detect iframe embed
+    if (window.self !== window.top) {
+      document.body.classList.add('in-iframe');
     }
 
     // Initialize on page load
