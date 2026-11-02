@@ -264,123 +264,67 @@
 
             </div>
 
-            <!-- Column 2: GEOGRAPHIC BASIN OVERVIEW (Col Span 4) -->
-            <div class="lg:col-span-4 flex flex-col gap-3">
+            <!-- Column 2: LONG-TERM STORAGE & FLOW BALANCES (Col Span 4) -->
+            <div class="lg:col-span-4 flex flex-col gap-4">
               <div class="text-xs font-black uppercase tracking-wider text-sky-900 flex items-center justify-between">
                 <span class="flex items-center gap-2">
                   <span class="w-2 h-2 rounded-full bg-sky-600"></span>
-                  Geographic Basin Overview
+                  Reservoir Trends &amp; Macro Storage
                 </span>
-                <button onclick="setTab('map')" class="text-[11px] font-bold text-sky-700 hover:text-sky-900 hover:underline flex items-center gap-1">
-                  <span>Open Full GIS Map</span>
-                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                <button onclick="setTab('reservoirs')" class="text-[11px] font-bold text-sky-700 hover:text-sky-900 hover:underline">
+                  92-Year Deep Dive →
                 </button>
               </div>
 
-              <!-- Geographic Basin Overview Container -->
-              <div class="card-academic rounded-lg p-3 shadow-sm flex flex-col justify-between h-full bg-[#faf9f5]">
-                <div>
-                  <div class="flex items-center justify-between pb-2 mb-2 border-b border-stone-200">
-                    <span class="text-xs font-black text-stone-900 uppercase tracking-tight">Geographic Schematic</span>
-                    <button onclick="setTab('map')" class="text-[11px] font-bold text-sky-700 hover:text-sky-900 hover:underline flex items-center gap-1">
-                      <span>Full GIS Map →</span>
-                    </button>
+              <!-- Card 1: Lake Powell Storage History (1963-2026) -->
+              <div class="card-academic rounded-lg p-3.5 shadow-sm">
+                <div class="flex justify-between items-start mb-2">
+                  <div>
+                    <h3 class="text-xs font-bold text-stone-900">1. Lake Powell Storage (1963–2026)</h3>
+                    <p class="text-[10px] text-stone-500 font-medium">Historical end-of-year storage (Million Acre-Feet)</p>
                   </div>
-                  <p class="text-[11px] text-stone-600 mb-2">
-                    Schematic topology showing major natural river corridors, mega-storage impoundments, and trans-mountain / agricultural diversion canals.
-                  </p>
+                  <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-sky-100 text-sky-800 border border-sky-300">USBR 65-Yr</span>
                 </div>
-
-                <div class="flex-1 flex items-center justify-center py-2">
-                  <svg viewBox="0 0 540 680" class="w-full h-auto max-h-[480px]" style="background-color: #f8f7f2; border-radius: 8px; border: 1px solid #e2e0d8;">
-                    <!-- State Border Grid Lines -->
-                    <g stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,4" fill="none">
-                      <line x1="40" y1="30" x2="500" y2="30" />
-                      <line x1="260" y1="30" x2="260" y2="650" />
-                      <line x1="40" y1="210" x2="500" y2="210" />
-                      <line x1="40" y1="410" x2="500" y2="410" />
-                      <line x1="150" y1="210" x2="150" y2="650" />
-                    </g>
-
-                    <!-- State Code Labels -->
-                    <g font-family="'Inter', sans-serif" font-weight="900" font-size="14" fill="#94a3b8" opacity="0.6">
-                      <text x="360" y="70">WY</text>
-                      <text x="390" y="270">CO</text>
-                      <text x="80" y="270">NV</text>
-                      <text x="180" y="140">UT</text>
-                      <text x="80" y="520">CA</text>
-                      <text x="390" y="500">NM</text>
-                      <text x="200" y="500">AZ</text>
-                    </g>
-
-                    <!-- Hydrologic Basin Watershed Polygon -->
-                    <path d="M 260 45 L 380 65 L 460 135 L 485 250 L 450 370 L 390 425 L 305 540 L 240 590 L 180 540 L 160 450 L 205 340 L 230 230 L 210 110 Z" 
-                          fill="rgba(2, 132, 199, 0.05)" stroke="#94a3b8" stroke-width="1.8" />
-
-                    <!-- Natural Rivers (Teal & Blue) -->
-                    <!-- Green River (WY -> UT -> Lake Powell) -->
-                    <path d="M 340 50 Q 320 110 330 180 T 295 295" fill="none" stroke="#059669" stroke-width="3.5" stroke-linecap="round" />
-                    <text x="340" y="120" font-size="9" font-weight="800" fill="#047857">Green River</text>
-
-                    <!-- Upper Colorado River (CO -> Lake Powell) -->
-                    <path d="M 440 220 Q 390 230 340 250 T 295 295" fill="none" stroke="#059669" stroke-width="3" stroke-linecap="round" />
-                    <text x="385" y="225" font-size="9" font-weight="800" fill="#047857">Upper Colorado</text>
-
-                    <!-- Confluence Reach into Lake Powell -->
-                    <path d="M 295 295 L 295 320" fill="none" stroke="#0284c7" stroke-width="4.5" stroke-linecap="round" />
-
-                    <!-- Lake Powell Impoundment Body -->
-                    <ellipse cx="295" cy="335" rx="20" ry="10" fill="#0284c7" stroke="#0369a1" stroke-width="1.5" />
-                    <text x="325" y="338" font-size="9.5" font-weight="900" fill="#0369a1">Lake Powell (24.3M AF)</text>
-
-                    <!-- Glen Canyon Dam & Lee's Ferry Compact Point -->
-                    <circle cx="295" cy="355" r="4" fill="#dc2626" stroke="#ffffff" stroke-width="1.2" />
-                    <text x="210" y="358" font-size="9" font-weight="900" fill="#dc2626">Lee's Ferry (Compact Point)</text>
-
-                    <!-- Grand Canyon Reach to Lake Mead -->
-                    <path d="M 295 355 Q 240 375 190 395" fill="none" stroke="#0284c7" stroke-width="4" stroke-linecap="round" />
-
-                    <!-- Lake Mead Impoundment Body -->
-                    <ellipse cx="175" cy="405" rx="22" ry="11" fill="#0284c7" stroke="#0369a1" stroke-width="1.5" />
-                    <circle cx="160" cy="412" r="4" fill="#0f172a" />
-                    <text x="90" y="405" font-size="9.5" font-weight="900" fill="#0369a1">Lake Mead / Hoover Dam</text>
-
-                    <!-- Lower Colorado River Mainstem -->
-                    <path d="M 160 415 L 165 480 L 175 540 L 185 610" fill="none" stroke="#0284c7" stroke-width="4.5" stroke-linecap="round" />
-
-                    <!-- Major Trans-Mountain & Conveyance Canals (Red / Orange Dashed) -->
-                    <!-- C-BT & Front Range -->
-                    <path d="M 410 215 Q 440 205 480 210" fill="none" stroke="#ea580c" stroke-width="2.5" stroke-dasharray="4,2" />
-                    <text x="445" y="200" font-size="8.5" font-weight="800" fill="#c2410c">C-BT / Denver Tunnels</text>
-
-                    <!-- Central Arizona Project (CAP) -->
-                    <path d="M 165 490 Q 210 505 260 535" fill="none" stroke="#dc2626" stroke-width="3" stroke-dasharray="4,2" />
-                    <text x="215" y="508" font-size="8.5" font-weight="800" fill="#b91c1c">Central Arizona Project (CAP)</text>
-
-                    <!-- Colorado River Aqueduct (CRA) to SoCal -->
-                    <path d="M 165 480 Q 120 480 75 490" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="4,2" />
-                    <text x="65" y="478" font-size="8.5" font-weight="800" fill="#b91c1c">CRA (SoCal MWD)</text>
-
-                    <!-- All-American Canal (AAC to Imperial Valley) -->
-                    <path d="M 175 545 L 100 555" fill="none" stroke="#dc2626" stroke-width="3.5" stroke-linecap="round" />
-                    <text x="80" y="572" font-size="9" font-weight="900" fill="#b91c1c">All-American Canal (IID)</text>
-
-                    <!-- Legend Box -->
-                    <g transform="translate(325, 570)">
-                      <rect width="185" height="70" rx="5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1" />
-                      <line x1="12" y1="16" x2="35" y2="16" stroke="#0284c7" stroke-width="3.5" />
-                      <text x="42" y="19" font-size="9" font-weight="700" fill="#334155">Natural River Channel</text>
-                      <line x1="12" y1="34" x2="35" y2="34" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="4,2" />
-                      <text x="42" y="37" font-size="9" font-weight="700" fill="#334155">Canals &amp; Diversions</text>
-                      <circle cx="23" cy="52" r="4.5" fill="#0284c7" />
-                      <text x="42" y="55" font-size="9" font-weight="700" fill="#334155">Storage Reservoirs</text>
-                    </g>
-                  </svg>
+                <div class="h-36 w-full relative">
+                  <canvas id="chart-powell-history"></canvas>
                 </div>
+                <div class="flex justify-between text-[10px] font-semibold text-stone-500 mt-1 border-t border-stone-200 pt-1">
+                  <span>1983 Full Pool: 25.0M AF</span>
+                  <span>Current: ~5.95M AF</span>
+                  <span>Min Power Pool: ~4.0M AF</span>
+                </div>
+              </div>
 
-                <div class="mt-2 pt-2 border-t border-stone-200 flex justify-between items-center text-[10px] text-stone-500">
-                  <span>Click 'GIS Hydrology Map' in the left menu for full terrain &amp; gages.</span>
-                  <button onclick="setTab('map')" class="font-bold text-sky-700 hover:underline">Launch GIS View →</button>
+              <!-- Card 2: Lake Mead 92-Year Drawdown Sparkline (1935-2026) -->
+              <div class="card-academic rounded-lg p-3.5 shadow-sm">
+                <div class="flex justify-between items-start mb-2">
+                  <div>
+                    <h3 class="text-xs font-bold text-stone-900">2. Lake Mead Elevation Trajectory</h3>
+                    <p class="text-[10px] text-stone-500 font-medium">Annual mean elevation (ft NGVD29, 1935–2026)</p>
+                  </div>
+                  <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300">Hoover 92-Yr</span>
+                </div>
+                <div class="h-32 w-full relative">
+                  <canvas id="chart-mead-overview-sparkline"></canvas>
+                </div>
+                <div class="flex justify-between text-[10px] font-mono text-stone-500 mt-1 border-t border-stone-200 pt-1">
+                  <span>1983 Spill: 1,225 ft</span>
+                  <span>Shortage Trigger: 1,075 ft</span>
+                  <span>Current: ~1,039 ft</span>
+                </div>
+              </div>
+
+              <!-- Card 3: Storage Distribution by Sub-basin -->
+              <div class="card-academic rounded-lg p-3.5 shadow-sm">
+                <div class="flex justify-between items-start mb-2">
+                  <div>
+                    <h3 class="text-xs font-bold text-stone-900">3. System Capacity Distribution</h3>
+                    <p class="text-[10px] text-stone-500 font-medium">Upper Basin (30.6M AF) vs. Lower Basin (28.5M AF)</p>
+                  </div>
+                  <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-stone-200 text-stone-700 border border-stone-300">59.2M AF Total</span>
+                </div>
+                <div class="h-28 w-full relative">
+                  <canvas id="chart-storage-distribution"></canvas>
                 </div>
               </div>
 
@@ -954,6 +898,154 @@
             },
             y: {
               ticks: { font: { size: 9 } },
+              grid: { color: '#e5e7eb' }
+            }
+          }
+        }
+      });
+
+      // 6. Lake Powell 65-Year Storage History (Million AF)
+      const powellData = portalData.lake_powell_historical || [];
+      const powellYears = powellData.map(d => d.year);
+      const powellMaf = powellData.map(d => (d.year_end_af / 1e6).toFixed(2));
+
+      const powellCtx = document.getElementById('chart-powell-history').getContext('2d');
+      new Chart(powellCtx, {
+        type: 'line',
+        data: {
+          labels: powellYears,
+          datasets: [{
+            label: 'Powell Storage (MAF)',
+            data: powellMaf,
+            borderColor: '#0284c7',
+            backgroundColor: 'rgba(2, 132, 199, 0.14)',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.15,
+            pointRadius: 0,
+            pointHoverRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => ` Storage: ${ctx.parsed.y} MAF`
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { font: { size: 9 }, maxTicksLimit: 6 }
+            },
+            y: {
+              min: 0,
+              max: 27,
+              ticks: { font: { size: 9 }, stepSize: 5, callback: (v) => v + 'M' },
+              grid: { color: '#e5e7eb' }
+            }
+          }
+        }
+      });
+
+      // 7. Lake Mead 92-Year Overview Sparkline
+      const meadData = portalData.lake_mead_historical || [];
+      const meadYears = meadData.map(d => d.year);
+      const meadMeans = meadData.map(d => d.mean);
+
+      const meadSparkCtx = document.getElementById('chart-mead-overview-sparkline').getContext('2d');
+      new Chart(meadSparkCtx, {
+        type: 'line',
+        data: {
+          labels: meadYears,
+          datasets: [{
+            label: 'Mead Mean Elev (ft)',
+            data: meadMeans,
+            borderColor: '#059669',
+            backgroundColor: 'rgba(5, 150, 105, 0.12)',
+            borderWidth: 1.8,
+            fill: true,
+            tension: 0.15,
+            pointRadius: 0,
+            pointHoverRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => ` Mean Elev: ${ctx.parsed.y.toFixed(1)} ft`
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { font: { size: 9 }, maxTicksLimit: 6 }
+            },
+            y: {
+              min: 880,
+              max: 1240,
+              ticks: { font: { size: 9 }, maxTicksLimit: 4, callback: (v) => v + "'" },
+              grid: { color: '#e5e7eb' }
+            }
+          }
+        }
+      });
+
+      // 8. Storage Capacity Distribution Bar Chart
+      const distCtx = document.getElementById('chart-storage-distribution').getContext('2d');
+      new Chart(distCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Upper Basin', 'Lower Basin'],
+          datasets: [
+            {
+              label: 'Current Storage (MAF)',
+              data: [9.7, 10.8],
+              backgroundColor: '#0284c7',
+              borderRadius: 3
+            },
+            {
+              label: 'Unused Capacity (MAF)',
+              data: [20.9, 17.7],
+              backgroundColor: '#cbd5e1',
+              borderRadius: 3
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: { font: { size: 9, weight: 'bold' }, boxWidth: 10 }
+            },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => ` ${ctx.dataset.label}: ${ctx.parsed.y} MAF`
+              }
+            }
+          },
+          scales: {
+            x: {
+              stacked: true,
+              grid: { display: false },
+              ticks: { font: { size: 9, weight: 'bold' } }
+            },
+            y: {
+              stacked: true,
+              min: 0,
+              max: 35,
+              ticks: { font: { size: 9 }, callback: (v) => v + 'M' },
               grid: { color: '#e5e7eb' }
             }
           }
