@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-11-01T22:17:58.920467",
+  "fetched_at": "2026-11-01T22:24:12.354697",
   "streamflows": [
     {
       "id": "09034250",
@@ -167,8 +167,8 @@
       "id": "09302000",
       "name": "Duchesne River near Randlett, UT",
       "type": "streamflow",
-      "flow_cfs": 1010.0,
-      "timestamp": "2026-11-01T21:00:00.000-07:00",
+      "flow_cfs": 1050.0,
+      "timestamp": "2026-11-01T22:00:00.000-07:00",
       "lat": 40.21027778,
       "lon": -109.7813889
     },
@@ -361,7 +361,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 1020,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T22:17:57.692148",
+      "timestamp": "2026-11-01T22:24:11.411092",
       "lat": 40.3283,
       "lon": -105.5786
     },
@@ -372,7 +372,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 1280,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T22:17:57.692160",
+      "timestamp": "2026-11-01T22:24:11.411103",
       "lat": 39.9022,
       "lon": -105.6433
     },
@@ -383,7 +383,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 1020,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T22:17:57.692164",
+      "timestamp": "2026-11-01T22:24:11.411107",
       "lat": 39.4633,
       "lon": -105.6797
     },
@@ -394,7 +394,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 945,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T22:17:57.692166",
+      "timestamp": "2026-11-01T22:24:11.411109",
       "lat": 39.2619,
       "lon": -106.5297
     }

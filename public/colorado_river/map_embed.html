@@ -220,6 +220,13 @@
     body.sidebar-drawer-active .map-top-actions,
     .dashboard-body:has(.sidebar-panel.drawer-open) .map-top-actions {
       transform: translateX(calc(-1 * min(88vw, 380px))) !important;
+      padding-right: 10px !important;
+    }
+
+    /* When drawer is open, hide redundant Basin Metrics tab since drawer has its own header & close button */
+    body.sidebar-drawer-active .sidebar-expand-tab,
+    .dashboard-body:has(.sidebar-panel.drawer-open) .sidebar-expand-tab {
+      display: none !important;
     }
 
     /* Slide controls left when Map Controls opens */
