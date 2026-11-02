@@ -16,6 +16,8 @@ let tooltipPopup;
 let activeFeaturePopup = null;
 let selectedReachId = null;
 let selectedConduit = { type: null, id: null };
+let selectedReservoirName = null;
+let flashInterval = null;
 
 function highlightSelectedReach(reachId) {
   selectedReachId = reachId || null;
@@ -49,9 +51,60 @@ function highlightSelectedConduit(type, id) {
   }
 }
 
+function highlightSelectedReservoir(gnisName) {
+  selectedReservoirName = gnisName || null;
+  if (!map) return;
+  const filter = selectedReservoirName ? ['==', ['get', 'GNIS_NAME'], selectedReservoirName] : ['==', ['get', 'GNIS_NAME'], ''];
+  if (map.getLayer('lakes-selected-highlight-fill')) {
+    map.setFilter('lakes-selected-highlight-fill', filter);
+  }
+  if (map.getLayer('lakes-selected-highlight-stroke')) {
+    map.setFilter('lakes-selected-highlight-stroke', filter);
+  }
+}
+
+function flashFeatureHighlight(type) {
+  if (flashInterval) {
+    clearInterval(flashInterval);
+    flashInterval = null;
+  }
+  let step = 0;
+  flashInterval = setInterval(() => {
+    step++;
+    const opacity = (step % 2 === 1) ? 0.2 : 0.95;
+    if (type === 'canal' && map.getLayer('canals-selected-highlight-casing')) {
+      map.setPaintProperty('canals-selected-highlight-casing', 'line-opacity', opacity);
+    } else if (type === 'tunnel' && map.getLayer('tunnels-selected-highlight-casing')) {
+      map.setPaintProperty('tunnels-selected-highlight-casing', 'line-opacity', opacity);
+    } else if (type === 'lake' && map.getLayer('lakes-selected-highlight-fill')) {
+      map.setPaintProperty('lakes-selected-highlight-fill', 'fill-opacity', opacity * 0.9);
+      if (map.getLayer('lakes-selected-highlight-stroke')) {
+        map.setPaintProperty('lakes-selected-highlight-stroke', 'line-opacity', opacity);
+      }
+    }
+    if (step >= 6) {
+      clearInterval(flashInterval);
+      flashInterval = null;
+      if (type === 'canal' && map.getLayer('canals-selected-highlight-casing')) {
+        map.setPaintProperty('canals-selected-highlight-casing', 'line-opacity', 0.95);
+      } else if (type === 'tunnel' && map.getLayer('tunnels-selected-highlight-casing')) {
+        map.setPaintProperty('tunnels-selected-highlight-casing', 'line-opacity', 0.95);
+      } else if (type === 'lake') {
+        if (map.getLayer('lakes-selected-highlight-fill')) map.setPaintProperty('lakes-selected-highlight-fill', 'fill-opacity', 0.85);
+        if (map.getLayer('lakes-selected-highlight-stroke')) map.setPaintProperty('lakes-selected-highlight-stroke', 'line-opacity', 1.0);
+      }
+    }
+  }, 220);
+}
+
 function clearReachHighlight() {
+  if (flashInterval) {
+    clearInterval(flashInterval);
+    flashInterval = null;
+  }
   highlightSelectedReach(null);
   highlightSelectedConduit(null, null);
+  highlightSelectedReservoir(null);
 }
 
 function showFeaturePopup(popup, lngLat) {
@@ -1933,6 +1986,29 @@ function renderGeography(geo, riverNetwork, lakes, powellContours) {
       }
     });
 
+    // Selected Lake / Reservoir Highlight (Luminous Cyan Glow & White Boundary)
+    map.addLayer({
+      id: 'lakes-selected-highlight-fill',
+      type: 'fill',
+      source: 'lakes',
+      filter: ['==', ['get', 'GNIS_NAME'], ''],
+      paint: {
+        'fill-color': '#00f0ff',
+        'fill-opacity': 0.85
+      }
+    });
+    map.addLayer({
+      id: 'lakes-selected-highlight-stroke',
+      type: 'line',
+      source: 'lakes',
+      filter: ['==', ['get', 'GNIS_NAME'], ''],
+      paint: {
+        'line-color': '#ffffff',
+        'line-width': 4.5,
+        'line-opacity': 1.0
+      }
+    });
+
     map.on('mousemove', 'lakes-fill', (e) => {
       if (!e.features.length) return;
       map.getCanvas().style.cursor = 'pointer';
@@ -1983,6 +2059,16 @@ function renderGeography(geo, riverNetwork, lakes, powellContours) {
         r.name.toLowerCase().includes(name.toLowerCase()) || 
         name.toLowerCase().includes(r.name.split('(')[0].trim().toLowerCase())
       );
+
+      if (p.GNIS_NAME) {
+        highlightSelectedReservoir(p.GNIS_NAME);
+      }
+
+      const highlightBadge = `<div style="font-size:9.5px; font-weight:700; color:#0e7490; background:#cffafe; border:1px solid #a5f3fc; padding:2px 6px; border-radius:4px; display:inline-flex; align-items:center; gap:4px; margin-top:5px;">
+        <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#06b6d4;"></span>
+        Waterbody Isolated &amp; Highlighted
+      </div>`;
+
       const portal = getPortalInfo(matchRes || { name: name });
       if (matchRes) {
         const dataHtml = `
@@ -2005,6 +2091,7 @@ function renderGeography(geo, riverNetwork, lakes, powellContours) {
               <strong>Active Capacity:</strong> ${Math.round(matchRes.capacity_af || 0).toLocaleString()} Acre-Feet<br>
               <strong>Operational Role:</strong> ${matchRes.role || 'Basin Storage'}
             </div>
+            ${highlightBadge}
             ${formatPortalHtml(portal, '#0284c7')}
           </div>
         `;
@@ -3533,13 +3620,12 @@ function updateSidebar(metrics) {
   const flowChartElem = document.getElementById("flow-dest-chart");
   if (flowChartElem) {
     const maxFlow = Math.max(tunnelsExport, aacFlow, craFlow, capFlow, leesFlow) || 1;
-    const makeBar = (name, flow, color, label1, label2, center, zoomLevel, meta) => {
+    const makeBar = (name, flow, color, label1, label2, center, zoomLevel, meta, conduitType, conduitId) => {
       const pct = Math.max(2, (flow / maxFlow) * 100);
-      const onClick = center ? `onclick="if(window.map) window.map.flyTo({center: [${center[0]}, ${center[1]}], zoom: ${zoomLevel || 9}, duration: 1400})"` : '';
       const portal = getPortalInfo(meta || { name: name });
       const portalLink = portal ? `<a href="${portal.url}" target="_blank" rel="noopener" title="Open official ${portal.name}" onclick="event.stopPropagation();" style="margin-left:6px; color:${color}; text-decoration:none; font-size:12px; font-weight:800;">↗</a>` : '';
       return `
-        <div class="flow-bar-row interactive" ${onClick} title="Click to fly to ${name}">
+        <div class="flow-bar-row interactive" onclick="handleConduitCardClick('${conduitType}', '${conduitId}', [${center[0]}, ${center[1]}], ${zoomLevel || 9})" title="Click to view and highlight ${name}">
           <div class="flow-bar-labels">
             <span class="flow-bar-name">${name}${portalLink} <span class="flow-bar-sub">(${label1})</span></span>
             <span class="flow-bar-val" style="color: ${color}">${Math.round(flow).toLocaleString()} cfs</span>
@@ -3553,11 +3639,11 @@ function updateSidebar(metrics) {
 
     flowChartElem.innerHTML = `
       <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 8px;">
-        ${makeBar("Lees Ferry", leesFlow, "var(--color-primary)", "Upper \u2192 Lower Basin", "", [-111.587, 36.865], 9.5, { id: "09380000", name: "Lees Ferry" })}
-        ${makeBar("All-American Canal", aacFlow, "var(--color-emerald)", "Ag Export", "", [-114.467, 32.883], 9, { id: "09527700", name: "All-American Canal" })}
-        ${makeBar("Central AZ Project", capFlow, "var(--color-emerald)", "AZ Municipal/Ag", "", [-114.111, 34.289], 9, { id: "09426650", name: "Central Arizona Project" })}
-        ${makeBar("CO River Aqueduct", craFlow, "var(--color-emerald)", "Urban Export", "", [-114.162, 34.314], 9, { id: "09424150", name: "Colorado River Aqueduct" })}
-        ${makeBar("Front Range Tunnels", tunnelsExport, "var(--color-primary)", "Divide Export", "", [-105.7, 39.8], 8, { id: "ROBTUNCO", name: "Front Range Tunnels" })}
+        ${makeBar("Lees Ferry", leesFlow, "var(--color-primary)", "Upper \u2192 Lower Basin", "", [-111.587, 36.865], 9.5, { id: "09380000", name: "Lees Ferry" }, 'reach', 'lees_ferry')}
+        ${makeBar("All-American Canal", aacFlow, "var(--color-emerald)", "Ag Export", "", [-114.467, 32.883], 9, { id: "09527700", name: "All-American Canal" }, 'canal', '09527700')}
+        ${makeBar("Central AZ Project", capFlow, "var(--color-emerald)", "AZ Municipal/Ag", "", [-114.111, 34.289], 9, { id: "09426650", name: "Central Arizona Project" }, 'canal', '09426650')}
+        ${makeBar("CO River Aqueduct", craFlow, "var(--color-emerald)", "Urban Export", "", [-114.162, 34.314], 9, { id: "09424150", name: "Colorado River Aqueduct" }, 'canal', '09424150')}
+        ${makeBar("Front Range Tunnels", tunnelsExport, "var(--color-primary)", "Divide Export", "", [-105.7, 39.8], 8.5, { id: "ROBTUNCO", name: "Front Range Tunnels" }, 'tunnel', 'ROBTUNCO')}
       </div>
     `;
   }
@@ -3657,9 +3743,7 @@ function updateSidebar(metrics) {
         </div>
       `;
       row.onclick = () => {
-        if (r.lat && r.lon) {
-          map.flyTo({ center: [r.lon, r.lat], zoom: 10.2, duration: 1400 });
-        }
+        handleReservoirCardClick(r);
       };
       container.appendChild(row);
     });
@@ -3772,6 +3856,222 @@ function flyToNode(id, lat, lon) {
       showFeaturePopup(stationMarkers[id].popup, [lon, lat]);
     }, 1500);
   }
+}
+
+function handleConduitCardClick(type, id, center, zoomLevel) {
+  if (!map) return;
+  // 1. Close drawer to reveal map clearly
+  if (typeof window.closeSidebar === 'function') {
+    window.closeSidebar();
+  }
+
+  // 2. Fly to target conduit/gauge
+  map.flyTo({
+    center: center,
+    zoom: zoomLevel || 9.5,
+    pitch: isTilted ? 45 : 0,
+    duration: 1300,
+    essential: true
+  });
+
+  // 3. Highlight and flash the conduit/reach
+  if (type === 'reach') {
+    highlightSelectedReach(id);
+  } else if (type === 'canal' || type === 'tunnel') {
+    highlightSelectedConduit(type, id);
+    flashFeatureHighlight(type);
+  }
+
+  // 4. Open feature telemetry popup
+  setTimeout(() => {
+    if (stationMarkers[id]) {
+      showFeaturePopup(stationMarkers[id].popup, center);
+    } else if (type === 'canal' && cachedGeography?.tunnels) {
+      const canalFeat = cachedGeography.tunnels.find(t => t.id === id);
+      if (canalFeat) {
+        showFeaturePopup(new maplibregl.Popup({ offset: 8 }).setHTML(formatCanalPopupHtml(canalFeat)), center);
+      }
+    }
+  }, 1300);
+}
+
+function handleReservoirCardClick(r) {
+  if (!map) return;
+  // 1. Close drawer to expose the full map
+  if (typeof window.closeSidebar === 'function') {
+    window.closeSidebar();
+  }
+
+  // 2. Fly to reservoir location
+  if (r.lat && r.lon) {
+    map.flyTo({
+      center: [r.lon, r.lat],
+      zoom: 10.2,
+      pitch: isTilted ? 42 : 0,
+      duration: 1400,
+      essential: true
+    });
+  }
+
+  // 3. Match reservoir to NHD lake GNIS name and trigger flashing highlight
+  const cleanName = r.name.split('(')[0].trim();
+  const lakeGNIS = findMatchingLakeGNIS(cleanName);
+  if (lakeGNIS) {
+    highlightSelectedReservoir(lakeGNIS);
+    flashFeatureHighlight('lake');
+  }
+
+  // 4. Open reservoir detail popup
+  setTimeout(() => {
+    const popupHtml = formatReservoirDetailPopup(r, cleanName);
+    const popup = new maplibregl.Popup({ offset: 8 }).setHTML(popupHtml);
+    showFeaturePopup(popup, [r.lon, r.lat]);
+  }, 1400);
+}
+
+function findMatchingLakeGNIS(cleanName) {
+  if (!cachedLakes?.features) return cleanName;
+  const match = cachedLakes.features.find(f => {
+    const gnis = f.properties?.GNIS_NAME || f.properties?.name || '';
+    return gnis.toLowerCase().includes(cleanName.toLowerCase()) || 
+           cleanName.toLowerCase().includes(gnis.toLowerCase());
+  });
+  return match?.properties?.GNIS_NAME || match?.properties?.name || cleanName;
+}
+
+function formatCanalPopupHtml(t) {
+  const flowVal = Number(t.flow_cfs || 0);
+  const portal = getPortalInfo(t);
+  const highlightBadge = `<div style="font-size:9.5px; font-weight:700; color:#0e7490; background:#cffafe; border:1px solid #a5f3fc; padding:2px 6px; border-radius:4px; display:inline-flex; align-items:center; gap:4px; margin-top:5px;">
+    <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#06b6d4;"></span>
+    Segment Isolated &amp; Highlighted
+  </div>`;
+  const dataHtml = `
+    <div style="padding: 2px;">
+      <span style="font-size:10px;font-weight:700;color:#0369a1;background:#e0f2fe;border:1px solid #bae6fd;padding:2px 6px;border-radius:4px;display:inline-block;margin-bottom:4px;">Major Conveyance Canal</span>
+      <strong style="font-size:14px;color:#0f172a;display:block;">${t.name}</strong>
+      <span style="font-size:11px;color:#0284c7;font-weight:600;">${t.operator || ''}</span>
+      ${flowVal > 0 ? `
+      <div style="margin: 8px 0; padding: 6px 10px; background:#f8fafc; border-radius:6px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:baseline;">
+        <span style="font-size:11px; color:#475569; font-weight:600;">Estimated Flow:</span>
+        <span style="font-size:16px; font-weight:800; color:#0284c7;">${flowVal.toLocaleString()} cfs</span>
+      </div>` : ''}
+      <div style="font-size:11px;line-height:1.45;color:#334155;margin-top:6px;">
+        <strong>Destination:</strong> ${t.destination || t.to}<br>
+        <strong>Length:</strong> ${t.length_miles} miles<br>
+        <strong>Intake:</strong> ${t.from}<br>
+        <strong>Terminus:</strong> ${t.to}
+      </div>
+      <div style="font-size:10.5px;color:#64748b;margin-top:6px;border-top:1px solid #e2e8f0;padding-top:5px;line-height:1.4;">
+        <strong>Design Capacity:</strong> ${t.id === "09527700" ? '26,155 cfs (Imperial Dam Headworks)' : (t.id === "09426650" ? '3,000 cfs (Mark Wilmer Pumping Plant)' : '1,600 cfs (Whitsett Pumping Plant)')}<br>
+        <strong>Infrastructure:</strong> Major Inter-Basin Conveyance Aqueduct
+      </div>
+      ${highlightBadge}
+      ${formatPortalHtml(portal, '#0284c7')}
+    </div>
+  `;
+  const cleanCName = (t.name || '').replace(/["\\]/g, '');
+  const endpoint = `https://waterservices.usgs.gov/nwis/iv/?sites=${t.id}&parameterCd=00060&format=json`;
+  const pyCode = `import requests
+
+# USGS Canal Telemetry Station #${t.id}
+url = "https://waterservices.usgs.gov/nwis/iv/"
+params = {
+    "sites": "${t.id}",       # ${cleanCName}
+    "parameterCd": "00060",  # Canal Flow (cfs)
+    "format": "json"
+}
+res = requests.get(url, params=params, timeout=10).json()
+val = res["value"]["timeSeries"][0]["values"][0]["value"][-1]
+flow_cfs = float(val["value"])
+print(f"${cleanCName}: {flow_cfs:,.0f} cfs")`;
+
+  return formatTabbedPopup({
+    dataHtml,
+    codeTitle: `USGS Canal #${t.id}`,
+    endpointUrl: endpoint,
+    pythonCode: pyCode,
+    notes: "Major conveyance canal telemetry."
+  });
+}
+
+function formatReservoirDetailPopup(matchRes, cleanName) {
+  const portal = getPortalInfo(matchRes || { name: cleanName });
+  const highlightBadge = `<div style="font-size:9.5px; font-weight:700; color:#0e7490; background:#cffafe; border:1px solid #a5f3fc; padding:2px 6px; border-radius:4px; display:inline-flex; align-items:center; gap:4px; margin-top:5px;">
+    <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#06b6d4;"></span>
+    Waterbody Isolated &amp; Highlighted
+  </div>`;
+  const dataHtml = `
+    <div style="padding:2px;">
+      <span style="font-size:10px; font-weight:700; color:#0369a1; background:#e0f2fe; padding:2px 6px; border-radius:4px; display:inline-block; margin-bottom:4px;">Major Storage Reservoir</span>
+      <strong style="font-size:14px; color:#0f172a; display:block;">${matchRes.name}</strong>
+      <span style="font-size:11px; color:#64748b; font-weight:600;">${matchRes.river || ''}</span>
+      <div style="margin: 8px 0; padding: 8px 10px; background:#f8fafc; border-radius:6px; border:1px solid #e2e8f0;">
+        <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
+          <span style="font-size:11px; color:#475569; font-weight:600;">Current Storage:</span>
+          <span style="font-size:16px; font-weight:800; color:#0284c7;">${matchRes.capacity_pct}% <span style="font-size:11px; font-weight:600; color:#64748b;">Full</span></span>
+        </div>
+        <div style="height:6px; background:#e2e8f0; border-radius:3px; overflow:hidden;">
+          <div style="width:${Math.min(100, matchRes.capacity_pct)}%; height:100%; background:${matchRes.capacity_pct < 25 ? '#ef4444' : (matchRes.capacity_pct < 50 ? '#f59e0b' : '#0891b2')};"></div>
+        </div>
+      </div>
+      <div style="font-size:11.5px; color:#334155; line-height:1.5;">
+        <strong>Elevation:</strong> ${matchRes.elevation_ft ? matchRes.elevation_ft.toLocaleString() + ' ft' : 'USBR'}<br>
+        <strong>Volume Stored:</strong> ${Math.round(matchRes.storage_af).toLocaleString()} Acre-Feet<br>
+        <strong>Active Capacity:</strong> ${Math.round(matchRes.capacity_af || 0).toLocaleString()} Acre-Feet<br>
+        <strong>Operational Role:</strong> ${matchRes.role || 'Basin Storage'}
+      </div>
+      ${highlightBadge}
+      ${formatPortalHtml(portal, '#0284c7')}
+    </div>
+  `;
+  const isFrontRange = matchRes.category === 'front_range';
+  const cleanResName = matchRes.name.replace(/["\\]/g, '');
+  let endpointUrl = '';
+  let pyCode = '';
+  let notes = '';
+
+  if (isFrontRange) {
+    const resAbbrev = (matchRes.id || 'DILRESCO').toUpperCase();
+    endpointUrl = `https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeseriesday/?abbrev=${resAbbrev}&format=json`;
+    pyCode = `import requests
+
+# Colorado DWR HydroBase Storage Telemetry
+url = "https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeseriesday/"
+params = {
+    "abbrev": "${resAbbrev}",  # ${cleanResName}
+    "format": "json"
+}
+res = requests.get(url, params=params, timeout=10).json()
+reading = res["ResultList"][0]
+print(f"${cleanResName}: {reading['measValue']} AF on {reading['measDate']}")`;
+    notes = "Colorado DWR daily reservoir storage accounting & dam telemetry.";
+  } else {
+    const usgsGauge = matchRes.id === 'lake_powell' ? '09379900' : (matchRes.id === 'lake_mead' ? '09421000' : '09379900');
+    endpointUrl = `https://waterservices.usgs.gov/nwis/iv/?sites=${usgsGauge}&parameterCd=62614&format=json`;
+    pyCode = `import requests
+
+# USGS Lake Elevation & USBR HydroData Telemetry
+url = "https://waterservices.usgs.gov/nwis/iv/"
+params = {
+    "sites": "${usgsGauge}",       # ${cleanResName}
+    "parameterCd": "62614",  # Elevation (ft NGVD 1929)
+    "format": "json"
+}
+res = requests.get(url, params=params, timeout=10).json()
+val = res["value"]["timeSeries"][0]["values"][0]["value"][-1]
+elev = float(val["value"])
+print(f"${cleanResName} Elevation: {elev:,.1f} ft")`;
+    notes = "USGS parameter 62614 = Lake water surface elevation. Synced with USBR storage curves.";
+  }
+
+  return formatTabbedPopup({
+    dataHtml,
+    codeTitle: `${cleanResName}`,
+    endpointUrl,
+    pythonCode: pyCode,
+    notes
+  });
 }
 
 // Authoritative full basin bounding box (encompassing all Upper & Lower Basin boundaries)
