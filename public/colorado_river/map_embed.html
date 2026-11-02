@@ -25,8 +25,10 @@
       height: 100vh !important;
       position: relative !important;
     }
-    #map-container {
-      height: 100% !important;
+    /* Shift MapLibre native zoom/pitch control down so Layers & Basemap sits cleanly above it */
+    .maplibregl-ctrl-top-left {
+      top: 60px !important;
+      left: 6px !important;
     }
     /* Floating top right action buttons for Basin Metrics & Refresh */
     .embed-action-pill {
