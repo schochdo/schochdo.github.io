@@ -422,6 +422,14 @@
                 <p class="text-[10.5px] text-stone-600 mt-2.5 leading-relaxed">
                   The 1922 Compact negotiators assumed an average virgin flow of ~17.5–18.0 MAF during an anomalously wet decade (1905–1922). Modern hydrology establishes true sustainable yield at ~12.4 MAF, producing an annual structural overdraft of <strong>~5.1 Million Acre-Feet</strong>.
                 </p>
+                <div class="mt-3 pt-2.5 border-t border-stone-200 flex flex-wrap items-center gap-2">
+                  <button onclick="setTab('sankey')" class="px-2.5 py-1 text-[11px] font-bold rounded bg-sky-50 text-sky-800 hover:bg-sky-100 border border-sky-300 transition cursor-pointer">
+                    Explore Water Budget Sankey →
+                  </button>
+                  <button onclick="setTab('pipeline')" class="px-2.5 py-1 text-[11px] font-bold rounded bg-stone-100 text-stone-800 hover:bg-stone-200 border border-stone-300 transition cursor-pointer">
+                    Explore Conveyance Transit →
+                  </button>
+                </div>
               </div>
 
             </div>
@@ -782,7 +790,7 @@
   <!-- ========================================== -->
   <!-- MODAL 1: LAW OF THE RIVER (Full Legal Text) -->
   <!-- ========================================== -->
-  <div id="law-modal" class="fixed inset-0 academic-modal-backdrop hidden z-50 flex items-center justify-center p-4">
+  <div id="law-modal" onclick="if(event.target === this) closeModals()" class="fixed inset-0 academic-modal-backdrop hidden z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-xl shadow-2xl max-w-3xl w-full max-h-[85vh] flex flex-col border border-stone-300">
       <div class="flex justify-between items-center p-5 border-b border-stone-200">
         <div>
@@ -820,7 +828,7 @@
   <!-- ========================================== -->
   <!-- MODAL 2: API & CODE DOCUMENTATION          -->
   <!-- ========================================== -->
-  <div id="api-modal" class="fixed inset-0 academic-modal-backdrop hidden z-50 flex items-center justify-center p-4">
+  <div id="api-modal" onclick="if(event.target === this) closeModals()" class="fixed inset-0 academic-modal-backdrop hidden z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-xl shadow-2xl max-w-3xl w-full max-h-[85vh] flex flex-col border border-stone-300">
       <div class="flex justify-between items-center p-5 border-b border-stone-200">
         <div>
@@ -841,9 +849,19 @@
             <li><strong>USDA NRCS SNOTEL:</strong> Basin Snow Water Equivalent (SWE) percentiles and peak runoff indices.</li>
           </ul>
         </div>
-        <div class="bg-stone-900 text-stone-200 p-4 rounded-lg font-mono text-[11px] overflow-x-auto">
-          <div class="text-emerald-400 font-bold mb-2"># Ingestion Script: src/fetch_water_data.py</div>
-          <code>import requests<br>import json<br><br># Fetch USGS Lee's Ferry compact gage<br>url = "https://waterservices.usgs.gov/nwis/iv/?sites=09380000&format=json"<br>data = requests.get(url).json()<br>cfs = data['value']['timeSeries'][0]['values'][0]['value'][0]['value']<br>print(f"Lee's Ferry Flow: {cfs} cfs")</code>
+        <div class="bg-stone-900 text-stone-200 p-4 rounded-lg font-mono text-[11px] overflow-x-auto relative">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-emerald-400 font-bold"># Ingestion Script: src/fetch_water_data.py</span>
+            <button id="btn-copy-code" onclick="copyApiSnippet()" class="px-2 py-0.5 rounded text-[10px] font-bold bg-stone-800 hover:bg-stone-700 text-stone-300 border border-stone-600 transition cursor-pointer">Copy Code</button>
+          </div>
+          <code id="api-code-snippet">import requests
+import json
+
+# Fetch USGS Lee's Ferry compact gage
+url = "https://waterservices.usgs.gov/nwis/iv/?sites=09380000&format=json"
+data = requests.get(url).json()
+cfs = data['value']['timeSeries'][0]['values'][0]['value'][0]['value']
+print(f"Lee's Ferry Flow: {cfs} cfs")</code>
         </div>
       </div>
       <div class="p-4 border-t border-stone-200 bg-stone-50 flex justify-end">
@@ -856,7 +874,9 @@
     // Tab switching logic for the unified Research Workspace
     let currentTab = 'overview';
     const urlParams = new URLSearchParams(window.location.search);
-    const initialTab = urlParams.get('tab');
+    const initialStation = urlParams.get('station');
+    const initialTab = urlParams.get('tab') || (initialStation ? 'map' : 'overview');
+
     function setTab(tabId) {
       currentTab = tabId;
       document.querySelectorAll('.sidebar-link').forEach(el => el.classList.remove('active'));
@@ -879,6 +899,10 @@
       } else if (tabId === 'map') {
         topHeader.classList.add('hidden'); // Allow full-bleed map
         document.getElementById('section-map').classList.remove('hidden');
+        const iframe = document.getElementById('iframe-map');
+        if (iframe && iframe.contentWindow && iframe.contentWindow.map && typeof iframe.contentWindow.map.resize === 'function') {
+          iframe.contentWindow.map.resize();
+        }
       } else if (tabId === 'sankey') {
         topHeader.classList.add('hidden'); // Allow full-bleed Sankey budget diagram
         document.getElementById('section-sankey').classList.remove('hidden');
@@ -901,6 +925,71 @@
         topHeader.classList.add('hidden'); // Telemetry has its own header table
         document.getElementById('section-telemetry').classList.remove('hidden');
       }
+
+      // Synchronize browser URL query state without page reload
+      try {
+        const newUrl = new URL(window.location);
+        newUrl.searchParams.set('tab', tabId);
+        if (tabId !== 'map') {
+          newUrl.searchParams.delete('station');
+        }
+        window.history.replaceState({}, '', newUrl);
+      } catch (_) {}
+    }
+
+    // Direct deep-link station focus on the interactive 3D map
+    function focusMapStation(stationId) {
+      setTab('map');
+      const iframe = document.getElementById('iframe-map');
+      if (iframe && iframe.contentWindow) {
+        const tryFocus = () => {
+          try {
+            if (typeof iframe.contentWindow.focusMapStation === 'function') {
+              iframe.contentWindow.focusMapStation(stationId);
+            } else {
+              iframe.contentWindow.postMessage({ type: 'focusStation', stationId: stationId }, '*');
+            }
+          } catch (err) {
+            iframe.contentWindow.postMessage({ type: 'focusStation', stationId: stationId }, '*');
+          }
+        };
+        tryFocus();
+        setTimeout(tryFocus, 250);
+        setTimeout(tryFocus, 650);
+      }
+    }
+    window.focusMapStation = focusMapStation;
+
+    // Cross-iframe communication for tab switching and station navigation
+    window.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'focusStation') {
+        focusMapStation(event.data.stationId);
+      } else if (event.data && event.data.type === 'setTab') {
+        setTab(event.data.tabId);
+      }
+    });
+
+    // Close modals on Escape key
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModals();
+    });
+
+    // Copy Python Code snippet helper with visual feedback
+    function copyApiSnippet() {
+      const codeEl = document.getElementById('api-code-snippet');
+      const btn = document.getElementById('btn-copy-code');
+      if (!codeEl) return;
+      navigator.clipboard.writeText(codeEl.innerText).then(() => {
+        if (btn) {
+          const orig = btn.innerText;
+          btn.innerText = 'Copied!';
+          btn.classList.add('text-emerald-400');
+          setTimeout(() => {
+            btn.innerText = orig;
+            btn.classList.remove('text-emerald-400');
+          }, 2000);
+        }
+      });
     }
 
     // Modal controllers
@@ -2125,6 +2214,11 @@
       loadPortalData();
       if (initialTab) {
         setTab(initialTab);
+      }
+      if (initialStation) {
+        setTimeout(() => {
+          focusMapStation(initialStation);
+        }, 900);
       }
     });
   </script>

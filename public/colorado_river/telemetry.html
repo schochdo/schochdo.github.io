@@ -54,7 +54,7 @@
   <header class="bg-white border-b border-slate-200 px-6 py-3.5 shadow-sm sticky top-0 z-20">
     <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
       <div class="flex items-center gap-3">
-        <a id="btn-back-workspace" href="./" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition border border-slate-300">
+        <a id="btn-back-workspace" href="./" onclick="backToWorkspace(event)" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition border border-slate-300">
           <span>← Back to Research Workspace</span>
         </a>
         <div id="divider-workspace" class="h-4 w-px bg-slate-300"></div>
@@ -69,7 +69,7 @@
       </div>
 
       <div class="flex items-center gap-2">
-        <a id="btn-flow-diagram" href="./sankey.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-sky-50 hover:bg-sky-100 text-sky-700 text-xs font-semibold border border-sky-200 transition">
+        <a id="btn-flow-diagram" href="./sankey.html" onclick="goToFlowDiagram(event)" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-sky-50 hover:bg-sky-100 text-sky-700 text-xs font-semibold border border-sky-200 transition">
           <span>〰 Flow Diagram</span>
         </a>
         <button id="refresh-btn" onclick="fetchData()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold border border-slate-300 shadow-sm transition">
@@ -549,8 +549,6 @@
           `;
         }
 
-        const mapFlyUrl = `./?station=${encodeURIComponent(node.id)}`;
-
         return `
           <tr class="hover:bg-sky-50/50 transition cursor-default">
             <td class="px-4 py-3 font-semibold text-slate-900">
@@ -579,13 +577,38 @@
               ${formatTimestamp(node.timestamp)}
             </td>
             <td class="px-4 py-3 text-center whitespace-nowrap">
-              <a href="${mapFlyUrl}" target="_blank" class="inline-flex items-center gap-1 text-[11px] px-2.5 py-1 rounded bg-slate-100 hover:bg-sky-100 text-slate-700 hover:text-sky-800 font-medium transition border border-slate-200" title="Fly to this gauge on the interactive 3D map">
-                <span>View on Map ↗</span>
-              </a>
+              <button onclick="showStationOnMap('${node.id}')" class="inline-flex items-center gap-1 text-[11px] px-2.5 py-1 rounded bg-slate-100 hover:bg-sky-100 text-slate-700 hover:text-sky-800 font-semibold transition border border-slate-200 cursor-pointer shadow-2xs" title="Fly to this station on the interactive map">
+                <span>Show on Map →</span>
+              </button>
             </td>
           </tr>
         `;
       }).join('');
+    }
+
+    // Seamless navigation between tabs / standalone windows
+    function showStationOnMap(stationId) {
+      if (window.parent && window.parent !== window && typeof window.parent.focusMapStation === 'function') {
+        window.parent.focusMapStation(stationId);
+      } else if (window.parent && window.parent !== window) {
+        window.parent.postMessage({ type: 'focusStation', stationId: stationId }, '*');
+      } else {
+        window.location.href = `./?tab=map&station=${encodeURIComponent(stationId)}`;
+      }
+    }
+
+    function backToWorkspace(e) {
+      if (window.parent && window.parent !== window && typeof window.parent.setTab === 'function') {
+        if (e) e.preventDefault();
+        window.parent.setTab('overview');
+      }
+    }
+
+    function goToFlowDiagram(e) {
+      if (window.parent && window.parent !== window && typeof window.parent.setTab === 'function') {
+        if (e) e.preventDefault();
+        window.parent.setTab('sankey');
+      }
     }
 
     // Detect iframe embed

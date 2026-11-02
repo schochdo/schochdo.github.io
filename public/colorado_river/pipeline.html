@@ -162,6 +162,10 @@
     .dry-river-channel {
       animation: dryPulse 3s infinite ease-in-out;
     }
+    /* Clean embed mode when loaded inside index.html iframe */
+    body.in-iframe #btn-back-workspace {
+      display: none !important;
+    }
   </style>
 </head>
 <body>
@@ -170,9 +174,11 @@
     <header class="flex flex-wrap items-center justify-between gap-4 mb-4 pb-3 border-b border-slate-300">
       <div>
         <div class="flex items-center gap-2">
-          <a href="./" class="text-xs px-3 py-1 rounded-md bg-white border border-slate-300 text-slate-700 font-semibold hover:bg-slate-50 transition shadow-sm">← Back to Research Workspace</a>
+          <a id="btn-back-workspace" href="./" onclick="backToWorkspace(event)" class="text-xs px-3 py-1 rounded-md bg-white border border-slate-300 text-slate-700 font-semibold hover:bg-slate-50 transition shadow-sm">← Back to Research Workspace</a>
           <span class="text-xs text-slate-400">•</span>
           <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Geographic Conveyance &amp; Transit Schematic</span>
+          <span class="text-xs text-slate-400">•</span>
+          <a href="./sankey.html" onclick="goToSankey(event)" class="text-xs font-semibold text-sky-700 hover:underline">View Water Budget Sankey →</a>
         </div>
         <h1 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight mt-1.5 flex items-center gap-3">
           Colorado River: Pipeline &amp; River Transit Schematic
@@ -860,12 +866,28 @@
       if (!el) return;
       el.style.cursor = 'pointer';
 
+      let stationMatch = portal?.label?.match(/#([0-9A-Z]+)/);
+      let stationId = stationMatch ? stationMatch[1] : (portal?.url?.match(/monitoring-location\/(\d+)/)?.[1] || (portal?.url?.match(/station=([0-9A-Z]+)/)?.[1]));
+      if (!stationId && portal?.url?.includes('g4000/hourly/mead-elv')) stationId = 'lake_mead';
+      if (!stationId && portal?.url?.includes('crsp/cs/gcd')) stationId = 'lake_powell';
+      if (!stationId && portal?.url?.includes('reservoir_data/917')) stationId = 'flaming_gorge';
+      if (!stationId && portal?.url?.includes('reservoir_data/924')) stationId = 'navajo_reservoir';
+      if (!stationId && portal?.url?.includes('reservoir_data/913')) stationId = 'blue_mesa';
+
+      const showOnMapBtn = stationId ? `
+        <button onclick="event.stopPropagation(); focusMapStation('${stationId}');" class="px-2 py-0.5 rounded bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-300 font-bold text-[10.5px] transition cursor-pointer shadow-2xs">
+          Show on Map →
+        </button>
+      ` : '';
+
       const portalHtml = portal ? `
-        <div class="mt-2.5 pt-2 border-t border-slate-200 flex items-center justify-between text-[11px]">
-          <span class="text-slate-500 font-medium">Official Data Portal:</span>
-          <span class="text-sky-600 font-bold flex items-center gap-1">${portal.label} ↗</span>
+        <div class="mt-2.5 pt-2 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2 text-[11px]">
+          <div class="flex items-center gap-1.5">
+            <span class="text-slate-500 font-medium">Official Portal:</span>
+            <a href="${portal.url}" target="_blank" rel="noopener" class="text-sky-600 hover:text-sky-800 font-bold flex items-center gap-1 underline underline-offset-2" onclick="event.stopPropagation();">${portal.label} ↗</a>
+          </div>
+          ${showOnMapBtn}
         </div>
-        <div class="text-[9.5px] text-slate-400 mt-1 italic">Click diagram element to lock inspection or open portal</div>
       ` : '';
 
       el.addEventListener('mouseenter', (e) => {
@@ -1236,6 +1258,32 @@
         label: 'USGS Station #09095500 (Cameo, CO)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09095500/'
       });
+    }
+
+    function backToWorkspace(e) {
+      if (window.parent && window.parent !== window && typeof window.parent.setTab === 'function') {
+        if (e) e.preventDefault();
+        window.parent.setTab('overview');
+      }
+    }
+
+    function goToSankey(e) {
+      if (window.parent && window.parent !== window && typeof window.parent.setTab === 'function') {
+        if (e) e.preventDefault();
+        window.parent.setTab('sankey');
+      }
+    }
+
+    function focusMapStation(stationId) {
+      if (window.parent && window.parent !== window && typeof window.parent.focusMapStation === 'function') {
+        window.parent.focusMapStation(stationId);
+      } else {
+        window.location.href = `./?tab=map&station=${encodeURIComponent(stationId)}`;
+      }
+    }
+
+    if (window.self !== window.top) {
+      document.body.classList.add('in-iframe');
     }
 
     // Initialize tooltips & interactive portals

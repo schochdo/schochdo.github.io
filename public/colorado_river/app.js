@@ -12,6 +12,7 @@ const markers = {
   reservoirs: []
 };
 let stationMarkers = {};
+window.stationMarkers = stationMarkers;
 let tooltipPopup;
 let activeFeaturePopup = null;
 let selectedReachId = null;
@@ -108,6 +109,7 @@ function clearReachHighlight() {
 }
 
 function showFeaturePopup(popup, lngLat) {
+  if (!map || !popup) return popup;
   if (tooltipPopup && tooltipPopup.isOpen()) {
     tooltipPopup.remove();
   }
@@ -198,6 +200,8 @@ let cachedPowellContours = null;
 let cachedNormals = null;
 let cachedMetrics = null;
 let activeMetrics = null;
+window.cachedMetrics = null;
+window.activeMetrics = null;
 
 function getActivePowellElevation() {
   const p = (cachedMetrics?.reservoirs || activeMetrics?.reservoirs)?.find(r => r.id === 'lake_powell');
@@ -324,64 +328,68 @@ if (document.readyState === "loading") {
 }
 
 function initMap() {
-  // Default: clean 2D top-down orientation fit perfectly to the Upper and Lower Basin extents
-  map = new maplibregl.Map({
-    container: 'map',
-    style: initialStyle,
-    bounds: [[-116.65, 31.15], [-105.45, 43.65]],
-    fitBoundsOptions: { padding: { top: 45, bottom: 45, left: 45, right: 45 } },
-    pitch: 0,
-    bearing: 0,
-    maxPitch: 65,
-    attributionControl: false
-  });
-  window.map = map;
+  try {
+    // Default: clean 2D top-down orientation fit perfectly to the Upper and Lower Basin extents
+    map = new maplibregl.Map({
+      container: 'map',
+      style: initialStyle,
+      bounds: [[-116.65, 31.15], [-105.45, 43.65]],
+      fitBoundsOptions: { padding: { top: 45, bottom: 45, left: 45, right: 45 } },
+      pitch: 0,
+      bearing: 0,
+      maxPitch: 65,
+      attributionControl: false
+    });
+    window.map = map;
+  } catch (mapErr) {
+    console.warn("MapLibre WebGL canvas initialization warning:", mapErr);
+    map = null;
+    window.map = null;
+  }
 
   // Pitch & orientation navigation controls
-  map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-left');
+  if (map) {
+    map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-left');
 
-  // Shared hover tooltip popup
-  tooltipPopup = new maplibregl.Popup({
-    closeButton: false,
-    closeOnClick: false,
-    offset: 12
-  });
+    // Shared hover tooltip popup
+    tooltipPopup = new maplibregl.Popup({
+      closeButton: false,
+      closeOnClick: false,
+      offset: 12
+    });
 
-  map.on('click', (e) => {
-    if (e.originalEvent && e.originalEvent._handled) return;
-    clearReachHighlight();
-    if (activeFeaturePopup && activeFeaturePopup.isOpen()) {
-      activeFeaturePopup.remove();
-      activeFeaturePopup = null;
-    }
-  });
+    map.on('click', (e) => {
+      if (e.originalEvent && e.originalEvent._handled) return;
+      clearReachHighlight();
+      if (activeFeaturePopup && activeFeaturePopup.isOpen()) {
+        activeFeaturePopup.remove();
+        activeFeaturePopup = null;
+      }
+    });
 
-  map.on('load', () => {
-    // Note: Do NOT enable 3D terrain in 2D flat mode. 3D perspective LOD causes edge tiles
-    // on wide monitors to drop to lower zoom levels, resulting in blurry screen borders.
-    // 2D orthogonal Mercator projection guarantees 100% uniform tile resolution edge-to-edge.
-    if (isTilted) {
-      map.setTerrain({
-        source: 'terrain-dem',
-        exaggeration: 1.5
-      });
-    }
+    map.on('load', () => {
+      if (isTilted) {
+        map.setTerrain({
+          source: 'terrain-dem',
+          exaggeration: 1.5
+        });
+      }
 
-    loadData();
-    initTrackballNavigation();
-    initTableResizer();
-    initLayersHoverBehavior();
-    if (window.location.search.includes('expand_table=1')) {
-      toggleTableCollapse();
-    }
-    if (window.location.search.includes('expand_sidebar=1')) {
-      ['outflows', 'reservoirs', 'front-range'].forEach(prefix => {
-        const body = document.getElementById(`${prefix}-body`);
-        if (body && window.getComputedStyle(body).display === 'none') {
-          toggleCardCollapse(`${prefix}-card`, `${prefix}-body`, `${prefix}-collapse-icon`);
-        }
-      });
-    }
+      loadData();
+      initTrackballNavigation();
+      initTableResizer();
+      initLayersHoverBehavior();
+      if (window.location.search.includes('expand_table=1')) {
+        toggleTableCollapse();
+      }
+      if (window.location.search.includes('expand_sidebar=1')) {
+        ['outflows', 'reservoirs', 'front-range'].forEach(prefix => {
+          const body = document.getElementById(`${prefix}-body`);
+          if (body && window.getComputedStyle(body).display === 'none') {
+            toggleCardCollapse(`${prefix}-card`, `${prefix}-body`, `${prefix}-collapse-icon`);
+          }
+        });
+      }
     if (window.location.search.includes('show_tunnels=1')) {
       const toggle = document.getElementById("toggle-tunnels");
       if (toggle) {
@@ -422,6 +430,11 @@ function initMap() {
   map.on('zoom', queueBadgePlacements);
   map.on('resize', queueBadgePlacements);
   map.on('pitch', syncPerspectiveState);
+  }
+
+  // Always kick off telemetry and geography ingestion immediately
+  loadData();
+  initLayersHoverBehavior();
 }
 
 function changeBasemap(key) {
@@ -1489,29 +1502,35 @@ async function loadData(forceLive = false) {
   try {
     const t = Date.now();
     
-    // 1. Fetch metrics snapshot immediately in parallel with heavy geometries
-    const metricsPromise = fetch(`./data/latest_metrics.json?t=${t}`)
-      .then(r => r.json())
-      .then(metrics => {
-        if (metrics.reservoirs && Array.isArray(metrics.reservoirs)) {
-          const getCap = r => Number(r.capacity_af) || (r.storage_af && r.capacity_pct ? (r.storage_af / (r.capacity_pct / 100)) : 0) || 0;
-          metrics.reservoirs.sort((a, b) => {
-            const catA = a.category === 'front_range' ? 1 : 0;
-            const catB = b.category === 'front_range' ? 1 : 0;
-            if (catA !== catB) return catA - catB;
-            return getCap(b) - getCap(a);
-          });
-        }
-        cachedMetrics = metrics;
-        activeMetrics = metrics;
-        populateTelemetryTable(metrics);
-        updateSidebar(metrics);
-        const initialDateStr = formatTimestamp(metrics.fetched_at);
-        if (syncElem) syncElem.textContent = `Telemetry Snapshot (${initialDateStr})`;
-        return metrics;
+    // 1. Fetch metrics snapshot immediately (17 KB - instant)
+    const metricsRes = await fetch(`./data/latest_metrics.json?t=${t}`);
+    const metrics = await metricsRes.json();
+    if (metrics.reservoirs && Array.isArray(metrics.reservoirs)) {
+      const getCap = r => Number(r.capacity_af) || (r.storage_af && r.capacity_pct ? (r.storage_af / (r.capacity_pct / 100)) : 0) || 0;
+      metrics.reservoirs.sort((a, b) => {
+        const catA = a.category === 'front_range' ? 1 : 0;
+        const catB = b.category === 'front_range' ? 1 : 0;
+        if (catA !== catB) return catA - catB;
+        return getCap(b) - getCap(a);
       });
+    }
+    cachedMetrics = metrics;
+    activeMetrics = metrics;
+    window.cachedMetrics = metrics;
+    window.activeMetrics = metrics;
+    populateTelemetryTable(metrics);
+    updateSidebar(metrics);
+    const initialDateStr = formatTimestamp(metrics.fetched_at);
+    if (syncElem) syncElem.textContent = `Telemetry Snapshot (${initialDateStr})`;
 
-    // 2. Fetch static base geometries on first load
+    // Check if there was a pending station request while waiting for metrics
+    if (window._pendingFocusStation) {
+      const pStation = window._pendingFocusStation;
+      window._pendingFocusStation = null;
+      setTimeout(() => window.focusMapStation(pStation), 100);
+    }
+
+    // 2. Fetch static base geometries on first load (larger GeoJSON files)
     if (!cachedGeography || !cachedRiverNetwork || !cachedLakes) {
       const [geoRes, riverRes, lakesRes, powellContoursRes, normalsRes] = await Promise.all([
         fetch(`./data/geography.json?t=${t}`),
@@ -1527,21 +1546,26 @@ async function loadData(forceLive = false) {
         cachedPowellContours = await powellContoursRes.json();
       }
       if (normalsRes && normalsRes.ok) cachedNormals = await normalsRes.json();
-      renderGeography(cachedGeography, cachedRiverNetwork, cachedLakes, cachedPowellContours);
     }
 
-    const metrics = await metricsPromise;
-    activeMetrics = metrics;
+    // 3. Render map layers as soon as MapLibre style is loaded
+    const renderLayersIfMapReady = () => {
+      if (!map) return;
+      if (cachedGeography && cachedRiverNetwork && cachedLakes) {
+        renderGeography(cachedGeography, cachedRiverNetwork, cachedLakes, cachedPowellContours);
+      }
+      applyLiveHydrology(cachedRiverNetwork, metrics);
+      renderMetrics(metrics);
+      updatePowellActiveLayers(metrics);
+      renderFlowHealthLayer(cachedRiverNetwork, metrics);
+      updateBadgePlacements();
+    };
 
-    // 3. Immediately render cached metrics on map layers
-    applyLiveHydrology(cachedRiverNetwork, metrics);
-    renderMetrics(metrics);
-    updatePowellActiveLayers(metrics);
-    renderFlowHealthLayer(cachedRiverNetwork, metrics);
-    updateBadgePlacements();
-
-    const initialDateStr = formatTimestamp(metrics.fetched_at);
-    if (syncElem) syncElem.textContent = `Telemetry Snapshot (${initialDateStr})`;
+    if (map && map.isStyleLoaded && map.isStyleLoaded()) {
+      renderLayersIfMapReady();
+    } else if (map && map.once) {
+      map.once('load', renderLayersIfMapReady);
+    }
 
     // 4. In background (or when user clicks Reload), query live USGS & CDWR directly from browser
     Promise.allSettled([fetchLiveUSGS(), fetchLiveCDWR()]).then(results => {
@@ -1645,22 +1669,16 @@ async function loadData(forceLive = false) {
       console.warn("Live telemetry query fell back to snapshot:", liveErr);
     });
 
-    // Check if URL specified a station to fly to
+    // Check if URL or pending caller specified a station to fly to
     const urlParams = new URLSearchParams(window.location.search);
-    const targetStation = urlParams.get('station');
+    const targetStation = urlParams.get('station') || window._pendingFocusStation;
     if (targetStation) {
       setTimeout(() => {
-        const markerEntry = stationMarkers[targetStation];
-        if (markerEntry) {
-          flyToNode(targetStation, markerEntry.lat, markerEntry.lon);
-        } else {
-          // Check in metrics
-          const node = [...(metrics.streamflows || []), ...(metrics.tunnels || []), ...(metrics.canals || []), ...(metrics.reservoirs || [])].find(n => n.id === targetStation);
-          if (node && node.lat && node.lon) {
-            flyToNode(node.id, node.lat, node.lon);
-          }
+        if (typeof window.focusMapStation === 'function') {
+          window.focusMapStation(targetStation);
         }
-      }, 800);
+        window._pendingFocusStation = null;
+      }, 700);
     }
 
   } catch (error) {
@@ -3274,6 +3292,67 @@ function toggleFlowHealthLayer(show) {
 
 // ─── End Flow Health Overlay ─────────────────────────────────────────────────
 
+function formatGaugePopup(s) {
+  const isLeesFerry = s.id === "09380000";
+  const norm = getHistoricalNormal(s.id);
+  let healthBadgeHtml = '';
+  if (norm && norm > 0) {
+    const pct = Math.round((s.flow_cfs / norm) * 100);
+    const color = flowHealthColor(pct);
+    const label = flowHealthLabel(pct);
+    healthBadgeHtml = `
+      <div style="margin: 6px 0; padding: 5px 8px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:10.5px; color:#64748b; font-weight:600;">vs. Hist. Daily Avg:</span>
+        <span style="font-size:12.5px; font-weight:800; color:${color};">${pct}% <span style="font-size:10px; font-weight:600;">(${label})</span></span>
+      </div>
+      <div style="font-size:10px; color:#94a3b8; margin-bottom:6px;">Avg today: ${Math.round(norm).toLocaleString()} cfs</div>
+    `;
+  }
+
+  const dataHtml = `
+    <div style="padding: 2px;">
+      <div style="display:flex; align-items:center; gap:6px; margin-bottom:6px;">
+        <span style="font-size:10px; font-weight:700; color:#0369a1; background:#e0f2fe; padding:2px 6px; border-radius:4px;">USGS Gage</span>
+        ${isLeesFerry ? '<span style="font-size:10px; font-weight:700; color:#0369a1; background:#e0f2fe; border: 1px solid #bae6fd; padding:2px 6px; border-radius:4px;">1922 Compact Divide</span>' : ''}
+      </div>
+      <strong style="font-size:13px; color:#0f172a; line-height:1.35; display:block;">${s.name}</strong>
+      <div style="margin: 8px 0; padding: 8px 10px; background:#f8fafc; border-radius:6px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:baseline;">
+        <span style="font-size:11px; color:#64748b; font-weight:600;">Discharge:</span>
+        <span style="font-size:16px; font-weight:800; color:#0284c7;">${(s.flow_cfs || 0).toLocaleString()} <span style="font-size:11px; font-weight:600; color:#64748b;">cfs</span></span>
+      </div>
+      ${healthBadgeHtml}
+      <div style="font-size:11px; color:#475569; line-height:1.5;">
+        <strong>Station ID:</strong> <a href="https://waterdata.usgs.gov/monitoring-location/${s.id}" target="_blank" style="color:#0284c7; text-decoration:none; font-weight:600;">#${s.id} ↗</a><br>
+        <strong>Measured:</strong> ${formatTimestamp(s.timestamp)}
+      </div>
+    </div>
+  `;
+
+  const cleanName = (s.name || '').replace(/["\\]/g, '');
+  const pyCode = `import requests
+
+# USGS Instantaneous Values (IV) REST API
+url = "https://waterservices.usgs.gov/nwis/iv/"
+params = {
+    "sites": "${s.id}",       # ${cleanName}
+    "parameterCd": "00060",  # Streamflow (cfs)
+    "siteStatus": "all",
+    "format": "json"
+}
+res = requests.get(url, params=params, timeout=10).json()
+val = res["value"]["timeSeries"][0]["values"][0]["value"][-1]
+flow_cfs = float(val["value"])
+print(f"Discharge: {flow_cfs:,.0f} cfs at {val['dateTime']}")`;
+
+  return formatTabbedPopup({
+    dataHtml,
+    codeTitle: `USGS Gauge #${s.id}`,
+    endpointUrl: `https://waterservices.usgs.gov/nwis/iv/?sites=${s.id}&parameterCd=00060&format=json`,
+    pythonCode: pyCode,
+    notes: "Parameter 00060 = Discharge (cfs). Telemetry refreshed every 15–60 minutes."
+  });
+}
+
 function renderMetrics(metrics) {
   // Clear previous CFS markers
   Object.values(markers).forEach(arr => {
@@ -3294,66 +3373,9 @@ function renderMetrics(metrics) {
 
     const el = document.createElement('div');
     el.className = 'cfs-marker-wrap';
-    el.innerHTML = `<div class="cfs-badge gauge ${highlightClass}"><span class="cfs-val">${s.flow_cfs.toLocaleString()}</span> <span class="cfs-unit">cfs</span></div>`;
+    el.innerHTML = `<div class="cfs-badge gauge ${highlightClass}"><span class="cfs-val">${(s.flow_cfs || 0).toLocaleString()}</span> <span class="cfs-unit">cfs</span></div>`;
 
-    const norm = getHistoricalNormal(s.id);
-    let healthBadgeHtml = '';
-    if (norm && norm > 0) {
-      const pct = Math.round((s.flow_cfs / norm) * 100);
-      const color = flowHealthColor(pct);
-      const label = flowHealthLabel(pct);
-      healthBadgeHtml = `
-        <div style="margin: 6px 0; padding: 5px 8px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; display:flex; justify-content:space-between; align-items:center;">
-          <span style="font-size:10.5px; color:#64748b; font-weight:600;">vs. Hist. Daily Avg:</span>
-          <span style="font-size:12.5px; font-weight:800; color:${color};">${pct}% <span style="font-size:10px; font-weight:600;">(${label})</span></span>
-        </div>
-        <div style="font-size:10px; color:#94a3b8; margin-bottom:6px;">Avg today: ${Math.round(norm).toLocaleString()} cfs</div>
-      `;
-    }
-
-    const dataHtml = `
-      <div style="padding: 2px;">
-        <div style="display:flex; align-items:center; gap:6px; margin-bottom:6px;">
-          <span style="font-size:10px; font-weight:700; color:#0369a1; background:#e0f2fe; padding:2px 6px; border-radius:4px;">USGS Gage</span>
-          ${isLeesFerry ? '<span style="font-size:10px; font-weight:700; color:#0369a1; background:#e0f2fe; border: 1px solid #bae6fd; padding:2px 6px; border-radius:4px;">1922 Compact Divide</span>' : ''}
-        </div>
-        <strong style="font-size:13px; color:#0f172a; line-height:1.35; display:block;">${s.name}</strong>
-        <div style="margin: 8px 0; padding: 8px 10px; background:#f8fafc; border-radius:6px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:baseline;">
-          <span style="font-size:11px; color:#64748b; font-weight:600;">Discharge:</span>
-          <span style="font-size:16px; font-weight:800; color:#0284c7;">${s.flow_cfs.toLocaleString()} <span style="font-size:11px; font-weight:600; color:#64748b;">cfs</span></span>
-        </div>
-        ${healthBadgeHtml}
-        <div style="font-size:11px; color:#475569; line-height:1.5;">
-          <strong>Station ID:</strong> <a href="https://waterdata.usgs.gov/monitoring-location/${s.id}" target="_blank" style="color:#0284c7; text-decoration:none; font-weight:600;">#${s.id} ↗</a><br>
-          <strong>Measured:</strong> ${formatTimestamp(s.timestamp)}
-        </div>
-      </div>
-    `;
-
-    const cleanName = s.name.replace(/["\\]/g, '');
-    const pyCode = `import requests
-
-# USGS Instantaneous Values (IV) REST API
-url = "https://waterservices.usgs.gov/nwis/iv/"
-params = {
-    "sites": "${s.id}",       # ${cleanName}
-    "parameterCd": "00060",  # Streamflow (cfs)
-    "siteStatus": "all",
-    "format": "json"
-}
-res = requests.get(url, params=params, timeout=10).json()
-val = res["value"]["timeSeries"][0]["values"][0]["value"][-1]
-flow_cfs = float(val["value"])
-print(f"Discharge: {flow_cfs:,.0f} cfs at {val['dateTime']}")`;
-
-    const popupHtml = formatTabbedPopup({
-      dataHtml,
-      codeTitle: `USGS Gauge #${s.id}`,
-      endpointUrl: `https://waterservices.usgs.gov/nwis/iv/?sites=${s.id}&parameterCd=00060&format=json`,
-      pythonCode: pyCode,
-      notes: "Parameter 00060 = Discharge (cfs). Telemetry refreshed every 15–60 minutes."
-    });
-
+    const popupHtml = formatGaugePopup(s);
     const popup = new maplibregl.Popup({ offset: 12 }).setHTML(popupHtml);
 
     popup.on('open', () => {
@@ -3897,6 +3919,10 @@ function populateTelemetryTable(metrics) {
 }
 
 function flyToNode(id, lat, lon) {
+  if (typeof window.focusMapStation === 'function') {
+    window.focusMapStation(id);
+    return;
+  }
   map.flyTo({
     center: [lon, lat],
     zoom: 10.5,
@@ -3912,6 +3938,113 @@ function flyToNode(id, lat, lon) {
   }
 }
 
+window.focusMapStation = function(stationId) {
+  if (!stationId) return;
+  if (!map) {
+    window._pendingFocusStation = stationId;
+    return;
+  }
+
+  // 1. Close slide-out drawers to provide clear, unobstructed map view
+  if (typeof window.closeSidebar === 'function') window.closeSidebar();
+  if (typeof closeMapMenu === 'function') closeMapMenu();
+  if (activeFeaturePopup && activeFeaturePopup.isOpen()) {
+    activeFeaturePopup.remove();
+    activeFeaturePopup = null;
+  }
+
+  const metrics = activeMetrics || cachedMetrics;
+
+  // 2. Reservoir Match
+  if (metrics?.reservoirs) {
+    const res = metrics.reservoirs.find(r => r.id === stationId);
+    if (res) {
+      handleReservoirCardClick(res);
+      return;
+    }
+  }
+
+  // 3. Diversion Canal Match
+  if (metrics?.canals) {
+    const can = metrics.canals.find(c => c.id === stationId);
+    if (can) {
+      handleConduitCardClick('canal', can.id, [can.lon, can.lat], 10.5);
+      return;
+    }
+  }
+
+  // 4. Diversion Tunnel Match
+  if (metrics?.tunnels) {
+    const tun = metrics.tunnels.find(t => t.id === stationId);
+    if (tun) {
+      handleConduitCardClick('tunnel', tun.id, [tun.lon, tun.lat], 10.5);
+      return;
+    }
+  }
+
+  // 5. In stationMarkers registry (active USGS streamflow gauges or tunnels)
+  if (stationMarkers && stationMarkers[stationId]) {
+    const entry = stationMarkers[stationId];
+    if (map && map.flyTo) {
+      map.flyTo({
+        center: [entry.lon, entry.lat],
+        zoom: 11,
+        pitch: isTilted ? 45 : 0,
+        duration: 700,
+        essential: true
+      });
+    }
+    setTimeout(() => {
+      if (map) showFeaturePopup(entry.popup, [entry.lon, entry.lat]);
+    }, 350);
+    return;
+  }
+
+  // 6. In metrics streamflows (if marker not indexed in stationMarkers yet)
+  if (metrics?.streamflows) {
+    const stm = metrics.streamflows.find(s => s.id === stationId);
+    if (stm) {
+      if (map && map.flyTo) {
+        map.flyTo({
+          center: [stm.lon, stm.lat],
+          zoom: 11,
+          pitch: isTilted ? 45 : 0,
+          duration: 700,
+          essential: true
+        });
+      }
+      setTimeout(() => {
+        const popup = stationMarkers?.[stm.id]?.popup || new maplibregl.Popup({ offset: 12 }).setHTML(formatGaugePopup(stm));
+        if (map) showFeaturePopup(popup, [stm.lon, stm.lat]);
+      }, 350);
+      return;
+    }
+  }
+
+  // 7. In cachedGeography dams
+  if (cachedGeography?.dams) {
+    const dam = cachedGeography.dams.find(d => d.id === stationId || d.name === stationId);
+    if (dam) {
+      if (map && map.flyTo) {
+        map.flyTo({
+          center: [dam.lon, dam.lat],
+          zoom: 12,
+          pitch: isTilted ? 45 : 0,
+          duration: 700,
+          essential: true
+        });
+      }
+      return;
+    }
+  }
+};
+
+window.addEventListener('message', (e) => {
+  if (e.data && e.data.type === 'focusStation') {
+    window.focusMapStation(e.data.stationId);
+  }
+});
+
 function handleConduitCardClick(type, id, center, zoomLevel) {
   if (!map) return;
   // 1. Close drawer to reveal map clearly
@@ -3924,7 +4057,7 @@ function handleConduitCardClick(type, id, center, zoomLevel) {
     center: center,
     zoom: zoomLevel || 9.5,
     pitch: isTilted ? 45 : 0,
-    duration: 1300,
+    duration: 700,
     essential: true
   });
 
@@ -3946,7 +4079,7 @@ function handleConduitCardClick(type, id, center, zoomLevel) {
         showFeaturePopup(new maplibregl.Popup({ offset: 8 }).setHTML(formatCanalPopupHtml(canalFeat)), center);
       }
     }
-  }, 1300);
+  }, 450);
 }
 
 function handleReservoirCardClick(r) {
@@ -3962,7 +4095,7 @@ function handleReservoirCardClick(r) {
       center: [r.lon, r.lat],
       zoom: 10.2,
       pitch: isTilted ? 42 : 0,
-      duration: 1400,
+      duration: 700,
       essential: true
     });
   }
@@ -3980,7 +4113,7 @@ function handleReservoirCardClick(r) {
     const popupHtml = formatReservoirDetailPopup(r, cleanName);
     const popup = new maplibregl.Popup({ offset: 8 }).setHTML(popupHtml);
     showFeaturePopup(popup, [r.lon, r.lat]);
-  }, 1400);
+  }, 450);
 }
 
 function findMatchingLakeGNIS(cleanName) {

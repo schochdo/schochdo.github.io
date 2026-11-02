@@ -76,6 +76,10 @@
       opacity: 1;
       transform: translateY(0);
     }
+    /* Clean embed mode when loaded inside index.html iframe */
+    body.in-iframe #btn-back-workspace {
+      display: none !important;
+    }
   </style>
 </head>
 <body>
@@ -84,11 +88,11 @@
     <header class="flex flex-wrap items-center justify-between gap-4 mb-4 pb-3 border-b border-slate-300">
       <div>
         <div class="flex items-center gap-2">
-          <a href="./" class="text-xs px-3 py-1 rounded-md bg-white border border-slate-300 text-slate-700 font-semibold hover:bg-slate-50 transition shadow-sm">← Back to Research Workspace</a>
+          <a id="btn-back-workspace" href="./" onclick="backToWorkspace(event)" class="text-xs px-3 py-1 rounded-md bg-white border border-slate-300 text-slate-700 font-semibold hover:bg-slate-50 transition shadow-sm">← Back to Research Workspace</a>
           <span class="text-xs text-slate-400">•</span>
           <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">True Flow Accounting</span>
           <span class="text-xs text-slate-400">•</span>
-          <a href="./pipeline.html" class="text-xs font-semibold text-sky-700 hover:underline">View Pipeline Transit Schematic →</a>
+          <a href="./pipeline.html" onclick="goToPipeline(event)" class="text-xs font-semibold text-sky-700 hover:underline">View Pipeline Transit Schematic →</a>
         </div>
         <h1 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight mt-1.5 flex items-center gap-3">
           Colorado River: Water Budget &amp; Basin Deficit Sankey
@@ -452,6 +456,24 @@
       if (y + rect.height > window.innerHeight - 16) y = e.clientY - rect.height - 14;
       tooltip.style.left = x + 'px';
       tooltip.style.top = y + 'px';
+    }
+
+    function backToWorkspace(e) {
+      if (window.parent && window.parent !== window && typeof window.parent.setTab === 'function') {
+        if (e) e.preventDefault();
+        window.parent.setTab('overview');
+      }
+    }
+
+    function goToPipeline(e) {
+      if (window.parent && window.parent !== window && typeof window.parent.setTab === 'function') {
+        if (e) e.preventDefault();
+        window.parent.setTab('pipeline');
+      }
+    }
+
+    if (window.self !== window.top) {
+      document.body.classList.add('in-iframe');
     }
 
     window.addEventListener('resize', () => {

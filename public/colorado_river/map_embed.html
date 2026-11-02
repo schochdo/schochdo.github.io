@@ -502,7 +502,9 @@
     // URL parameter support for direct testing & deep-linking
     window.addEventListener('load', () => {
       const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('drawer') === 'layers') {
+      if (urlParams.get('station')) {
+        setTimeout(() => { if (typeof window.focusMapStation === 'function') window.focusMapStation(urlParams.get('station')); }, 500);
+      } else if (urlParams.get('drawer') === 'layers') {
         setTimeout(() => { if (typeof toggleMapMenu === 'function') toggleMapMenu(); }, 400);
       } else if (urlParams.get('drawer') === 'metrics') {
         setTimeout(() => { if (typeof window.toggleSidebar === 'function') window.toggleSidebar(); }, 400);
