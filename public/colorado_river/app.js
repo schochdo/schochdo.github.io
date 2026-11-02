@@ -164,11 +164,6 @@ const HOVER_PRIORITIES = {
 };
 
 function showHoverTooltip(html, lngLat, sourceKey) {
-  // If an active feature card is currently open, suppress hover tooltips to avoid chaotic dual popups
-  if (activeFeaturePopup && activeFeaturePopup.isOpen()) {
-    if (tooltipPopup && tooltipPopup.isOpen()) tooltipPopup.remove();
-    return;
-  }
   if (!tooltipPopup || !map) return;
 
   const key = sourceKey || 'default';
@@ -685,17 +680,17 @@ function toggleTilt() {
 }
 
 function toggleMapMenu(e) {
-  if (e) e.stopPropagation();
+  if (e) {
+    e.stopPropagation();
+    e.preventDefault();
+  }
   const dropdown = document.getElementById("map-menu-dropdown");
   const btn = document.getElementById("map-menu-btn");
   if (!dropdown) return;
 
   const isShowing = dropdown.classList.contains("show");
   if (!isShowing) {
-    // Mutual exclusivity: Close Basin Metrics drawer before opening Map Controls
-    if (typeof window.closeSidebar === 'function') {
-      window.closeSidebar();
-    }
+    // Both drawers can cleanly coexist side-by-side; Basin Metrics stays open
     openMapMenuVisual();
   } else {
     closeMapMenu();
@@ -4070,8 +4065,7 @@ window.focusMapStation = function(stationId) {
     return;
   }
 
-  // 1. Close slide-out drawers to provide clear, unobstructed map view
-  if (typeof window.closeSidebar === 'function') window.closeSidebar();
+  // 1. Close secondary popovers if open
   if (typeof closeMapMenu === 'function') closeMapMenu();
   if (activeFeaturePopup && activeFeaturePopup.isOpen()) {
     activeFeaturePopup.remove();
@@ -4172,9 +4166,9 @@ window.addEventListener('message', (e) => {
 
 function handleConduitCardClick(type, id, center, zoomLevel) {
   if (!map) return;
-  // 1. Close drawer to reveal map clearly
-  if (typeof window.closeSidebar === 'function') {
-    window.closeSidebar();
+  // Keep Basin Metrics open while flying and highlighting target
+  if (typeof closeMapMenu === 'function') {
+    closeMapMenu();
   }
 
   // 2. Fly to target conduit/gauge
@@ -4209,9 +4203,9 @@ function handleConduitCardClick(type, id, center, zoomLevel) {
 
 function handleReservoirCardClick(r) {
   if (!map) return;
-  // 1. Close drawer to expose the full map
-  if (typeof window.closeSidebar === 'function') {
-    window.closeSidebar();
+  // Keep Basin Metrics open while flying and highlighting target
+  if (typeof closeMapMenu === 'function') {
+    closeMapMenu();
   }
 
   // 2. Fly to reservoir location

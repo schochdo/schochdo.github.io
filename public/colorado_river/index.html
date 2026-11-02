@@ -193,9 +193,8 @@
           </p>
         </div>
         <div class="hidden sm:flex items-center gap-3">
-          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-stone-200 text-stone-700 text-[11px] font-bold">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-            USGS &amp; USBR Ingestion Active
+          <span class="text-xs font-semibold text-stone-600 bg-stone-200/80 px-2.5 py-1 rounded">
+            246,000 sq mi • 7 Basin States &amp; Mexico • USGS &amp; USBR Ingestion
           </span>
         </div>
       </header>
@@ -209,11 +208,11 @@
         <div id="section-overview" class="flex-1 overflow-y-auto p-4 md:p-6 lg:p-7 max-w-7xl mx-auto space-y-6 w-full">
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
             
-            <!-- Column 1: STREAMFLOW & RUNOFF (Col Span 4) -->
+            <!-- Column 1: HEADWATER SUPPLY & STREAMFLOW (Col Span 4) -->
             <div class="lg:col-span-4 flex flex-col gap-4">
               <div class="text-xs font-black uppercase tracking-wider text-emerald-800 flex items-center gap-2">
                 <span class="w-2 h-2 rounded-full bg-emerald-600"></span>
-                Streamflow &amp; Runoff
+                Headwater Supply &amp; Streamflow
               </div>
 
               <!-- Card 1: Basin Snow Water Equivalent (SWE) Area Chart -->
@@ -239,7 +238,7 @@
               <div class="card-academic rounded-lg p-3.5 shadow-sm">
                 <div class="flex justify-between items-start mb-2">
                   <div>
-                    <h3 class="text-xs font-bold text-stone-900">2. Colorado River Flow at Lee's Ferry</h3>
+                    <h3 class="text-xs font-bold text-stone-900">2. Colorado River at Lee's Ferry</h3>
                     <p class="text-[10px] text-stone-500 font-medium">Daily discharge (cfs), Compact Point (USGS 09380000)</p>
                   </div>
                   <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-sky-100 text-sky-800 border border-sky-300">1,030 Days</span>
@@ -254,85 +253,131 @@
                 </div>
               </div>
 
-              <!-- Card 3: Key Reservoir Storage Summary Bar Chart -->
+              <!-- Card 3: Natural Runoff Eras (Virgin Yield) -->
               <div class="card-academic rounded-lg p-3.5 shadow-sm">
                 <div class="flex justify-between items-start mb-2">
                   <div>
-                    <h3 class="text-xs font-bold text-stone-900">3. Major Basin Storage Levels</h3>
-                    <p class="text-[10px] text-stone-500 font-medium">Combined storage: ~28.9% total capacity</p>
+                    <h3 class="text-xs font-bold text-stone-900">3. Natural Runoff Eras (Annual Yield)</h3>
+                    <p class="text-[10px] text-stone-500 font-medium">Historical pluvial period vs. 21st-century aridification</p>
                   </div>
-                  <button onclick="setTab('reservoirs')" class="text-[10px] font-bold text-blue-600 hover:underline">
-                    View 92-yr History →
-                  </button>
+                  <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-stone-200 text-stone-700 border border-stone-300">Virgin Flow</span>
                 </div>
-                <div class="h-28 w-full relative">
-                  <canvas id="chart-reservoir-levels"></canvas>
+                <div class="space-y-2.5 mt-2">
+                  <div>
+                    <div class="flex justify-between text-[11px] mb-0.5">
+                      <span class="font-semibold text-stone-700">1905–1922 Compact Negotiation Baseline</span>
+                      <span class="font-mono font-bold text-stone-900">17.5 MAF/yr</span>
+                    </div>
+                    <div class="w-full bg-stone-200 rounded-xs h-3 overflow-hidden">
+                      <div class="bg-slate-600 h-full" style="width: 100%;"></div>
+                    </div>
+                    <span class="text-[9.5px] text-stone-500">Unusually wet pluvial period; negotiators mistakenly assumed this was normal.</span>
+                  </div>
+                  <div>
+                    <div class="flex justify-between text-[11px] mb-0.5">
+                      <span class="font-semibold text-stone-700">1906–2020 Long-Term Natural Mean</span>
+                      <span class="font-mono font-bold text-sky-800">14.8 MAF/yr</span>
+                    </div>
+                    <div class="w-full bg-stone-200 rounded-xs h-3 overflow-hidden">
+                      <div class="bg-sky-600 h-full" style="width: 84.6%;"></div>
+                    </div>
+                    <span class="text-[9.5px] text-stone-500">USBR natural flow record (without reservoir evaporative losses).</span>
+                  </div>
+                  <div>
+                    <div class="flex justify-between text-[11px] mb-0.5">
+                      <span class="font-semibold text-red-700">2000–2026 Millennium Megadrought</span>
+                      <span class="font-mono font-bold text-red-700">12.4 MAF/yr</span>
+                    </div>
+                    <div class="w-full bg-stone-200 rounded-xs h-3 overflow-hidden">
+                      <div class="bg-red-600 h-full" style="width: 70.9%;"></div>
+                    </div>
+                    <span class="text-[9.5px] text-stone-500">Aridification loss: -2.4 MAF/yr (-16.2%) reduction from the long-term mean.</span>
+                  </div>
                 </div>
               </div>
 
             </div>
 
-            <!-- Column 2: LONG-TERM STORAGE & FLOW BALANCES (Col Span 4) -->
+            <!-- Column 2: RESERVOIR STORAGE & BUFFERS (Col Span 4) -->
             <div class="lg:col-span-4 flex flex-col gap-4">
               <div class="text-xs font-black uppercase tracking-wider text-sky-900 flex items-center justify-between">
                 <span class="flex items-center gap-2">
                   <span class="w-2 h-2 rounded-full bg-sky-600"></span>
-                  Reservoir Trends &amp; Macro Storage
+                  Reservoir Storage &amp; Buffers
                 </span>
                 <button onclick="setTab('reservoirs')" class="text-[11px] font-bold text-sky-700 hover:text-sky-900 hover:underline">
-                  92-Year Deep Dive →
+                  Reservoir Records (1935–Today) →
                 </button>
               </div>
 
-              <!-- Card 1: Lake Powell Storage History (1963-2026) -->
+              <!-- Card 1: Combined Basin Storage Trajectory (1935-2026) -->
               <div class="card-academic rounded-lg p-3.5 shadow-sm">
                 <div class="flex justify-between items-start mb-2">
                   <div>
-                    <h3 class="text-xs font-bold text-stone-900">1. Lake Powell Storage (1963–2026)</h3>
-                    <p class="text-[10px] text-stone-500 font-medium">Historical end-of-year storage (Million Acre-Feet)</p>
+                    <h3 class="text-xs font-bold text-stone-900">1. Combined Basin Storage Trajectory</h3>
+                    <p class="text-[10px] text-stone-500 font-medium">Continuous 92-year system water bank (Million Acre-Feet)</p>
                   </div>
-                  <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-sky-100 text-sky-800 border border-sky-300">USBR 65-Yr</span>
+                  <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-sky-100 text-sky-800 border border-sky-300">1935–2026</span>
                 </div>
                 <div class="h-36 w-full relative">
-                  <canvas id="chart-powell-history"></canvas>
+                  <canvas id="chart-macro-overview-timeline"></canvas>
                 </div>
                 <div class="flex justify-between text-[10px] font-semibold text-stone-500 mt-1 border-t border-stone-200 pt-1">
-                  <span>1983 Full Pool: 25.0M AF</span>
-                  <span>Current: ~5.95M AF</span>
-                  <span>Min Power Pool: ~4.0M AF</span>
+                  <span>Capacity: ~60.0 MAF</span>
+                  <span>1984 Peak: 56.2 MAF</span>
+                  <span class="text-emerald-700 font-bold">Current: ~17.7 MAF (29.5%)</span>
                 </div>
               </div>
 
-              <!-- Card 2: Lake Mead 92-Year Drawdown Sparkline (1935-2026) -->
-              <div class="card-academic rounded-lg p-3.5 shadow-sm">
-                <div class="flex justify-between items-start mb-2">
+              <!-- Card 2: Operating Thresholds & Storage Status -->
+              <div class="card-academic rounded-lg p-3.5 shadow-sm space-y-3">
+                <div class="flex justify-between items-start">
                   <div>
-                    <h3 class="text-xs font-bold text-stone-900">2. Lake Mead Elevation Trajectory</h3>
-                    <p class="text-[10px] text-stone-500 font-medium">Annual mean elevation (ft NGVD29, 1935–2026)</p>
+                    <h3 class="text-xs font-bold text-stone-900">2. Critical Operating Elevations</h3>
+                    <p class="text-[10px] text-stone-500 font-medium">Lake Mead &amp; Lake Powell vs. statutory &amp; power limits</p>
                   </div>
-                  <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300">Hoover 92-Yr</span>
+                  <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-stone-200 text-stone-700 border border-stone-300">USBR LC/UC</span>
                 </div>
-                <div class="h-32 w-full relative">
-                  <canvas id="chart-mead-overview-sparkline"></canvas>
-                </div>
-                <div class="flex justify-between text-[10px] font-mono text-stone-500 mt-1 border-t border-stone-200 pt-1">
-                  <span>1983 Spill: 1,225 ft</span>
-                  <span>Shortage Trigger: 1,075 ft</span>
-                  <span>Current: ~1,039 ft</span>
-                </div>
-              </div>
 
-              <!-- Card 3: Storage Distribution by Sub-basin -->
-              <div class="card-academic rounded-lg p-3.5 shadow-sm">
-                <div class="flex justify-between items-start mb-2">
-                  <div>
-                    <h3 class="text-xs font-bold text-stone-900">3. System Capacity Distribution</h3>
-                    <p class="text-[10px] text-stone-500 font-medium">Upper Basin (30.6M AF) vs. Lower Basin (28.5M AF)</p>
+                <!-- Lake Mead Status Box -->
+                <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
+                  <div class="flex justify-between items-center mb-1">
+                    <span class="text-xs font-bold text-slate-800">Lake Mead (Hoover Dam)</span>
+                    <span class="font-mono text-xs font-black text-sky-800">~1,039 ft <span class="text-[10px] font-semibold text-stone-500">(33% full)</span></span>
                   </div>
-                  <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-stone-200 text-stone-700 border border-stone-300">59.2M AF Total</span>
+                  <div class="w-full bg-stone-200 rounded-xs h-2.5 overflow-hidden">
+                    <div class="bg-sky-600 h-full" style="width: 33.3%;"></div>
+                  </div>
+                  <div class="flex justify-between text-[9.5px] text-stone-500 mt-1">
+                    <span>Dead Pool: 895'</span>
+                    <span class="text-amber-700 font-bold">Min Power: 950'</span>
+                    <span class="text-red-700 font-bold">Shortage Cut: 1,075'</span>
+                    <span>Full: 1,221'</span>
+                  </div>
                 </div>
-                <div class="h-28 w-full relative">
-                  <canvas id="chart-storage-distribution"></canvas>
+
+                <!-- Lake Powell Status Box -->
+                <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
+                  <div class="flex justify-between items-center mb-1">
+                    <span class="text-xs font-bold text-slate-800">Lake Powell (Glen Canyon Dam)</span>
+                    <span class="font-mono text-xs font-black text-teal-800">~3,570 ft <span class="text-[10px] font-semibold text-stone-500">(35% full)</span></span>
+                  </div>
+                  <div class="w-full bg-stone-200 rounded-xs h-2.5 overflow-hidden">
+                    <div class="bg-teal-600 h-full" style="width: 35.2%;"></div>
+                  </div>
+                  <div class="flex justify-between text-[9.5px] text-stone-500 mt-1">
+                    <span>Dead Pool: 3,370'</span>
+                    <span class="text-amber-700 font-bold">Min Power: 3,490'</span>
+                    <span class="text-blue-700 font-bold">Buffer Target: 3,575'</span>
+                    <span>Full: 3,700'</span>
+                  </div>
+                </div>
+
+                <div class="pt-2 border-t border-stone-200 flex justify-between items-center text-[10.5px]">
+                  <span class="text-stone-500">Includes Flaming Gorge, Navajo, Blue Mesa</span>
+                  <button onclick="setTab('reservoirs')" class="font-bold text-blue-700 hover:underline">
+                    View Interactive Heatmaps →
+                  </button>
                 </div>
               </div>
 
@@ -343,38 +388,29 @@
               
               <div class="text-xs font-black uppercase tracking-wider text-amber-800 flex items-center gap-2">
                 <span class="w-2 h-2 rounded-full bg-amber-600"></span>
-                Diversions &amp; Consumption
+                Consumptive Demand &amp; Overdraft
               </div>
 
-              <!-- Card 1: Active Canals & Pipelines Bar Chart -->
+              <!-- Card 1: Consumptive Water Use by State & Diversions -->
               <div class="card-academic rounded-lg p-3.5 shadow-sm">
                 <div class="flex justify-between items-start mb-2">
                   <div>
-                    <h3 class="text-xs font-bold text-stone-900">1. Active Canals &amp; Pipelines</h3>
-                    <p class="text-[10px] text-stone-500 font-medium">Design diversion capacity (Thousand cfs)</p>
-                  </div>
-                  <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-300">Intake Capacities</span>
-                </div>
-                <div class="h-32 w-full relative">
-                  <canvas id="chart-diversions"></canvas>
-                </div>
-              </div>
-
-              <!-- Card 2: Consumptive Water Use by State Bar Chart -->
-              <div class="card-academic rounded-lg p-3.5 shadow-sm">
-                <div class="flex justify-between items-start mb-2">
-                  <div>
-                    <h3 class="text-xs font-bold text-stone-900">2. Consumptive Water Use by State</h3>
-                    <p class="text-[10px] text-stone-500 font-medium">Annual normal consumptive depletions (Million AF/yr)</p>
+                    <h3 class="text-xs font-bold text-stone-900">1. Consumptive Use by State &amp; Canals</h3>
+                    <p class="text-[10px] text-stone-500 font-medium">Normal consumptive depletions (Million Acre-Feet/yr)</p>
                   </div>
                   <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-stone-200 text-stone-700 border border-stone-300">MAF / Year</span>
                 </div>
                 <div class="h-36 w-full relative">
                   <canvas id="chart-state-use"></canvas>
                 </div>
+                <div class="mt-2 pt-1.5 border-t border-stone-200 flex flex-wrap gap-1.5 text-[10px]">
+                  <span class="px-1.5 py-0.5 rounded bg-stone-100 text-stone-700 font-semibold">All-American Canal: 26.1k cfs</span>
+                  <span class="px-1.5 py-0.5 rounded bg-stone-100 text-stone-700 font-semibold">CAP: 3.0k cfs</span>
+                  <span class="px-1.5 py-0.5 rounded bg-stone-100 text-stone-700 font-semibold">CRA: 2.6k cfs</span>
+                </div>
               </div>
 
-              <!-- Card 3: Research Question: The Allocation Deficit -->
+              <!-- Card 2: Research Question: The Allocation Deficit -->
               <div class="card-academic rounded-lg p-4 shadow-sm border-l-4 border-l-stone-900 bg-white">
                 <div class="flex items-center gap-1.5 text-stone-900 mb-1">
                   <span class="text-xs font-black uppercase tracking-widest">RESEARCH CORE</span>
@@ -452,7 +488,7 @@
         </div>
 
         <!-- ========================================== -->
-        <!-- TAB 4: PIPELINE & TRANSIT SCHEMATIC        -->
+        <!-- TAB 4: RIVER REACH FLOW & DIVERSIONS       -->
         <!-- ========================================== -->
         <div id="section-pipeline" class="hidden flex-1 w-full h-full min-h-0 relative">
           <iframe id="iframe-pipeline" src="./pipeline.html" class="w-full h-full border-none"></iframe>
@@ -475,7 +511,7 @@
                   Macro Basin Storage Timeline (1935–Present)
                 </h2>
                 <p class="text-xs text-stone-600 mt-1">
-                  Continuous annual storage volume in <strong>Million Acre-Feet (MAF)</strong> across all major Colorado River reservoirs simultaneously. Visualizing the Hoover fill (1935), the Glen Canyon &amp; Upper Basin storage expansion (1963–1980), the record 1983–1986 system spill, and the 2000–2026 megadrought structural depletion.
+                  Continuous annual storage volume in <strong>Million Acre-Feet (MAF)</strong> across all major Colorado River reservoirs simultaneously, documenting the 1935 Hoover fill, 1963–1980 Glen Canyon expansion, 1983–1986 system spill, and the 2000–2026 megadrought depletion.
                 </p>
               </div>
 
@@ -563,7 +599,7 @@
                 Lake Mead Elevation: 1935 to Present (92-Year Continuous Record)
               </h2>
               <p class="text-xs text-stone-600 mt-1">
-                Visualizing the <strong>initial fill (1935–1941)</strong>, the <strong>high intra-annual seasonal swings pre-Glen Canyon Dam (1935–1963)</strong>, the <strong>1983 historical high spill (1,225.4 ft)</strong>, and the <strong>2000–2026 megadrought structural drawdown</strong>.
+                Nine-decade continuous water elevation record, illustrating the <strong>1935–1941 initial fill</strong>, pre-Glen Canyon seasonal fluctuations (1935–1963), the <strong>1983 historical high spill (1,225.4 ft)</strong>, and post-2000 aridification depletion.
               </p>
             </div>
 
@@ -597,7 +633,7 @@
                 <canvas id="chart-mead-history"></canvas>
               </div>
               <div class="text-[11px] text-stone-500 flex justify-between items-center mt-2 pt-2 border-t border-stone-200">
-                <span>Shaded band shows <strong>monthly seasonal range (Min to Max)</strong> within each calendar year. Notice how the band narrows after 1963 when Glen Canyon Dam began dampening upstream runoff pulses.</span>
+                <span>Shaded envelope illustrates <strong>intra-annual seasonal range (monthly min to max)</strong>. The marked post-1963 dampening reflects Glen Canyon Dam regulatory storage dampening upstream snowmelt runoff pulses.</span>
                 <span class="font-bold text-stone-700">Source: USBR Hoover Dam Records</span>
               </div>
             </div>
@@ -634,7 +670,7 @@
                 Lake Powell Elevation: 1963 to Present (64-Year Continuous Record)
               </h2>
               <p class="text-xs text-stone-600 mt-1">
-                Visualizing the <strong>17-year initial fill period (1963–1980)</strong>, the <strong>record 1983 spill (3,708.4 ft)</strong>, the <strong>1999 full pool crest</strong>, and the <strong>2000–2026 megadrought drop toward Minimum Power Pool</strong>.
+                Six-decade continuous elevation record documenting the <strong>17-year initial filling phase (1963–1980)</strong>, the <strong>1983 crest (3,708.4 ft)</strong>, the 1999 full pool crest, and recent structural drawdown toward Minimum Power Pool.
               </p>
             </div>
 
@@ -1222,84 +1258,65 @@ print(f"Lee's Ferry Flow: {cfs} cfs")</code>
         }
       });
 
-      // 3. Reservoir Levels Bar Chart
-      const resCtx = document.getElementById('chart-reservoir-levels').getContext('2d');
-      new Chart(resCtx, {
-        type: 'bar',
-        data: {
-          labels: ['Lake Powell', 'Lake Mead', 'Flaming Gorge', 'Navajo'],
-          datasets: [{
-            data: [35.2, 33.8, 71.4, 62.0],
-            backgroundColor: ['#0284c7', '#0369a1', '#059669', '#0d9488'],
-            borderRadius: 4
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              callbacks: {
-                label: (ctx) => ` Current Capacity: ${ctx.parsed.y}%`
-              }
-            }
+      // 3. Combined Macro Basin Storage Trajectory (1935 - 2026)
+      const timeline = portalData.basin_storage_timeline || [];
+      const macroYears = timeline.map(d => d.year);
+      const macroTotalMaf = timeline.map(d => d.total_major_storage_maf);
+
+      const macroCanvas = document.getElementById('chart-macro-overview-timeline');
+      if (macroCanvas) {
+        const macroCtx = macroCanvas.getContext('2d');
+        new Chart(macroCtx, {
+          type: 'line',
+          plugins: [horizontalThresholdPlugin],
+          data: {
+            labels: macroYears,
+            datasets: [{
+              label: 'Total Basin Storage (MAF)',
+              data: macroTotalMaf,
+              borderColor: '#0284c7',
+              backgroundColor: 'rgba(2, 132, 199, 0.14)',
+              borderWidth: 2.2,
+              fill: true,
+              tension: 0.15,
+              pointRadius: 0,
+              pointHoverRadius: 4
+            }]
           },
-          scales: {
-            x: {
-              grid: { display: false },
-              ticks: { font: { size: 9, weight: 'bold' } }
-            },
-            y: {
-              min: 0,
-              max: 100,
-              ticks: {
-                font: { size: 9 },
-                callback: (val) => val + '%'
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              horizontalThresholdPlugin: {
+                lines: [
+                  { value: 60.0, label: 'Capacity', color: '#64748b', dash: [6, 4], unit: 'MAF' },
+                  { value: 6.0, label: 'Min Power', color: '#d97706', dash: [5, 3], unit: 'MAF' }
+                ]
               },
-              grid: { color: '#e5e7eb' }
-            }
-          }
-        }
-      });
-
-      // 4. Diversions Capacity Bar Chart
-      const divCtx = document.getElementById('chart-diversions').getContext('2d');
-      new Chart(divCtx, {
-        type: 'bar',
-        data: {
-          labels: ['All-American', 'CRA (SoCal)', 'CAP (AZ)', 'C-BT', 'Moffat'],
-          datasets: [{
-            data: [26.1, 2.6, 3.0, 1.0, 0.6],
-            backgroundColor: '#ea580c',
-            borderRadius: 4
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              callbacks: {
-                label: (ctx) => ` Capacity: ${ctx.parsed.y}k cfs`
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: (ctx) => ` Total Major Storage: ${ctx.parsed.y.toFixed(1)} MAF`
+                }
+              }
+            },
+            scales: {
+              x: {
+                grid: { display: false },
+                ticks: { font: { size: 9 }, maxTicksLimit: 6 }
+              },
+              y: {
+                min: 0,
+                max: 65,
+                ticks: { font: { size: 9 }, stepSize: 15, callback: (v) => v + 'M' },
+                grid: { color: '#e5e7eb' }
               }
             }
-          },
-          scales: {
-            x: {
-              grid: { display: false },
-              ticks: { font: { size: 8.5 } }
-            },
-            y: {
-              ticks: { font: { size: 9 } },
-              grid: { color: '#e5e7eb' }
-            }
           }
-        }
-      });
+        });
+      }
 
-      // 5. State Consumptive Use Bar Chart
+      // 4. State Consumptive Use Bar Chart
       const stateCtx = document.getElementById('chart-state-use').getContext('2d');
       new Chart(stateCtx, {
         type: 'bar',
@@ -1329,162 +1346,6 @@ print(f"Lee's Ferry Flow: {cfs} cfs")</code>
             },
             y: {
               ticks: { font: { size: 9 } },
-              grid: { color: '#e5e7eb' }
-            }
-          }
-        }
-      });
-
-      // 6. Lake Powell 65-Year Storage History (Million AF)
-      const powellData = portalData.lake_powell_historical || [];
-      const powellYears = powellData.map(d => d.year);
-      const powellMaf = powellData.map(d => parseFloat((d.year_end_af / 1e6).toFixed(2)));
-
-      const powellCtx = document.getElementById('chart-powell-history').getContext('2d');
-      new Chart(powellCtx, {
-        type: 'line',
-        plugins: [horizontalThresholdPlugin],
-        data: {
-          labels: powellYears,
-          datasets: [{
-            label: 'Powell Storage (MAF)',
-            data: powellMaf,
-            borderColor: '#0284c7',
-            backgroundColor: 'rgba(2, 132, 199, 0.14)',
-            borderWidth: 2,
-            fill: true,
-            tension: 0.15,
-            pointRadius: 0,
-            pointHoverRadius: 4
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            horizontalThresholdPlugin: {
-              lines: [
-                { value: 25.0, label: 'Full Pool', color: '#64748b', dash: [6, 4], unit: 'M AF' },
-                { value: 4.0, label: 'Min Power', color: '#d97706', dash: [5, 3], unit: 'M AF' },
-                { value: 1.8, label: 'Dead Pool', color: '#dc2626', dash: [6, 3], unit: 'M AF' }
-              ]
-            },
-            legend: { display: false },
-            tooltip: {
-              callbacks: {
-                label: (ctx) => ` Storage: ${ctx.parsed.y} MAF`
-              }
-            }
-          },
-          scales: {
-            x: {
-              grid: { display: false },
-              ticks: { font: { size: 9 }, maxTicksLimit: 6 }
-            },
-            y: {
-              min: 0,
-              max: 27,
-              ticks: { font: { size: 9 }, stepSize: 5, callback: (v) => v + 'M' },
-              grid: { color: '#e5e7eb' }
-            }
-          }
-        }
-      });
-
-      // 7. Lake Mead 92-Year Overview Sparkline
-      const meadData = portalData.lake_mead_historical || [];
-      const meadYears = meadData.map(d => d.year);
-      const meadMeans = meadData.map(d => d.mean);
-
-      const meadSparkCtx = document.getElementById('chart-mead-overview-sparkline').getContext('2d');
-      new Chart(meadSparkCtx, {
-        type: 'line',
-        data: {
-          labels: meadYears,
-          datasets: [{
-            label: 'Mead Mean Elev (ft)',
-            data: meadMeans,
-            borderColor: '#059669',
-            backgroundColor: 'rgba(5, 150, 105, 0.12)',
-            borderWidth: 1.8,
-            fill: true,
-            tension: 0.15,
-            pointRadius: 0,
-            pointHoverRadius: 4
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              callbacks: {
-                label: (ctx) => ` Mean Elev: ${ctx.parsed.y.toFixed(1)} ft`
-              }
-            }
-          },
-          scales: {
-            x: {
-              grid: { display: false },
-              ticks: { font: { size: 9 }, maxTicksLimit: 6 }
-            },
-            y: {
-              min: 880,
-              max: 1240,
-              ticks: { font: { size: 9 }, maxTicksLimit: 4, callback: (v) => v + "'" },
-              grid: { color: '#e5e7eb' }
-            }
-          }
-        }
-      });
-
-      // 8. Storage Capacity Distribution Bar Chart
-      const distCtx = document.getElementById('chart-storage-distribution').getContext('2d');
-      new Chart(distCtx, {
-        type: 'bar',
-        data: {
-          labels: ['Upper Basin', 'Lower Basin'],
-          datasets: [
-            {
-              label: 'Current Storage (MAF)',
-              data: [9.7, 10.8],
-              backgroundColor: '#0284c7',
-              borderRadius: 3
-            },
-            {
-              label: 'Unused Capacity (MAF)',
-              data: [20.9, 17.7],
-              backgroundColor: '#cbd5e1',
-              borderRadius: 3
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'top',
-              labels: { font: { size: 9, weight: 'bold' }, boxWidth: 10 }
-            },
-            tooltip: {
-              callbacks: {
-                label: (ctx) => ` ${ctx.dataset.label}: ${ctx.parsed.y} MAF`
-              }
-            }
-          },
-          scales: {
-            x: {
-              stacked: true,
-              grid: { display: false },
-              ticks: { font: { size: 9, weight: 'bold' } }
-            },
-            y: {
-              stacked: true,
-              min: 0,
-              max: 35,
-              ticks: { font: { size: 9 }, callback: (v) => v + 'M' },
               grid: { color: '#e5e7eb' }
             }
           }

@@ -348,7 +348,7 @@
           <path id="div-mexico" class="diversion-path" d="M 480,955 L 270,955" stroke="#ea580c" stroke-width="8.5" marker-end="url(#arrow-div)" />
         </g>
 
-        <!-- 4. Main River Channels & Tributaries (Cyan / Cerulean Blue) - Transit Schematic Conveyance -->
+        <!-- 4. Main River Channels & Tributaries (Cyan / Cerulean Blue) - Topological Network Conveyance -->
         <g id="rivers-layer">
           <!-- Upper Green River (Headwaters to Yampa Confluence - 3.6 MAF) -->
           <path id="river-green-upper" class="river-path" d="M 580,50 L 580,255" stroke="#0284c7" stroke-width="14" />
@@ -371,8 +371,8 @@
           <path id="river-headwaters" class="river-path" d="M 1000,50 L 1000,210" stroke="#0284c7" stroke-width="18" />
           <text x="1025" y="65" fill="#0284c7" font-size="12.5" font-weight="900">COLORADO RIVER HEADWATERS</text>
           <text x="1025" y="80" fill="#475569" font-size="10" font-weight="500">Rocky Mountain NP • Continental Divide</text>
-          <rect x="1025" y="87" width="70" height="20" rx="4" class="badge-bg blue" />
-          <text x="1060" y="97" class="maf-badge badge-text-blue text-[10.5px]">15.0 MAF</text>
+          <rect x="1025" y="87" width="60" height="20" rx="4" class="badge-bg blue" />
+          <text x="1055" y="97" class="maf-badge badge-text-blue text-[10.5px]">8.0 MAF</text>
 
           <!-- Upper Mainstem Reach (Post-Front Range Diversion, shrinks to 16px / 7.45 MAF) -->
           <path id="river-upper-main-pre" class="river-path" d="M 1000,210 L 860,350" stroke="#0284c7" stroke-width="16" />
@@ -661,7 +661,7 @@
         if (!res.ok) return;
         liveMetrics = await res.json();
       } catch (e) {
-        console.warn('Could not load live metrics for transit schematic:', e);
+        console.warn('Could not load live metrics for river flow network:', e);
       }
     }
 
@@ -957,8 +957,8 @@
     function setupTooltips() {
       attachElement('river-headwaters', 'Colorado River Headwaters (Rocky Mountain NP)', () => `
         <strong>Region:</strong> Rocky Mountain National Park / Continental Divide, CO<br>
-        <strong>Natural Basin Yield:</strong> ~15.0 MAF/yr aggregate historical basin runoff<br>
-        <strong>Headwater Source:</strong> High-altitude snowpack, Blue &amp; Fraser River basins<br>
+        <strong>Upper Basin Headwaters Yield:</strong> ~8.0 MAF/yr natural runoff prior to trans-mountain export<br>
+        <strong>Headwater Source:</strong> High-altitude snowpack, Blue &amp; Fraser River basins (~15.0 MAF/yr is aggregate basin virgin yield)<br>
         <strong>Accounting:</strong> Feeds Upper Division State apportionments under 1922 &amp; 1948 Compacts` + flowComparisonBox('09070500', 1.50, 'USGS #09070500 Dotsero Flow', 'Dotsero gauge measures upper mainstem runoff before the Roaring Fork confluence. Autumn baseflow is typically 30–60% of annual continuous mean.') + `
       `, {
         label: 'USGS Station #09070500 (Dotsero)',

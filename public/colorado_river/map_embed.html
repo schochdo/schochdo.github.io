@@ -53,46 +53,43 @@
       pointer-events: none !important;
     }
 
-    /* Fixed Slide-Out Drawers on the Right (Both Drawers Share Same Anchor) */
-    /* 1. Map Controls (Layers & Basemap) Drawer */
+    /* Fixed Popover Dropdown on the Right for Map Controls */
+    /* 1. Map Controls (Layers & Basemap) Floating Popover */
     .map-menu-dropdown {
       position: fixed !important;
-      top: 0 !important;
-      bottom: 0 !important;
-      right: 0 !important;
+      top: 56px !important;
+      right: 14px !important;
+      bottom: auto !important;
       left: auto !important;
       width: 320px !important;
-      max-width: 88vw !important;
-      height: 100vh !important;
-      max-height: 100vh !important;
+      max-width: calc(100vw - 28px) !important;
+      max-height: calc(100vh - 72px) !important;
       background: rgba(255, 255, 255, 0.98) !important;
       backdrop-filter: blur(16px) !important;
       -webkit-backdrop-filter: blur(16px) !important;
-      border-left: 1px solid #cbd5e1 !important;
-      border-top: none !important;
-      border-right: none !important;
-      border-bottom: none !important;
-      border-radius: 0 !important;
-      box-shadow: -8px 0 28px rgba(15, 23, 42, 0.18) !important;
+      border: 1px solid #cbd5e1 !important;
+      border-radius: 12px !important;
+      box-shadow: 0 16px 36px -4px rgba(15, 23, 42, 0.22), 0 4px 12px rgba(15, 23, 42, 0.08) !important;
       padding: 16px !important;
       box-sizing: border-box !important;
       display: flex !important;
       flex-direction: column !important;
       gap: 12px !important;
-      z-index: 2200 !important;
-      transform: translateX(100%) !important;
-      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease !important;
+      z-index: 2300 !important;
+      transform: translateY(-8px) scale(0.98) !important;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.18s ease, visibility 0.18s !important;
       opacity: 0 !important;
       visibility: hidden !important;
-      pointer-events: auto !important;
+      pointer-events: none !important;
       user-select: none !important;
       overflow-y: auto !important;
       -webkit-overflow-scrolling: touch !important;
     }
     .map-menu-dropdown.show {
-      transform: translateX(0) !important;
+      transform: translateY(0) scale(1) !important;
       opacity: 1 !important;
       visibility: visible !important;
+      pointer-events: auto !important;
     }
 
     /* Map Controls Header */
@@ -229,10 +226,10 @@
       display: none !important;
     }
 
-    /* Slide controls left when Map Controls opens */
-    body.map-menu-active .map-top-actions,
-    .dashboard-body:has(.map-menu-dropdown.show) .map-top-actions {
-      transform: translateX(calc(-1 * min(88vw, 320px))) !important;
+    /* When Basin Metrics drawer is open, align floating Map Controls popover to the left of the drawer */
+    body.sidebar-drawer-active .map-menu-dropdown,
+    .dashboard-body:has(.sidebar-panel.drawer-open) .map-menu-dropdown {
+      right: 394px !important;
     }
 
     /* Basin Metrics Slide-out Drawer (Desktop & Mobile both slide out uniformly from right) */

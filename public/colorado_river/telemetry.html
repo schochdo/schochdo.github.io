@@ -126,55 +126,80 @@
       </div>
     </div>
 
-    <!-- Troubleshooting Controls: Search, Filters & Stats -->
-    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-4">
-      <div class="flex flex-wrap items-center gap-3 flex-1 min-w-[280px]">
-        <div class="relative flex-1 min-w-[240px]">
-          <input 
-            type="text" 
-            id="search-input" 
-            placeholder="Search by station name, ID, river, basin or state..." 
-            class="w-full pl-9 pr-4 py-2 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:bg-white transition"
-            oninput="handleSearchChange()"
-          />
-          <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
+    <!-- Troubleshooting Controls: Search, Filters & View Mode -->
+    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-3.5">
+      <!-- Top Row: Hydrologic Category Pills & View Switcher -->
+      <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100">
+        <div class="flex flex-wrap items-center gap-1.5" id="category-pills">
+          <button onclick="setCategoryFilter('all')" id="pill-all" class="px-3 py-1 text-xs font-bold rounded-md bg-slate-900 text-white transition">
+            All Facilities (<span id="count-all">0</span>)
+          </button>
+          <button onclick="setCategoryFilter('compact')" id="pill-compact" class="px-3 py-1 text-xs font-semibold rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+            1922 Compact Divide (<span id="count-compact">1</span>)
+          </button>
+          <button onclick="setCategoryFilter('upper_mainstem')" id="pill-upper_mainstem" class="px-3 py-1 text-xs font-semibold rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+            Upper Basin Mainstem &amp; Tributaries (<span id="count-upper">0</span>)
+          </button>
+          <button onclick="setCategoryFilter('lower_mainstem')" id="pill-lower_mainstem" class="px-3 py-1 text-xs font-semibold rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+            Lower Basin Regulated Reaches (<span id="count-lower">0</span>)
+          </button>
+          <button onclick="setCategoryFilter('diversions')" id="pill-diversions" class="px-3 py-1 text-xs font-semibold rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+            Tunnels &amp; Conveyance Canals (<span id="count-div">0</span>)
+          </button>
+          <button onclick="setCategoryFilter('reservoirs')" id="pill-reservoirs" class="px-3 py-1 text-xs font-semibold rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+            Storage Reservoirs (<span id="count-res">0</span>)
+          </button>
         </div>
 
-        <select id="type-filter" onchange="applyFilters()" class="text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500 font-medium">
-          <option value="all">All Facility Types</option>
-          <option value="streamflow">Streamflow (USGS)</option>
-          <option value="diversion_tunnel">Trans-Mountain Tunnel</option>
-          <option value="diversion_canal">Conveyance Canal</option>
-          <option value="reservoir">Storage Reservoir</option>
-        </select>
-
-        <select id="basin-filter" onchange="applyFilters()" class="text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500 font-medium">
-          <option value="all">All Basins &amp; Regions</option>
-          <option value="Upper Basin">Upper Basin</option>
-          <option value="Upper/Lower Divide">Upper/Lower Divide (Lee Ferry)</option>
-          <option value="Lower Basin">Lower Basin</option>
-          <option value="Continental Divide">Continental Divide (Trans-Mountain)</option>
-          <option value="Lower Basin Conveyance">Lower Basin Conveyance</option>
-          <option value="Upper Basin Storage">Upper Basin Storage</option>
-          <option value="Lower Basin Storage">Lower Basin Storage</option>
-          <option value="Front Range Storage">Front Range Storage</option>
-        </select>
-
-        <select id="health-filter" onchange="applyFilters()" class="text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500 font-medium">
-          <option value="all">All Historical Statuses</option>
-          <option value="abundant">Abundant (≥150%)</option>
-          <option value="normal">Normal (90–150%)</option>
-          <option value="below">Below Normal (50–90%)</option>
-          <option value="low">Low Flow (25–50%)</option>
-          <option value="critical">Critically Low (<25%)</option>
-        </select>
+        <!-- View Mode Switcher -->
+        <div class="inline-flex rounded-lg bg-slate-100 p-0.5 border border-slate-300">
+          <button onclick="setViewMode('grouped')" id="btn-view-grouped" class="px-3 py-1 text-xs font-bold rounded-md bg-white text-slate-900 shadow-xs transition">
+            📑 Grouped by Reach
+          </button>
+          <button onclick="setViewMode('flat')" id="btn-view-flat" class="px-3 py-1 text-xs font-semibold rounded-md text-slate-600 hover:text-slate-900 transition">
+            ↕ Flat Sortable
+          </button>
+        </div>
       </div>
 
-      <div class="text-xs text-slate-500 font-medium whitespace-nowrap">
-        Showing <span id="visible-count" class="font-bold text-slate-800">0</span> of <span id="total-count" class="font-bold text-slate-800">0</span> nodes
+      <!-- Second Row: Search & Specific Attribute Filters -->
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div class="flex flex-wrap items-center gap-3 flex-1 min-w-[280px]">
+          <div class="relative flex-1 min-w-[240px]">
+            <input 
+              type="text" 
+              id="search-input" 
+              placeholder="Search station name, USGS ID, river reach, notes..." 
+              class="w-full pl-9 pr-4 py-2 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:bg-white transition"
+              oninput="handleSearchChange()"
+            />
+            <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </div>
+
+          <select id="type-filter" onchange="applyFilters()" class="text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500 font-medium">
+            <option value="all">All Facility Types</option>
+            <option value="streamflow">Streamflow (USGS NWIS)</option>
+            <option value="diversion_tunnel">Trans-Mountain Tunnel (CDSS)</option>
+            <option value="diversion_canal">Conveyance Canal (USGS/USBR)</option>
+            <option value="reservoir">Storage Reservoir (USBR/CDSS)</option>
+          </select>
+
+          <select id="health-filter" onchange="applyFilters()" class="text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500 font-medium">
+            <option value="all">All Flow Health Statuses</option>
+            <option value="abundant">Abundant (≥150% of Normal)</option>
+            <option value="normal">Normal (90–150% of Normal)</option>
+            <option value="below">Below Normal (50–90% of Normal)</option>
+            <option value="low">Low Flow (25–50% of Normal)</option>
+            <option value="critical">Critically Low (&lt;25% of Normal)</option>
+          </select>
+        </div>
+
+        <div class="text-xs text-slate-500 font-medium whitespace-nowrap">
+          Showing <span id="visible-count" class="font-bold text-slate-800">0</span> of <span id="total-count" class="font-bold text-slate-800">0</span> nodes
+        </div>
       </div>
     </div>
 
@@ -184,20 +209,20 @@
         <table class="w-full text-left text-xs border-collapse data-table">
           <thead>
             <tr class="border-b border-slate-200 text-slate-600 font-bold text-[11px] uppercase tracking-wider">
-              <th class="px-4 py-3 cursor-pointer hover:text-slate-900" onclick="sortTable('name')">Station / Structure ↕</th>
+              <th class="px-4 py-3 cursor-pointer hover:text-slate-900" onclick="sortTable('name')">Station / Facility ↕</th>
               <th class="px-4 py-3 cursor-pointer hover:text-slate-900" onclick="sortTable('id')">Station ID ↕</th>
               <th class="px-4 py-3 cursor-pointer hover:text-slate-900" onclick="sortTable('type')">Type ↕</th>
-              <th class="px-4 py-3 cursor-pointer hover:text-slate-900" onclick="sortTable('basin')">Basin / Region ↕</th>
-              <th class="px-4 py-3 text-right cursor-pointer hover:text-slate-900" onclick="sortTable('reading_num')">Reading ↕</th>
-              <th class="px-4 py-3">Historical Normal</th>
-              <th class="px-4 py-3">Notes / Operational Context</th>
-              <th class="px-4 py-3 cursor-pointer hover:text-slate-900" onclick="sortTable('timestamp')">Latest Timestamp ↕</th>
-              <th class="px-4 py-3 text-center">Actions</th>
+              <th class="px-4 py-3 cursor-pointer hover:text-slate-900" onclick="sortTable('groupName')">Hydrologic Reach ↕</th>
+              <th class="px-4 py-3 text-right cursor-pointer hover:text-slate-900" onclick="sortTable('reading_num')">Live Rate / Volume ↕</th>
+              <th class="px-4 py-3">Flow Health (% Mean)</th>
+              <th class="px-4 py-3">Operational Destination / Purpose</th>
+              <th class="px-4 py-3 cursor-pointer hover:text-slate-900" onclick="sortTable('timestamp')">Timestamp ↕</th>
+              <th class="px-4 py-3 text-center">Map</th>
             </tr>
           </thead>
           <tbody id="telemetry-rows" class="divide-y divide-slate-100">
             <tr>
-              <td colspan="9" class="text-center py-12 text-slate-400">Loading telemetry feeds...</td>
+              <td colspan="9" class="text-center py-12 text-slate-400">Loading hydrologic telemetry network...</td>
             </tr>
           </tbody>
         </table>
@@ -214,8 +239,53 @@
   <script>
     let allNodes = [];
     let cachedNormals = null;
-    let sortColumn = 'basin';
+    let viewMode = 'grouped'; // 'grouped' or 'flat'
+    let activeCategory = 'all'; // 'all', 'compact', 'upper_mainstem', 'lower_mainstem', 'diversions', 'reservoirs'
+    let sortColumn = 'order';
     let sortAsc = true;
+
+    const REACH_GROUPS = [
+      {
+        id: 'compact',
+        title: '1922 Compact Divide Reach (Lee Ferry)',
+        subtitle: 'The statutory legal fulcrum dividing Upper and Lower Basin allocations (USGS #09380000)',
+        dotColor: 'bg-sky-500',
+        textColor: 'text-sky-900',
+        bgColor: 'bg-sky-50/70 border-sky-200'
+      },
+      {
+        id: 'upper_mainstem',
+        title: 'Upper Basin Mainstem & Tributaries',
+        subtitle: 'High-altitude snowmelt reaches across Colorado, Wyoming, Utah & New Mexico',
+        dotColor: 'bg-blue-600',
+        textColor: 'text-blue-900',
+        bgColor: 'bg-blue-50/70 border-blue-200'
+      },
+      {
+        id: 'lower_mainstem',
+        title: 'Lower Basin Regulated Deliveries',
+        subtitle: 'Regulated mainstem releases below Hoover, Davis, Parker & Imperial Dams',
+        dotColor: 'bg-emerald-600',
+        textColor: 'text-emerald-900',
+        bgColor: 'bg-emerald-50/70 border-emerald-200'
+      },
+      {
+        id: 'diversions',
+        title: 'Trans-Mountain Tunnels & Conveyance Canals',
+        subtitle: 'Continental Divide exports and interstate agricultural/municipal diversion canals',
+        dotColor: 'bg-amber-600',
+        textColor: 'text-amber-900',
+        bgColor: 'bg-amber-50/70 border-amber-200'
+      },
+      {
+        id: 'reservoirs',
+        title: 'Storage Reservoirs & Impoundments',
+        subtitle: 'Federal storage buffers (CRSP & Lower Basin) buffering annual droughts',
+        dotColor: 'bg-purple-600',
+        textColor: 'text-purple-900',
+        bgColor: 'bg-purple-50/70 border-purple-200'
+      }
+    ];
 
     function todayKey() {
       const now = new Date();
@@ -367,95 +437,126 @@
     }
 
     function buildNodeList(metrics) {
-      allNodes = [
-        ...metrics.streamflows.map(s => {
-          let b = "Upper Basin";
-          if (s.id === "09380000") b = "Upper/Lower Divide";
-          else if (["09402000", "09415000", "09426000", "09429100", "09474000", "09520500", "09498500", "09511300"].includes(s.id)) b = "Lower Basin";
-          
-          const norm = getHistoricalNormal(s.id);
-          let healthStatus = 'unmonitored';
-          let healthPct = null;
-          if (norm && norm > 0 && s.flow_cfs != null) {
-            healthPct = Math.round((s.flow_cfs / norm) * 100);
-            if (healthPct >= 150) healthStatus = 'abundant';
-            else if (healthPct >= 90) healthStatus = 'normal';
-            else if (healthPct >= 50) healthStatus = 'below';
-            else if (healthPct >= 25) healthStatus = 'low';
-            else healthStatus = 'critical';
-          }
+      allNodes = [];
 
-          return {
-            id: s.id,
-            name: s.name,
-            type: "streamflow",
-            basin: b,
-            reading: `${s.flow_cfs.toLocaleString()} cfs`,
-            reading_num: s.flow_cfs,
-            norm_cfs: norm,
-            health_pct: healthPct,
-            health_status: healthStatus,
-            notes: "USGS NWIS Real-Time Gauge",
-            timestamp: s.timestamp,
-            lat: s.lat,
-            lon: s.lon
-          };
-        }),
-        ...metrics.tunnels.map(t => ({
+      // 1. Streamflow Gages
+      (metrics.streamflows || []).forEach((s, idx) => {
+        const norm = getHistoricalNormal(s.id);
+        let healthStatus = 'unmonitored';
+        let healthPct = null;
+        if (norm && norm > 0 && s.flow_cfs != null) {
+          healthPct = Math.round((s.flow_cfs / norm) * 100);
+          if (healthPct >= 150) healthStatus = 'abundant';
+          else if (healthPct >= 90) healthStatus = 'normal';
+          else if (healthPct >= 50) healthStatus = 'below';
+          else if (healthPct >= 25) healthStatus = 'low';
+          else healthStatus = 'critical';
+        }
+
+        let groupId = 'upper_mainstem';
+        let groupName = 'Upper Basin Mainstem';
+        let order = 100 + idx;
+
+        if (s.id === '09380000') {
+          groupId = 'compact';
+          groupName = '1922 Compact Divide';
+          order = 10;
+        } else if (['09402000', '09415000', '09421500', '09423000', '09426000', '09427520', '09429100', '09429490', '09474000', '09520500', '09522000', '09498500', '09511300'].includes(s.id)) {
+          groupId = 'lower_mainstem';
+          groupName = 'Lower Basin Deliveries';
+          order = 200 + idx;
+        }
+
+        allNodes.push({
+          id: s.id,
+          name: s.name,
+          type: "streamflow",
+          groupId: groupId,
+          groupName: groupName,
+          order: order,
+          reading: `${s.flow_cfs.toLocaleString()} cfs`,
+          reading_num: s.flow_cfs,
+          norm_cfs: norm,
+          health_pct: healthPct,
+          health_status: healthStatus,
+          notes: s.id === '09380000' ? "Statutory Lee Ferry Compact boundary (1922 Treaty)" : "USGS NWIS Real-Time Discharge",
+          timestamp: s.timestamp,
+          lat: s.lat,
+          lon: s.lon
+        });
+      });
+
+      // 2. Trans-Mountain Diversion Tunnels
+      (metrics.tunnels || []).forEach((t, idx) => {
+        allNodes.push({
           id: t.id,
           name: t.name,
           type: "diversion_tunnel",
-          basin: "Continental Divide",
+          groupId: "diversions",
+          groupName: "Trans-Mountain Tunnels",
+          order: 300 + idx,
           reading: `${t.flow_cfs.toLocaleString()} cfs`,
           reading_num: t.flow_cfs,
           norm_cfs: null,
           health_pct: null,
           health_status: 'unmonitored',
-          notes: t.destination,
+          notes: t.destination || "Continental Divide Export (CDSS)",
           timestamp: t.timestamp,
           lat: t.lat,
           lon: t.lon
-        })),
-        ...(metrics.canals || []).map(c => ({
+        });
+      });
+
+      // 3. Conveyance Canals
+      (metrics.canals || []).forEach((c, idx) => {
+        allNodes.push({
           id: c.id,
           name: c.name,
           type: "diversion_canal",
-          basin: "Lower Basin Conveyance",
+          groupId: "diversions",
+          groupName: "Conveyance Canals",
+          order: 350 + idx,
           reading: `${c.flow_cfs.toLocaleString()} cfs`,
           reading_num: c.flow_cfs,
           norm_cfs: null,
           health_pct: null,
           health_status: 'unmonitored',
-          notes: c.destination,
+          notes: c.destination || "Lower Basin Conveyance Canal",
           timestamp: c.timestamp,
           lat: c.lat,
           lon: c.lon
-        })),
-        ...[...(metrics.reservoirs || [])].sort((a, b) => {
-          const capA = Number(a.capacity_af) || 0;
-          const capB = Number(b.capacity_af) || 0;
-          return capB - capA;
-        }).map(r => {
-          const pct = (r.capacity_pct !== undefined && r.capacity_pct !== null) 
-            ? r.capacity_pct 
-            : ((r.storage_af / r.capacity_af) * 100);
-          return {
-            id: r.id,
-            name: r.name,
-            type: "reservoir",
-            basin: r.category === "front_range" ? "Front Range Storage" : (["lake_powell", "flaming_gorge", "navajo", "blue_mesa"].includes(r.id) ? "Upper Basin Storage" : "Lower Basin Storage"),
-            reading: `${pct.toFixed(1)}% (${Math.round(r.storage_af / 1000).toLocaleString()}k AF)`,
-            reading_num: r.storage_af,
-            norm_cfs: null,
-            health_pct: null,
-            health_status: 'unmonitored',
-            notes: r.feet_below_full ? `${r.feet_below_full} ft down (Elev: ${r.elevation_ft ? r.elevation_ft.toLocaleString() : 'N/A'} ft)` : `Elevation: ${r.elevation_ft ? r.elevation_ft.toLocaleString() : 'N/A'} ft`,
-            timestamp: r.timestamp,
-            lat: r.lat,
-            lon: r.lon
-          };
-        })
-      ];
+        });
+      });
+
+      // 4. Reservoirs
+      const sortedRes = [...(metrics.reservoirs || [])].sort((a, b) => {
+        const capA = Number(a.capacity_af) || 0;
+        const capB = Number(b.capacity_af) || 0;
+        return capB - capA;
+      });
+
+      sortedRes.forEach((r, idx) => {
+        const pct = (r.capacity_pct !== undefined && r.capacity_pct !== null) 
+          ? r.capacity_pct 
+          : ((r.storage_af / r.capacity_af) * 100);
+        allNodes.push({
+          id: r.id,
+          name: r.name,
+          type: "reservoir",
+          groupId: "reservoirs",
+          groupName: "Storage Reservoirs",
+          order: 400 + idx,
+          reading: `${pct.toFixed(1)}% (${Math.round(r.storage_af / 1000).toLocaleString()}k AF)`,
+          reading_num: r.storage_af,
+          norm_cfs: null,
+          health_pct: null,
+          health_status: 'unmonitored',
+          notes: r.feet_below_full ? `${r.feet_below_full} ft down (Elev: ${r.elevation_ft ? r.elevation_ft.toLocaleString() : 'N/A'} ft)` : `Elevation: ${r.elevation_ft ? r.elevation_ft.toLocaleString() : 'N/A'} ft`,
+          timestamp: r.timestamp,
+          lat: r.lat,
+          lon: r.lon
+        });
+      });
     }
 
     function updateKpis(metrics) {
@@ -463,6 +564,49 @@
       document.getElementById('stat-streamflow-count').textContent = metrics.streamflows?.length || 0;
       document.getElementById('stat-diversion-count').textContent = (metrics.tunnels?.length || 0) + (metrics.canals?.length || 0);
       document.getElementById('stat-reservoir-count').textContent = metrics.reservoirs?.length || 0;
+
+      // Update category pill counts
+      const counts = { compact: 0, upper_mainstem: 0, lower_mainstem: 0, diversions: 0, reservoirs: 0 };
+      allNodes.forEach(n => {
+        if (counts[n.groupId] !== undefined) counts[n.groupId]++;
+      });
+      const elAll = document.getElementById('count-all'); if (elAll) elAll.textContent = allNodes.length;
+      const elCompact = document.getElementById('count-compact'); if (elCompact) elCompact.textContent = counts.compact;
+      const elUpper = document.getElementById('count-upper'); if (elUpper) elUpper.textContent = counts.upper_mainstem;
+      const elLower = document.getElementById('count-lower'); if (elLower) elLower.textContent = counts.lower_mainstem;
+      const elDiv = document.getElementById('count-div'); if (elDiv) elDiv.textContent = counts.diversions;
+      const elRes = document.getElementById('count-res'); if (elRes) elRes.textContent = counts.reservoirs;
+    }
+
+    function setViewMode(mode) {
+      viewMode = mode;
+      const btnGrouped = document.getElementById('btn-view-grouped');
+      const btnFlat = document.getElementById('btn-view-flat');
+      if (btnGrouped && btnFlat) {
+        if (mode === 'grouped') {
+          btnGrouped.className = 'px-3 py-1 text-xs font-bold rounded-md bg-white text-slate-900 shadow-xs transition';
+          btnFlat.className = 'px-3 py-1 text-xs font-semibold rounded-md text-slate-600 hover:text-slate-900 transition';
+        } else {
+          btnGrouped.className = 'px-3 py-1 text-xs font-semibold rounded-md text-slate-600 hover:text-slate-900 transition';
+          btnFlat.className = 'px-3 py-1 text-xs font-bold rounded-md bg-white text-slate-900 shadow-xs transition';
+        }
+      }
+      applyFilters();
+    }
+
+    function setCategoryFilter(cat) {
+      activeCategory = cat;
+      const pillKeys = ['all', 'compact', 'upper_mainstem', 'lower_mainstem', 'diversions', 'reservoirs'];
+      pillKeys.forEach(k => {
+        const btn = document.getElementById('pill-' + k);
+        if (!btn) return;
+        if (k === cat) {
+          btn.className = 'px-3 py-1 text-xs font-bold rounded-md bg-slate-900 text-white transition';
+        } else {
+          btn.className = 'px-3 py-1 text-xs font-semibold rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200 transition';
+        }
+      });
+      applyFilters();
     }
 
     function handleSearchChange() {
@@ -472,17 +616,16 @@
     function applyFilters() {
       const q = document.getElementById('search-input').value.toLowerCase().trim();
       const typeFilter = document.getElementById('type-filter').value;
-      const basinFilter = document.getElementById('basin-filter').value;
       const healthFilter = document.getElementById('health-filter').value;
 
       let filtered = allNodes.filter(node => {
+        if (activeCategory !== 'all' && node.groupId !== activeCategory) return false;
         if (typeFilter !== 'all' && node.type !== typeFilter) return false;
-        if (basinFilter !== 'all' && node.basin !== basinFilter) return false;
         if (healthFilter !== 'all' && node.health_status !== healthFilter) return false;
         if (q) {
           const match = node.name.toLowerCase().includes(q) ||
                         node.id.toLowerCase().includes(q) ||
-                        node.basin.toLowerCase().includes(q) ||
+                        node.groupName.toLowerCase().includes(q) ||
                         node.notes.toLowerCase().includes(q);
           if (!match) return false;
         }
@@ -514,6 +657,67 @@
       applyFilters();
     }
 
+    function renderRowHtml(node) {
+      const portal = getPortalInfo(node);
+      const portalLink = portal 
+        ? `<a href="${portal.url}" target="_blank" rel="noopener" class="text-sky-600 hover:text-sky-800 font-semibold ml-1.5" title="Open official ${portal.name} portal">↗</a>` 
+        : '';
+
+      let healthHtml = '<span class="text-slate-400 text-[11px]">—</span>';
+      if (node.norm_cfs) {
+        let badgeColor = 'bg-slate-100 text-slate-700';
+        if (node.health_status === 'abundant') badgeColor = 'bg-blue-100 text-blue-800 font-bold';
+        else if (node.health_status === 'normal') badgeColor = 'bg-sky-100 text-sky-800 font-semibold';
+        else if (node.health_status === 'below') badgeColor = 'bg-amber-100 text-amber-800 font-semibold';
+        else if (node.health_status === 'low') badgeColor = 'bg-red-100 text-red-800 font-semibold';
+        else if (node.health_status === 'critical') badgeColor = 'bg-red-200 text-red-900 font-bold';
+
+        healthHtml = `
+          <div class="flex items-center gap-2">
+            <span class="text-[11px] px-2 py-0.5 rounded ${badgeColor}">
+              ${node.health_pct}%
+            </span>
+            <span class="text-[11px] text-slate-500 font-mono">(${node.norm_cfs.toLocaleString()} cfs mean)</span>
+          </div>
+        `;
+      }
+
+      return `
+        <tr class="hover:bg-sky-50/50 transition cursor-default">
+          <td class="px-4 py-3 font-semibold text-slate-900">
+            ${node.name}
+            ${portalLink}
+          </td>
+          <td class="px-4 py-3 font-mono text-slate-600 text-[11px]">
+            ${node.id}
+          </td>
+          <td class="px-4 py-3 whitespace-nowrap">
+            <span class="type-pill ${node.type}">${node.type.replace('_', ' ')}</span>
+          </td>
+          <td class="px-4 py-3 text-slate-600 whitespace-nowrap">
+            ${node.groupName}
+          </td>
+          <td class="px-4 py-3 text-right font-bold text-slate-900 whitespace-nowrap font-mono">
+            ${node.reading}
+          </td>
+          <td class="px-4 py-3 whitespace-nowrap">
+            ${healthHtml}
+          </td>
+          <td class="px-4 py-3 text-slate-500 text-[11px] max-w-[260px]">
+            ${node.notes}
+          </td>
+          <td class="px-4 py-3 text-slate-500 text-[11px] whitespace-nowrap">
+            ${formatTimestamp(node.timestamp)}
+          </td>
+          <td class="px-4 py-3 text-center whitespace-nowrap">
+            <button onclick="showStationOnMap('${node.id}')" class="inline-flex items-center gap-1 text-[11px] px-2.5 py-1 rounded bg-slate-100 hover:bg-sky-100 text-slate-700 hover:text-sky-800 font-semibold transition border border-slate-200 cursor-pointer shadow-2xs" title="Fly to this station on the interactive map">
+              <span>Show on Map →</span>
+            </button>
+          </td>
+        </tr>
+      `;
+    }
+
     function renderTable(nodes) {
       const tbody = document.getElementById('telemetry-rows');
       document.getElementById('visible-count').textContent = nodes.length;
@@ -524,66 +728,49 @@
         return;
       }
 
-      tbody.innerHTML = nodes.map(node => {
-        const portal = getPortalInfo(node);
-        const portalLink = portal 
-          ? `<a href="${portal.url}" target="_blank" rel="noopener" class="text-sky-600 hover:text-sky-800 font-semibold ml-1.5" title="Open official ${portal.name} portal">↗</a>` 
-          : '';
+      if (viewMode === 'flat' || activeCategory !== 'all') {
+        tbody.innerHTML = nodes.map(renderRowHtml).join('');
+        return;
+      }
 
-        let healthHtml = '<span class="text-slate-400 text-[11px]">—</span>';
-        if (node.norm_cfs) {
-          let badgeColor = 'bg-slate-100 text-slate-700';
-          if (node.health_status === 'abundant') badgeColor = 'bg-blue-100 text-blue-800 font-bold';
-          else if (node.health_status === 'normal') badgeColor = 'bg-sky-100 text-sky-800 font-semibold';
-          else if (node.health_status === 'below') badgeColor = 'bg-amber-100 text-amber-800 font-semibold';
-          else if (node.health_status === 'low') badgeColor = 'bg-red-100 text-red-800 font-semibold';
-          else if (node.health_status === 'critical') badgeColor = 'bg-red-200 text-red-900 font-bold';
+      // Grouped by Hydrologic Reach Mode
+      let html = '';
+      REACH_GROUPS.forEach(group => {
+        const groupNodes = nodes.filter(n => n.groupId === group.id);
+        if (groupNodes.length === 0) return;
 
-          healthHtml = `
-            <div class="flex items-center gap-2">
-              <span class="text-[11px] px-2 py-0.5 rounded ${badgeColor}">
-                ${node.health_pct}%
-              </span>
-              <span class="text-[11px] text-slate-500 font-mono">(${node.norm_cfs.toLocaleString()} cfs normal)</span>
-            </div>
-          `;
+        // Calculate aggregate flow or storage
+        let summaryText = '';
+        if (group.id === 'reservoirs') {
+          const totalStorageAf = groupNodes.reduce((acc, cur) => acc + (cur.reading_num || 0), 0);
+          summaryText = `Combined Storage: ${(totalStorageAf / 1e6).toFixed(2)} MAF`;
+        } else {
+          const totalFlowCfs = groupNodes.reduce((acc, cur) => acc + (cur.reading_num || 0), 0);
+          summaryText = `Current Reach Flow: ${totalFlowCfs.toLocaleString()} cfs`;
         }
 
-        return `
-          <tr class="hover:bg-sky-50/50 transition cursor-default">
-            <td class="px-4 py-3 font-semibold text-slate-900">
-              ${node.name}
-              ${portalLink}
-            </td>
-            <td class="px-4 py-3 font-mono text-slate-600 text-[11px]">
-              ${node.id}
-            </td>
-            <td class="px-4 py-3 whitespace-nowrap">
-              <span class="type-pill ${node.type}">${node.type.replace('_', ' ')}</span>
-            </td>
-            <td class="px-4 py-3 text-slate-600 whitespace-nowrap">
-              ${node.basin}
-            </td>
-            <td class="px-4 py-3 text-right font-bold text-slate-900 whitespace-nowrap">
-              ${node.reading}
-            </td>
-            <td class="px-4 py-3 whitespace-nowrap">
-              ${healthHtml}
-            </td>
-            <td class="px-4 py-3 text-slate-500 text-[11px] max-w-[260px]">
-              ${node.notes}
-            </td>
-            <td class="px-4 py-3 text-slate-500 text-[11px] whitespace-nowrap">
-              ${formatTimestamp(node.timestamp)}
-            </td>
-            <td class="px-4 py-3 text-center whitespace-nowrap">
-              <button onclick="showStationOnMap('${node.id}')" class="inline-flex items-center gap-1 text-[11px] px-2.5 py-1 rounded bg-slate-100 hover:bg-sky-100 text-slate-700 hover:text-sky-800 font-semibold transition border border-slate-200 cursor-pointer shadow-2xs" title="Fly to this station on the interactive map">
-                <span>Show on Map →</span>
-              </button>
+        html += `
+          <tr class="${group.bgColor} border-y border-slate-200">
+            <td colspan="9" class="px-4 py-2.5">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded-full ${group.dotColor}"></span>
+                  <span class="text-xs font-black uppercase tracking-wider ${group.textColor}">${group.title}</span>
+                  <span class="text-[11px] text-slate-500 font-medium">(${groupNodes.length} nodes)</span>
+                  <span class="text-[11px] text-slate-400 italic hidden md:inline">• ${group.subtitle}</span>
+                </div>
+                <div class="text-xs font-mono font-bold ${group.textColor}">
+                  ${summaryText}
+                </div>
+              </div>
             </td>
           </tr>
         `;
-      }).join('');
+
+        html += groupNodes.map(renderRowHtml).join('');
+      });
+
+      tbody.innerHTML = html;
     }
 
     // Seamless navigation between tabs / standalone windows
