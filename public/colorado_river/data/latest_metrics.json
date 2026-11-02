@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-11-01T18:08:27.384654",
+  "fetched_at": "2026-11-01T18:12:37.836244",
   "streamflows": [
     {
       "id": "09034250",
@@ -41,8 +41,8 @@
       "id": "09070500",
       "name": "Colorado River near Dotsero, CO",
       "type": "streamflow",
-      "flow_cfs": 639.0,
-      "timestamp": "2026-11-01T17:00:00.000-07:00",
+      "flow_cfs": 653.0,
+      "timestamp": "2026-11-01T18:00:00.000-07:00",
       "lat": 39.6446111,
       "lon": -107.0780139
     },
@@ -104,8 +104,8 @@
       "id": "09180000",
       "name": "Dolores River near Cisco, UT",
       "type": "streamflow",
-      "flow_cfs": 734.0,
-      "timestamp": "2026-11-01T17:45:00.000-07:00",
+      "flow_cfs": 748.0,
+      "timestamp": "2026-11-01T18:00:00.000-07:00",
       "lat": 38.79720805,
       "lon": -109.1951142
     },
@@ -186,7 +186,7 @@
       "name": "Green River at Green River, UT",
       "type": "streamflow",
       "flow_cfs": 4280.0,
-      "timestamp": "2026-11-01T17:45:00.000-07:00",
+      "timestamp": "2026-11-01T18:00:00.000-07:00",
       "lat": 38.98886944,
       "lon": -110.15035556
     },
@@ -212,8 +212,8 @@
       "id": "09365000",
       "name": "San Juan River at Farmington, NM",
       "type": "streamflow",
-      "flow_cfs": 9540.0,
-      "timestamp": "2026-11-01T17:00:00.000-07:00",
+      "flow_cfs": 10800.0,
+      "timestamp": "2026-11-01T18:00:00.000-07:00",
       "lat": 36.72301667,
       "lon": -108.2255889
     },
@@ -221,8 +221,8 @@
       "id": "09368000",
       "name": "San Juan River at Shiprock, NM",
       "type": "streamflow",
-      "flow_cfs": 8190.0,
-      "timestamp": "2026-11-01T17:00:00.000-07:00",
+      "flow_cfs": 8670.0,
+      "timestamp": "2026-11-01T18:00:00.000-07:00",
       "lat": 36.77666667,
       "lon": -108.6830556
     },
@@ -248,8 +248,8 @@
       "id": "09382000",
       "name": "Paria River at Lees Ferry, AZ",
       "type": "streamflow",
-      "flow_cfs": 3150.0,
-      "timestamp": "2026-11-01T17:44:00.000-07:00",
+      "flow_cfs": 3640.0,
+      "timestamp": "2026-11-01T18:00:00.000-07:00",
       "lat": 36.87221098,
       "lon": -111.59462862
     },
@@ -361,7 +361,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 1020,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T18:08:26.400711",
+      "timestamp": "2026-11-01T18:12:36.864398",
       "lat": 40.3283,
       "lon": -105.5786
     },
@@ -372,7 +372,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 1280,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T18:08:26.400719",
+      "timestamp": "2026-11-01T18:12:36.864429",
       "lat": 39.9022,
       "lon": -105.6433
     },
@@ -383,7 +383,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 1020,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T18:08:26.400721",
+      "timestamp": "2026-11-01T18:12:36.864436",
       "lat": 39.4633,
       "lon": -105.6797
     },
@@ -394,7 +394,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 945,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T18:08:26.400723",
+      "timestamp": "2026-11-01T18:12:36.864443",
       "lat": 39.2619,
       "lon": -106.5297
     }
