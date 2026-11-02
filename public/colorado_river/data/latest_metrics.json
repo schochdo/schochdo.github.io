@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-11-01T17:18:17.041623",
+  "fetched_at": "2026-11-01T17:29:31.839895",
   "streamflows": [
     {
       "id": "09034250",
@@ -68,8 +68,8 @@
       "id": "09095500",
       "name": "Colorado River near Cameo, CO",
       "type": "streamflow",
-      "flow_cfs": 1850.0,
-      "timestamp": "2026-11-01T17:00:00.000-07:00",
+      "flow_cfs": 1870.0,
+      "timestamp": "2026-11-01T17:15:00.000-07:00",
       "lat": 39.2391463,
       "lon": -108.2661946
     },
@@ -104,8 +104,8 @@
       "id": "09180000",
       "name": "Dolores River near Cisco, UT",
       "type": "streamflow",
-      "flow_cfs": 713.0,
-      "timestamp": "2026-11-01T17:00:00.000-07:00",
+      "flow_cfs": 720.0,
+      "timestamp": "2026-11-01T17:15:00.000-07:00",
       "lat": 38.79720805,
       "lon": -109.1951142
     },
@@ -185,8 +185,8 @@
       "id": "09315000",
       "name": "Green River at Green River, UT",
       "type": "streamflow",
-      "flow_cfs": 4070.0,
-      "timestamp": "2026-11-01T17:00:00.000-07:00",
+      "flow_cfs": 4120.0,
+      "timestamp": "2026-11-01T17:15:00.000-07:00",
       "lat": 38.98886944,
       "lon": -110.15035556
     },
@@ -248,8 +248,8 @@
       "id": "09382000",
       "name": "Paria River at Lees Ferry, AZ",
       "type": "streamflow",
-      "flow_cfs": 2510.0,
-      "timestamp": "2026-11-01T17:00:00.000-07:00",
+      "flow_cfs": 2720.0,
+      "timestamp": "2026-11-01T17:14:00.000-07:00",
       "lat": 36.87221098,
       "lon": -111.59462862
     },
@@ -266,8 +266,8 @@
       "id": "09402500",
       "name": "Colorado River near Grand Canyon, AZ (Phantom Ranch)",
       "type": "streamflow",
-      "flow_cfs": 9700.0,
-      "timestamp": "2026-11-01T16:15:00.000-07:00",
+      "flow_cfs": 9600.0,
+      "timestamp": "2026-11-01T17:15:00.000-07:00",
       "lat": 36.10137176,
       "lon": -112.0862795
     },
@@ -338,8 +338,8 @@
       "id": "09511300",
       "name": "Verde River near Scottsdale, AZ",
       "type": "streamflow",
-      "flow_cfs": 16600.0,
-      "timestamp": "2026-11-01T17:00:00.000-07:00",
+      "flow_cfs": 16100.0,
+      "timestamp": "2026-11-01T17:20:00.000-07:00",
       "lat": 33.5586557,
       "lon": -111.6693043
     },
@@ -394,7 +394,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 945,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T15:00:00",
+      "timestamp": "2026-11-01T16:00:00",
       "lat": 39.2619,
       "lon": -106.5297
     }
@@ -498,7 +498,7 @@
       "river": "San Juan River (NM/CO)",
       "type": "reservoir",
       "category": "system",
-      "elevation_ft": 6018.9,
+      "elevation_ft": 6049.2,
       "storage_af": 1161417.0,
       "capacity_af": 1696000.0,
       "capacity_pct": 68.5,
@@ -551,7 +551,7 @@
       "capacity_af": 539800.0,
       "capacity_pct": 48.1,
       "role": "C-BT Project Primary Storage -> Adams Tunnel",
-      "timestamp": "2026-11-01T15:00:00",
+      "timestamp": "2026-11-01T16:00:00",
       "lat": 40.1488,
       "lon": -105.8675
     },
@@ -583,11 +583,11 @@
       "elevation_ft": 7826.3,
       "stage_ft": null,
       "feet_below_full": 123.7,
-      "storage_af": 14976.0,
+      "storage_af": 14983.0,
       "capacity_af": 153639.0,
-      "capacity_pct": 9.7,
+      "capacity_pct": 9.8,
       "role": "West Slope Compensatory Storage (C-BT Replacement)",
-      "timestamp": "2026-11-01T15:00:00",
+      "timestamp": "2026-11-01T16:00:00",
       "lat": 39.8783,
       "lon": -106.3298
     },

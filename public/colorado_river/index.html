@@ -731,14 +731,18 @@
       if (!portalData) return;
 
       // 1. Basin SWE Area Chart (1977 - 2026)
+      const sweData = portalData.swe_history || [];
+      const sweYears = sweData.map(d => d.year);
+      const sweInches = sweData.map(d => d.swe_in);
+
       const sweCtx = document.getElementById('chart-swe').getContext('2d');
       new Chart(sweCtx, {
         type: 'line',
         data: {
-          labels: portalData.basin_swe.years,
+          labels: sweYears,
           datasets: [{
             label: 'Peak SWE (in)',
-            data: portalData.basin_swe.peak_swe_inches,
+            data: sweInches,
             borderColor: '#059669',
             backgroundColor: 'rgba(5, 150, 105, 0.15)',
             borderWidth: 2,
@@ -777,17 +781,52 @@
       });
 
       // 2. Lee's Ferry Daily Streamflow Sparkline
+      const lfData = portalData.lees_ferry_daily || [];
+      const lfDates = lfData.map(d => d.date);
+      const lfCfs = lfData.map(d => d.cfs);
+
       const leesCtx = document.getElementById('chart-lees-ferry').getContext('2d');
       new Chart(leesCtx, {
         type: 'line',
         data: {
-          labels: portalData.lees_ferry_daily.dates,
+          labels: lfDates,
           datasets: [{
             label: 'Discharge (cfs)',
-            data: portalData.lees_ferry_daily.flow_cfs,
+            data: lfCfs,
             borderColor: '#0284c7',
             backgroundColor: 'rgba(2, 132, 199, 0.12)',
             borderWidth: 1.5,
+            fill: true,
+            tension: 0.1,
+            pointRadius: 0,
+            pointHoverRadius: 3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              mode: 'index',
+              intersect: false,
+              callbacks: {
+                label: (ctx) => ` Flow: ${parseInt(ctx.parsed.y).toLocaleString()} cfs`
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { display: false }
+            },
+            y: {
+              ticks: { font: { size: 9 }, maxTicksLimit: 4 },
+              grid: { color: '#e5e7eb' }
+            }
+          }
+        }
+      });
             fill: true,
             tension: 0.1,
             pointRadius: 0,
@@ -940,24 +979,11 @@
       if (meadChartRendered || !portalData) return;
       meadChartRendered = true;
 
-      const records = portalData.mead_historical_monthly.records;
+      const records = portalData.lake_mead_historical || [];
       const years = records.map(r => r.year);
-      
-      const minElv = records.map(r => {
-        const valid = r.months.filter(m => m !== null);
-        return valid.length ? Math.min(...valid) : null;
-      });
-
-      const maxElv = records.map(r => {
-        const valid = r.months.filter(m => m !== null);
-        return valid.length ? Math.max(...valid) : null;
-      });
-
-      const meanElv = records.map(r => {
-        const valid = r.months.filter(m => m !== null);
-        if (!valid.length) return null;
-        return valid.reduce((a, b) => a + b, 0) / valid.length;
-      });
+      const minElv = records.map(r => r.min);
+      const maxElv = records.map(r => r.max);
+      const meanElv = records.map(r => r.mean);
 
       const ctx = document.getElementById('chart-mead-history').getContext('2d');
       new Chart(ctx, {
@@ -1037,8 +1063,8 @@
       const container = document.getElementById('heatmap-grid');
       if (container.children.length > 0 || !portalData) return;
 
-      const records = portalData.mead_historical_monthly.records;
-      const monthNames = portalData.mead_historical_monthly.months_header;
+      const records = portalData.lake_mead_historical || [];
+      const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
 
       // Header row
       const headerRow = document.createElement('div');
@@ -1080,12 +1106,13 @@
         yearLabel.innerText = r.year;
         row.appendChild(yearLabel);
 
-        r.months.forEach((val, idx) => {
+        monthNames.forEach(mKey => {
+          const val = r.elevations ? r.elevations[mKey] : null;
           const cell = document.createElement('div');
           cell.className = 'h-3 rounded-xs heatmap-cell cursor-pointer relative';
           cell.style.backgroundColor = getColor(val);
           if (val) {
-            cell.title = `${r.year} ${monthNames[idx]}: ${val.toFixed(1)} ft NGVD29`;
+            cell.title = `${r.year} ${mKey}: ${val.toFixed(1)} ft NGVD29`;
           }
           row.appendChild(cell);
         });

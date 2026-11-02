@@ -192,82 +192,75 @@
 
     </div>
 
-    <!-- Collapsible Sidebar (Basin Metrics) -->
-    <aside id="sidebar">
-      <div class="sidebar-header">
-        <div class="sidebar-title-group">
-          <h2>Basin Hydrology</h2>
-          <span class="badge" id="data-status">Live Feeds</span>
+    <!-- Right Sidebar: Basin Metrics & Outflows -->
+    <aside class="sidebar-panel" id="sidebar-panel">
+      <!-- Mobile Sidebar Header with Close Button -->
+      <div class="sidebar-mobile-header">
+        <div class="sidebar-mobile-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          <span>Basin Telemetry &amp; Storage</span>
         </div>
-        <button class="close-sidebar-btn" onclick="closeSidebar()" title="Close panel" aria-label="Close Metrics Panel">&times;</button>
+        <button class="sidebar-close-btn" onclick="closeSidebar()" aria-label="Close sidebar">✕</button>
       </div>
 
-      <div class="sidebar-content">
-        <!-- Overview Card -->
-        <div class="metric-card" id="overview-card">
-          <h3>Where Is The Water Going?</h3>
-          <p class="card-desc">Real-time snapshot of out-of-basin diversions and primary interstate compact deliveries:</p>
-          <div class="diversion-summary-grid">
-            <div class="diversion-item">
-              <span class="diversion-label">Denver / Front Range</span>
-              <span class="diversion-val" id="total-transmountain-flow">-- cfs</span>
-              <span class="diversion-sub">Moffat, Roberts &amp; Adams Bores</span>
-            </div>
-            <div class="diversion-item">
-              <span class="diversion-label">Lake Mead Inflow (Lee's Ferry)</span>
-              <span class="diversion-val" id="lees-ferry-flow">-- cfs</span>
-              <span class="diversion-sub">Compact Point Delivery</span>
-            </div>
+      <!-- Where Is the Water Going? (Major Basin Outflows & Diversions) -->
+      <section class="card stat-card outflows-card" id="outflows-card">
+        <div class="card-header card-header-clickable" onclick="toggleCardCollapse('outflows-card', 'outflows-body', 'outflows-collapse-icon')" title="Click to collapse / expand outflows">
+          <h3>Where Is the Water Going?</h3>
+          <div class="card-header-actions">
+            <span class="collapse-icon" id="outflows-collapse-icon">▼</span>
           </div>
         </div>
+        <div id="outflows-body">
+          <p class="metric-desc" style="margin-top: 4px; margin-bottom: 8px;">Real-time snapshot of out-of-basin diversions and primary interstate compact deliveries:</p>
+          <div class="flow-dest-chart" id="flow-dest-chart">
+            <!-- Dynamically populated by updateSidebar() with a horizontal bar chart -->
+          </div>
+        </div>
+      </section>
 
-        <!-- Major Reservoirs Card -->
-        <div class="metric-card" id="reservoirs-card">
-          <div class="card-header-flex">
-            <h3>Basin Storage Reservoirs</h3>
-            <span class="badge" id="storage-status">--% Full</span>
-          </div>
-          <p class="card-desc" id="system-storage-summary">System Total: --M AF of --M AF Total Capacity</p>
-          <div class="reservoir-list" id="reservoir-list">
-            <div class="loading-state">Loading reservoir elevations...</div>
+      <!-- Basin-Wide Mega Reservoirs -->
+      <section class="card stat-card reservoirs-card" id="reservoirs-card">
+        <div class="card-header card-header-clickable" onclick="toggleCardCollapse('reservoirs-card', 'reservoirs-body', 'reservoirs-collapse-icon')" title="Click to collapse / expand main storage reservoirs">
+          <h3>Basin Storage Reservoirs</h3>
+          <div class="card-header-actions">
+            <span class="badge stat-badge" id="basin-storage-badge" style="background:#fef3c7; color:#b45309;">28.9% Full</span>
+            <span class="collapse-icon" id="reservoirs-collapse-icon">▼</span>
           </div>
         </div>
+        <div id="reservoirs-body">
+          <div id="basin-storage-summary" style="font-size: 11px; color: var(--text-muted); margin: 4px 0 8px 0; font-weight: 500;">
+            System Total: <strong>17.11M AF</strong> of 59.16M AF Total Capacity
+          </div>
+          <div class="res-list-container" id="reservoir-list">
+            <!-- Dynamically populated by updateSidebar() -->
+          </div>
+        </div>
+      </section>
 
-        <!-- Front Range Diversion Pools -->
-        <div class="metric-card" id="front-range-reservoirs-card">
-          <div class="card-header-flex">
-            <h3>Front Range Reservoirs</h3>
-            <span class="badge" id="fr-storage-status">--% Full</span>
-          </div>
-          <div class="reservoir-list" id="fr-reservoir-list">
-            <div class="loading-state">Loading terminal storage...</div>
+      <!-- Front Range & Denver Collection Reservoirs -->
+      <section class="card stat-card front-range-card collapsed" id="front-range-card">
+        <div class="card-header card-header-clickable" onclick="toggleCardCollapse('front-range-card', 'front-range-body', 'front-range-collapse-icon')" title="Click to collapse / expand Denver & Front Range collection storage">
+          <h3>Front Range Reservoirs</h3>
+          <div class="card-header-actions">
+            <span class="badge stat-badge" id="fr-storage-badge" style="background:#fef3c7; color:#b45309;">46.0% Full</span>
+            <span class="collapse-icon" id="front-range-collapse-icon" style="transform: rotate(-90deg);">▼</span>
           </div>
         </div>
+        <div id="front-range-body" style="display: none;">
+          <div id="fr-storage-summary" style="font-size: 11px; color: var(--text-muted); margin: 4px 0 8px 0; font-weight: 500;">
+            Headwater Storage &bull; West Slope Trans-Mountain Sources
+          </div>
+          <div class="res-list-container" id="front-range-res-list">
+            <!-- Dynamically populated by updateSidebar() -->
+          </div>
+        </div>
+      </section>
 
-        <!-- Key Gages Card -->
-        <div class="metric-card" id="gages-card">
-          <h3>Key River Gages</h3>
-          <div class="gage-list" id="gage-list">
-            <div class="loading-state">Connecting to USGS NWIS...</div>
-          </div>
-        </div>
-
-        <!-- Trans-Mountain Tunnels Card -->
-        <div class="metric-card" id="tunnels-card">
-          <h3>Trans-Mountain Diversion Bores</h3>
-          <div class="tunnel-list" id="tunnel-list">
-            <div class="loading-state">Connecting to CDWR Telemetry...</div>
-          </div>
-        </div>
-
-        <!-- Major Canals Card -->
-        <div class="metric-card" id="canals-card">
-          <h3>Agricultural Delivery Canals</h3>
-          <div class="canal-list" id="canal-list">
-            <div class="loading-state">Connecting to Lower Basin Canals...</div>
-          </div>
-        </div>
-      </div>
     </aside>
   </main>
 
