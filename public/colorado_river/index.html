@@ -758,19 +758,23 @@
         tabPowell.className = 'px-3.5 py-1 text-xs font-medium rounded-md text-stone-600 hover:text-stone-900 transition';
         panelMead.classList.remove('hidden');
         panelPowell.classList.add('hidden');
-        renderMeadHistoricalCharts();
-        if (currentReservoirView === 'heatmap') {
-          renderHeatmap();
-        }
+        setTimeout(() => {
+          renderMeadHistoricalCharts();
+          if (currentReservoirView === 'heatmap') {
+            renderHeatmap();
+          }
+        }, 10);
       } else {
         tabPowell.className = 'px-3.5 py-1 text-xs font-bold rounded-md bg-white text-stone-900 shadow-sm transition';
         tabMead.className = 'px-3.5 py-1 text-xs font-medium rounded-md text-stone-600 hover:text-stone-900 transition';
         panelMead.classList.add('hidden');
         panelPowell.classList.remove('hidden');
-        renderPowellHistoricalCharts();
-        if (currentReservoirView === 'heatmap') {
-          renderPowellHeatmap();
-        }
+        setTimeout(() => {
+          renderPowellHistoricalCharts();
+          if (currentReservoirView === 'heatmap') {
+            renderPowellHeatmap();
+          }
+        }, 10);
       }
     }
 
@@ -1038,11 +1042,12 @@
       // 6. Lake Powell 65-Year Storage History (Million AF)
       const powellData = portalData.lake_powell_historical || [];
       const powellYears = powellData.map(d => d.year);
-      const powellMaf = powellData.map(d => (d.year_end_af / 1e6).toFixed(2));
+      const powellMaf = powellData.map(d => parseFloat((d.year_end_af / 1e6).toFixed(2)));
 
       const powellCtx = document.getElementById('chart-powell-history').getContext('2d');
       new Chart(powellCtx, {
         type: 'line',
+        plugins: [horizontalThresholdPlugin],
         data: {
           labels: powellYears,
           datasets: [{
@@ -1061,6 +1066,13 @@
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
+            horizontalThresholdPlugin: {
+              lines: [
+                { value: 25.0, label: 'Full Pool', color: '#64748b', dash: [6, 4], unit: 'M AF' },
+                { value: 4.0, label: 'Min Power', color: '#d97706', dash: [5, 3], unit: 'M AF' },
+                { value: 1.8, label: 'Dead Pool', color: '#dc2626', dash: [6, 3], unit: 'M AF' }
+              ]
+            },
             legend: { display: false },
             tooltip: {
               callbacks: {
@@ -1185,19 +1197,26 @@
     }
 
     // Historical Lake Mead Charts (Envelope & Heatmap)
-    let meadChartRendered = false;
+    let meadChartInstance = null;
 
     // Custom plugin to draw horizontal reference lines with crisp right-aligned labels
     const horizontalThresholdPlugin = {
       id: 'horizontalThresholdPlugin',
       afterDraw(chart, args, options) {
-        const { ctx, chartArea: { left, right }, scales: { y } } = chart;
-        const lines = options.lines || [];
+        if (!chart || !chart.chartArea || !chart.scales || !chart.scales.y) return;
+        const { ctx, chartArea } = chart;
+        const left = chartArea.left;
+        const right = chartArea.right;
+        const top = chartArea.top;
+        const bottom = chartArea.bottom;
+        const y = chart.scales.y;
+        const lines = (options && options.lines) || [];
         
         ctx.save();
         lines.forEach(line => {
+          if (line.value === undefined || line.value === null) return;
           const yPos = y.getPixelForValue(line.value);
-          if (yPos === undefined || isNaN(yPos) || yPos < chart.chartArea.top || yPos > chart.chartArea.bottom) return;
+          if (yPos === undefined || isNaN(yPos) || yPos < top || yPos > bottom) return;
 
           // Draw dashed threshold line
           ctx.beginPath();
@@ -1212,11 +1231,13 @@
           if (line.label) {
             ctx.setLineDash([]);
             ctx.font = 'bold 9px "JetBrains Mono", monospace';
-            const labelText = `${line.label} (${line.value.toLocaleString()} ft)`;
+            const unit = line.unit !== undefined ? line.unit : ' ft';
+            const valStr = typeof line.value === 'number' ? line.value.toLocaleString() : line.value;
+            const labelText = `${line.label} (${valStr}${unit})`;
             const textWidth = ctx.measureText(labelText).width;
             
             // Background pill for label legibility
-            ctx.fillStyle = line.bgColor || 'rgba(255, 255, 255, 0.85)';
+            ctx.fillStyle = line.bgColor || 'rgba(255, 255, 255, 0.88)';
             ctx.fillRect(right - textWidth - 10, yPos - 12, textWidth + 8, 11);
             
             // Text
@@ -1231,17 +1252,26 @@
     };
 
     function renderMeadHistoricalCharts() {
-      if (meadChartRendered || !portalData) return;
-      meadChartRendered = true;
+      if (!portalData) return;
 
       const records = portalData.lake_mead_historical || [];
+      if (!records.length) return;
+
       const years = records.map(r => r.year);
       const minElv = records.map(r => r.min);
       const maxElv = records.map(r => r.max);
       const meanElv = records.map(r => r.mean);
 
-      const ctx = document.getElementById('chart-mead-history').getContext('2d');
-      new Chart(ctx, {
+      const canvas = document.getElementById('chart-mead-history');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      if (meadChartInstance) {
+        meadChartInstance.destroy();
+        meadChartInstance = null;
+      }
+
+      meadChartInstance = new Chart(ctx, {
         type: 'line',
         plugins: [horizontalThresholdPlugin],
         data: {
@@ -1386,19 +1416,28 @@
     }
 
     // Historical Lake Powell Charts (Envelope & Heatmap)
-    let powellChartRendered = false;
+    let powellChartInstance = null;
     function renderPowellHistoricalCharts() {
-      if (powellChartRendered || !portalData) return;
-      powellChartRendered = true;
+      if (!portalData) return;
 
       const records = portalData.lake_powell_elevation_historical || [];
+      if (!records.length) return;
+
       const years = records.map(r => r.year);
       const minElv = records.map(r => r.min);
       const maxElv = records.map(r => r.max);
       const meanElv = records.map(r => r.mean);
 
-      const ctx = document.getElementById('chart-powell-elevation-history').getContext('2d');
-      new Chart(ctx, {
+      const canvas = document.getElementById('chart-powell-elevation-history');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      if (powellChartInstance) {
+        powellChartInstance.destroy();
+        powellChartInstance = null;
+      }
+
+      powellChartInstance = new Chart(ctx, {
         type: 'line',
         plugins: [horizontalThresholdPlugin],
         data: {
