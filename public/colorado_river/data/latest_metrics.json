@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-11-01T20:34:57.938276",
+  "fetched_at": "2026-11-01T20:38:08.544211",
   "streamflows": [
     {
       "id": "09034250",
@@ -194,8 +194,8 @@
       "id": "09355500",
       "name": "San Juan River near Archuleta, NM (Navajo Dam)",
       "type": "streamflow",
-      "flow_cfs": 1890.0,
-      "timestamp": "2026-11-01T19:15:00.000-07:00",
+      "flow_cfs": 1370.0,
+      "timestamp": "2026-11-01T20:15:00.000-07:00",
       "lat": 36.80188889,
       "lon": -107.6986389
     },
@@ -361,7 +361,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 1020,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T20:34:56.993093",
+      "timestamp": "2026-11-01T20:38:07.574952",
       "lat": 40.3283,
       "lon": -105.5786
     },
@@ -372,7 +372,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 1280,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T20:34:56.993109",
+      "timestamp": "2026-11-01T20:38:07.574961",
       "lat": 39.9022,
       "lon": -105.6433
     },
@@ -383,7 +383,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 1020,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T20:34:56.993113",
+      "timestamp": "2026-11-01T20:38:07.574964",
       "lat": 39.4633,
       "lon": -105.6797
     },
@@ -394,7 +394,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 945,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T20:34:56.993116",
+      "timestamp": "2026-11-01T20:38:07.574968",
       "lat": 39.2619,
       "lon": -106.5297
     }

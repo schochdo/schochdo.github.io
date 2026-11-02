@@ -15,6 +15,7 @@ let stationMarkers = {};
 let tooltipPopup;
 let activeFeaturePopup = null;
 let selectedReachId = null;
+let selectedConduit = { type: null, id: null };
 
 function highlightSelectedReach(reachId) {
   selectedReachId = reachId || null;
@@ -28,8 +29,29 @@ function highlightSelectedReach(reachId) {
   }
 }
 
+function highlightSelectedConduit(type, id) {
+  selectedConduit = { type: type || null, id: id || null };
+  if (!map) return;
+  const canalFilter = (type === 'canal' && id) ? ['==', ['get', 'id'], id] : ['==', ['get', 'id'], ''];
+  const tunnelFilter = (type === 'tunnel' && id) ? ['==', ['get', 'id'], id] : ['==', ['get', 'id'], ''];
+  
+  if (map.getLayer('canals-selected-highlight-casing')) {
+    map.setFilter('canals-selected-highlight-casing', canalFilter);
+  }
+  if (map.getLayer('canals-selected-highlight-core')) {
+    map.setFilter('canals-selected-highlight-core', canalFilter);
+  }
+  if (map.getLayer('tunnels-selected-highlight-casing')) {
+    map.setFilter('tunnels-selected-highlight-casing', tunnelFilter);
+  }
+  if (map.getLayer('tunnels-selected-highlight-core')) {
+    map.setFilter('tunnels-selected-highlight-core', tunnelFilter);
+  }
+}
+
 function clearReachHighlight() {
   highlightSelectedReach(null);
+  highlightSelectedConduit(null, null);
 }
 
 function showFeaturePopup(popup, lngLat) {
@@ -2503,6 +2525,51 @@ print(f"${cleanReachName} Calculated Flow: {reach_flow_cfs:,.0f} cfs")
         }
       });
 
+      // 2b. Selected Tunnel Highlight (Luminous Cyan Casing & Pure White Core)
+      map.addLayer({
+        id: 'tunnels-selected-highlight-casing',
+        type: 'line',
+        source: 'tunnels',
+        filter: ['==', ['get', 'id'], ''],
+        layout: {
+          'visibility': showTunnels ? 'visible' : 'none',
+          'line-join': 'round',
+          'line-cap': 'round'
+        },
+        paint: {
+          'line-color': '#00f0ff',
+          'line-width': [
+            'interpolate', ['linear'], ['zoom'],
+            5, ['+', ['*', ['get', 'flow_cfs'], 0.005], 9],
+            8, ['+', ['*', ['get', 'flow_cfs'], 0.008], 11],
+            12, ['+', ['*', ['get', 'flow_cfs'], 0.012], 14]
+          ],
+          'line-blur': 2.0,
+          'line-opacity': 0.95
+        }
+      });
+      map.addLayer({
+        id: 'tunnels-selected-highlight-core',
+        type: 'line',
+        source: 'tunnels',
+        filter: ['==', ['get', 'id'], ''],
+        layout: {
+          'visibility': showTunnels ? 'visible' : 'none',
+          'line-join': 'round',
+          'line-cap': 'round'
+        },
+        paint: {
+          'line-color': '#ffffff',
+          'line-width': [
+            'interpolate', ['linear'], ['zoom'],
+            5, ['+', ['*', ['get', 'flow_cfs'], 0.005], 3.5],
+            8, ['+', ['*', ['get', 'flow_cfs'], 0.008], 5],
+            12, ['+', ['*', ['get', 'flow_cfs'], 0.012], 7]
+          ],
+          'line-opacity': 1.0
+        }
+      });
+
       // 3. Intake and Outlet Portal Markers (Barbell-Type Pipeline Terminals)
       map.addLayer({
         id: 'tunnels-portals-layer',
@@ -2601,6 +2668,13 @@ print(f"${cleanReachName} Calculated Flow: {reach_flow_cfs:,.0f} cfs")
           : 'Gates Closed / Seasonal Low Flow';
         const portal = getPortalInfo(t);
 
+        highlightSelectedConduit('tunnel', t.id);
+
+        const highlightBadge = `<div style="font-size:9.5px; font-weight:700; color:#0e7490; background:#cffafe; border:1px solid #a5f3fc; padding:2px 6px; border-radius:4px; display:inline-flex; align-items:center; gap:4px; margin-top:5px;">
+          <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#06b6d4;"></span>
+          Segment Isolated &amp; Highlighted
+        </div>`;
+
         const dataHtml = `
           <div style="padding: 2px;">
             <span style="font-size:10px;font-weight:700;color:#0369a1;background:#e0f2fe;border:1px solid #bae6fd;padding:2px 6px;border-radius:4px;display:inline-block;margin-bottom:4px;">Trans-Mountain Diversion Tunnel</span>
@@ -2620,6 +2694,7 @@ print(f"${cleanReachName} Calculated Flow: {reach_flow_cfs:,.0f} cfs")
               <strong>Design Capacity:</strong> ${capDisplay}<br>
               <strong>Operational Status:</strong> ${statusText}
             </div>
+            ${highlightBadge}
             ${formatPortalHtml(portal, '#0284c7')}
           </div>
         `;
@@ -2684,6 +2759,42 @@ print(f"${cleanTName}: {flow_cfs:,.1f} cfs")`;
         }
       });
 
+      // Selected Canal Highlight (Luminous Cyan Casing & White Core)
+      map.addLayer({
+        id: 'canals-selected-highlight-casing',
+        type: 'line',
+        source: 'canals',
+        filter: ['==', ['get', 'id'], ''],
+        layout: {
+          'visibility': showCanals ? 'visible' : 'none',
+          'line-join': 'round',
+          'line-cap': 'round'
+        },
+        paint: {
+          'line-color': '#00f0ff',
+          'line-width': 12,
+          'line-blur': 2.0,
+          'line-opacity': 0.95
+        }
+      });
+      map.addLayer({
+        id: 'canals-selected-highlight-core',
+        type: 'line',
+        source: 'canals',
+        filter: ['==', ['get', 'id'], ''],
+        layout: {
+          'visibility': showCanals ? 'visible' : 'none',
+          'line-join': 'round',
+          'line-cap': 'round'
+        },
+        paint: {
+          'line-color': '#ffffff',
+          'line-width': 5,
+          'line-dasharray': [3, 2.5],
+          'line-opacity': 1.0
+        }
+      });
+
       // Generous 22px hit buffer for canals
       map.addLayer({
         id: 'canals-hit-buffer',
@@ -2743,6 +2854,14 @@ print(f"${cleanTName}: {flow_cfs:,.1f} cfs")`;
         const t = e.features[0].properties;
         const flowVal = Number(t.flow_cfs || 0);
         const portal = getPortalInfo(t);
+
+        highlightSelectedConduit('canal', t.id);
+
+        const highlightBadge = `<div style="font-size:9.5px; font-weight:700; color:#0e7490; background:#cffafe; border:1px solid #a5f3fc; padding:2px 6px; border-radius:4px; display:inline-flex; align-items:center; gap:4px; margin-top:5px;">
+          <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#06b6d4;"></span>
+          Segment Isolated &amp; Highlighted
+        </div>`;
+
         const dataHtml = `
           <div style="padding: 2px;">
             <span style="font-size:10px;font-weight:700;color:#0369a1;background:#e0f2fe;border:1px solid #bae6fd;padding:2px 6px;border-radius:4px;display:inline-block;margin-bottom:4px;">Major Conveyance Canal</span>
@@ -2763,6 +2882,7 @@ print(f"${cleanTName}: {flow_cfs:,.1f} cfs")`;
               <strong>Design Capacity:</strong> ${t.id === "09527700" ? '26,155 cfs (Imperial Dam Headworks)' : (t.id === "09426650" ? '3,000 cfs (Mark Wilmer Pumping Plant)' : '1,600 cfs (Whitsett Pumping Plant)')}<br>
               <strong>Infrastructure:</strong> Major Inter-Basin Conveyance Aqueduct
             </div>
+            ${highlightBadge}
             ${formatPortalHtml(portal, '#0284c7')}
           </div>
         `;
