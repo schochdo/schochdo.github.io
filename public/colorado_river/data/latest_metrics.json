@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-11-01T17:39:14.223304",
+  "fetched_at": "2026-11-01T17:42:01.591802",
   "streamflows": [
     {
       "id": "09034250",
@@ -185,8 +185,8 @@
       "id": "09315000",
       "name": "Green River at Green River, UT",
       "type": "streamflow",
-      "flow_cfs": 4120.0,
-      "timestamp": "2026-11-01T17:15:00.000-07:00",
+      "flow_cfs": 4200.0,
+      "timestamp": "2026-11-01T17:30:00.000-07:00",
       "lat": 38.98886944,
       "lon": -110.15035556
     },
@@ -293,8 +293,8 @@
       "id": "09426000",
       "name": "Bill Williams River below Alamo Dam, AZ",
       "type": "streamflow",
-      "flow_cfs": 13.4,
-      "timestamp": "2026-11-01T16:30:00.000-07:00",
+      "flow_cfs": 13.0,
+      "timestamp": "2026-11-01T17:30:00.000-07:00",
       "lat": 34.2310833,
       "lon": -113.6099306
     },
@@ -372,7 +372,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 1280,
       "flow_cfs": 15.6,
-      "timestamp": "2026-11-01T15:00:00",
+      "timestamp": "2026-11-01T16:00:00",
       "lat": 39.9022,
       "lon": -105.6433
     },
@@ -529,11 +529,11 @@
       "type": "reservoir",
       "category": "system",
       "elevation_ft": 448.4,
-      "storage_af": 590300.0,
+      "storage_af": 589300.0,
       "capacity_af": 619400.0,
-      "capacity_pct": 95.3,
+      "capacity_pct": 95.1,
       "role": "Forebay Pumping Pool for CRA & CAP Aqueducts",
-      "timestamp": "2026-11-01T16:30:00.000-07:00",
+      "timestamp": "2026-11-01T17:30:00.000-07:00",
       "lat": 34.2981,
       "lon": -114.1678
     },
