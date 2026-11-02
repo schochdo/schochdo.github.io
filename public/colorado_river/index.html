@@ -840,6 +840,8 @@
   <script>
     // Tab switching logic for the unified Research Workspace
     let currentTab = 'overview';
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialTab = urlParams.get('tab');
     function setTab(tabId) {
       currentTab = tabId;
       document.querySelectorAll('.sidebar-link').forEach(el => el.classList.remove('active'));
@@ -2102,6 +2104,9 @@
     // Initialize portal on DOM content loaded
     document.addEventListener('DOMContentLoaded', () => {
       loadPortalData();
+      if (initialTab) {
+        setTab(initialTab);
+      }
     });
   </script>
 </body>

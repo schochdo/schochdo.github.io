@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-11-01T20:21:40.942451",
+  "fetched_at": "2026-11-01T20:30:47.671942",
   "streamflows": [
     {
       "id": "09034250",
@@ -32,8 +32,8 @@
       "id": "09070000",
       "name": "Eagle River below Gypsum, CO",
       "type": "streamflow",
-      "flow_cfs": 130.0,
-      "timestamp": "2026-11-01T19:15:00.000-07:00",
+      "flow_cfs": 126.0,
+      "timestamp": "2026-11-01T20:15:00.000-07:00",
       "lat": 39.64942954,
       "lon": -106.9536554
     },
@@ -68,8 +68,8 @@
       "id": "09095500",
       "name": "Colorado River near Cameo, CO",
       "type": "streamflow",
-      "flow_cfs": 2000.0,
-      "timestamp": "2026-11-01T20:00:00.000-07:00",
+      "flow_cfs": 2010.0,
+      "timestamp": "2026-11-01T20:15:00.000-07:00",
       "lat": 39.2391463,
       "lon": -108.2661946
     },
@@ -78,7 +78,7 @@
       "name": "Gunnison River below Gunnison Tunnel, CO",
       "type": "streamflow",
       "flow_cfs": 222.0,
-      "timestamp": "2026-11-01T20:00:00.000-07:00",
+      "timestamp": "2026-11-01T20:15:00.000-07:00",
       "lat": 38.52915336,
       "lon": -107.648947
     },
@@ -104,8 +104,8 @@
       "id": "09180000",
       "name": "Dolores River near Cisco, UT",
       "type": "streamflow",
-      "flow_cfs": 1140.0,
-      "timestamp": "2026-11-01T20:00:00.000-07:00",
+      "flow_cfs": 1210.0,
+      "timestamp": "2026-11-01T20:15:00.000-07:00",
       "lat": 38.79720805,
       "lon": -109.1951142
     },
@@ -158,8 +158,8 @@
       "id": "09261000",
       "name": "Green River near Jensen, UT (below Yampa)",
       "type": "streamflow",
-      "flow_cfs": 2720.0,
-      "timestamp": "2026-11-01T20:00:00.000-07:00",
+      "flow_cfs": 2730.0,
+      "timestamp": "2026-11-01T20:15:00.000-07:00",
       "lat": 40.40871944,
       "lon": -109.23523611
     },
@@ -185,8 +185,8 @@
       "id": "09315000",
       "name": "Green River at Green River, UT",
       "type": "streamflow",
-      "flow_cfs": 4010.0,
-      "timestamp": "2026-11-01T20:00:00.000-07:00",
+      "flow_cfs": 3990.0,
+      "timestamp": "2026-11-01T20:15:00.000-07:00",
       "lat": 38.98886944,
       "lon": -110.15035556
     },
@@ -248,8 +248,8 @@
       "id": "09382000",
       "name": "Paria River at Lees Ferry, AZ",
       "type": "streamflow",
-      "flow_cfs": 3580.0,
-      "timestamp": "2026-11-01T20:00:00.000-07:00",
+      "flow_cfs": 3350.0,
+      "timestamp": "2026-11-01T20:14:00.000-07:00",
       "lat": 36.87221098,
       "lon": -111.59462862
     },
@@ -266,8 +266,8 @@
       "id": "09402500",
       "name": "Colorado River near Grand Canyon, AZ (Phantom Ranch)",
       "type": "streamflow",
-      "flow_cfs": 9250.0,
-      "timestamp": "2026-11-01T19:15:00.000-07:00",
+      "flow_cfs": 9110.0,
+      "timestamp": "2026-11-01T20:15:00.000-07:00",
       "lat": 36.10137176,
       "lon": -112.0862795
     },
@@ -338,8 +338,8 @@
       "id": "09511300",
       "name": "Verde River near Scottsdale, AZ",
       "type": "streamflow",
-      "flow_cfs": 18500.0,
-      "timestamp": "2026-11-01T20:05:00.000-07:00",
+      "flow_cfs": 19100.0,
+      "timestamp": "2026-11-01T20:20:00.000-07:00",
       "lat": 33.5586557,
       "lon": -111.6693043
     },
@@ -361,7 +361,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 1020,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T20:21:39.977291",
+      "timestamp": "2026-11-01T20:30:46.688777",
       "lat": 40.3283,
       "lon": -105.5786
     },
@@ -372,7 +372,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 1280,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T20:21:39.977302",
+      "timestamp": "2026-11-01T20:30:46.688787",
       "lat": 39.9022,
       "lon": -105.6433
     },
@@ -383,7 +383,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 1020,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T20:21:39.977305",
+      "timestamp": "2026-11-01T20:30:46.688791",
       "lat": 39.4633,
       "lon": -105.6797
     },
@@ -394,7 +394,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 945,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T20:21:39.977307",
+      "timestamp": "2026-11-01T20:30:46.688793",
       "lat": 39.2619,
       "lon": -106.5297
     }

@@ -520,11 +520,13 @@ function toggleTilt() {
 
 function toggleMapMenu(e) {
   if (e) e.stopPropagation();
+  const container = document.getElementById("map-menu-container");
   const dropdown = document.getElementById("map-menu-dropdown");
   const btn = document.getElementById("map-menu-btn");
-  if (dropdown) {
-    const isShowing = dropdown.classList.contains("show");
-    dropdown.classList.toggle("show", !isShowing);
+  if (container) {
+    const isShowing = container.classList.contains("open") || (dropdown && dropdown.classList.contains("show"));
+    container.classList.toggle("open", !isShowing);
+    if (dropdown) dropdown.classList.toggle("show", !isShowing);
     if (btn) btn.classList.toggle("active", !isShowing);
   }
 }
@@ -555,6 +557,7 @@ document.addEventListener("click", (e) => {
   if (container && !container.contains(e.target)) {
     const dropdown = document.getElementById("map-menu-dropdown");
     const btn = document.getElementById("map-menu-btn");
+    container.classList.remove("open");
     if (dropdown) dropdown.classList.remove("show");
     if (btn) btn.classList.remove("active");
   }
@@ -562,8 +565,10 @@ document.addEventListener("click", (e) => {
 
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
+    const container = document.getElementById("map-menu-container");
     const dropdown = document.getElementById("map-menu-dropdown");
     const btn = document.getElementById("map-menu-btn");
+    if (container) container.classList.remove("open");
     if (dropdown) dropdown.classList.remove("show");
     if (btn) btn.classList.remove("active");
   }
