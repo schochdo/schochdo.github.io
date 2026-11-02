@@ -545,12 +545,31 @@ function toggleMapMenu(e) {
   const container = document.getElementById("map-menu-container");
   const dropdown = document.getElementById("map-menu-dropdown");
   const btn = document.getElementById("map-menu-btn");
-  if (container) {
-    const isShowing = container.classList.contains("open") || (dropdown && dropdown.classList.contains("show"));
-    container.classList.toggle("open", !isShowing);
-    if (dropdown) dropdown.classList.toggle("show", !isShowing);
-    if (btn) btn.classList.toggle("active", !isShowing);
+  if (!dropdown) return;
+
+  const isShowing = dropdown.classList.contains("show");
+  if (!isShowing) {
+    // Mutual exclusivity: Close Basin Metrics panel before opening Map Controls tray
+    if (typeof window.closeSidebar === 'function') {
+      window.closeSidebar();
+    }
+    dropdown.classList.add("show");
+    if (container) container.classList.add("open");
+    if (btn) btn.classList.add("active");
+  } else {
+    dropdown.classList.remove("show");
+    if (container) container.classList.remove("open");
+    if (btn) btn.classList.remove("active");
   }
+}
+
+function closeMapMenu() {
+  const container = document.getElementById("map-menu-container");
+  const dropdown = document.getElementById("map-menu-dropdown");
+  const btn = document.getElementById("map-menu-btn");
+  if (dropdown) dropdown.classList.remove("show");
+  if (container) container.classList.remove("open");
+  if (btn) btn.classList.remove("active");
 }
 
 function switchMapMenuTab(tabName, e) {
@@ -575,13 +594,12 @@ function switchMapMenuTab(tabName, e) {
 
 // Close map menu on click outside or escape key
 document.addEventListener("click", (e) => {
-  const container = document.getElementById("map-menu-container");
-  if (container && !container.contains(e.target)) {
-    const dropdown = document.getElementById("map-menu-dropdown");
-    const btn = document.getElementById("map-menu-btn");
-    container.classList.remove("open");
-    if (dropdown) dropdown.classList.remove("show");
-    if (btn) btn.classList.remove("active");
+  const dropdown = document.getElementById("map-menu-dropdown");
+  const btn = document.getElementById("map-menu-btn");
+  if (dropdown && dropdown.classList.contains("show")) {
+    if (!dropdown.contains(e.target) && (!btn || !btn.contains(e.target))) {
+      closeMapMenu();
+    }
   }
 });
 
@@ -4415,22 +4433,26 @@ window.stepTilt = function(delta) {
 window.toggleSidebar = function() {
   const panel = document.getElementById('sidebar-panel');
   const backdrop = document.getElementById('sidebar-backdrop');
-  const btn = document.getElementById('sidebar-toggle-btn');
+  const btn = document.getElementById('sidebar-toggle-btn') || document.getElementById('sidebar-expand-tab');
   if (!panel) return;
 
-  const isMobile = window.innerWidth <= 900;
-  if (isMobile) {
-    const willOpen = !panel.classList.contains('mobile-open');
-    panel.classList.toggle('mobile-open', willOpen);
-    if (backdrop) backdrop.classList.toggle('show', willOpen);
-    if (btn) btn.classList.toggle('active', willOpen);
-    document.body.classList.toggle('sidebar-drawer-active', willOpen);
+  const isOpen = panel.classList.contains('drawer-open') || panel.classList.contains('mobile-open');
+  if (!isOpen) {
+    // Mutual exclusivity: Close Map Controls tray before opening Basin Metrics drawer
+    if (typeof closeMapMenu === 'function') {
+      closeMapMenu();
+    }
+    panel.classList.add('drawer-open');
+    panel.classList.add('mobile-open');
+    if (backdrop) backdrop.classList.add('show');
+    if (btn) btn.classList.add('active');
+    document.body.classList.add('sidebar-drawer-active');
   } else {
-    // Desktop collapse mode
-    const willCollapse = !panel.classList.contains('desktop-collapsed');
-    panel.classList.toggle('desktop-collapsed', willCollapse);
-    document.body.classList.toggle('sidebar-collapsed', willCollapse);
-    if (btn) btn.classList.toggle('active', !willCollapse);
+    panel.classList.remove('drawer-open');
+    panel.classList.remove('mobile-open');
+    if (backdrop) backdrop.classList.remove('show');
+    if (btn) btn.classList.remove('active');
+    document.body.classList.remove('sidebar-drawer-active');
   }
 
   // Trigger MapLibre resize smoothly after transition
@@ -4442,8 +4464,9 @@ window.toggleSidebar = function() {
 window.closeSidebar = function() {
   const panel = document.getElementById('sidebar-panel');
   const backdrop = document.getElementById('sidebar-backdrop');
-  const btn = document.getElementById('sidebar-toggle-btn');
+  const btn = document.getElementById('sidebar-toggle-btn') || document.getElementById('sidebar-expand-tab');
   if (panel) {
+    panel.classList.remove('drawer-open');
     panel.classList.remove('mobile-open');
   }
   if (backdrop) {
