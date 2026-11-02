@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-11-01T17:42:01.591802",
+  "fetched_at": "2026-11-01T17:45:04.540128",
   "streamflows": [
     {
       "id": "09034250",
@@ -68,8 +68,8 @@
       "id": "09095500",
       "name": "Colorado River near Cameo, CO",
       "type": "streamflow",
-      "flow_cfs": 1870.0,
-      "timestamp": "2026-11-01T17:15:00.000-07:00",
+      "flow_cfs": 1880.0,
+      "timestamp": "2026-11-01T17:30:00.000-07:00",
       "lat": 39.2391463,
       "lon": -108.2661946
     },
@@ -78,7 +78,7 @@
       "name": "Gunnison River below Gunnison Tunnel, CO",
       "type": "streamflow",
       "flow_cfs": 222.0,
-      "timestamp": "2026-11-01T17:15:00.000-07:00",
+      "timestamp": "2026-11-01T17:30:00.000-07:00",
       "lat": 38.52915336,
       "lon": -107.648947
     },
@@ -86,8 +86,8 @@
       "id": "09152500",
       "name": "Gunnison River near Grand Junction, CO",
       "type": "streamflow",
-      "flow_cfs": 1780.0,
-      "timestamp": "2026-11-01T16:30:00.000-07:00",
+      "flow_cfs": 1800.0,
+      "timestamp": "2026-11-01T17:30:00.000-07:00",
       "lat": 38.98331575,
       "lon": -108.4506446
     },
@@ -132,7 +132,7 @@
       "name": "Green River near Green River, WY",
       "type": "streamflow",
       "flow_cfs": 891.0,
-      "timestamp": "2026-11-01T16:30:00.000-07:00",
+      "timestamp": "2026-11-01T17:30:00.000-07:00",
       "lat": 41.5163221,
       "lon": -109.4490579
     },
@@ -140,8 +140,8 @@
       "id": "09234500",
       "name": "Green River near Greendale, UT (Flaming Gorge Dam)",
       "type": "streamflow",
-      "flow_cfs": 2850.0,
-      "timestamp": "2026-11-01T16:30:00.000-07:00",
+      "flow_cfs": 2890.0,
+      "timestamp": "2026-11-01T17:30:00.000-07:00",
       "lat": 40.90829296,
       "lon": -109.422914
     },
@@ -158,8 +158,8 @@
       "id": "09261000",
       "name": "Green River near Jensen, UT (below Yampa)",
       "type": "streamflow",
-      "flow_cfs": 2640.0,
-      "timestamp": "2026-11-01T17:15:00.000-07:00",
+      "flow_cfs": 2620.0,
+      "timestamp": "2026-11-01T17:30:00.000-07:00",
       "lat": 40.40871944,
       "lon": -109.23523611
     },
@@ -230,8 +230,8 @@
       "id": "09379500",
       "name": "San Juan River near Bluff, UT",
       "type": "streamflow",
-      "flow_cfs": 8520.0,
-      "timestamp": "2026-11-01T16:30:00.000-07:00",
+      "flow_cfs": 9530.0,
+      "timestamp": "2026-11-01T17:30:00.000-07:00",
       "lat": 37.15067778,
       "lon": -109.8666889
     },
@@ -248,8 +248,8 @@
       "id": "09382000",
       "name": "Paria River at Lees Ferry, AZ",
       "type": "streamflow",
-      "flow_cfs": 2720.0,
-      "timestamp": "2026-11-01T17:14:00.000-07:00",
+      "flow_cfs": 2860.0,
+      "timestamp": "2026-11-01T17:29:00.000-07:00",
       "lat": 36.87221098,
       "lon": -111.59462862
     },
@@ -338,8 +338,8 @@
       "id": "09511300",
       "name": "Verde River near Scottsdale, AZ",
       "type": "streamflow",
-      "flow_cfs": 16100.0,
-      "timestamp": "2026-11-01T17:20:00.000-07:00",
+      "flow_cfs": 15700.0,
+      "timestamp": "2026-11-01T17:35:00.000-07:00",
       "lat": 33.5586557,
       "lon": -111.6693043
     },
@@ -425,8 +425,8 @@
       "name": "All-American Canal near Imperial Dam",
       "type": "diversion_canal",
       "destination": "Imperial & Coachella Valleys",
-      "flow_cfs": 950.0,
-      "timestamp": "2026-11-01T16:30:00.000-07:00",
+      "flow_cfs": 1110.0,
+      "timestamp": "2026-11-01T17:30:00.000-07:00",
       "lat": 32.70425,
       "lon": -115.0481139
     }

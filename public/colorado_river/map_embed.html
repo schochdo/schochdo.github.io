@@ -5,28 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Colorado River Basin Map</title>
   
-  <!-- MapLibre GL JS -->
-  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" />
-  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-
-  <!-- PMTiles Plugin for MapLibre -->
-  <script src="https://unpkg.com/pmtiles@3.0.7/dist/pmtiles.js"></script>
-
-  <!-- Main Stylesheet -->
-  <link rel="stylesheet" href="style.css?v=4.5">
+  <!-- MapLibre GL CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css"/>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css?v=4.6">
 
   <style>
-    /* Embed specific overrides to remove the top clutter */
-    body {
+    html, body {
       height: 100vh !important;
       overflow: hidden !important;
-      display: flex !important;
-      flex-direction: column !important;
       margin: 0 !important;
       padding: 0 !important;
-    }
-    .app-header {
-      display: none !important;
     }
     .dashboard-body {
       height: 100vh !important;
@@ -35,24 +28,12 @@
     #map-container {
       height: 100% !important;
     }
-    /* Positioning for clean on-map controls */
-    .map-menu-container {
-      position: absolute !important;
-      top: 14px !important;
-      left: 14px !important;
-      right: auto !important;
-      z-index: 950 !important;
-    }
-    .map-menu-dropdown {
-      left: 0 !important;
-      right: auto !important;
-    }
-    /* Floating top action pill for Basin Metrics Drawer and Refresh (Top-Right) */
+    /* Floating top right action buttons for Basin Metrics & Refresh */
     .embed-action-pill {
       position: absolute;
       top: 14px;
       right: 14px;
-      z-index: 10;
+      z-index: 950;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -72,6 +53,7 @@
       cursor: pointer;
       backdrop-filter: blur(8px);
       transition: all 0.15s ease;
+      font-family: inherit;
     }
     .embed-btn:hover {
       background: #ffffff;
@@ -90,8 +72,8 @@
     <div id="map-container">
       <div id="map"></div>
 
-      <!-- Floating Map Menu (Layers & Basemap Selector) -->
-      <div class="map-menu-container" id="map-menu-container">
+      <!-- Floating Map Menu (Layers & Basemap Selector - Top Left) -->
+      <div class="map-menu-container" id="map-menu-container" style="left: 14px; right: auto;">
         <button class="map-menu-btn" id="map-menu-btn" onclick="toggleMapMenu(event)" title="Choose Layers and Basemap">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
@@ -101,7 +83,7 @@
           <span id="map-menu-label">Layers &amp; Basemap</span>
         </button>
 
-        <div class="map-menu-dropdown" id="map-menu-dropdown">
+        <div class="map-menu-dropdown" id="map-menu-dropdown" style="left: 0; right: auto;">
           <!-- Navigation Tabs: Layers | Basemap -->
           <div class="map-menu-nav-tabs">
             <button class="map-menu-tab-btn active" id="tab-btn-layers" onclick="switchMapMenuTab('layers', event)">
@@ -112,77 +94,109 @@
             </button>
           </div>
 
-          <!-- Tab Pane 1: Layer Controls -->
-          <div class="map-menu-pane active" id="pane-layers">
-            <div class="map-menu-list">
-              <label class="map-menu-item">
-                <input type="checkbox" id="layer-gages" checked onchange="toggleLayer('gages', this.checked)">
-                <span class="map-menu-icon" style="background:#0284c7;"></span>
-                <span class="map-menu-text">USGS Stream Gauges</span>
+          <!-- Tab Pane 1: Layer Controls (Proper Toggle Sliders) -->
+          <div class="map-menu-tab-pane" id="pane-layers">
+            <div class="toggle-group" id="layer-toggle-group">
+              <label class="toggle-label">
+                <span>River &amp; Lake Network</span>
+                <input type="checkbox" id="toggle-river-network" checked onchange="toggleLayer('river-network')">
+                <span class="slider"></span>
               </label>
-              <label class="map-menu-item">
-                <input type="checkbox" id="layer-reservoirs" checked onchange="toggleLayer('reservoirs', this.checked)">
-                <span class="map-menu-icon" style="background:#2563eb;"></span>
-                <span class="map-menu-text">Reclamation Reservoirs</span>
+              <label class="toggle-label" style="padding-left: 14px; font-size: 11px; color: var(--text-muted);">
+                <span>↳ Mainstem Colorado</span>
+                <input type="checkbox" id="toggle-river-mainstem" checked onchange="toggleLayer('river-mainstem')">
+                <span class="slider"></span>
               </label>
-              <label class="map-menu-item">
-                <input type="checkbox" id="layer-tunnels" checked onchange="toggleLayer('tunnels', this.checked)">
-                <span class="map-menu-icon" style="background:#ea580c;"></span>
-                <span class="map-menu-text">Trans-Mountain Diversions</span>
+              <label class="toggle-label" style="padding-left: 14px; font-size: 11px; color: var(--text-muted);">
+                <span>↳ Major Tributaries</span>
+                <input type="checkbox" id="toggle-river-major" checked onchange="toggleLayer('river-major')">
+                <span class="slider"></span>
               </label>
-              <label class="map-menu-item">
-                <input type="checkbox" id="layer-canals" checked onchange="toggleLayer('canals', this.checked)">
-                <span class="map-menu-icon" style="background:#d97706;"></span>
-                <span class="map-menu-text">Agricultural Delivery Canals</span>
+              <label class="toggle-label" style="padding-left: 14px; font-size: 11px; color: var(--text-muted);">
+                <span>↳ Secondary Streams</span>
+                <input type="checkbox" id="toggle-river-minor" checked onchange="toggleLayer('river-minor')">
+                <span class="slider"></span>
               </label>
-              <label class="map-menu-item">
-                <input type="checkbox" id="layer-rivers" checked onchange="toggleLayer('rivers', this.checked)">
-                <span class="map-menu-icon" style="background:#0284c7;"></span>
-                <span class="map-menu-text">River Network Vectors</span>
+              <label class="toggle-label" style="padding-left: 14px; font-size: 11px; color: var(--text-muted);">
+                <span>↳ Reservoirs &amp; Lakes</span>
+                <input type="checkbox" id="toggle-reservoirs" checked onchange="toggleLayer('reservoirs')">
+                <span class="slider"></span>
               </label>
-              <label class="map-menu-item">
-                <input type="checkbox" id="layer-tribs" checked onchange="toggleLayer('tribs', this.checked)">
-                <span class="map-menu-icon" style="background:#38bdf8;"></span>
-                <span class="map-menu-text">Major Tributary Branches</span>
+              <label class="toggle-label">
+                <span>Major Storage Dams (16)</span>
+                <input type="checkbox" id="toggle-dams" checked onchange="toggleLayer('dams')">
+                <span class="slider"></span>
               </label>
-              <label class="map-menu-item">
-                <input type="checkbox" id="layer-basin" checked onchange="toggleLayer('basin', this.checked)">
-                <span class="map-menu-icon" style="background:#64748b;"></span>
-                <span class="map-menu-text">Hydrologic Basin Boundary</span>
+              <label class="toggle-label">
+                <span>Continental Divide</span>
+                <input type="checkbox" id="toggle-divide" checked onchange="toggleLayer('divide')">
+                <span class="slider"></span>
               </label>
-              <label class="map-menu-item">
-                <input type="checkbox" id="layer-divide" checked onchange="toggleLayer('divide', this.checked)">
-                <span class="map-menu-icon" style="background:#dc2626;"></span>
-                <span class="map-menu-text">Continental Divide Crest</span>
+              <label class="toggle-label">
+                <span>Basin Boundaries</span>
+                <input type="checkbox" id="toggle-basin" checked onchange="toggleLayer('basin')">
+                <span class="slider"></span>
+              </label>
+              <label class="toggle-label">
+                <span>Flow Health Overlay</span>
+                <input type="checkbox" id="toggle-flow-health" onchange="toggleLayer('flow-health')">
+                <span class="slider"></span>
+              </label>
+              <label class="toggle-label">
+                <span>Streamflow Gauges (USGS)</span>
+                <input type="checkbox" id="toggle-streamflow-gauges" checked onchange="toggleLayer('streamflow-gauges')">
+                <span class="slider"></span>
+              </label>
+              <label class="toggle-label" style="padding-left: 14px; font-size: 11px; color: var(--text-muted);">
+                <span>↳ Flow Data Badges</span>
+                <input type="checkbox" id="toggle-all-badges" onchange="toggleLayer('all-badges')">
+                <span class="slider"></span>
+              </label>
+              <label class="toggle-label">
+                <span>Trans-Mountain Tunnels</span>
+                <input type="checkbox" id="toggle-tunnels" checked onchange="toggleLayer('tunnels')">
+                <span class="slider"></span>
+              </label>
+              <label class="toggle-label">
+                <span>Conveyance Canals (AAC/CAP/CRA)</span>
+                <input type="checkbox" id="toggle-canals" checked onchange="toggleLayer('canals')">
+                <span class="slider"></span>
               </label>
             </div>
           </div>
 
-          <!-- Tab Pane 2: Basemap Controls -->
-          <div class="map-menu-pane" id="pane-basemaps">
-            <div class="map-menu-grid">
-              <button class="basemap-tile-btn active" data-style="satellite" onclick="selectBasemap('satellite', this)">
-                <span class="basemap-tile-icon">🛰️</span>
-                <span class="basemap-tile-name">Satellite</span>
-              </button>
-              <button class="basemap-tile-btn" data-style="terrain" onclick="selectBasemap('terrain', this)">
-                <span class="basemap-tile-icon">⛰️</span>
-                <span class="basemap-tile-name">Terrain</span>
-              </button>
-              <button class="basemap-tile-btn" data-style="outdoor" onclick="selectBasemap('outdoor', this)">
-                <span class="basemap-tile-icon">🌲</span>
-                <span class="basemap-tile-name">Outdoor</span>
-              </button>
-              <button class="basemap-tile-btn" data-style="osm" onclick="selectBasemap('osm', this)">
-                <span class="basemap-tile-icon">🗺️</span>
-                <span class="basemap-tile-name">Street</span>
-              </button>
+          <!-- Tab Pane 2: Basemap Selector (Proper Tiles with Checkmarks) -->
+          <div class="map-menu-tab-pane" id="pane-basemaps" style="display: none;">
+            <div class="map-menu-section">
+              <div class="basemap-list">
+                <button class="basemap-item-btn active" data-value="esriNatGeo" onclick="selectBasemap('esriNatGeo')">
+                  <span class="basemap-icon">🗺️</span>
+                  <span class="basemap-name">National Geographic</span>
+                  <span class="basemap-check">✓</span>
+                </button>
+                <button class="basemap-item-btn" data-value="esriWorldTopo" onclick="selectBasemap('esriWorldTopo')">
+                  <span class="basemap-icon">🏔️</span>
+                  <span class="basemap-name">World Topo (High Res)</span>
+                  <span class="basemap-check">✓</span>
+                </button>
+                <button class="basemap-item-btn" data-value="esriTerrain" onclick="selectBasemap('esriTerrain')">
+                  <span class="basemap-icon">🌄</span>
+                  <span class="basemap-name">Terrain with Labels</span>
+                  <span class="basemap-check">✓</span>
+                </button>
+                <button class="basemap-item-btn" data-value="openTopo" onclick="selectBasemap('openTopo')">
+                  <span class="basemap-icon">🧭</span>
+                  <span class="basemap-name">OpenTopoMap (Contours)</span>
+                  <span class="basemap-check">✓</span>
+                </button>
+              </div>
             </div>
           </div>
+
         </div>
       </div>
 
-      <!-- Floating Controls on Top Right (Basin Metrics Drawer + Reload) -->
+      <!-- Top Right Actions: Refresh + Basin Metrics -->
       <div class="embed-action-pill">
         <button class="embed-btn" onclick="refreshData()" title="Reload live hydrology data">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -202,6 +216,80 @@
         </button>
       </div>
 
+      <!-- Map Legend -->
+      <div class="map-legend" id="map-legend">
+        <div class="legend-header-toggle" onclick="toggleLegendMobile()">
+          <h4>Map Legend</h4>
+          <span class="legend-toggle-chevron">▾</span>
+        </div>
+        <div class="legend-content">
+          <div class="legend-section-title">STREAMFLOW VOLUME (CFS)</div>
+          <div class="legend-item"><span class="legend-line river" style="background:#0284c7; height: 6px;"></span> High Flow Mainstem (&gt; 5,000 cfs)</div>
+          <div class="legend-item"><span class="legend-line river" style="background:#0284c7; height: 3.5px;"></span> Major Rivers &amp; Tributaries (1,000 &ndash; 5,000 cfs)</div>
+          <div class="legend-item"><span class="legend-line river" style="background:#0284c7; height: 1.5px;"></span> Secondary Streams &amp; Headwaters (&lt; 1,000 cfs)</div>
+
+          <div class="legend-section-title" style="margin-top: 8px;">WATER INFRASTRUCTURE</div>
+          <div class="legend-item"><span class="legend-box" style="background:#0284c7; width:14px; height:10px; border-radius:2px;"></span> Storage Reservoirs &amp; Lakes</div>
+          <div class="legend-item"><span style="display:inline-block; width:11px; height:11px; background:#1e293b; border:1px solid #fff; border-radius:2px; margin-right:6px; vertical-align:middle;"></span> Major Storage Dams (16)</div>
+          <div class="legend-item"><span class="legend-line divide"></span> Continental Divide</div>
+          <div class="legend-item"><span style="display:inline-flex; align-items:center; width:22px; height:8px; margin-right:6px; vertical-align:middle;"><span style="width:6px; height:6px; border-radius:50%; background:#0284c7; border:1.5px solid #0f172a; flex-shrink:0;"></span><span style="flex:1; height:3px; background:#0284c7; border-top:0.5px solid #0f172a; border-bottom:0.5px solid #0f172a;"></span><span style="width:6px; height:6px; border-radius:50%; background:#0284c7; border:1.5px solid #0f172a; flex-shrink:0;"></span></span> Trans-Mountain Tunnels (Front Range)</div>
+          <div class="legend-item"><span class="legend-line" style="display:inline-block; width:22px; height:3.5px; background:repeating-linear-gradient(90deg, #0284c7, #0284c7 3px, transparent 3px, transparent 6px); margin-right:6px; vertical-align:middle;"></span> Conveyance Canals (AAC / CAP / CRA)</div>
+          <div class="legend-item"><span class="legend-dot gauge"></span> USGS Streamflow Gauge</div>
+          <div class="legend-item"><span class="legend-cfs-badge">7,800 cfs</span> Live Flow Badge</div>
+
+          <div id="flow-health-legend" style="display:none;">
+            <div class="legend-section-title" style="margin-top: 8px;">FLOW HEALTH (% OF DAILY AVERAGE)</div>
+            <div class="legend-item"><span class="legend-line river" style="background:#1d4ed8; height: 4px;"></span> Abundant (&gt; 150%)</div>
+            <div class="legend-item"><span class="legend-line river" style="background:#0ea5e9; height: 4px;"></span> Normal (90–150%)</div>
+            <div class="legend-item"><span class="legend-line river" style="background:#f59e0b; height: 4px;"></span> Below Normal (50–90%)</div>
+            <div class="legend-item"><span class="legend-line river" style="background:#ef4444; height: 4px;"></span> Low Flow (25–50%)</div>
+            <div class="legend-item"><span class="legend-line river" style="background:#991b1b; height: 4px;"></span> Critically Low (&lt; 25%)</div>
+          </div>
+
+          <!-- Basemap Attribution (Integrated into Legend Footer) -->
+          <div class="legend-attribution" id="legend-attribution">
+            Tiles &copy; Esri &mdash; National Geographic, USGS, NOAA | <a href="https://maplibre.org" target="_blank" rel="noopener">MapLibre</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Google Earth Style Trackball Navigation Control (Lower Right) -->
+      <div class="trackball-nav-control" id="trackball-nav-control">
+        <div class="trackball-wrapper" id="trackball-wrapper" title="Drag center to orbit & tilt • Drag ring to rotate • Click to reset North • Double-click for 2D">
+          <svg class="trackball-svg" id="trackball-svg" width="72" height="72" viewBox="-36 -36 72 72">
+            <!-- Subtle outer bezel ring strictly concentric with wrapper -->
+            <circle cx="0" cy="0" r="34.5" fill="none" stroke="#94a3b8" stroke-width="0.8" stroke-opacity="0.45" />
+
+            <!-- Rotating Outer Compass Group (North Arrow & Cardinals) -->
+            <g id="trackball-compass-ring" class="trackball-compass-ring">
+              <!-- North Red Arrow Indicator (tip touches r=34.5, base at r=25.5) -->
+              <polygon points="0,-34.5 3.6,-25.5 -3.6,-25.5" fill="#dc2626" />
+              <!-- Cardinal Degree Ticks (E, S, W all touch r=34.5 inward to r=27.5) -->
+              <line x1="34.5" y1="0" x2="27.5" y2="0" stroke="#64748b" stroke-width="1.5" stroke-linecap="round" />
+              <line x1="0" y1="34.5" x2="0" y2="27.5" stroke="#64748b" stroke-width="1.5" stroke-linecap="round" />
+              <line x1="-34.5" y1="0" x2="-27.5" y2="0" stroke="#64748b" stroke-width="1.5" stroke-linecap="round" />
+
+              <!-- Cardinal Labels (All bold 900 weight with uniform font size and deep contrast) -->
+              <text x="0" y="-18.8" fill="#dc2626" font-family="'Inter', -apple-system, sans-serif" font-size="8" font-weight="900" text-anchor="middle" dominant-baseline="central">N</text>
+              <text x="19.2" y="0" fill="#1e293b" font-family="'Inter', -apple-system, sans-serif" font-size="8" font-weight="900" text-anchor="middle" dominant-baseline="central">E</text>
+              <text x="0" y="18.8" fill="#1e293b" font-family="'Inter', -apple-system, sans-serif" font-size="8" font-weight="900" text-anchor="middle" dominant-baseline="central">S</text>
+              <text x="-19.5" y="0" fill="#1e293b" font-family="'Inter', -apple-system, sans-serif" font-size="8" font-weight="900" text-anchor="middle" dominant-baseline="central">W</text>
+            </g>
+
+            <!-- Inner Interactive 3D Trackball Gimbal (Tilt & Orbit) -->
+            <g id="trackball-inner-orb" class="trackball-inner-orb">
+              <!-- Inner Ball Surface (Sky Blue Ice theme, centered at 0, 0) -->
+              <circle cx="0" cy="0" r="13" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.2" stroke-dasharray="2,2" stroke-opacity="0.85" />
+              <!-- Horizon Bar -->
+              <line x1="-10.5" y1="0" x2="10.5" y2="0" stroke="rgba(2, 132, 199, 0.5)" stroke-width="1" />
+              <!-- Perspective Gimbal Ellipse (squashes with pitch) -->
+              <ellipse id="trackball-pitch-ellipse" cx="0" cy="0" rx="10.5" ry="10.5" fill="none" stroke="#0284c7" stroke-width="1.5" stroke-opacity="0.9" />
+              <!-- Center Trackball Pivot Dot -->
+              <circle id="trackball-center-pivot" cx="0" cy="0" r="3" fill="#0284c7" stroke="#ffffff" stroke-width="1.2" />
+            </g>
+          </svg>
+        </div>
+      </div>
     </div>
 
     <!-- Right Sidebar: Basin Metrics & Outflows -->
@@ -276,6 +364,8 @@
     </aside>
   </main>
 
-  <script src="app.js?v=4.6"></script>
+  <!-- MapLibre GL JS & Main Script -->
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+  <script src="app.js?v=25.0"></script>
 </body>
 </html>
