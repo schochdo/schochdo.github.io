@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-11-01T20:30:47.671942",
+  "fetched_at": "2026-11-01T20:34:57.938276",
   "streamflows": [
     {
       "id": "09034250",
@@ -23,8 +23,8 @@
       "id": "09058000",
       "name": "Colorado River near Kremmling, CO",
       "type": "streamflow",
-      "flow_cfs": 481.0,
-      "timestamp": "2026-11-01T19:15:00.000-07:00",
+      "flow_cfs": 471.0,
+      "timestamp": "2026-11-01T20:15:00.000-07:00",
       "lat": 40.036667,
       "lon": -106.439444
     },
@@ -59,8 +59,8 @@
       "id": "09085100",
       "name": "Colorado River below Glenwood Springs, CO",
       "type": "streamflow",
-      "flow_cfs": 1470.0,
-      "timestamp": "2026-11-01T19:15:00.000-07:00",
+      "flow_cfs": 1360.0,
+      "timestamp": "2026-11-01T20:15:00.000-07:00",
       "lat": 39.5549819,
       "lon": -107.337554
     },
@@ -149,8 +149,8 @@
       "id": "09260050",
       "name": "Yampa River at Deerlodge Park, CO",
       "type": "streamflow",
-      "flow_cfs": 330.0,
-      "timestamp": "2026-11-01T19:15:00.000-07:00",
+      "flow_cfs": 346.0,
+      "timestamp": "2026-11-01T20:15:00.000-07:00",
       "lat": 40.45161747,
       "lon": -108.52512937
     },
@@ -361,7 +361,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 1020,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T20:30:46.688777",
+      "timestamp": "2026-11-01T20:34:56.993093",
       "lat": 40.3283,
       "lon": -105.5786
     },
@@ -372,7 +372,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 1280,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T20:30:46.688787",
+      "timestamp": "2026-11-01T20:34:56.993109",
       "lat": 39.9022,
       "lon": -105.6433
     },
@@ -383,7 +383,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 1020,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T20:30:46.688791",
+      "timestamp": "2026-11-01T20:34:56.993113",
       "lat": 39.4633,
       "lon": -105.6797
     },
@@ -394,7 +394,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 945,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T20:30:46.688793",
+      "timestamp": "2026-11-01T20:34:56.993116",
       "lat": 39.2619,
       "lon": -106.5297
     }
