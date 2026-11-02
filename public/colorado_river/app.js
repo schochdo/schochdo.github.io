@@ -370,6 +370,7 @@ function initMap() {
     loadData();
     initTrackballNavigation();
     initTableResizer();
+    initLayersHoverBehavior();
     if (window.location.search.includes('expand_table=1')) {
       toggleTableCollapse();
     }
@@ -593,36 +594,89 @@ function toggleTilt() {
   }
 }
 
+let isLayersPinned = false;
+let layersHoverTimeout = null;
+
 function toggleMapMenu(e) {
   if (e) e.stopPropagation();
-  const container = document.getElementById("map-menu-container");
   const dropdown = document.getElementById("map-menu-dropdown");
   const btn = document.getElementById("map-menu-btn");
   if (!dropdown) return;
 
   const isShowing = dropdown.classList.contains("show");
   if (!isShowing) {
-    // Mutual exclusivity: Close Basin Metrics panel before opening Map Controls tray
+    // Click action: Pin open
+    isLayersPinned = true;
     if (typeof window.closeSidebar === 'function') {
       window.closeSidebar();
     }
-    dropdown.classList.add("show");
-    if (container) container.classList.add("open");
-    if (btn) btn.classList.add("active");
+    openMapMenuVisual();
   } else {
-    dropdown.classList.remove("show");
-    if (container) container.classList.remove("open");
-    if (btn) btn.classList.remove("active");
+    // If pinned and clicked again, toggle closed
+    isLayersPinned = false;
+    closeMapMenu();
   }
 }
 
+function openMapMenuVisual() {
+  const container = document.getElementById("map-menu-container");
+  const dropdown = document.getElementById("map-menu-dropdown");
+  const btn = document.getElementById("map-menu-btn");
+  if (dropdown) dropdown.classList.add("show");
+  if (container) container.classList.add("open");
+  if (btn) btn.classList.add("active");
+}
+
 function closeMapMenu() {
+  isLayersPinned = false;
+  if (layersHoverTimeout) {
+    clearTimeout(layersHoverTimeout);
+    layersHoverTimeout = null;
+  }
   const container = document.getElementById("map-menu-container");
   const dropdown = document.getElementById("map-menu-dropdown");
   const btn = document.getElementById("map-menu-btn");
   if (dropdown) dropdown.classList.remove("show");
   if (container) container.classList.remove("open");
   if (btn) btn.classList.remove("active");
+}
+
+function initLayersHoverBehavior() {
+  const btn = document.getElementById("map-menu-btn");
+  const dropdown = document.getElementById("map-menu-dropdown");
+  if (!btn || !dropdown) return;
+
+  // Hover in on button: open temporarily if not pinned
+  btn.addEventListener("mouseenter", () => {
+    if (layersHoverTimeout) clearTimeout(layersHoverTimeout);
+    if (!isLayersPinned) {
+      openMapMenuVisual();
+    }
+  });
+
+  // Leave button: start close timer
+  btn.addEventListener("mouseleave", (e) => {
+    if (isLayersPinned) return;
+    // If moving into dropdown, keep open
+    if (dropdown.contains(e.relatedTarget)) return;
+    layersHoverTimeout = setTimeout(() => {
+      if (!isLayersPinned) closeMapMenu();
+    }, 280);
+  });
+
+  // Hover in on dropdown: cancel close timer
+  dropdown.addEventListener("mouseenter", () => {
+    if (layersHoverTimeout) clearTimeout(layersHoverTimeout);
+  });
+
+  // Mouse leave dropdown: close if not pinned
+  dropdown.addEventListener("mouseleave", (e) => {
+    if (isLayersPinned) return;
+    if (btn.contains(e.relatedTarget)) return;
+    layersHoverTimeout = setTimeout(() => {
+      if (!isLayersPinned) closeMapMenu();
+    }, 280);
+  });
 }
 
 function switchMapMenuTab(tabName, e) {
