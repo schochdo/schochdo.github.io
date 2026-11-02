@@ -684,9 +684,6 @@ function toggleTilt() {
   }
 }
 
-let isLayersPinned = false;
-let layersHoverTimeout = null;
-
 function toggleMapMenu(e) {
   if (e) e.stopPropagation();
   const dropdown = document.getElementById("map-menu-dropdown");
@@ -695,77 +692,41 @@ function toggleMapMenu(e) {
 
   const isShowing = dropdown.classList.contains("show");
   if (!isShowing) {
-    // Click action: Pin open
-    isLayersPinned = true;
+    // Mutual exclusivity: Close Basin Metrics drawer before opening Map Controls
     if (typeof window.closeSidebar === 'function') {
       window.closeSidebar();
     }
     openMapMenuVisual();
   } else {
-    // If pinned and clicked again, toggle closed
-    isLayersPinned = false;
     closeMapMenu();
   }
 }
 
 function openMapMenuVisual() {
-  const container = document.getElementById("map-menu-container");
   const dropdown = document.getElementById("map-menu-dropdown");
   const btn = document.getElementById("map-menu-btn");
   if (dropdown) dropdown.classList.add("show");
-  if (container) container.classList.add("open");
   if (btn) btn.classList.add("active");
+  document.body.classList.add("map-menu-active");
 }
 
 function closeMapMenu() {
-  isLayersPinned = false;
-  if (layersHoverTimeout) {
-    clearTimeout(layersHoverTimeout);
-    layersHoverTimeout = null;
-  }
-  const container = document.getElementById("map-menu-container");
   const dropdown = document.getElementById("map-menu-dropdown");
   const btn = document.getElementById("map-menu-btn");
   if (dropdown) dropdown.classList.remove("show");
-  if (container) container.classList.remove("open");
   if (btn) btn.classList.remove("active");
+  document.body.classList.remove("map-menu-active");
 }
 
 function initLayersHoverBehavior() {
-  const btn = document.getElementById("map-menu-btn");
-  const dropdown = document.getElementById("map-menu-dropdown");
-  if (!btn || !dropdown) return;
-
-  // Hover in on button: open temporarily if not pinned
-  btn.addEventListener("mouseenter", () => {
-    if (layersHoverTimeout) clearTimeout(layersHoverTimeout);
-    if (!isLayersPinned) {
-      openMapMenuVisual();
-    }
-  });
-
-  // Leave button: start close timer
-  btn.addEventListener("mouseleave", (e) => {
-    if (isLayersPinned) return;
-    // If moving into dropdown, keep open
-    if (dropdown.contains(e.relatedTarget)) return;
-    layersHoverTimeout = setTimeout(() => {
-      if (!isLayersPinned) closeMapMenu();
-    }, 280);
-  });
-
-  // Hover in on dropdown: cancel close timer
-  dropdown.addEventListener("mouseenter", () => {
-    if (layersHoverTimeout) clearTimeout(layersHoverTimeout);
-  });
-
-  // Mouse leave dropdown: close if not pinned
-  dropdown.addEventListener("mouseleave", (e) => {
-    if (isLayersPinned) return;
-    if (btn.contains(e.relatedTarget)) return;
-    layersHoverTimeout = setTimeout(() => {
-      if (!isLayersPinned) closeMapMenu();
-    }, 280);
+  // Sticky click-only behavior: dismiss map controls when clicking outside
+  document.addEventListener("click", (e) => {
+    const dropdown = document.getElementById("map-menu-dropdown");
+    const btn = document.getElementById("map-menu-btn");
+    if (!dropdown || !dropdown.classList.contains("show")) return;
+    if (btn && btn.contains(e.target)) return;
+    if (dropdown.contains(e.target)) return;
+    closeMapMenu();
   });
 }
 
@@ -5085,6 +5046,7 @@ window.toggleSidebar = function() {
   const panel = document.getElementById('sidebar-panel');
   const backdrop = document.getElementById('sidebar-backdrop');
   const btn = document.getElementById('sidebar-toggle-btn') || document.getElementById('sidebar-expand-tab');
+  const arrow = document.getElementById('sidebar-tab-arrow');
   if (!panel) return;
 
   const isOpen = panel.classList.contains('drawer-open') || panel.classList.contains('mobile-open');
@@ -5097,12 +5059,14 @@ window.toggleSidebar = function() {
     panel.classList.add('mobile-open');
     if (backdrop) backdrop.classList.add('show');
     if (btn) btn.classList.add('active');
+    if (arrow) arrow.textContent = '▶';
     document.body.classList.add('sidebar-drawer-active');
   } else {
     panel.classList.remove('drawer-open');
     panel.classList.remove('mobile-open');
     if (backdrop) backdrop.classList.remove('show');
     if (btn) btn.classList.remove('active');
+    if (arrow) arrow.textContent = '◀';
     document.body.classList.remove('sidebar-drawer-active');
   }
 
@@ -5116,6 +5080,7 @@ window.closeSidebar = function() {
   const panel = document.getElementById('sidebar-panel');
   const backdrop = document.getElementById('sidebar-backdrop');
   const btn = document.getElementById('sidebar-toggle-btn') || document.getElementById('sidebar-expand-tab');
+  const arrow = document.getElementById('sidebar-tab-arrow');
   if (panel) {
     panel.classList.remove('drawer-open');
     panel.classList.remove('mobile-open');
@@ -5125,6 +5090,9 @@ window.closeSidebar = function() {
   }
   if (btn) {
     btn.classList.remove('active');
+  }
+  if (arrow) {
+    arrow.textContent = '◀';
   }
   document.body.classList.remove('sidebar-drawer-active');
 

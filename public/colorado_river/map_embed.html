@@ -54,7 +54,7 @@
     }
 
     /* Fixed Slide-Out Drawers on the Right (Both Drawers Share Same Anchor) */
-    /* 1. Layers & Basemap Drawer Panel */
+    /* 1. Map Controls (Layers & Basemap) Drawer */
     .map-menu-dropdown {
       position: fixed !important;
       top: 0 !important;
@@ -79,13 +79,15 @@
       display: flex !important;
       flex-direction: column !important;
       gap: 12px !important;
-      z-index: 2100 !important;
+      z-index: 2200 !important;
       transform: translateX(100%) !important;
       transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease !important;
       opacity: 0 !important;
       visibility: hidden !important;
       pointer-events: auto !important;
       user-select: none !important;
+      overflow-y: auto !important;
+      -webkit-overflow-scrolling: touch !important;
     }
     .map-menu-dropdown.show {
       transform: translateX(0) !important;
@@ -93,30 +95,112 @@
       visibility: visible !important;
     }
 
-    /* Tab Handles Docked Flush on the Right Edge */
-    /* Basin Metrics Tab Handle - Flush Top Right */
-    .sidebar-expand-tab {
+    /* Map Controls Header */
+    .map-tray-header {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      padding-bottom: 12px !important;
+      border-bottom: 1px solid #e2e8f0 !important;
+      margin-bottom: 2px !important;
+      width: 100% !important;
+    }
+    .map-tray-title {
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      font-size: 13px !important;
+      font-weight: 800 !important;
+      color: #0f172a !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.05em !important;
+    }
+    .map-tray-close-btn {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 28px !important;
+      height: 28px !important;
+      border-radius: 6px !important;
+      border: 1px solid #cbd5e1 !important;
+      background: #f8fafc !important;
+      color: #64748b !important;
+      cursor: pointer !important;
+      font-size: 14px !important;
+      font-weight: 700 !important;
+      transition: all 0.15s ease !important;
+    }
+    .map-tray-close-btn:hover {
+      background: #ef4444 !important;
+      color: #ffffff !important;
+      border-color: #ef4444 !important;
+    }
+
+    /* Shared Top Controls Container (Floating Hamburger + Flush Basin Metrics Tab) */
+    .map-top-actions {
       position: absolute !important;
-      top: 0 !important;
+      top: 14px !important;
       right: 0 !important;
-      z-index: 960 !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      z-index: 2150 !important;
+      pointer-events: auto !important;
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+
+    /* Floating Hamburger Button (to the left of Basin Metrics at top: 14px) */
+    .map-menu-btn {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 36px !important;
+      height: 36px !important;
+      padding: 0 !important;
+      background: rgba(255, 255, 255, 0.96) !important;
+      backdrop-filter: blur(14px) !important;
+      -webkit-backdrop-filter: blur(14px) !important;
+      border: 1px solid #cbd5e1 !important;
+      border-radius: 8px !important;
+      color: #0f172a !important;
+      cursor: pointer !important;
+      box-shadow: -2px 3px 10px rgba(15, 23, 42, 0.10) !important;
+      transition: all 0.18s ease !important;
+      user-select: none !important;
+    }
+    .map-menu-btn:hover {
+      background: #ffffff !important;
+      border-color: #94a3b8 !important;
+      color: #0284c7 !important;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.14) !important;
+    }
+    .map-menu-btn.active {
+      background: #0284c7 !important;
+      border-color: #0284c7 !important;
+      color: #ffffff !important;
+    }
+
+    /* Basin Metrics Tab Handle (docked flush against right edge, top: 14px) */
+    .sidebar-expand-tab {
+      position: relative !important;
+      top: auto !important;
+      right: auto !important;
       display: flex !important;
       align-items: center !important;
       gap: 7px !important;
-      padding: 0 14px !important;
-      height: 38px !important;
+      padding: 0 13px !important;
+      height: 36px !important;
       font-size: 12px !important;
       font-weight: 800 !important;
       color: #0f172a !important;
       background: rgba(255, 255, 255, 0.96) !important;
-      border: 1px solid #cbd5e1 !important;
-      border-right: none !important;
-      border-top: none !important;
-      border-radius: 0 0 0 10px !important;
-      box-shadow: -3px 4px 14px rgba(15, 23, 42, 0.12) !important;
-      cursor: pointer !important;
       backdrop-filter: blur(14px) !important;
       -webkit-backdrop-filter: blur(14px) !important;
+      border: 1px solid #cbd5e1 !important;
+      border-right: none !important;
+      border-radius: 8px 0 0 8px !important;
+      box-shadow: -3px 4px 14px rgba(15, 23, 42, 0.10) !important;
+      cursor: pointer !important;
       transition: all 0.18s ease !important;
       user-select: none !important;
       white-space: nowrap !important;
@@ -132,45 +216,16 @@
       color: #ffffff !important;
     }
 
-    /* Layers Tab Handle - Docked Flush Below Basin Metrics (Icon Only) */
-    .map-menu-container {
-      position: absolute !important;
-      top: 48px !important;
-      right: 0 !important;
-      left: auto !important;
-      bottom: auto !important;
-      z-index: 950 !important;
-      pointer-events: auto !important;
+    /* Slide controls left when Basin Metrics opens so hamburger button stays 100% visible */
+    body.sidebar-drawer-active .map-top-actions,
+    .dashboard-body:has(.sidebar-panel.drawer-open) .map-top-actions {
+      transform: translateX(calc(-1 * min(88vw, 380px))) !important;
     }
 
-    .map-menu-btn {
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      width: 40px !important;
-      height: 40px !important;
-      padding: 0 !important;
-      background: rgba(255, 255, 255, 0.96) !important;
-      backdrop-filter: blur(14px) !important;
-      -webkit-backdrop-filter: blur(14px) !important;
-      border: 1px solid #cbd5e1 !important;
-      border-right: none !important;
-      border-radius: 10px 0 0 10px !important;
-      color: #0f172a !important;
-      cursor: pointer !important;
-      box-shadow: -3px 4px 14px rgba(15, 23, 42, 0.12) !important;
-      transition: all 0.18s ease !important;
-      user-select: none !important;
-    }
-    .map-menu-btn:hover {
-      background: #ffffff !important;
-      border-color: #94a3b8 !important;
-      color: #0284c7 !important;
-    }
-    .map-menu-btn.active {
-      background: #0284c7 !important;
-      border-color: #0284c7 !important;
-      color: #ffffff !important;
+    /* Slide controls left when Map Controls opens */
+    body.map-menu-active .map-top-actions,
+    .dashboard-body:has(.map-menu-dropdown.show) .map-top-actions {
+      transform: translateX(calc(-1 * min(88vw, 320px))) !important;
     }
 
     /* Basin Metrics Slide-out Drawer (Desktop & Mobile both slide out uniformly from right) */
@@ -183,13 +238,13 @@
       min-width: 0 !important;
       max-width: 88vw !important;
       height: 100vh !important;
-      z-index: 2100 !important;
+      z-index: 2200 !important;
       transform: translateX(100%) !important;
       transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease !important;
       box-shadow: -8px 0 32px rgba(15, 23, 42, 0.22) !important;
-      border-left: 1px solid var(--border-color) !important;
+      border-left: 1px solid var(--border-color, #cbd5e1) !important;
       padding: 16px !important;
-      background: var(--bg-surface) !important;
+      background: var(--bg-surface, #f8fafc) !important;
       display: flex !important;
       flex-direction: column !important;
       gap: 14px !important;
@@ -220,9 +275,10 @@
     <div id="map-container">
       <div id="map"></div>
 
-      <!-- Floating Map Menu (Layers & Basemap Selector - Top Right) -->
-      <div class="map-menu-container" id="map-menu-container">
-        <button class="map-menu-btn" id="map-menu-btn" onclick="toggleMapMenu(event)" title="Layers &amp; Basemaps">
+      <!-- Top Actions Bar (Floating Hamburger + Flush Basin Metrics Tab) -->
+      <div class="map-top-actions" id="map-top-actions">
+        <!-- Floating Hamburger Button (to the left of Basin Metrics) -->
+        <button class="map-menu-btn" id="map-menu-btn" onclick="toggleMapMenu(event)" title="Layers &amp; Basemaps" aria-label="Toggle Map Controls">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
             <polyline points="2 17 12 22 22 17"></polyline>
@@ -230,29 +286,42 @@
           </svg>
         </button>
 
-        <div class="map-menu-dropdown" id="map-menu-dropdown">
-          <!-- Tray Header with Title & Close Button -->
-          <div class="map-tray-header">
-            <div class="map-tray-title">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                <polyline points="2 17 12 22 22 17"></polyline>
-                <polyline points="2 12 12 17 22 12"></polyline>
-              </svg>
-              <span>Map Controls</span>
-            </div>
-            <button class="map-tray-close-btn" onclick="toggleMapMenu(event)" title="Close Tray">✕</button>
-          </div>
+        <!-- Basin Metrics Tab Handle (Flush to right edge, top: 14px) -->
+        <button class="sidebar-expand-tab" id="sidebar-expand-tab" onclick="toggleSidebar()" title="Toggle Basin Metrics Panel" aria-label="Toggle Basin Metrics Panel">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          <span id="sidebar-tab-text">Basin Metrics</span>
+          <span id="sidebar-tab-arrow" class="tab-arrow">◀</span>
+        </button>
+      </div>
 
-          <!-- Navigation Tabs: Layers | Basemap -->
-          <div class="map-menu-nav-tabs">
-            <button class="map-menu-tab-btn active" id="tab-btn-layers" onclick="switchMapMenuTab('layers', event)">
-              <span>🗺️ Layers</span>
-            </button>
-            <button class="map-menu-tab-btn" id="tab-btn-basemaps" onclick="switchMapMenuTab('basemaps', event)">
-              <span>🎨 Basemap</span>
-            </button>
+      <!-- Map Controls Slide-Out Drawer (Independent Child of map-container) -->
+      <div class="map-menu-dropdown" id="map-menu-dropdown">
+        <!-- Tray Header with Title & Close Button -->
+        <div class="map-tray-header">
+          <div class="map-tray-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+            <span>Map Controls</span>
           </div>
+          <button class="map-tray-close-btn" onclick="toggleMapMenu(event)" title="Close Map Controls" aria-label="Close Map Controls">✕</button>
+        </div>
+
+        <!-- Navigation Tabs: Layers | Basemap -->
+        <div class="map-menu-nav-tabs">
+          <button class="map-menu-tab-btn active" id="tab-btn-layers" onclick="switchMapMenuTab('layers', event)">
+            <span>🗺️ Layers</span>
+          </button>
+          <button class="map-menu-tab-btn" id="tab-btn-basemaps" onclick="switchMapMenuTab('basemaps', event)">
+            <span>🎨 Basemap</span>
+          </button>
+        </div>
 
           <!-- Tab Pane 1: Layer Controls (Proper Toggle Sliders) -->
           <div class="map-menu-tab-pane" id="pane-layers">
@@ -355,16 +424,6 @@
 
         </div>
       </div>
-
-      <!-- Button to Re-expand Sidebar when Collapsed -->
-      <button class="sidebar-expand-tab" id="sidebar-expand-tab" onclick="toggleSidebar()" title="Open Basin Metrics Panel">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="18" y1="20" x2="18" y2="10"></line>
-          <line x1="12" y1="20" x2="12" y2="4"></line>
-          <line x1="6" y1="20" x2="6" y2="14"></line>
-        </svg>
-        <span>Basin Metrics ◀</span>
-      </button>
 
       <!-- Map Legend -->
       <div class="map-legend" id="map-legend">

@@ -342,7 +342,7 @@
         .nodeId(d => d.name)
         .nodeWidth(18)
         .nodePadding(14)
-        .extent([[20, 20], [width - 20, height - 20]]);
+        .extent([[28, 20], [width - 28, height - 20]]);
 
       const graph = sankey({
         nodes: nodes.map(d => Object.assign({}, d)),
@@ -437,13 +437,26 @@
 
       // Node Labels
       node.append("text")
-        .attr("x", d => d.x0 < width / 2 ? d.x1 + 8 : d.x0 - 8)
+        .attr("x", d => {
+          if (d.x0 < 60) return d.x1 + 8;
+          if (d.x1 > width - 60) return d.x0 - 8;
+          return d.x0 < width / 2 ? d.x1 + 8 : d.x0 - 8;
+        })
         .attr("y", d => (d.y1 + d.y0) / 2)
         .attr("dy", "0.35em")
-        .attr("text-anchor", d => d.x0 < width / 2 ? "start" : "end")
+        .attr("text-anchor", d => {
+          if (d.x0 < 60) return "start";
+          if (d.x1 > width - 60) return "end";
+          return d.x0 < width / 2 ? "start" : "end";
+        })
         .attr("fill", d => d.category.includes('deficit') ? '#b91c1c' : '#0f172a')
         .attr("font-weight", d => d.category.includes('hub') ? '800' : '600')
         .attr("font-size", d => d.category.includes('hub') ? '11.5px' : '10.5px')
+        .style("paint-order", "stroke fill")
+        .style("stroke", "#ffffff")
+        .style("stroke-width", "3.5px")
+        .style("stroke-linejoin", "round")
+        .style("stroke-linecap", "round")
         .text(d => `${d.name} (${d.value.toFixed(2)} MAF)`);
     }
 

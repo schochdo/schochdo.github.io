@@ -289,47 +289,144 @@ body {
   background: #dbeafe;
 }
 
-/* Floating On-Map Hamburger Menu (Basemap & 3D Selector) */
-.map-menu-container {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  left: auto;
-  z-index: 950;
+/* Shared Top Controls Container (Floating Hamburger + Flush Basin Metrics Tab) */
+.map-top-actions {
+  position: absolute !important;
+  top: 14px !important;
+  right: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  z-index: 2150 !important;
+  pointer-events: auto !important;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
+/* Slide controls left when Basin Metrics opens */
+body.sidebar-drawer-active .map-top-actions,
+.dashboard-body:has(.sidebar-panel.drawer-open) .map-top-actions {
+  transform: translateX(calc(-1 * min(88vw, 380px))) !important;
+}
+
+/* Slide controls left when Map Controls opens */
+body.map-menu-active .map-top-actions,
+.dashboard-body:has(.map-menu-dropdown.show) .map-top-actions {
+  transform: translateX(calc(-1 * min(88vw, 320px))) !important;
+}
+
+/* Floating Hamburger Button (to the left of Basin Metrics at top: 14px) */
 .map-menu-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  height: 36px;
-  padding: 0 16px;
-  background: var(--bg-panel);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid var(--border-color);
-  border-radius: 20px;
-  color: var(--text-main);
-  font-family: inherit;
-  font-size: 13.5px;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
-  transition: all 0.18s ease;
-  user-select: none;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 36px !important;
+  height: 36px !important;
+  padding: 0 !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 8px !important;
+  color: #0f172a !important;
+  cursor: pointer !important;
+  box-shadow: -2px 3px 10px rgba(15, 23, 42, 0.10) !important;
+  transition: all 0.18s ease !important;
+  user-select: none !important;
 }
 
 .map-menu-btn:hover {
-  background: var(--bg-card);
-  border-color: #94a3b8;
-  color: var(--color-primary);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  background: #ffffff !important;
+  border-color: #94a3b8 !important;
+  color: #0284c7 !important;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.14) !important;
 }
 
 .map-menu-btn.active {
-  background: var(--bg-card);
-  border-color: var(--color-primary);
-  color: var(--color-primary);
+  background: #0284c7 !important;
+  border-color: #0284c7 !important;
+  color: #ffffff !important;
+}
+
+/* Basin Metrics Tab Handle */
+.sidebar-expand-tab {
+  position: relative !important;
+  top: auto !important;
+  right: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  padding: 0 13px !important;
+  height: 36px !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1px solid #cbd5e1 !important;
+  border-right: none !important;
+  border-radius: 8px 0 0 8px !important;
+  box-shadow: -3px 4px 14px rgba(15, 23, 42, 0.10) !important;
+  cursor: pointer !important;
+  transition: all 0.18s ease !important;
+  user-select: none !important;
+  white-space: nowrap !important;
+}
+
+.sidebar-expand-tab:hover {
+  background: #ffffff !important;
+  color: #0284c7 !important;
+  border-color: #94a3b8 !important;
+}
+
+.sidebar-expand-tab.active {
+  background: #0284c7 !important;
+  border-color: #0284c7 !important;
+  color: #ffffff !important;
+}
+
+/* Map Controls Header */
+.map-tray-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding-bottom: 12px !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  margin-bottom: 2px !important;
+  width: 100% !important;
+}
+
+.map-tray-title {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+.map-tray-close-btn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 6px !important;
+  border: 1px solid #cbd5e1 !important;
+  background: #f8fafc !important;
+  color: #64748b !important;
+  cursor: pointer !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  transition: all 0.15s ease !important;
+}
+
+.map-tray-close-btn:hover {
+  background: #ef4444 !important;
+  color: #ffffff !important;
+  border-color: #ef4444 !important;
 }
 
 .map-menu-btn svg {
