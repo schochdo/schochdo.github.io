@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Colorado River Basin Water Infrastructure & Hydrology Dashboard</title>
+  
+  <!-- MapLibre GL CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css"/>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css?v=4.4">
+</head>
+<body>
+  <!-- Header Bar -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="logo-badge">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+        </svg>
+      </div>
+      <div class="title-group">
+        <h1>Colorado River Basin <span class="highlight">Water Infrastructure & Hydrology</span></h1>
+        <p class="subtitle">DAT1001 Project • Real-Time Streamflow, Trans-Mountain Diversions & Reservoir Storage</p>
+      </div>
+    </div>
+    
+    <div class="header-right">
+      <button class="nav-header-btn law-btn" onclick="openLegalModal()" title="View Law of the River &amp; Compact Framework">
+        <span class="btn-icon">⚖️</span>
+        <span class="btn-text">Law of the River</span>
+      </button>
+      <button class="nav-header-btn code-btn" onclick="openApiModal()" title="View Hydrology APIs &amp; Python Code Documentation">
+        <span class="btn-icon">💻</span>
+        <span class="btn-text">API &amp; Code</span>
+      </button>
+      <button class="nav-header-btn flow-btn" onclick="window.open('./sankey.html','_blank')" title="Open Minard-style flow diagram">
+        <span class="btn-icon">〰</span>
+        <span class="btn-text">Flow Diagram</span>
+      </button>
+      <button class="nav-header-btn portal-btn" onclick="window.open('./portal.html','_blank')" title="Open Academic Data Portal &amp; Historical Reservoirs">
+        <span class="btn-icon">📈</span>
+        <span class="btn-text">Data Portal</span>
+      </button>
+      <button class="nav-header-btn telemetry-btn" onclick="window.open('./telemetry.html','_blank')" title="Open Gage &amp; Telemetry Registry Table">
+        <span class="btn-icon">📊</span>
+        <span class="btn-text">Gage Registry</span>
+      </button>
+
+      <div class="sync-badge">
+        <span class="status-dot"></span>
+        <span id="sync-time">Loading live feeds...</span>
+      </div>
+      <button class="icon-btn" onclick="refreshData()" title="Reload live data">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="23 4 23 10 17 10"></polyline>
+          <polyline points="1 20 1 14 7 14"></polyline>
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+        </svg>
+      </button>
+      <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" onclick="toggleSidebar()" title="Toggle Basin Metrics Panel" aria-label="Toggle Basin Metrics">
+        <svg class="sidebar-toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"></line>
+          <line x1="12" y1="20" x2="12" y2="4"></line>
+          <line x1="6" y1="20" x2="6" y2="14"></line>
+        </svg>
+        <span class="sidebar-toggle-text">
+          <span class="desktop-text">Basin Metrics</span>
+          <span class="mobile-text">Metrics</span>
+        </span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="dashboard-body">
+    <!-- Backdrop for Mobile Sidebar Drawer -->
+    <div id="sidebar-backdrop" class="sidebar-backdrop" onclick="closeSidebar()"></div>
+
+    <!-- Map Canvas -->
+    <div id="map-container">
+      <div id="map"></div>
+
+      <!-- Floating Map Menu (Layers & Basemap Selector) -->
+      <div class="map-menu-container" id="map-menu-container">
+        <button class="map-menu-btn" id="map-menu-btn" onclick="toggleMapMenu(event)" title="Choose Layers and Basemap">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+          <span id="map-menu-label">Layers &amp; Basemap</span>
+        </button>
+
+        <div class="map-menu-dropdown" id="map-menu-dropdown">
+          <!-- Navigation Tabs: Layers | Basemap -->
+          <div class="map-menu-nav-tabs">
+            <button class="map-menu-tab-btn active" id="tab-btn-layers" onclick="switchMapMenuTab('layers', event)">
+              <span>🗺️ Layers</span>
+            </button>
+            <button class="map-menu-tab-btn" id="tab-btn-basemaps" onclick="switchMapMenuTab('basemaps', event)">
+              <span>🎨 Basemap</span>
+            </button>
+          </div>
+
+          <!-- Tab Pane 1: Layer Controls -->
+          <div class="map-menu-tab-pane" id="pane-layers">
+            <div class="toggle-group" id="layer-toggle-group">
+              <label class="toggle-label">
+                <span>River &amp; Lake Network</span>
+                <input type="checkbox" id="toggle-river-network" checked onchange="toggleLayer('river-network')">
+                <span class="slider"></span>
+              </label>
+              <label class="toggle-label" style="padding-left: 14px; font-size: 11px; color: var(--text-muted);">
+                <span>↳ Mainstem Colorado</span>
+                <input type="checkbox" id="toggle-river-mainstem" checked onchange="toggleLayer('river-mainstem')">
+                <span class="slider"></span>
+              </label>
+              <label class="toggle-label" style="padding-left: 14px; font-size: 11px; color: var(--text-muted);">
+                <span>↳ Major Tributaries</span>
+                <input type="checkbox" id="toggle-river-major" checked onchange="toggleLayer('river-major')">
+                <span class="slider"></span>
+              </label>
+              <label class="toggle-label" style="padding-left: 14px; font-size: 11px; color: var(--text-muted);">
+                <span>↳ Secondary Streams</span>
+                <input type="checkbox" id="toggle-river-minor" checked onchange="toggleLayer('river-minor')">
+                <span class="slider"></span>
+              </label>
+              <label class="toggle-label" style="padding-left: 14px; font-size: 11px; color: var(--text-muted);">
+                <span>↳ Reservoirs &amp; Lakes</span>
+                <input type="checkbox" id="toggle-reservoirs" checked onchange="toggleLayer('reservoirs')">
+                <span class="slider"></span>
+              </label>
+              <label class="toggle-label">
+                <span>Major Storage Dams (16)</span>
+                <input type="checkbox" id="toggle-dams" checked onchange="toggleLayer('dams')">
+                <span class="slider"></span>
+              </label>
+              <label class="toggle-label">
+                <span>Continental Divide</span>
+                <input type="checkbox" id="toggle-divide" checked onchange="toggleLayer('divide')">
+                <span class="slider"></span>
+              </label>
+              <label class="toggle-label">
+                <span>Basin Boundaries</span>
+                <input type="checkbox" id="toggle-basin" checked onchange="toggleLayer('basin')">
+                <span class="slider"></span>
+              </label>
+              <label class="toggle-label">
+                <span>Flow Health Overlay</span>
+                <input type="checkbox" id="toggle-flow-health" onchange="toggleLayer('flow-health')">
+                <span class="slider"></span>
+              </label>
+              <label class="toggle-label" style="padding-left: 14px; font-size: 11px; color: var(--text-muted);">
+                <span>↳ % of Daily Average</span>
+              </label>
+              <label class="toggle-label">
+                <span>Streamflow Gauges (USGS)</span>
+                <input type="checkbox" id="toggle-streamflow-gauges" checked onchange="toggleLayer('streamflow-gauges')">
+                <span class="slider"></span>
+              </label>
+              <label class="toggle-label" style="padding-left: 14px; font-size: 11px; color: var(--text-muted);">
+                <span>↳ Flow Data Badges</span>
+                <input type="checkbox" id="toggle-all-badges" onchange="toggleLayer('all-badges')">
+                <span class="slider"></span>
+              </label>
+              <label class="toggle-label">
+                <span>Trans-Mountain Tunnels</span>
+                <input type="checkbox" id="toggle-tunnels" checked onchange="toggleLayer('tunnels')">
+                <span class="slider"></span>
+              </label>
+              <label class="toggle-label">
+                <span>Conveyance Canals (AAC/CAP/CRA)</span>
+                <input type="checkbox" id="toggle-canals" checked onchange="toggleLayer('canals')">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Tab Pane 2: Basemap Selector -->
+          <div class="map-menu-tab-pane" id="pane-basemaps" style="display: none;">
+            <div class="map-menu-section">
+              <div class="basemap-list">
+                <button class="basemap-item-btn active" data-value="esriNatGeo" onclick="selectBasemap('esriNatGeo')">
+                  <span class="basemap-icon">🗺️</span>
+                  <span class="basemap-name">National Geographic</span>
+                  <span class="basemap-check">✓</span>
+                </button>
+                <button class="basemap-item-btn" data-value="esriWorldTopo" onclick="selectBasemap('esriWorldTopo')">
+                  <span class="basemap-icon">🏔️</span>
+                  <span class="basemap-name">World Topo (High Res)</span>
+                  <span class="basemap-check">✓</span>
+                </button>
+                <button class="basemap-item-btn" data-value="esriTerrain" onclick="selectBasemap('esriTerrain')">
+                  <span class="basemap-icon">🌄</span>
+                  <span class="basemap-name">Terrain with Labels</span>
+                  <span class="basemap-check">✓</span>
+                </button>
+                <button class="basemap-item-btn" data-value="openTopo" onclick="selectBasemap('openTopo')">
+                  <span class="basemap-icon">🧭</span>
+                  <span class="basemap-name">OpenTopoMap (Contours)</span>
+                  <span class="basemap-check">✓</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Map Legend -->
+      <div class="map-legend" id="map-legend">
+        <div class="legend-header-toggle" onclick="toggleLegendMobile()">
+          <h4>Map Legend</h4>
+          <span class="legend-toggle-chevron">▾</span>
+        </div>
+        <div class="legend-content">
+          <div class="legend-section-title">STREAMFLOW VOLUME (CFS)</div>
+          <div class="legend-item"><span class="legend-line river" style="background:#0284c7; height: 6px;"></span> High Flow Mainstem (&gt; 5,000 cfs)</div>
+          <div class="legend-item"><span class="legend-line river" style="background:#0284c7; height: 3.5px;"></span> Major Rivers &amp; Tributaries (1,000 &ndash; 5,000 cfs)</div>
+          <div class="legend-item"><span class="legend-line river" style="background:#0284c7; height: 1.5px;"></span> Secondary Streams &amp; Headwaters (&lt; 1,000 cfs)</div>
+
+          <div class="legend-section-title" style="margin-top: 8px;">WATER INFRASTRUCTURE</div>
+          <div class="legend-item"><span class="legend-box" style="background:#0284c7; width:14px; height:10px; border-radius:2px;"></span> Storage Reservoirs &amp; Lakes</div>
+          <div class="legend-item"><span style="display:inline-block; width:11px; height:11px; background:#1e293b; border:1px solid #fff; border-radius:2px; margin-right:6px; vertical-align:middle;"></span> Major Storage Dams (16)</div>
+          <div class="legend-item"><span class="legend-line divide"></span> Continental Divide</div>
+          <div class="legend-item"><span style="display:inline-flex; align-items:center; width:22px; height:8px; margin-right:6px; vertical-align:middle;"><span style="width:6px; height:6px; border-radius:50%; background:#0284c7; border:1.5px solid #0f172a; flex-shrink:0;"></span><span style="flex:1; height:3px; background:#0284c7; border-top:0.5px solid #0f172a; border-bottom:0.5px solid #0f172a;"></span><span style="width:6px; height:6px; border-radius:50%; background:#0284c7; border:1.5px solid #0f172a; flex-shrink:0;"></span></span> Trans-Mountain Tunnels (Front Range)</div>
+          <div class="legend-item"><span class="legend-line" style="display:inline-block; width:22px; height:3.5px; background:repeating-linear-gradient(90deg, #0284c7, #0284c7 3px, transparent 3px, transparent 6px); margin-right:6px; vertical-align:middle;"></span> Conveyance Canals (AAC / CAP / CRA)</div>
+          <div class="legend-item"><span class="legend-dot gauge"></span> USGS Streamflow Gauge</div>
+          <div class="legend-item"><span class="legend-cfs-badge">7,800 cfs</span> Live Flow Badge</div>
+
+          <div id="flow-health-legend" style="display:none;">
+            <div class="legend-section-title" style="margin-top: 8px;">FLOW HEALTH (% OF DAILY AVERAGE)</div>
+            <div class="legend-item"><span class="legend-line river" style="background:#1d4ed8; height: 4px;"></span> Abundant (&gt; 150%)</div>
+            <div class="legend-item"><span class="legend-line river" style="background:#0ea5e9; height: 4px;"></span> Normal (90–150%)</div>
+            <div class="legend-item"><span class="legend-line river" style="background:#f59e0b; height: 4px;"></span> Below Normal (50–90%)</div>
+            <div class="legend-item"><span class="legend-line river" style="background:#ef4444; height: 4px;"></span> Low Flow (25–50%)</div>
+            <div class="legend-item"><span class="legend-line river" style="background:#991b1b; height: 4px;"></span> Critically Low (&lt; 25%)</div>
+          </div>
+
+          <!-- Basemap Attribution (Integrated into Legend Footer) -->
+          <div class="legend-attribution" id="legend-attribution">
+            Tiles &copy; Esri &mdash; National Geographic, USGS, NOAA | <a href="https://maplibre.org" target="_blank" rel="noopener">MapLibre</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Google Earth Style Trackball Navigation Control (Lower Right) -->
+      <div class="trackball-nav-control" id="trackball-nav-control">
+        <div class="trackball-wrapper" id="trackball-wrapper" title="Drag center to orbit & tilt • Drag ring to rotate • Click to reset North • Double-click for 2D">
+          <svg class="trackball-svg" id="trackball-svg" width="72" height="72" viewBox="-36 -36 72 72">
+            <!-- Subtle outer bezel ring strictly concentric with wrapper -->
+            <circle cx="0" cy="0" r="34.5" fill="none" stroke="#94a3b8" stroke-width="0.8" stroke-opacity="0.45" />
+
+            <!-- Rotating Outer Compass Group (North Arrow & Cardinals) -->
+            <g id="trackball-compass-ring" class="trackball-compass-ring">
+              <!-- North Red Arrow Indicator (tip touches r=34.5, base at r=25.5) -->
+              <polygon points="0,-34.5 3.6,-25.5 -3.6,-25.5" fill="#dc2626" />
+              <!-- Cardinal Degree Ticks (E, S, W all touch r=34.5 inward to r=27.5) -->
+              <line x1="34.5" y1="0" x2="27.5" y2="0" stroke="#64748b" stroke-width="1.5" stroke-linecap="round" />
+              <line x1="0" y1="34.5" x2="0" y2="27.5" stroke="#64748b" stroke-width="1.5" stroke-linecap="round" />
+              <line x1="-34.5" y1="0" x2="-27.5" y2="0" stroke="#64748b" stroke-width="1.5" stroke-linecap="round" />
+
+              <!-- Cardinal Labels (All bold 900 weight with uniform font size and deep contrast) -->
+              <text x="0" y="-18.8" fill="#dc2626" font-family="'Inter', -apple-system, sans-serif" font-size="8" font-weight="900" text-anchor="middle" dominant-baseline="central">N</text>
+              <text x="19.2" y="0" fill="#1e293b" font-family="'Inter', -apple-system, sans-serif" font-size="8" font-weight="900" text-anchor="middle" dominant-baseline="central">E</text>
+              <text x="0" y="18.8" fill="#1e293b" font-family="'Inter', -apple-system, sans-serif" font-size="8" font-weight="900" text-anchor="middle" dominant-baseline="central">S</text>
+              <text x="-19.5" y="0" fill="#1e293b" font-family="'Inter', -apple-system, sans-serif" font-size="8" font-weight="900" text-anchor="middle" dominant-baseline="central">W</text>
+            </g>
+
+            <!-- Inner Interactive 3D Trackball Gimbal (Tilt & Orbit) -->
+            <g id="trackball-inner-orb" class="trackball-inner-orb">
+              <!-- Inner Ball Surface (Sky Blue Ice theme, centered at 0, 0) -->
+              <circle cx="0" cy="0" r="13" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.2" stroke-dasharray="2,2" stroke-opacity="0.85" />
+              <!-- Horizon Bar -->
+              <line x1="-10.5" y1="0" x2="10.5" y2="0" stroke="rgba(2, 132, 199, 0.5)" stroke-width="1" />
+              <!-- Perspective Gimbal Ellipse (squashes with pitch) -->
+              <ellipse id="trackball-pitch-ellipse" cx="0" cy="0" rx="10.5" ry="10.5" fill="none" stroke="#0284c7" stroke-width="1.5" stroke-opacity="0.9" />
+              <!-- Center Trackball Pivot Dot -->
+              <circle id="trackball-center-pivot" cx="0" cy="0" r="3" fill="#0284c7" stroke="#ffffff" stroke-width="1.2" />
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Sidebar: Basin Metrics & Outflows -->
+    <aside class="sidebar-panel" id="sidebar-panel">
+      <!-- Mobile Sidebar Header with Close Button -->
+      <div class="sidebar-mobile-header">
+        <div class="sidebar-mobile-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          <span>Basin Telemetry &amp; Storage</span>
+        </div>
+        <button class="sidebar-close-btn" onclick="closeSidebar()" aria-label="Close sidebar">✕</button>
+      </div>
+
+      <!-- Mobile Quick Actions: Law, Code, Flow & Gage Registry -->
+      <div class="sidebar-mobile-actions">
+        <button class="nav-header-btn law-btn" onclick="openLegalModal(); closeSidebar();" title="View Law of the River &amp; Compact Framework">
+          <span class="btn-icon">⚖️</span>
+          <span class="btn-text">Law of the River</span>
+        </button>
+        <button class="nav-header-btn code-btn" onclick="openApiModal(); closeSidebar();" title="View Hydrology APIs &amp; Python Code Documentation">
+          <span class="btn-icon">💻</span>
+          <span class="btn-text">API &amp; Code</span>
+        </button>
+        <button class="nav-header-btn flow-btn" onclick="window.open('./sankey.html','_blank')" title="Open Minard-style flow diagram">
+          <span class="btn-icon">〰</span>
+          <span class="btn-text">Flow Diagram</span>
+        </button>
+        <button class="nav-header-btn telemetry-btn" onclick="window.open('./telemetry.html','_blank')" title="Open Gage &amp; Telemetry Registry Table">
+          <span class="btn-icon">📊</span>
+          <span class="btn-text">Gage Registry</span>
+        </button>
+      </div>
+      <!-- Where Is the Water Going? (Major Basin Outflows & Diversions) -->
+      <section class="card stat-card outflows-card" id="outflows-card">
+        <div class="card-header card-header-clickable" onclick="toggleCardCollapse('outflows-card', 'outflows-body', 'outflows-collapse-icon')" title="Click to collapse / expand outflows">
+          <h3>Where Is the Water Going?</h3>
+          <div class="card-header-actions">
+            <span class="collapse-icon" id="outflows-collapse-icon">▼</span>
+          </div>
+        </div>
+        <div id="outflows-body">
+          <p class="metric-desc" style="margin-top: 4px; margin-bottom: 8px;">Real-time snapshot of out-of-basin diversions and primary interstate compact deliveries:</p>
+          <div class="flow-dest-chart" id="flow-dest-chart">
+            <!-- Dynamically populated by updateSidebar() with a horizontal bar chart -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Basin-Wide Mega Reservoirs -->
+      <section class="card stat-card reservoirs-card" id="reservoirs-card">
+        <div class="card-header card-header-clickable" onclick="toggleCardCollapse('reservoirs-card', 'reservoirs-body', 'reservoirs-collapse-icon')" title="Click to collapse / expand main storage reservoirs">
+          <h3>Basin Storage Reservoirs</h3>
+          <div class="card-header-actions">
+            <span class="badge stat-badge" id="basin-storage-badge" style="background:#fef3c7; color:#b45309;">28.9% Full</span>
+            <span class="collapse-icon" id="reservoirs-collapse-icon">▼</span>
+          </div>
+        </div>
+        <div id="reservoirs-body">
+          <div id="basin-storage-summary" style="font-size: 11px; color: var(--text-muted); margin: 4px 0 8px 0; font-weight: 500;">
+            System Total: <strong>17.11M AF</strong> of 59.16M AF Total Capacity
+          </div>
+          <div class="res-list-container" id="reservoir-list">
+            <!-- Dynamically populated by updateSidebar() -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Front Range & Denver Collection Reservoirs -->
+      <section class="card stat-card front-range-card collapsed" id="front-range-card">
+        <div class="card-header card-header-clickable" onclick="toggleCardCollapse('front-range-card', 'front-range-body', 'front-range-collapse-icon')" title="Click to collapse / expand Denver & Front Range collection storage">
+          <h3>Front Range Reservoirs</h3>
+          <div class="card-header-actions">
+            <span class="badge stat-badge" id="fr-storage-badge" style="background:#fef3c7; color:#b45309;">46.0% Full</span>
+            <span class="collapse-icon" id="front-range-collapse-icon" style="transform: rotate(-90deg);">▼</span>
+          </div>
+        </div>
+        <div id="front-range-body" style="display: none;">
+          <div id="fr-storage-summary" style="font-size: 11px; color: var(--text-muted); margin: 4px 0 8px 0; font-weight: 500;">
+            Headwater Storage &bull; West Slope Trans-Mountain Sources
+          </div>
+          <div class="res-list-container" id="front-range-res-list">
+            <!-- Dynamically populated by updateSidebar() -->
+          </div>
+        </div>
+      </section>
+
+
+    </aside>
+  </main>
+
+  <!-- Law of the River & Institutional Framework Modal -->
+  <div class="modal-overlay" id="legal-modal" onclick="closeLegalModal(event)">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <h2>⚖️ The Law of the River: Paper Rights vs. Wet Water Reality</h2>
+          <p>How a century of imaginary water allocations, emergency reservoir bailouts, and climate reality led to the post-2026 reckoning.</p>
+        </div>
+        <button class="modal-close-btn" onclick="closeLegalModal()" title="Close dialog">✕</button>
+      </div>
+      <div class="modal-body">
+        
+        <!-- Chapter 1: 1922–1944: Allocating "Paper Water" -->
+        <div class="law-section">
+          <div class="law-section-header">
+            <h3 class="law-section-title">1. 1922–1944: Allocating "Paper Water"</h3>
+            <span class="law-tag primary">Historic Foundation</span>
+          </div>
+          <p class="law-text">
+            The legal framework began with the <strong>1922 Colorado River Compact</strong>, signed in Santa Fe, New Mexico by the seven basin states and Herbert Hoover. It divided the river at Lees Ferry, Arizona, allocating <strong>7.5 million acre-feet (MAF)</strong> annually to the Upper Basin (CO, WY, UT, NM) and <strong>7.5 MAF</strong> to the Lower Basin (AZ, CA, NV). In 1944, the <strong>Mexican Water Treaty</strong> added an international guarantee of <strong>1.5 MAF/yr</strong> delivered at Morelos Dam, splitting any deficit 50/50 between Upper and Lower Basins (+0.75 MAF each).
+          </p>
+          <p class="law-text" style="margin-top: 8px;">
+            <strong>The Original Sin:</strong> Negotiators based these statutory promises on streamflow gauges from the exceptionally wet period of 1905–1922, believing the river carried over <strong>17.5 MAF/yr</strong>. In reality, long-term tree-ring and USGS hydrologic records demonstrate that natural flow averages only <strong>~13.2 MAF/yr</strong>—and in the 21st century has dropped to just <strong>~12.5 MAF/yr</strong>. Compounding the error, the treaties completely ignored <strong>~1.6 MAF/yr of reservoir evaporation and transit losses</strong>, legally committing <strong>16.5 MAF of paper water</strong> that nature simply does not provide.
+          </p>
+          <div class="law-stats-grid">
+            <div class="law-stat-box">
+              <div class="law-stat-label">Upper Basin Paper Right</div>
+              <div class="law-stat-val">7.5 MAF / yr</div>
+            </div>
+            <div class="law-stat-box">
+              <div class="law-stat-label">Lower Basin Paper Right</div>
+              <div class="law-stat-val">7.5 MAF / yr</div>
+            </div>
+            <div class="law-stat-box">
+              <div class="law-stat-label">Mexico Treaty (1944)</div>
+              <div class="law-stat-val">1.5 MAF / yr</div>
+            </div>
+            <div class="law-stat-box">
+              <div class="law-stat-label">Total Paper Promises</div>
+              <div class="law-stat-val" style="color:#0284c7;">16.5 MAF / yr</div>
+            </div>
+            <div class="law-stat-box">
+              <div class="law-stat-label">Actual Modern Inflow</div>
+              <div class="law-stat-val" style="color:#dc2626;">~12.5 MAF / yr</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chapter 2: The Seniority Pecking Order: Who Gets Cut First? -->
+        <div class="law-section">
+          <div class="law-section-header">
+            <h3 class="law-section-title">2. The Seniority Pecking Order: Who Gets Cut First?</h3>
+            <span class="law-tag warning">Legal Hierarchy</span>
+          </div>
+          <p class="law-text">
+            Western water law operates strictly on <strong>Prior Appropriation: <em>"First in time, first in right."</em></strong> Whoever put river water to beneficial use earliest holds senior legal priority. As the basin developed throughout the 20th century, this doctrine established a rigid hierarchy that dictates who must absorb shortages when wet water falls short:
+          </p>
+          <ul class="law-text" style="margin-top: 8px; padding-left: 20px; list-style-type: disc;">
+            <li>
+              <strong>California's Senior Fortress (1901 Rights):</strong> Southern California agricultural districts—principally the <strong>Imperial Irrigation District (IID)</strong>—hold senior water rights established in 1901 that legally pre-date the 1922 Compact. Under federal law, these rights are virtually untouchable.
+            </li>
+            <li style="margin-top: 6px;">
+              <strong>Arizona's 1968 Junior Sacrifice:</strong> To obtain congressional funding to construct the 336-mile Central Arizona Project (CAP) canal to Phoenix and Tucson, Arizona was forced into a brutal statutory concession in the 1968 Basin Project Act: <strong>CAP water was made legally junior to California's 4.4 MAF allocation</strong>. If the river runs short, Arizona must take the cuts before California loses a single drop.
+            </li>
+            <li style="margin-top: 6px;">
+              <strong>The Upper Basin's Natural Snowpack Ceiling:</strong> Lacking large downstream regulatory reservoirs, Upper Basin users pull directly from mountain streams. In dry summers, state water commissioners physically walk the ditches and lock junior headgates (e.g., when the 1902 Shoshone Power Plant calls for water, junior trans-mountain tunnels like Denver's Roberts and Moffat tunnels are curtailed). The Upper Basin has <strong>never consumed its 7.5 MAF paper entitlement</strong>—it has always been hydrologically capped at <strong>~4.0 to 4.5 MAF/yr</strong>.
+            </li>
+          </ul>
+        </div>
+
+        <!-- Chapter 3: 2000–2021: Hiding the Deficit in the Reservoirs -->
+        <div class="law-section">
+          <div class="law-section-header">
+            <h3 class="law-section-title">3. 2000–2021: Hiding the Deficit in the Reservoirs</h3>
+            <span class="law-tag danger">The 20-Year Drain</span>
+          </div>
+          <p class="law-text">
+            If the river was over-allocated by millions of acre-feet every year, why didn't the system collapse decades ago? <strong>Water managers literally drained the reservoirs to hide the deficit.</strong>
+          </p>
+          <p class="law-text" style="margin-top: 8px;">
+            In 1999, Lake Powell and Lake Mead were <strong>95% full</strong>, storing over <strong>50 million acre-feet</strong>—nearly four full years of river runoff in reserve. Because of that massive savings account, cities and farms were allowed to consume ~15.0 MAF every year while climate change and drought reduced river runoff to ~12.5 MAF. The <strong>~2.5 MAF annual shortfall was quietly withdrawn from storage year after year</strong>.
+          </p>
+          <p class="law-text" style="margin-top: 8px;">
+            Over two decades, <strong>~37 million acre-feet of stored water was drained</strong> to keep the illusion of full paper allocations alive.
+          </p>
+          <div class="law-stats-grid">
+            <div class="law-stat-box">
+              <div class="law-stat-label">1999 Combined Storage</div>
+              <div class="law-stat-val" style="color:#047857;">~50 MAF (95% Full)</div>
+            </div>
+            <div class="law-stat-box">
+              <div class="law-stat-label">2022 Crisis Low</div>
+              <div class="law-stat-val" style="color:#dc2626;">~13 MAF (25% Full)</div>
+            </div>
+            <div class="law-stat-box">
+              <div class="law-stat-label">Total Storage Depleted</div>
+              <div class="law-stat-val" style="color:#dc2626;">~37 MAF Lost</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chapter 4: 2022–2024: Dead Pool Threats & Emergency Buyouts -->
+        <div class="law-section">
+          <div class="law-section-header">
+            <h3 class="law-section-title">4. 2022–2024: Dead Pool Threats &amp; Emergency Buyouts</h3>
+            <span class="law-tag amber">Crisis &amp; Federal Aid</span>
+          </div>
+          <p class="law-text">
+            By mid-2022, the savings account was nearly empty. Combined storage crashed to <strong>25%</strong>, Lake Powell dropped to within 32 feet of losing hydroelectric generation at Glen Canyon Dam, and federal engineers warned of <strong>"dead pool"</strong>—the point where water falls below dam outlet pipes, physically severing the Colorado River.
+          </p>
+          <p class="law-text" style="margin-top: 8px;">
+            The paper rights immediately collided with reality:
+          </p>
+          <ul class="law-text" style="margin-top: 6px; padding-left: 20px; list-style-type: disc;">
+            <li>
+              <strong>Mandatory Cuts Hit Arizona:</strong> The Bureau of Reclamation declared the first-ever Tier 1 and Tier 2 shortages. Because of the 1968 junior priority, <strong>Arizona lost ~592,000 AF (>20% of its total river supply)</strong>, while senior California took zero mandatory cuts.
+            </li>
+            <li style="margin-top: 6px;">
+              <strong>The $1.2 Billion Federal Buyout:</strong> In June 2022, Reclamation Commissioner Camille Touton warned the seven states to slash consumption by 2.0 to 4.0 MAF immediately or face unilateral federal shutdowns. Rather than fight an existential decade-long Supreme Court battle over California’s senior 1901 rights, the federal government deployed <strong>$1.2 Billion from the Inflation Reduction Act</strong>, literally <strong>paying farmers ~$400 per acre-foot to leave fields fallow</strong>, buying 3.0 MAF of conservation through 2026.
+            </li>
+          </ul>
+        </div>
+
+        <!-- Chapter 5: 2026 & Beyond: The End of Pretend Water -->
+        <div class="law-section">
+          <div class="law-section-header">
+            <h3 class="law-section-title">5. 2026 &amp; Beyond: The End of Pretend Water</h3>
+            <span class="law-tag primary">The Reckoning Ahead</span>
+          </div>
+          <p class="law-text">
+            The federal buyout money, the 2007 Interim Guidelines, and the 2019 Drought Contingency Plans all <strong>expire on December 31, 2026</strong>.
+          </p>
+          <p class="law-text" style="margin-top: 8px;">
+            <strong>The Bottom Line:</strong> <em>You cannot drink paper water.</em> The reservoirs can no longer be drained to buffer imaginary water rights, and federal taxpayer checks cannot subsidize fallowed fields indefinitely.
+          </p>
+          <p class="law-text" style="margin-top: 8px;">
+            In the ongoing post-2026 negotiations, the seven states, 30 sovereign Tribal Nations, and federal water managers must permanently eliminate <strong>2.0 to 4.0 million acre-feet of paper entitlements</strong>. For the first time, Lower Basin states will be forced to formally deduct ~1.5 MAF of reservoir evaporation, while Western cities spend tens of billions on wastewater recycling, turf replacement, and agricultural efficiency to survive on the water that nature actually provides.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Hydrologic APIs & Python Code Architecture Modal (Option C) -->
+  <div class="modal-overlay" id="api-modal" onclick="closeApiModal(event)">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <h2>💻 Hydrologic APIs &amp; Python Data Pipeline</h2>
+          <p>Real-time telemetry feeds, REST endpoints, and conservation-of-mass river routing code powering this project.</p>
+        </div>
+        <button class="modal-close-btn" onclick="closeApiModal()" title="Close dialog">✕</button>
+      </div>
+      <div class="modal-body">
+        
+        <!-- Chapter 1: USGS NWIS Instantaneous Values API -->
+        <div class="api-section">
+          <div class="api-section-header">
+            <h3 class="api-section-title">1. USGS National Water Information System (NWIS)</h3>
+            <span class="api-tag usgs">USGS REST API</span>
+          </div>
+          <p class="law-text">
+            Real-time streamflow across the 25+ river reaches and confluences is ingested directly from the <strong>USGS Instantaneous Values (IV) Web Service</strong>. Measurements are refreshed at 15- to 60-minute intervals from satellite-telemetry acoustic Doppler and stage sensors.
+          </p>
+          <table class="api-param-table">
+            <thead>
+              <tr><th>Parameter</th><th>Value</th><th>Technical Description</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>sites</code></td>
+                <td>e.g. <code>09380000, 09070500</code></td>
+                <td>Comma-delimited 8-digit USGS station IDs (Lees Ferry, Dotsero, Cameo, Cisco, etc.).</td>
+              </tr>
+              <tr>
+                <td><code>parameterCd</code></td>
+                <td><code>00060</code> / <code>62614</code></td>
+                <td><code>00060</code> = Discharge in cubic feet per second (cfs); <code>62614</code> = Lake elevation (ft).</td>
+              </tr>
+              <tr>
+                <td><code>siteStatus</code></td>
+                <td><code>all</code></td>
+                <td>Includes active operational telemetry nodes across all 7 basin states.</td>
+              </tr>
+              <tr>
+                <td><code>format</code></td>
+                <td><code>json</code></td>
+                <td>Structured WaterML 2.0 / JSON time-series output.</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="code-snippet-box">
+            <div class="code-snippet-header">
+              <span class="code-snippet-lang">Python 3 • requests (Live Streamflow)</span>
+              <button type="button" class="code-snippet-copy-btn" onclick="copyPopupCode(this)">Copy</button>
+            </div>
+            <pre><code>import requests
+
+# Base endpoint for USGS Instantaneous Values (IV)
+url = "https://waterservices.usgs.gov/nwis/iv/"
+
+# Query Sentinel Gauges across Upper and Lower Basins:
+# 09380000 = Lees Ferry Compact Divide
+# 09070500 = Dotsero (Upper Mainstem)
+# 09180500 = Cisco (near UT-CO border)
+# 09429100 = Below Palo Verde Dam (Lower Basin)
+params = {
+    "sites": "09380000,09070500,09180500,09429100",
+    "parameterCd": "00060",  # Streamflow Discharge (cfs)
+    "siteStatus": "all",
+    "format": "json"
+}
+
+response = requests.get(url, params=params, timeout=12)
+data = response.json()
+
+print(f"{'USGS Gauge ID':&lt;14} | {'Station Name':&lt;38} | {'Discharge (cfs)':&gt;15}")
+print("-" * 72)
+
+for ts in data["value"]["timeSeries"]:
+    site_id = ts["sourceInfo"]["siteCode"][0]["value"]
+    site_name = ts["sourceInfo"]["siteName"]
+    readings = ts["values"][0]["value"]
+    if readings:
+        latest = readings[-1]
+        cfs_val = float(latest["value"]) if latest["value"] != "-999999" else 0.0
+        print(f"{site_id:&lt;14} | {site_name[:38]:&lt;38} | {cfs_val:&gt;15,.1f}")</code></pre>
+          </div>
+        </div>
+
+        <!-- Chapter 2: Colorado DWR HydroBase v2 -->
+        <div class="api-section">
+          <div class="api-section-header">
+            <h3 class="api-section-title">2. Colorado DWR HydroBase v2 (Trans-Mountain Diversions)</h3>
+            <span class="api-tag cdwr">Colorado DWR API</span>
+          </div>
+          <p class="law-text">
+            Trans-mountain diversions that carry West Slope water underneath the Continental Divide to Denver and Front Range cities are monitored via the <strong>Colorado Division of Water Resources (CDWR) HydroBase REST API v2</strong>. This tracks tunnels that remove water before it ever reaches the Lower Basin.
+          </p>
+          <table class="api-param-table">
+            <thead>
+              <tr><th>Endpoint / Param</th><th>Value</th><th>Technical Description</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>telemetrytimeserieshour</code></td>
+                <td>Hourly Readings</td>
+                <td>Active hourly discharge for diversion tunnels (<code>ROBTUNCO</code>, <code>MOFTUNCO</code>, <code>ADATUNCO</code>, <code>BOUTUNCO</code>).</td>
+              </tr>
+              <tr>
+                <td><code>telemetrytimeseriesday</code></td>
+                <td>Daily Accounting</td>
+                <td>Daily storage volume and elevation for Front Range municipal reservoirs (<code>GRARESCO</code>, <code>DILRESCO</code>, <code>GRMRESCO</code>).</td>
+              </tr>
+              <tr>
+                <td><code>abbrev</code></td>
+                <td>Structure Codes</td>
+                <td>Comma-separated unique CDWR structure identifiers.</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="code-snippet-box">
+            <div class="code-snippet-header">
+              <span class="code-snippet-lang">Python 3 • requests (Trans-Mountain Tunnels)</span>
+              <button type="button" class="code-snippet-copy-btn" onclick="copyPopupCode(this)">Copy</button>
+            </div>
+            <pre><code>import requests
+
+# Colorado Division of Water Resources (HydroBase REST API v2)
+# Hourly telemetric discharge for Continental Divide diversion tunnels:
+# ROBTUNCO = Harold D. Roberts Tunnel (Dillon -&gt; South Platte / Denver)
+# MOFTUNCO = Moffat Water Tunnel (Fraser -&gt; Gross Res / Denver)
+# ADATUNCO = Alva B. Adams Tunnel (Grand Lake -&gt; Estes Park / Northern)
+# BOUTUNCO = Charles H. Boustead Tunnel (Fryingpan -&gt; Arkansas / Aurora)
+
+base_url = "https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeserieshour/"
+params = {
+    "abbrev": "ROBTUNCO,MOFTUNCO,ADATUNCO,BOUTUNCO",
+    "format": "json"
+}
+
+headers = {"User-Agent": "DAT1001-Research/1.0"}
+res = requests.get(base_url, params=params, headers=headers, timeout=10).json()
+
+# Deduplicate to extract the latest reading per tunnel
+tunnel_flows = {}
+for item in res.get("ResultList", []):
+    if item.get("parameter") == "DISCHRG":
+        code = item["abbrev"]
+        val = max(0.0, float(item.get("measValue", 0.0)))
+        dt = item.get("measDateTime")
+        if code not in tunnel_flows or dt &gt; tunnel_flows[code]["time"]:
+            tunnel_flows[code] = {"flow_cfs": val, "time": dt, "name": item["stationName"]}
+
+print(f"{'Tunnel Code':&lt;10} | {'Infrastructure Name':&lt;32} | {'Export (cfs)':&gt;12}")
+print("-" * 60)
+for code, info in tunnel_flows.items():
+    print(f"{code:&lt;10} | {info['name'][:32]:&lt;32} | {info['flow_cfs']:&gt;12,.1f}")</code></pre>
+          </div>
+        </div>
+
+        <!-- Chapter 3: USBR Reclamation HydroData & Hourly Operations -->
+        <div class="api-section">
+          <div class="api-section-header">
+            <h3 class="api-section-title">3. USBR Reclamation HydroData &amp; Hourly Operations</h3>
+            <span class="api-tag usbr">USBR HydroData</span>
+          </div>
+          <p class="law-text">
+            Major federal storage reservoirs—Lake Powell (Glen Canyon Dam), Lake Mead (Hoover Dam), Flaming Gorge, Navajo, and Blue Mesa—are tracked using dual feeds: the <strong>Upper Colorado Region HydroData CSV API</strong> and the <strong>Lower Colorado Hourly Operations teletype log</strong>.
+          </p>
+          <table class="api-param-table">
+            <thead>
+              <tr><th>Provider Service</th><th>Identifier</th><th>Role / Field</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>UC HydroData CSV</code></td>
+                <td><code>Res 919 (Powell), 917 (Flaming Gorge)</code></td>
+                <td>Param <code>17.csv</code> = Storage in Acre-Feet; Param <code>49.csv</code> = Water surface elevation (ft).</td>
+              </tr>
+              <tr>
+                <td><code>LC Hourly Operations</code></td>
+                <td><code>/hourly/hourly.html</code></td>
+                <td>Live hourly feed for Hoover, Davis, and Parker Dam releases and Mead/Mohave/Havasu elevations.</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="code-snippet-box">
+            <div class="code-snippet-header">
+              <span class="code-snippet-lang">Python 3 • pandas &amp; requests (Reservoir Curves)</span>
+              <button type="button" class="code-snippet-copy-btn" onclick="copyPopupCode(this)">Copy</button>
+            </div>
+            <pre><code>import pandas as pd
+import requests
+import re
+
+# 1. USBR Upper Colorado Region HydroData CSV API
+# Reservoir IDs: 919 = Lake Powell, 917 = Flaming Gorge, 920 = Navajo
+# Parameter 17 = Storage (Acre-Feet), Parameter 49 = Elevation (Feet)
+powell_csv_url = "https://www.usbr.gov/uc/water/hydrodata/reservoir_data/919/csv/17.csv"
+
+df_powell = pd.read_csv(powell_csv_url, skiprows=1, names=["datetime", "storage_af"])
+latest_powell = df_powell.dropna().iloc[-1]
+print(f"Lake Powell Storage: {float(latest_powell['storage_af']):,.0f} AF (as of {latest_powell['datetime']})")
+
+# 2. USBR Lower Colorado Region Teletype Feed (Hourly Operations)
+# Reports Hoover Dam / Lake Mead, Davis Dam / Mohave, and Parker Dam / Havasu
+hourly_url = "https://www.usbr.gov/lc/region/g4000/hourly/hourly.html"
+txt = requests.get(hourly_url, timeout=10).text
+
+# Parse teletype table format: [HOUR-RANGE] [MEAD_EL] [HOOVER_CFS] [MOHAVE_EL] ...
+pattern = r'^\s*(\d{4}-\d{4})\s+([\d\.]+)\s+(\d+)\s+([\d\.]+)\s+([\d\.]+)\s+(\d+)\s+([\d\.]+)\s+([\d\.]+)'
+for line in txt.splitlines():
+    match = re.match(pattern, line)
+    if match:
+        time_slot, mead_el, hoover_cfs, mohave_el, mohave_af, davis_cfs, havasu_el, havasu_af = match.groups()
+        print(f"Lake Mead Elevation: {mead_el} ft | Hoover Dam Release: {int(hoover_cfs):,} cfs ({time_slot})")</code></pre>
+          </div>
+        </div>
+
+        <!-- Chapter 4: Ingestion Engine & Mass-Balance Pipeline -->
+        <div class="api-section">
+          <div class="api-section-header">
+            <h3 class="api-section-title">4. Automated Ingestion &amp; Conservation-of-Mass GeoJSON Pipeline</h3>
+            <span class="api-tag pipeline">Data Architecture</span>
+          </div>
+          <p class="law-text">
+            All data sources are synthesized by an automated Python pipeline (<code>src/fetch_water_data.py</code> and <code>src/generate_river_network.py</code>). To ensure physical realism across unmonitored river segments, the pipeline applies a <strong>topological mass-balance network algorithm</strong>:
+          </p>
+          <p class="law-text" style="margin-top: 6px; font-family: ui-monospace, SFMono-Regular, monospace; font-size: 11.5px; background: #f8fafc; padding: 6px 10px; border-radius: 5px; border: 1px solid #e2e8f0;">
+            Q_downstream = Q_mainstem_upstream + &Sigma;(Q_tributaries) - &Sigma;(Q_transmountain_tunnels) - &Sigma;(Q_canals) &plusmn; &Delta;Storage
+          </p>
+          <div class="code-snippet-box">
+            <div class="code-snippet-header">
+              <span class="code-snippet-lang">Python 3 • Multi-Threaded Ingestion &amp; GeoJSON Export</span>
+              <button type="button" class="code-snippet-copy-btn" onclick="copyPopupCode(this)">Copy</button>
+            </div>
+            <pre><code>import concurrent.futures
+import json
+from datetime import datetime
+
+# Pipeline Architecture: src/fetch_water_data.py
+# 1. Multi-Threaded Concurrent Ingestion across Providers
+with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
+    future_usgs = pool.submit(fetch_usgs_streamflow)
+    future_tunnels = pool.submit(fetch_cdwr_tunnels)
+    future_res = pool.submit(fetch_reservoirs)
+    
+    streamflow = future_usgs.result()
+    diversions = future_tunnels.result()
+    reservoirs = future_res.result()
+
+# 2. Conservation of Mass Topological Routing
+# Downstream river reach flows are mathematically derived at confluences:
+# Continuous Shapely vectors are weighted by real-time flow (cfs)
+# and saved directly as GeoJSON rendered in GPU textures by MapLibre GL:
+metrics_payload = {
+    "timestamp": datetime.utcnow().isoformat() + "Z",
+    "stations": streamflow,
+    "tunnels": diversions,
+    "reservoirs": reservoirs
+}
+
+with open("web/data/latest_metrics.json", "w") as f:
+    json.dump(metrics_payload, f, indent=2)
+print("Hydrologic telemetry pipeline synced successfully.")</code></pre>
+          </div>
+        </div>
+
+        <!-- Chapter 5: Decoupled Jupyter Spatial Data Engineering Notebooks -->
+        <div class="api-section">
+          <div class="api-section-header">
+            <h3 class="api-section-title">5. Decoupled Spatial Data Engineering Notebooks</h3>
+            <span class="api-tag pipeline" style="background:#e0e7ff; color:#3730a3; border-color:#c7d2fe;">Jupyter Notebooks</span>
+          </div>
+          <p class="law-text">
+            For academic inspection and automated batch pipelines, the data engineering logic is cleanly decoupled into two standalone, zero-cloud-cost Jupyter notebooks located in <code>notebooks/</code>:
+          </p>
+          <div style="display:flex; flex-direction:column; gap:8px; margin: 10px 0;">
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:8px 12px;">
+              <strong style="color:#0f172a; font-size:12px;">📓 notebooks/01_build_river_network.ipynb</strong>
+              <div style="font-size:11px; color:#475569; margin-top:2px;">
+                <strong>Spatial Topology &amp; Dynamic Shoreline Engine:</strong> Uses <code>pynhd.NLDI</code> and <code>WaterData</code> to disaggregate NHDPlus artificial paths from free-flowing rivers, calculates smoothed bed elevations, enforces the dynamic Cataract Canyon re-emergence rule, and synthesizes the Lake Powell topobathymetric contour deck from 3,490' to 3,700'. Exports <code>river_network.geojson</code> and <code>powell_contours.geojson</code>.
+              </div>
+            </div>
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:8px 12px;">
+              <strong style="color:#0f172a; font-size:12px;">📓 notebooks/02_analyze_flow_and_export.ipynb</strong>
+              <div style="font-size:11px; color:#475569; margin-top:2px;">
+                <strong>Real-Time Telemetry &amp; Hydrological Metrics:</strong> Uses official USGS <code>dataretrieval</code> to ingest live discharge (<code>00060</code>), 50-year daily p50 statistics, sequential reach mass-balance deltas (&Delta;Q), and reservoir elevations (<code>62614</code>). Exports static contract <code>latest_conditions.json</code>.
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- MapLibre GL JS -->
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+  <script src="app.js?v=24.0"></script>
+</body>
+</html>

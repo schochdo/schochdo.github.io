@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Colorado River Basin Map</title>
+  
+  <!-- MapLibre GL JS -->
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" />
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+
+  <!-- PMTiles Plugin for MapLibre -->
+  <script src="https://unpkg.com/pmtiles@3.0.7/dist/pmtiles.js"></script>
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="style.css?v=4.5">
+
+  <style>
+    /* Embed specific overrides to remove the top clutter */
+    body {
+      height: 100vh !important;
+      overflow: hidden !important;
+      display: flex !important;
+      flex-direction: column !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+    .app-header {
+      display: none !important;
+    }
+    .dashboard-body {
+      height: 100vh !important;
+      position: relative !important;
+    }
+    #map-container {
+      height: 100% !important;
+    }
+    /* Floating top action pill for Basin Metrics Drawer and Refresh */
+    .embed-action-pill {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .embed-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #0f172a;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: all 0.15s ease;
+    }
+    .embed-btn:hover {
+      background: #ffffff;
+      border-color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Main Workspace -->
+  <main class="dashboard-body">
+    <!-- Backdrop for Mobile Sidebar Drawer -->
+    <div id="sidebar-backdrop" class="sidebar-backdrop" onclick="closeSidebar()"></div>
+
+    <!-- Map Canvas -->
+    <div id="map-container">
+      <div id="map"></div>
+
+      <!-- Floating Map Menu (Layers & Basemap Selector) -->
+      <div class="map-menu-container" id="map-menu-container">
+        <button class="map-menu-btn" id="map-menu-btn" onclick="toggleMapMenu(event)" title="Choose Layers and Basemap">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+          <span id="map-menu-label">Layers &amp; Basemap</span>
+        </button>
+
+        <div class="map-menu-dropdown" id="map-menu-dropdown">
+          <!-- Navigation Tabs: Layers | Basemap -->
+          <div class="map-menu-nav-tabs">
+            <button class="map-menu-tab-btn active" id="tab-btn-layers" onclick="switchMapMenuTab('layers', event)">
+              <span>🗺️ Layers</span>
+            </button>
+            <button class="map-menu-tab-btn" id="tab-btn-basemaps" onclick="switchMapMenuTab('basemaps', event)">
+              <span>🎨 Basemap</span>
+            </button>
+          </div>
+
+          <!-- Tab Pane 1: Layer Controls -->
+          <div class="map-menu-pane active" id="pane-layers">
+            <div class="map-menu-list">
+              <label class="map-menu-item">
+                <input type="checkbox" id="layer-gages" checked onchange="toggleLayer('gages', this.checked)">
+                <span class="map-menu-icon" style="background:#0284c7;"></span>
+                <span class="map-menu-text">USGS Stream Gauges</span>
+              </label>
+              <label class="map-menu-item">
+                <input type="checkbox" id="layer-reservoirs" checked onchange="toggleLayer('reservoirs', this.checked)">
+                <span class="map-menu-icon" style="background:#2563eb;"></span>
+                <span class="map-menu-text">Reclamation Reservoirs</span>
+              </label>
+              <label class="map-menu-item">
+                <input type="checkbox" id="layer-tunnels" checked onchange="toggleLayer('tunnels', this.checked)">
+                <span class="map-menu-icon" style="background:#ea580c;"></span>
+                <span class="map-menu-text">Trans-Mountain Diversions</span>
+              </label>
+              <label class="map-menu-item">
+                <input type="checkbox" id="layer-canals" checked onchange="toggleLayer('canals', this.checked)">
+                <span class="map-menu-icon" style="background:#d97706;"></span>
+                <span class="map-menu-text">Agricultural Delivery Canals</span>
+              </label>
+              <label class="map-menu-item">
+                <input type="checkbox" id="layer-rivers" checked onchange="toggleLayer('rivers', this.checked)">
+                <span class="map-menu-icon" style="background:#0284c7;"></span>
+                <span class="map-menu-text">River Network Vectors</span>
+              </label>
+              <label class="map-menu-item">
+                <input type="checkbox" id="layer-tribs" checked onchange="toggleLayer('tribs', this.checked)">
+                <span class="map-menu-icon" style="background:#38bdf8;"></span>
+                <span class="map-menu-text">Major Tributary Branches</span>
+              </label>
+              <label class="map-menu-item">
+                <input type="checkbox" id="layer-basin" checked onchange="toggleLayer('basin', this.checked)">
+                <span class="map-menu-icon" style="background:#64748b;"></span>
+                <span class="map-menu-text">Hydrologic Basin Boundary</span>
+              </label>
+              <label class="map-menu-item">
+                <input type="checkbox" id="layer-divide" checked onchange="toggleLayer('divide', this.checked)">
+                <span class="map-menu-icon" style="background:#dc2626;"></span>
+                <span class="map-menu-text">Continental Divide Crest</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Tab Pane 2: Basemap Controls -->
+          <div class="map-menu-pane" id="pane-basemaps">
+            <div class="map-menu-grid">
+              <button class="basemap-tile-btn active" data-style="satellite" onclick="selectBasemap('satellite', this)">
+                <span class="basemap-tile-icon">🛰️</span>
+                <span class="basemap-tile-name">Satellite</span>
+              </button>
+              <button class="basemap-tile-btn" data-style="terrain" onclick="selectBasemap('terrain', this)">
+                <span class="basemap-tile-icon">⛰️</span>
+                <span class="basemap-tile-name">Terrain</span>
+              </button>
+              <button class="basemap-tile-btn" data-style="outdoor" onclick="selectBasemap('outdoor', this)">
+                <span class="basemap-tile-icon">🌲</span>
+                <span class="basemap-tile-name">Outdoor</span>
+              </button>
+              <button class="basemap-tile-btn" data-style="osm" onclick="selectBasemap('osm', this)">
+                <span class="basemap-tile-icon">🗺️</span>
+                <span class="basemap-tile-name">Street</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Floating Controls on Top Right (Basin Metrics Drawer + Reload) -->
+      <div class="embed-action-pill">
+        <button class="embed-btn" onclick="refreshData()" title="Reload live hydrology data">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <polyline points="1 20 1 14 7 14"></polyline>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+          </svg>
+          <span>Refresh</span>
+        </button>
+        <button class="embed-btn" id="sidebar-toggle-btn" onclick="toggleSidebar()" title="Toggle Basin Metrics Panel">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          <span>Basin Metrics</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Collapsible Sidebar (Basin Metrics) -->
+    <aside id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-title-group">
+          <h2>Basin Hydrology</h2>
+          <span class="badge" id="data-status">Live Feeds</span>
+        </div>
+        <button class="close-sidebar-btn" onclick="closeSidebar()" title="Close panel" aria-label="Close Metrics Panel">&times;</button>
+      </div>
+
+      <div class="sidebar-content">
+        <!-- Overview Card -->
+        <div class="metric-card" id="overview-card">
+          <h3>Where Is The Water Going?</h3>
+          <p class="card-desc">Real-time snapshot of out-of-basin diversions and primary interstate compact deliveries:</p>
+          <div class="diversion-summary-grid">
+            <div class="diversion-item">
+              <span class="diversion-label">Denver / Front Range</span>
+              <span class="diversion-val" id="total-transmountain-flow">-- cfs</span>
+              <span class="diversion-sub">Moffat, Roberts &amp; Adams Bores</span>
+            </div>
+            <div class="diversion-item">
+              <span class="diversion-label">Lake Mead Inflow (Lee's Ferry)</span>
+              <span class="diversion-val" id="lees-ferry-flow">-- cfs</span>
+              <span class="diversion-sub">Compact Point Delivery</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Major Reservoirs Card -->
+        <div class="metric-card" id="reservoirs-card">
+          <div class="card-header-flex">
+            <h3>Basin Storage Reservoirs</h3>
+            <span class="badge" id="storage-status">--% Full</span>
+          </div>
+          <p class="card-desc" id="system-storage-summary">System Total: --M AF of --M AF Total Capacity</p>
+          <div class="reservoir-list" id="reservoir-list">
+            <div class="loading-state">Loading reservoir elevations...</div>
+          </div>
+        </div>
+
+        <!-- Front Range Diversion Pools -->
+        <div class="metric-card" id="front-range-reservoirs-card">
+          <div class="card-header-flex">
+            <h3>Front Range Reservoirs</h3>
+            <span class="badge" id="fr-storage-status">--% Full</span>
+          </div>
+          <div class="reservoir-list" id="fr-reservoir-list">
+            <div class="loading-state">Loading terminal storage...</div>
+          </div>
+        </div>
+
+        <!-- Key Gages Card -->
+        <div class="metric-card" id="gages-card">
+          <h3>Key River Gages</h3>
+          <div class="gage-list" id="gage-list">
+            <div class="loading-state">Connecting to USGS NWIS...</div>
+          </div>
+        </div>
+
+        <!-- Trans-Mountain Tunnels Card -->
+        <div class="metric-card" id="tunnels-card">
+          <h3>Trans-Mountain Diversion Bores</h3>
+          <div class="tunnel-list" id="tunnel-list">
+            <div class="loading-state">Connecting to CDWR Telemetry...</div>
+          </div>
+        </div>
+
+        <!-- Major Canals Card -->
+        <div class="metric-card" id="canals-card">
+          <h3>Agricultural Delivery Canals</h3>
+          <div class="canal-list" id="canal-list">
+            <div class="loading-state">Connecting to Lower Basin Canals...</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <script src="app.js?v=4.6"></script>
+</body>
+</html>
