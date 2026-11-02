@@ -32,52 +32,170 @@
       position: relative;
     }
     
-    /* Top-Right Floating Layers & Basemap Menu */
+    /* Slide-out Layers & Basemap Drawer Tray on the Right */
     .map-menu-container {
       position: absolute !important;
-      top: 14px !important;
-      right: 14px !important;
-      left: auto !important;
-      z-index: 900 !important;
-    }
-    .map-menu-dropdown {
+      top: 0 !important;
       right: 0 !important;
+      bottom: 0 !important;
       left: auto !important;
+      z-index: 1050 !important;
+      display: flex !important;
+      flex-direction: row-reverse !important;
+      align-items: flex-start !important;
+      pointer-events: none !important;
+      transition: right 0.28s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    /* Floating Tab to Expand Sidebar when Collapsed */
+    /* When Basin Metrics sidebar is expanded on desktop (sidebar width is 380px),
+       dock the tray handle right at the sidebar's left edge */
+    body:not(.sidebar-collapsed) .map-menu-container {
+      right: 380px !important;
+    }
+    body.sidebar-collapsed .map-menu-container {
+      right: 0 !important;
+    }
+
+    /* The Slide-Out Trigger Tab Handle */
+    .map-menu-btn {
+      pointer-events: auto !important;
+      margin-top: 14px !important;
+      margin-right: 0 !important;
+      border-radius: 8px 0 0 8px !important;
+      border-right: none !important;
+      height: 36px !important;
+      padding: 0 13px !important;
+      background: rgba(255, 255, 255, 0.95) !important;
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
+      border: 1px solid #cbd5e1 !important;
+      border-right: none !important;
+      box-shadow: -3px 3px 12px rgba(15, 23, 42, 0.1) !important;
+      font-size: 12px !important;
+      font-weight: 700 !important;
+      color: #0f172a !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 7px !important;
+      cursor: pointer !important;
+      transition: all 0.18s ease !important;
+    }
+    .map-menu-btn:hover {
+      background: #ffffff !important;
+      color: #0284c7 !important;
+      border-color: #94a3b8 !important;
+    }
+    .map-menu-btn.active {
+      background: #0284c7 !important;
+      border-color: #0284c7 !important;
+      color: #ffffff !important;
+    }
+
+    /* The Slide-Out Tray Panel */
+    .map-menu-dropdown {
+      pointer-events: auto !important;
+      position: relative !important;
+      top: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 310px !important;
+      height: 100vh !important;
+      max-height: 100vh !important;
+      background: rgba(255, 255, 255, 0.98) !important;
+      backdrop-filter: blur(16px) !important;
+      -webkit-backdrop-filter: blur(16px) !important;
+      border-left: 1px solid #cbd5e1 !important;
+      border-top: none !important;
+      border-right: none !important;
+      border-bottom: none !important;
+      border-radius: 0 !important;
+      box-shadow: -8px 0 24px rgba(15, 23, 42, 0.14) !important;
+      padding: 16px !important;
+      box-sizing: border-box !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 12px !important;
+      transform: translateX(100%) !important;
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+    }
+    .map-menu-dropdown.show {
+      transform: translateX(0) !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+
+    /* Tray Header */
+    .map-tray-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #e2e8f0;
+      margin-bottom: 2px;
+    }
+    .map-tray-title {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .map-tray-close-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+      color: #64748b;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+      transition: all 0.15s ease;
+    }
+    .map-tray-close-btn:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    /* Floating Tab to Expand Basin Metrics Sidebar when Collapsed */
     .sidebar-expand-tab {
       position: absolute;
-      top: 14px;
-      right: 14px;
-      z-index: 850;
+      top: 58px; /* Offset cleanly below the 14px Layers & Basemap handle */
+      right: 0;
+      z-index: 900;
       display: none;
       align-items: center;
       gap: 6px;
-      padding: 7px 12px;
-      font-size: 11px;
+      padding: 0 12px;
+      height: 36px;
+      font-size: 11.5px;
       font-weight: 700;
       color: #0f172a;
       background: rgba(255, 255, 255, 0.95);
       border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      border-right: none;
+      border-radius: 8px 0 0 8px;
+      box-shadow: -3px 3px 12px rgba(15, 23, 42, 0.1);
       cursor: pointer;
-      backdrop-filter: blur(8px);
-      transition: all 0.15s ease;
+      backdrop-filter: blur(12px);
+      transition: all 0.18s ease;
       user-select: none;
     }
     .sidebar-expand-tab:hover {
       background: #ffffff;
+      color: #0284c7;
       border-color: #94a3b8;
     }
-    .sidebar-panel.desktop-collapsed + .sidebar-expand-tab,
-    .dashboard-body:has(.sidebar-panel.desktop-collapsed) .sidebar-expand-tab {
+    body.sidebar-collapsed .sidebar-expand-tab {
       display: flex !important;
-    }
-    /* When sidebar is open, Layers & Basemap sits 14px to the left of the sidebar */
-    .dashboard-body:not(:has(.sidebar-panel.desktop-collapsed)) .map-menu-container {
-      right: 404px !important;
     }
   </style>
 </head>
@@ -104,6 +222,19 @@
         </button>
 
         <div class="map-menu-dropdown" id="map-menu-dropdown">
+          <!-- Tray Header with Title & Close Button -->
+          <div class="map-tray-header">
+            <div class="map-tray-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                <polyline points="2 17 12 22 22 17"></polyline>
+                <polyline points="2 12 12 17 22 12"></polyline>
+              </svg>
+              <span>Map Controls</span>
+            </div>
+            <button class="map-tray-close-btn" onclick="toggleMapMenu(event)" title="Close Tray">✕</button>
+          </div>
+
           <!-- Navigation Tabs: Layers | Basemap -->
           <div class="map-menu-nav-tabs">
             <button class="map-menu-tab-btn active" id="tab-btn-layers" onclick="switchMapMenuTab('layers', event)">

@@ -4309,6 +4309,7 @@ window.toggleSidebar = function() {
     // Desktop collapse mode
     const willCollapse = !panel.classList.contains('desktop-collapsed');
     panel.classList.toggle('desktop-collapsed', willCollapse);
+    document.body.classList.toggle('sidebar-collapsed', willCollapse);
     if (btn) btn.classList.toggle('active', !willCollapse);
   }
 
