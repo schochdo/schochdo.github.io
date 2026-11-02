@@ -259,28 +259,28 @@
         return {
           name: 'USGS NWIS',
           url: 'https://waterdata.usgs.gov/monitoring-location/09527700/',
-          label: 'USGS All-American Canal Station #09527700'
+          label: 'USGS NWIS #09527700'
         };
       }
       if (id === '09424150' || name.includes('colorado river aqueduct')) {
         return {
           name: 'USGS NWIS',
           url: 'https://waterdata.usgs.gov/monitoring-location/09424150/',
-          label: 'USGS Colorado River Aqueduct Station #09424150'
+          label: 'USGS NWIS #09424150'
         };
       }
       if (id === '09426650' || name.includes('central arizona project') || name.includes('cap')) {
         return {
           name: 'USGS NWIS',
           url: 'https://waterdata.usgs.gov/monitoring-location/09426650/',
-          label: 'USGS Central Arizona Project Station #09426650'
+          label: 'USGS NWIS #09426650'
         };
       }
       if (/^\d{8}$/.test(id)) {
         return {
           name: 'USGS NWIS',
           url: `https://waterdata.usgs.gov/monitoring-location/${id}/`,
-          label: `USGS Station #${id}`
+          label: `USGS NWIS #${id}`
         };
       }
       if (id.endsWith('CO') || id.endsWith('TUNCO') || id.endsWith('DIVCO') || name.includes('front range tunnels') || name.includes('trans-mountain')) {
@@ -288,7 +288,7 @@
         return {
           name: 'Colorado DWR',
           url: `https://dwr.state.co.us/Tools/Stations?station=${encodeURIComponent(stationId)}`,
-          label: `CDSS Telemetry #${stationId}`
+          label: `CDSS #${stationId}`
         };
       }
       const resUrls = {

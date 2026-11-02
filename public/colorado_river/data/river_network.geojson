@@ -3213,7 +3213,7 @@
         "minelev_ft": 4000.0,
         "maxelev_ft": 4200.0,
         "ftype": "StreamRiver",
-        "notes": "Fontenelle Dam outflow to Green River, WY sentinel gauge (USGS #09217000)."
+        "notes": "Fontenelle Dam outflow to Green River, WY gage (USGS #09217000)."
       },
       "geometry": {
         "type": "MultiLineString",
@@ -24492,7 +24492,7 @@
         "gauge_id": "09355500",
         "flow_cfs": 272,
         "weight": 3.5,
-        "source_label": "Live USGS Sentinel Gauge",
+        "source_label": "USGS Gage",
         "gauge_info": "USGS #09355500 near Archuleta, NM (Navajo Dam Release)",
         "reach_type": "free_flowing",
         "re_emerged": false,
@@ -26440,7 +26440,7 @@
         "gauge_id": "09365000",
         "flow_cfs": 19200,
         "weight": 5.8,
-        "source_label": "Live USGS Sentinel Gauge",
+        "source_label": "USGS Gage",
         "gauge_info": "USGS #09379500 near Bluff, UT",
         "reach_type": "free_flowing",
         "re_emerged": false,
@@ -26892,7 +26892,7 @@
         "gauge_id": "09379500",
         "flow_cfs": 16300,
         "weight": 6.0,
-        "source_label": "Live USGS Sentinel Gauge",
+        "source_label": "USGS Gage",
         "gauge_info": "USGS #09379500 near Bluff, UT",
         "reach_type": "free_flowing",
         "re_emerged": false,
@@ -63997,7 +63997,7 @@
         "ftype": "StreamRiver",
         "notes": "Primary San Juan tributary from Durango, CO carrying high snowpack runoff to Farmington, NM.",
         "gauge_info": "USGS #09364500 at Farmington, NM",
-        "source_label": "Live USGS Sentinel Gauge"
+        "source_label": "USGS Gage"
       },
       "geometry": {
         "type": "MultiLineString",

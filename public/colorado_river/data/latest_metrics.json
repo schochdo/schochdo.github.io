@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-11-01T20:15:12.888668",
+  "fetched_at": "2026-11-01T20:21:40.942451",
   "streamflows": [
     {
       "id": "09034250",
@@ -15,7 +15,7 @@
       "name": "Blue River below Green Mtn Reservoir, CO",
       "type": "streamflow",
       "flow_cfs": 98.9,
-      "timestamp": "2026-11-01T19:00:00.000-07:00",
+      "timestamp": "2026-11-01T20:00:00.000-07:00",
       "lat": 39.88026354,
       "lon": -106.3339175
     },
@@ -167,8 +167,8 @@
       "id": "09302000",
       "name": "Duchesne River near Randlett, UT",
       "type": "streamflow",
-      "flow_cfs": 953.0,
-      "timestamp": "2026-11-01T19:00:00.000-07:00",
+      "flow_cfs": 982.0,
+      "timestamp": "2026-11-01T20:00:00.000-07:00",
       "lat": 40.21027778,
       "lon": -109.7813889
     },
@@ -361,7 +361,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 1020,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T20:15:11.875078",
+      "timestamp": "2026-11-01T20:21:39.977291",
       "lat": 40.3283,
       "lon": -105.5786
     },
@@ -372,7 +372,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 1280,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T20:15:11.875091",
+      "timestamp": "2026-11-01T20:21:39.977302",
       "lat": 39.9022,
       "lon": -105.6433
     },
@@ -383,7 +383,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 1020,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T20:15:11.875095",
+      "timestamp": "2026-11-01T20:21:39.977305",
       "lat": 39.4633,
       "lon": -105.6797
     },
@@ -394,7 +394,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 945,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T20:15:11.875098",
+      "timestamp": "2026-11-01T20:21:39.977307",
       "lat": 39.2619,
       "lon": -106.5297
     }
@@ -438,12 +438,12 @@
       "river": "Colorado River (AZ/NV)",
       "type": "reservoir",
       "category": "system",
-      "elevation_ft": 1039.1,
+      "elevation_ft": 1039.0,
       "storage_af": 8690000.0,
       "capacity_af": 26134000.0,
       "capacity_pct": 33.3,
       "role": "Lower Basin Primary Storage & Delivery Regulation",
-      "timestamp": "2026-11-01T19:00:00",
+      "timestamp": "2026-11-01T20:00:00",
       "lat": 36.0156,
       "lon": -114.7378
     },
@@ -483,7 +483,7 @@
       "river": "Lower Colorado River (AZ/NV)",
       "type": "reservoir",
       "category": "system",
-      "elevation_ft": 638.1,
+      "elevation_ft": 638.2,
       "storage_af": 1567000.0,
       "capacity_af": 1810000.0,
       "capacity_pct": 86.6,
