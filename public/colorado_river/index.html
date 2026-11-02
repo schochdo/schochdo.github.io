@@ -669,6 +669,84 @@
                 <span class="text-[10px]">Hover any cell to inspect exact monthly elevation</span>
               </div>
             </div>
+          <!-- SECTION 3: HYDRO-BATHYMETRIC RESEARCH CORE (ELEVATION VS. VOLUME) -->
+          <div class="card-academic rounded-xl p-5 shadow-sm bg-white space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-4 pb-3 border-b border-stone-200">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-amber-600"></span>
+                  <span class="text-xs font-bold text-amber-900 uppercase tracking-wider">Hydrological Research Core</span>
+                </div>
+                <h3 class="text-lg font-black text-stone-900 tracking-tight mt-0.5">
+                  The Hypsometric Principle: Why "1 Foot" Does Not Equal Constant Water
+                </h3>
+                <p class="text-xs text-stone-600 mt-1">
+                  Because desert canyon reservoirs have V-shaped and stepped amphitheater bathymetry, the marginal water volume stored per foot of elevation rise ($\frac{dV}{dz} = A(z)$) increases by up to <strong>600%</strong> from Dead Pool to Full Pool.
+                </p>
+              </div>
+
+              <!-- Reservoir Curve Switcher -->
+              <div class="flex items-center gap-2 bg-stone-100 p-1 rounded-lg border border-stone-300">
+                <button onclick="setHypsometricReservoir('mead')" id="btn-hypso-mead" class="px-3 py-1 text-xs font-bold rounded bg-white text-stone-900 shadow-sm border border-stone-300 transition">
+                  Lake Mead Rating Curve
+                </button>
+                <button onclick="setHypsometricReservoir('powell')" id="btn-hypso-powell" class="px-3 py-1 text-xs font-medium rounded text-stone-600 hover:text-stone-900 transition">
+                  Lake Powell Rating Curve
+                </button>
+              </div>
+            </div>
+
+            <!-- Side-by-Side: Interactive Rating Curve Chart & Domain Research Writeup -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start pt-1">
+              <!-- Left: Rating Curve Canvas (7 cols) -->
+              <div class="lg:col-span-7 bg-stone-50 rounded-lg p-3.5 border border-stone-200">
+                <div class="flex justify-between items-center mb-2">
+                  <span id="hypso-chart-title" class="text-xs font-bold text-stone-800">Lake Mead: Elevation (ft) vs. Cumulative Volume (MAF)</span>
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-white border border-stone-300 text-stone-600">USBR Rating Table</span>
+                </div>
+                <div class="h-72 w-full relative">
+                  <canvas id="chart-hypsometric-curve"></canvas>
+                </div>
+                <div class="flex justify-between text-[10px] text-stone-500 font-medium mt-2 pt-1 border-t border-stone-200">
+                  <span>Steeper slope at high elevations = exponential surface area expansion.</span>
+                  <span class="font-bold">Curve = ∫ A(h) dh</span>
+                </div>
+              </div>
+
+              <!-- Right: Editorial Analysis & Comparison Table (5 cols) -->
+              <div class="lg:col-span-5 space-y-3 text-xs leading-relaxed text-stone-700">
+                <div class="p-3 bg-stone-50 rounded-lg border border-stone-200">
+                  <div class="text-[11px] font-bold text-stone-900 uppercase tracking-wide mb-1">1. The "False Spring Rebound" Illusion</div>
+                  <p class="text-[11.5px] text-stone-600">
+                    At low drought levels, a seasonal pulse of <strong>600,000 AF</strong> shoots water elevation up by <strong>~9 to 10 feet</strong>, creating false headlines of rapid recovery. Near full pool, that identical inflow raises the lake by barely <strong>3.7 feet</strong>.
+                  </p>
+                </div>
+
+                <div class="p-3 bg-stone-50 rounded-lg border border-stone-200">
+                  <div class="text-[11px] font-bold text-amber-900 uppercase tracking-wide mb-1">2. The Accelerating Drawdown Trap</div>
+                  <p class="text-[11.5px] text-stone-600">
+                    When downstream consumption exceeds upstream inflow, the <strong>vertical drop accelerates exponentially</strong>. To satisfy fixed statutory deliveries (e.g. 7.5 MAF/yr compact delivery), dam gates must drop pool levels at increasingly rapid vertical speeds.
+                  </p>
+                </div>
+
+                <!-- Marginal Yield Comparison Table -->
+                <div class="p-3 bg-white rounded-lg border border-stone-200 overflow-x-auto">
+                  <div class="text-[11px] font-bold text-stone-900 mb-1.5" id="hypso-table-title">Marginal Water Stored per 1 Vertical Foot (Mead)</div>
+                  <table class="w-full text-[11px] text-left">
+                    <thead class="text-[10px] font-bold text-stone-500 border-b border-stone-200">
+                      <tr>
+                        <th class="pb-1">Elevation Pool</th>
+                        <th class="pb-1 text-right">Surface Area</th>
+                        <th class="pb-1 text-right">AF per 1 Foot Rise</th>
+                      </tr>
+                    </thead>
+                    <tbody id="hypso-table-body" class="divide-y divide-stone-100 font-mono text-[10.5px]">
+                      <!-- Populated dynamically based on Mead vs Powell -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
           </div>
 
         </div>
@@ -789,6 +867,7 @@
         document.getElementById('section-reservoirs').classList.remove('hidden');
         setTimeout(() => {
           renderMacroStorageTimeline();
+          renderHypsometricChart();
           if (currentReservoirRecord === 'mead') {
             renderMeadHistoricalCharts();
           } else {
@@ -898,6 +977,22 @@
       if (btnTotal) btnTotal.className = (mode === 'system_total') ? activeClass : inactiveClass;
 
       renderMacroStorageTimeline();
+    }
+
+    // Toggle Hypsometric Reservoir Rating Curve ('mead' or 'powell')
+    let currentHypsoRes = 'mead';
+    function setHypsometricReservoir(res) {
+      currentHypsoRes = res;
+      const btnMead = document.getElementById('btn-hypso-mead');
+      const btnPowell = document.getElementById('btn-hypso-powell');
+
+      const inactiveClass = 'px-3 py-1 text-xs font-medium rounded text-stone-600 hover:text-stone-900 transition';
+      const activeClass = 'px-3 py-1 text-xs font-bold rounded bg-white text-stone-900 shadow-sm border border-stone-300 transition';
+
+      btnMead.className = (res === 'mead') ? activeClass : inactiveClass;
+      btnPowell.className = (res === 'powell') ? activeClass : inactiveClass;
+
+      renderHypsometricChart();
     }
 
     let portalData = null;
@@ -1673,6 +1768,167 @@
         });
 
         container.appendChild(row);
+      });
+    }
+
+    // Hypsometric Rating Curve Chart & Data Table Controller
+    let hypsoChartInstance = null;
+    const hypsometricData = {
+      mead: {
+        title: 'Lake Mead: Elevation (ft) vs. Cumulative Live Volume (MAF)',
+        tableTitle: 'Marginal Water Stored per 1 Vertical Foot (Mead)',
+        yMin: 850,
+        yMax: 1240,
+        xMin: 0,
+        xMax: 28,
+        points: [
+          { elev: 895.0, storage: 0.0, area: 28000, label: 'Dead Pool (895 ft)' },
+          { elev: 950.0, storage: 2.0, area: 41000, label: 'Min Power (950 ft)' },
+          { elev: 1000.0, storage: 4.68, area: 56000, label: '1,000 ft' },
+          { elev: 1040.0, storage: 6.95, area: 65000, label: '2022 Low (1,040 ft)' },
+          { elev: 1075.0, storage: 9.60, area: 82000, label: 'Tier 1 Shortage (1,075 ft)' },
+          { elev: 1100.0, storage: 11.50, area: 95000, label: '1,100 ft' },
+          { elev: 1150.0, storage: 16.30, area: 122000, label: '1,150 ft' },
+          { elev: 1200.0, storage: 22.50, area: 149000, label: '1,200 ft' },
+          { elev: 1221.4, storage: 26.13, area: 158000, label: 'Spillway Crest (1,221.4 ft)' }
+        ],
+        table: [
+          { pool: 'Spillway Crest (1,221.4 ft)', area: '158,000 acres', yield: '~160,000 AF / ft' },
+          { pool: 'Joint Use Pool (1,150 ft)', area: '122,000 acres', yield: '~125,000 AF / ft' },
+          { pool: 'Tier 1 Shortage (1,075 ft)', area: '82,000 acres', yield: '~85,000 AF / ft' },
+          { pool: 'Critical Low (1,040 ft)', area: '65,000 acres', yield: '~68,000 AF / ft' },
+          { pool: 'Min Power Pool (950 ft)', area: '41,000 acres', yield: '~43,000 AF / ft' },
+          { pool: 'Dead Pool Sill (895 ft)', area: '28,000 acres', yield: '~28,000 AF / ft' }
+        ]
+      },
+      powell: {
+        title: 'Lake Powell: Elevation (ft) vs. Cumulative Live Volume (MAF)',
+        tableTitle: 'Marginal Water Stored per 1 Vertical Foot (Powell)',
+        yMin: 3340,
+        yMax: 3720,
+        xMin: 0,
+        xMax: 26,
+        points: [
+          { elev: 3370.0, storage: 0.0, area: 22000, label: 'Dead Pool (3,370 ft)' },
+          { elev: 3440.0, storage: 1.80, area: 35000, label: '3,440 ft' },
+          { elev: 3490.0, storage: 4.00, area: 51000, label: 'Min Power (3,490 ft)' },
+          { elev: 3532.0, storage: 5.95, area: 64000, label: 'Current Pool (3,532 ft)' },
+          { elev: 3575.0, storage: 9.50, area: 83000, label: '3,575 ft' },
+          { elev: 3620.0, storage: 14.80, area: 110000, label: '3,620 ft' },
+          { elev: 3648.0, storage: 17.10, area: 128000, label: 'Top Joint Use (3,648 ft)' },
+          { elev: 3700.0, storage: 24.32, area: 161000, label: 'Full Pool Crest (3,700 ft)' }
+        ],
+        table: [
+          { pool: 'Full Pool Crest (3,700 ft)', area: '161,000 acres', yield: '~163,000 AF / ft' },
+          { pool: 'Top Joint Use (3,648 ft)', area: '128,000 acres', yield: '~131,000 AF / ft' },
+          { pool: 'Mid Active Pool (3,575 ft)', area: '83,000 acres', yield: '~86,000 AF / ft' },
+          { pool: 'Current Level (3,532 ft)', area: '64,000 acres', yield: '~66,000 AF / ft' },
+          { pool: 'Min Power Pool (3,490 ft)', area: '51,000 acres', yield: '~53,000 AF / ft' },
+          { pool: 'Dead Pool Sill (3,370 ft)', area: '22,000 acres', yield: '~23,000 AF / ft' }
+        ]
+      }
+    };
+
+    function renderHypsometricChart() {
+      const config = hypsometricData[currentHypsoRes] || hypsometricData.mead;
+
+      // Update titles
+      const chartTitleEl = document.getElementById('hypso-chart-title');
+      if (chartTitleEl) chartTitleEl.innerText = config.title;
+      const tableTitleEl = document.getElementById('hypso-table-title');
+      if (tableTitleEl) tableTitleEl.innerText = config.tableTitle;
+
+      // Update Table Rows
+      const tableBody = document.getElementById('hypso-table-body');
+      if (tableBody) {
+        tableBody.innerHTML = '';
+        config.table.forEach(row => {
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-stone-50 transition';
+          tr.innerHTML = `
+            <td class="py-1.5 font-bold text-stone-800">${row.pool}</td>
+            <td class="py-1.5 text-right text-stone-600">${row.area}</td>
+            <td class="py-1.5 text-right font-black text-amber-900">${row.yield}</td>
+          `;
+          tableBody.appendChild(tr);
+        });
+      }
+
+      // Render Chart
+      const canvas = document.getElementById('chart-hypsometric-curve');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      if (hypsoChartInstance) {
+        hypsoChartInstance.destroy();
+        hypsoChartInstance = null;
+      }
+
+      const curvePoints = config.points.map(p => ({ x: p.storage, y: p.elev }));
+
+      hypsoChartInstance = new Chart(ctx, {
+        type: 'scatter',
+        data: {
+          datasets: [
+            {
+              label: 'Elevation vs Storage Curve',
+              data: curvePoints,
+              showLine: true,
+              borderColor: currentHypsoRes === 'mead' ? '#0284c7' : '#0d9488',
+              backgroundColor: currentHypsoRes === 'mead' ? 'rgba(2, 132, 199, 0.12)' : 'rgba(13, 148, 136, 0.12)',
+              fill: true,
+              tension: 0.25,
+              borderWidth: 2.5,
+              pointRadius: 4,
+              pointHoverRadius: 6,
+              pointBackgroundColor: '#ffffff',
+              pointBorderWidth: 2
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => {
+                  const pt = config.points[ctx.dataIndex];
+                  const label = pt ? pt.label : `${ctx.parsed.y} ft`;
+                  return ` [${label}] Storage: ${ctx.parsed.x.toFixed(2)} MAF | Area: ${pt ? pt.area.toLocaleString() + ' acres' : ''}`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              type: 'linear',
+              position: 'bottom',
+              min: config.xMin,
+              max: config.xMax,
+              title: {
+                display: true,
+                text: 'Active Storage Volume (Million Acre-Feet, MAF)',
+                font: { size: 10, weight: 'bold' }
+              },
+              ticks: { font: { size: 9 }, callback: (v) => v + 'M' },
+              grid: { color: '#e5e7eb' }
+            },
+            y: {
+              type: 'linear',
+              min: config.yMin,
+              max: config.yMax,
+              title: {
+                display: true,
+                text: 'Water Surface Elevation (ft NGVD29)',
+                font: { size: 10, weight: 'bold' }
+              },
+              ticks: { font: { size: 9 }, callback: (v) => v.toLocaleString() + "'" },
+              grid: { color: '#e5e7eb' }
+            }
+          }
+        }
       });
     }
 
