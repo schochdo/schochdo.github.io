@@ -277,91 +277,110 @@
                 </button>
               </div>
 
-              <!-- Schematic Basin Vector Map (SVG) -->
-              <div class="card-academic rounded-lg p-2 shadow-sm flex flex-col items-center justify-center relative min-h-[460px] bg-[#faf9f5]">
-                <svg viewBox="0 0 600 740" class="w-full h-auto max-h-[500px]" style="background-color: #f7f6f0; border-radius: 6px;">
-                  <!-- State Outlines & Labels -->
-                  <g stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="3,3" fill="none">
-                    <line x1="50" y1="20" x2="550" y2="20" />
-                    <line x1="280" y1="20" x2="280" y2="700" />
-                    <line x1="50" y1="240" x2="550" y2="240" />
-                    <line x1="50" y1="460" x2="550" y2="460" />
-                    <line x1="160" y1="240" x2="160" y2="700" />
-                  </g>
+              <!-- Geographic Basin Overview Container -->
+              <div class="card-academic rounded-lg p-3 shadow-sm flex flex-col justify-between h-full bg-[#faf9f5]">
+                <div>
+                  <div class="flex items-center justify-between pb-2 mb-2 border-b border-stone-200">
+                    <span class="text-xs font-black text-stone-900 uppercase tracking-tight">Geographic Schematic</span>
+                    <button onclick="setTab('map')" class="text-[11px] font-bold text-sky-700 hover:text-sky-900 hover:underline flex items-center gap-1">
+                      <span>Full GIS Map →</span>
+                    </button>
+                  </div>
+                  <p class="text-[11px] text-stone-600 mb-2">
+                    Schematic topology showing major natural river corridors, mega-storage impoundments, and trans-mountain / agricultural diversion canals.
+                  </p>
+                </div>
 
-                  <!-- State Names -->
-                  <g font-family="Inter, sans-serif" font-weight="800" font-size="13" fill="#64748b" opacity="0.65">
-                    <text x="380" y="70">WY</text>
-                    <text x="440" y="320">CO</text>
-                    <text x="100" y="320">NV</text>
-                    <text x="180" y="160">UT</text>
-                    <text x="90" y="580">CA</text>
-                    <text x="430" y="560">NM</text>
-                    <text x="210" y="560">AZ</text>
-                  </g>
+                <div class="flex-1 flex items-center justify-center py-2">
+                  <svg viewBox="0 0 540 680" class="w-full h-auto max-h-[480px]" style="background-color: #f8f7f2; border-radius: 8px; border: 1px solid #e2e0d8;">
+                    <!-- State Border Grid Lines -->
+                    <g stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,4" fill="none">
+                      <line x1="40" y1="30" x2="500" y2="30" />
+                      <line x1="260" y1="30" x2="260" y2="650" />
+                      <line x1="40" y1="210" x2="500" y2="210" />
+                      <line x1="40" y1="410" x2="500" y2="410" />
+                      <line x1="150" y1="210" x2="150" y2="650" />
+                    </g>
 
-                  <!-- Watershed Basin Boundary Polygon -->
-                  <path d="M 270 40 L 400 60 L 490 140 L 520 280 L 480 430 L 410 490 L 320 620 L 250 670 L 190 620 L 170 510 L 220 380 L 240 260 L 220 120 Z" 
-                        fill="rgba(14, 165, 233, 0.04)" stroke="#64748b" stroke-width="1.6" />
+                    <!-- State Code Labels -->
+                    <g font-family="'Inter', sans-serif" font-weight="900" font-size="14" fill="#94a3b8" opacity="0.6">
+                      <text x="360" y="70">WY</text>
+                      <text x="390" y="270">CO</text>
+                      <text x="80" y="270">NV</text>
+                      <text x="180" y="140">UT</text>
+                      <text x="80" y="520">CA</text>
+                      <text x="390" y="500">NM</text>
+                      <text x="200" y="500">AZ</text>
+                    </g>
 
-                  <!-- River Network Vectors -->
-                  <!-- Upper Mainstem & Tributaries (Green/Teal for Upper Basin) -->
-                  <path d="M 480 250 Q 440 260 380 280 T 320 330" fill="none" stroke="#059669" stroke-width="3" stroke-linecap="round" />
-                  <text x="410" y="255" font-size="9" font-weight="700" fill="#047857">Upper Colorado</text>
+                    <!-- Hydrologic Basin Watershed Polygon -->
+                    <path d="M 260 45 L 380 65 L 460 135 L 485 250 L 450 370 L 390 425 L 305 540 L 240 590 L 180 540 L 160 450 L 205 340 L 230 230 L 210 110 Z" 
+                          fill="rgba(2, 132, 199, 0.05)" stroke="#94a3b8" stroke-width="1.8" />
 
-                  <!-- Green River Mainstem -->
-                  <path d="M 360 50 Q 340 120 350 200 T 320 330" fill="none" stroke="#059669" stroke-width="3.5" stroke-linecap="round" />
-                  <text x="365" y="140" font-size="9" font-weight="700" fill="#047857">Green River</text>
+                    <!-- Natural Rivers (Teal & Blue) -->
+                    <!-- Green River (WY -> UT -> Lake Powell) -->
+                    <path d="M 340 50 Q 320 110 330 180 T 295 295" fill="none" stroke="#059669" stroke-width="3.5" stroke-linecap="round" />
+                    <text x="340" y="120" font-size="9" font-weight="800" fill="#047857">Green River</text>
 
-                  <!-- Lake Powell & Glen Canyon Dam -->
-                  <ellipse cx="320" cy="360" rx="14" ry="7" fill="#0284c7" stroke="#0369a1" stroke-width="1.5" />
-                  <text x="340" y="364" font-size="9" font-weight="800" fill="#0369a1">Lake Powell</text>
-                  <circle cx="316" cy="375" r="3.5" fill="#dc2626" />
-                  <text x="238" y="380" font-size="8.5" font-weight="700" fill="#1e293b">Lee's Ferry (Compact Point)</text>
+                    <!-- Upper Colorado River (CO -> Lake Powell) -->
+                    <path d="M 440 220 Q 390 230 340 250 T 295 295" fill="none" stroke="#059669" stroke-width="3" stroke-linecap="round" />
+                    <text x="385" y="225" font-size="9" font-weight="800" fill="#047857">Upper Colorado</text>
 
-                  <!-- Grand Canyon Reach to Lake Mead -->
-                  <path d="M 316 375 Q 260 395 210 420" fill="none" stroke="#0284c7" stroke-width="3.2" stroke-linecap="round" />
-                  
-                  <!-- Lake Mead & Hoover Dam -->
-                  <path d="M 210 420 Q 200 410 185 415 Q 175 425 185 440 Z" fill="#0284c7" stroke="#0369a1" stroke-width="1.5" />
-                  <circle cx="185" cy="440" r="4" fill="#0f172a" />
-                  <text x="110" y="435" font-size="9" font-weight="800" fill="#0369a1">Lake Mead / Hoover</text>
+                    <!-- Confluence Reach into Lake Powell -->
+                    <path d="M 295 295 L 295 320" fill="none" stroke="#0284c7" stroke-width="4.5" stroke-linecap="round" />
 
-                  <!-- Lower Basin Mainstem to Gulf -->
-                  <path d="M 185 440 L 188 520 L 195 590 L 210 660" fill="none" stroke="#0284c7" stroke-width="3.8" stroke-linecap="round" />
+                    <!-- Lake Powell Impoundment Body -->
+                    <ellipse cx="295" cy="335" rx="20" ry="10" fill="#0284c7" stroke="#0369a1" stroke-width="1.5" />
+                    <text x="325" y="338" font-size="9.5" font-weight="900" fill="#0369a1">Lake Powell (24.3M AF)</text>
 
-                  <!-- Trans-Mountain and Export Canals (Red/Amber) -->
-                  <!-- CBT / Moffat into Front Range -->
-                  <path d="M 450 240 Q 480 230 520 235" fill="none" stroke="#ea580c" stroke-width="2.5" stroke-dasharray="4,2" />
-                  <text x="495" y="228" font-size="8" font-weight="700" fill="#c2410c">C-BT / Front Range</text>
+                    <!-- Glen Canyon Dam & Lee's Ferry Compact Point -->
+                    <circle cx="295" cy="355" r="4" fill="#dc2626" stroke="#ffffff" stroke-width="1.2" />
+                    <text x="210" y="358" font-size="9" font-weight="900" fill="#dc2626">Lee's Ferry (Compact Point)</text>
 
-                  <!-- Central Arizona Project (CAP) -->
-                  <path d="M 188 535 Q 230 550 280 580" fill="none" stroke="#dc2626" stroke-width="3" stroke-dasharray="5,2" />
-                  <text x="225" y="555" font-size="8.5" font-weight="800" fill="#b91c1c">Central Arizona Project (CAP)</text>
+                    <!-- Grand Canyon Reach to Lake Mead -->
+                    <path d="M 295 355 Q 240 375 190 395" fill="none" stroke="#0284c7" stroke-width="4" stroke-linecap="round" />
 
-                  <!-- Colorado River Aqueduct (CRA) to SoCal -->
-                  <path d="M 188 525 Q 140 525 90 535" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="4,2" />
-                  <text x="80" y="525" font-size="8" font-weight="700" fill="#b91c1c">CRA (Metropolitan MWD)</text>
+                    <!-- Lake Mead Impoundment Body -->
+                    <ellipse cx="175" cy="405" rx="22" ry="11" fill="#0284c7" stroke="#0369a1" stroke-width="1.5" />
+                    <circle cx="160" cy="412" r="4" fill="#0f172a" />
+                    <text x="90" y="405" font-size="9.5" font-weight="900" fill="#0369a1">Lake Mead / Hoover Dam</text>
 
-                  <!-- All-American Canal (Imperial Dam to Imperial Valley) -->
-                  <path d="M 195 595 L 120 605" fill="none" stroke="#dc2626" stroke-width="3.5" stroke-linecap="round" />
-                  <text x="100" y="622" font-size="8.5" font-weight="800" fill="#b91c1c">All-American Canal (IID)</text>
+                    <!-- Lower Colorado River Mainstem -->
+                    <path d="M 160 415 L 165 480 L 175 540 L 185 610" fill="none" stroke="#0284c7" stroke-width="4.5" stroke-linecap="round" />
 
-                  <!-- Legend in bottom corner -->
-                  <g transform="translate(360, 630)">
-                    <rect width="180" height="75" rx="4" fill="white" stroke="#cbd5e1" stroke-width="1" />
-                    <line x1="12" y1="18" x2="35" y2="18" stroke="#0284c7" stroke-width="3" />
-                    <text x="42" y="21" font-size="8.5" font-weight="600" fill="#334155">Natural River Channel</text>
-                    <line x1="12" y1="38" x2="35" y2="38" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="4,2" />
-                    <text x="42" y="41" font-size="8.5" font-weight="600" fill="#334155">Trans-Basin / Canals</text>
-                    <circle cx="23" cy="58" r="4" fill="#0284c7" />
-                    <text x="42" y="61" font-size="8.5" font-weight="600" fill="#334155">Storage Reservoirs</text>
-                  </g>
-                </svg>
-                
-                <div class="w-full mt-2 flex justify-between items-center text-[10px] text-stone-500 border-t border-stone-200 pt-1.5 px-2">
-                  <span>Schematic topology of major mainstem rivers and trans-basin diversions</span>
-                  <button onclick="setTab('map')" class="font-bold text-sky-700 hover:underline">Interactive GIS Map →</button>
+                    <!-- Major Trans-Mountain & Conveyance Canals (Red / Orange Dashed) -->
+                    <!-- C-BT & Front Range -->
+                    <path d="M 410 215 Q 440 205 480 210" fill="none" stroke="#ea580c" stroke-width="2.5" stroke-dasharray="4,2" />
+                    <text x="445" y="200" font-size="8.5" font-weight="800" fill="#c2410c">C-BT / Denver Tunnels</text>
+
+                    <!-- Central Arizona Project (CAP) -->
+                    <path d="M 165 490 Q 210 505 260 535" fill="none" stroke="#dc2626" stroke-width="3" stroke-dasharray="4,2" />
+                    <text x="215" y="508" font-size="8.5" font-weight="800" fill="#b91c1c">Central Arizona Project (CAP)</text>
+
+                    <!-- Colorado River Aqueduct (CRA) to SoCal -->
+                    <path d="M 165 480 Q 120 480 75 490" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="4,2" />
+                    <text x="65" y="478" font-size="8.5" font-weight="800" fill="#b91c1c">CRA (SoCal MWD)</text>
+
+                    <!-- All-American Canal (AAC to Imperial Valley) -->
+                    <path d="M 175 545 L 100 555" fill="none" stroke="#dc2626" stroke-width="3.5" stroke-linecap="round" />
+                    <text x="80" y="572" font-size="9" font-weight="900" fill="#b91c1c">All-American Canal (IID)</text>
+
+                    <!-- Legend Box -->
+                    <g transform="translate(325, 570)">
+                      <rect width="185" height="70" rx="5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1" />
+                      <line x1="12" y1="16" x2="35" y2="16" stroke="#0284c7" stroke-width="3.5" />
+                      <text x="42" y="19" font-size="9" font-weight="700" fill="#334155">Natural River Channel</text>
+                      <line x1="12" y1="34" x2="35" y2="34" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="4,2" />
+                      <text x="42" y="37" font-size="9" font-weight="700" fill="#334155">Canals &amp; Diversions</text>
+                      <circle cx="23" cy="52" r="4.5" fill="#0284c7" />
+                      <text x="42" y="55" font-size="9" font-weight="700" fill="#334155">Storage Reservoirs</text>
+                    </g>
+                  </svg>
+                </div>
+
+                <div class="mt-2 pt-2 border-t border-stone-200 flex justify-between items-center text-[10px] text-stone-500">
+                  <span>Click 'GIS Hydrology Map' in the left menu for full terrain &amp; gages.</span>
+                  <button onclick="setTab('map')" class="font-bold text-sky-700 hover:underline">Launch GIS View →</button>
                 </div>
               </div>
 
@@ -796,37 +815,6 @@
             borderColor: '#0284c7',
             backgroundColor: 'rgba(2, 132, 199, 0.12)',
             borderWidth: 1.5,
-            fill: true,
-            tension: 0.1,
-            pointRadius: 0,
-            pointHoverRadius: 3
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              mode: 'index',
-              intersect: false,
-              callbacks: {
-                label: (ctx) => ` Flow: ${parseInt(ctx.parsed.y).toLocaleString()} cfs`
-              }
-            }
-          },
-          scales: {
-            x: {
-              grid: { display: false },
-              ticks: { display: false }
-            },
-            y: {
-              ticks: { font: { size: 9 }, maxTicksLimit: 4 },
-              grid: { color: '#e5e7eb' }
-            }
-          }
-        }
-      });
             fill: true,
             tension: 0.1,
             pointRadius: 0,
