@@ -26,10 +26,10 @@
       stroke-linecap: round;
       stroke-linejoin: round;
       cursor: pointer;
-      transition: filter 0.2s ease, stroke-width 0.2s ease;
+      transition: filter 0.2s ease, stroke-width 0.2s ease, stroke 0.2s ease;
     }
     .river-path:hover {
-      filter: drop-shadow(0 0 10px rgba(2, 132, 199, 0.5)) brightness(1.1);
+      filter: drop-shadow(0 0 10px rgba(2, 132, 199, 0.6)) brightness(1.15);
     }
 
     .diversion-path {
@@ -37,10 +37,10 @@
       stroke-linecap: round;
       stroke-linejoin: round;
       cursor: pointer;
-      transition: filter 0.2s ease, stroke-width 0.2s ease;
+      transition: filter 0.2s ease, stroke-width 0.2s ease, stroke 0.2s ease;
     }
     .diversion-path:hover {
-      filter: drop-shadow(0 0 10px rgba(234, 88, 12, 0.5)) brightness(1.1);
+      filter: drop-shadow(0 0 10px rgba(234, 88, 12, 0.6)) brightness(1.15);
     }
 
     .loss-path {
@@ -48,11 +48,47 @@
       stroke-linecap: butt;
       stroke-linejoin: round;
       cursor: pointer;
-      transition: filter 0.2s ease, opacity 0.2s ease;
+      transition: filter 0.2s ease, opacity 0.2s ease, stroke 0.2s ease;
     }
     .loss-path:hover {
-      filter: drop-shadow(0 0 6px rgba(217, 119, 6, 0.4)) brightness(1.1);
+      filter: drop-shadow(0 0 8px rgba(217, 119, 6, 0.6)) brightness(1.15);
       opacity: 0.95 !important;
+    }
+
+    /* Active Selected / Click Highlight States */
+    .river-path.selected {
+      stroke: #0284c7 !important;
+      filter: drop-shadow(0 0 10px rgba(2, 132, 199, 0.95)) drop-shadow(0 0 20px rgba(56, 189, 248, 0.8)) brightness(1.25) !important;
+    }
+    .diversion-path.selected {
+      stroke: #ea580c !important;
+      filter: drop-shadow(0 0 10px rgba(234, 88, 12, 0.95)) drop-shadow(0 0 20px rgba(251, 146, 60, 0.8)) brightness(1.25) !important;
+    }
+    .loss-path.selected {
+      stroke: #d97706 !important;
+      filter: drop-shadow(0 0 10px rgba(217, 119, 6, 0.95)) drop-shadow(0 0 18px rgba(245, 158, 11, 0.8)) brightness(1.25) !important;
+    }
+    .cursor-pointer.selected rect,
+    .cursor-pointer.selected circle {
+      stroke: #0284c7 !important;
+      filter: drop-shadow(0 0 10px rgba(2, 132, 199, 0.9)) drop-shadow(0 0 16px rgba(56, 189, 248, 0.6)) brightness(1.2) !important;
+    }
+
+    /* Dimming inactive elements when an element is selected */
+    svg.has-selection .river-path:not(.selected),
+    svg.has-selection .diversion-path:not(.selected),
+    svg.has-selection .loss-path:not(.selected) {
+      opacity: 0.22;
+      filter: grayscale(0.4);
+    }
+    svg.has-selection .cursor-pointer:not(.selected) {
+      opacity: 0.35;
+    }
+    svg.has-selection text:not(.selected-label),
+    svg.has-selection .badge-bg:not(.selected-badge),
+    svg.has-selection .maf-badge:not(.selected-badge) {
+      /* Keep labels readable but slightly softer */
+      opacity: 0.7;
     }
 
     /* State Borders & Labels */
@@ -115,6 +151,7 @@
     #flow-tooltip.visible {
       opacity: 1;
       transform: translateY(0);
+      pointer-events: auto;
     }
 
     /* Dry river animation */
@@ -764,6 +801,60 @@
       return renderComparisonCard('Live Storage & Pool Elevation', 'Bureau of Reclamation', rows, thresholds || 'Storage values reflect official daily Bureau of Reclamation reservoir operational accounting.');
     }
 
+    let selectedElementId = null;
+
+    function selectElement(elemId) {
+      const svg = document.getElementById('canvas');
+      // If clicking already selected element, toggle off
+      if (selectedElementId === elemId) {
+        clearSelection();
+        return;
+      }
+
+      // Clear previous selection
+      if (selectedElementId) {
+        const prev = document.getElementById(selectedElementId);
+        if (prev) prev.classList.remove('selected');
+      }
+
+      selectedElementId = elemId;
+      const el = document.getElementById(elemId);
+      if (el) {
+        el.classList.add('selected');
+        svg.classList.add('has-selection');
+      }
+    }
+
+    function clearSelection() {
+      const svg = document.getElementById('canvas');
+      if (selectedElementId) {
+        const prev = document.getElementById(selectedElementId);
+        if (prev) prev.classList.remove('selected');
+        selectedElementId = null;
+      }
+      svg.classList.remove('has-selection');
+    }
+
+    // Clicking anywhere on SVG background clears selection
+    document.addEventListener('DOMContentLoaded', () => {
+      const svg = document.getElementById('canvas');
+      if (svg) {
+        svg.addEventListener('click', (e) => {
+          // If click was directly on svg or layers/background, clear
+          if (e.target.id === 'canvas' || e.target.tagName === 'svg' || e.target.classList.contains('state-line') || e.target.classList.contains('state-name')) {
+            clearSelection();
+          }
+        });
+      }
+      // Also Escape key clears selection
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          clearSelection();
+          tooltip.classList.remove('visible');
+        }
+      });
+    });
+
     function attachElement(elemId, title, getDetails, portal) {
       const el = document.getElementById(elemId);
       if (!el) return;
@@ -774,10 +865,14 @@
           <span class="text-slate-500 font-medium">Official Data Portal:</span>
           <span class="text-sky-600 font-bold flex items-center gap-1">${portal.label} ↗</span>
         </div>
-        <div class="text-[9.5px] text-slate-400 mt-1 italic">Click diagram element to open portal in new tab</div>
+        <div class="text-[9.5px] text-slate-400 mt-1 italic">Click diagram element to lock inspection or open portal</div>
       ` : '';
 
       el.addEventListener('mouseenter', (e) => {
+        if (selectedElementId && selectedElementId !== elemId) {
+          // If another element is selected, don't overwrite tooltip unless requested
+          return;
+        }
         tooltip.innerHTML = `
           <div class="font-bold text-sky-700 text-sm mb-1">${title}</div>
           <div class="text-xs text-slate-700">${getDetails()}</div>
@@ -786,16 +881,33 @@
         tooltip.classList.add('visible');
         updateTooltipPos(e);
       });
-      el.addEventListener('mousemove', updateTooltipPos);
+      el.addEventListener('mousemove', (e) => {
+        if (!selectedElementId || selectedElementId === elemId) {
+          updateTooltipPos(e);
+        }
+      });
       el.addEventListener('mouseleave', () => {
+        // If this element is currently selected, keep tooltip pinned visible
+        if (selectedElementId === elemId) return;
         tooltip.classList.remove('visible');
       });
 
-      if (portal && portal.url) {
-        el.addEventListener('click', () => {
-          window.open(portal.url, '_blank', 'noopener');
-        });
-      }
+      el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        selectElement(elemId);
+        // Show tooltip pinned at element
+        tooltip.innerHTML = `
+          <div class="flex items-center justify-between border-b border-slate-200 pb-1 mb-2">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Selected Feature</span>
+            <span class="text-[10px] text-slate-500 cursor-pointer font-bold hover:text-slate-800" onclick="clearSelection(); tooltip.classList.remove('visible');">✕ Close</span>
+          </div>
+          <div class="font-bold text-sky-700 text-sm mb-1">${title}</div>
+          <div class="text-xs text-slate-700">${getDetails()}</div>
+          ${portalHtml}
+        `;
+        tooltip.classList.add('visible');
+        updateTooltipPos(e);
+      });
     }
 
     function updateTooltipPos(e) {
