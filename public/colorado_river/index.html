@@ -439,33 +439,48 @@
         <!-- TAB 4: RESERVOIRS (1935 - TODAY)           -->
         <!-- ========================================== -->
         <div id="section-reservoirs" class="p-4 md:p-6 lg:p-7 max-w-7xl mx-auto space-y-6 hidden">
-          <div class="card-academic rounded-xl p-5 shadow-sm bg-white">
-            <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-stone-200">
-              <div>
-                <div class="flex items-center gap-2">
-                  <span class="w-2.5 h-2.5 rounded-full bg-sky-600"></span>
-                  <span class="text-xs font-bold text-sky-800 uppercase tracking-wider">Long-Term Storage Analysis</span>
-                </div>
-                <h2 class="text-xl font-black text-stone-900 tracking-tight mt-0.5">
-                  Lake Mead Elevation: 1935 to Present (92-Year Continuous Record)
-                </h2>
-                <p class="text-xs text-stone-600 mt-1">
-                  Visualizing the <strong>initial fill (1935–1941)</strong>, the <strong>high intra-annual seasonal swings pre-Glen Canyon Dam (1935–1963)</strong>, the <strong>1983 historical high spill</strong>, and the <strong>2000–2026 megadrought structural drawdown</strong>.
-                </p>
-              </div>
-
-              <!-- Visualization Mode Selector -->
-              <div class="flex items-center gap-2 bg-stone-100 p-1.5 rounded-lg border border-stone-300">
-                <button onclick="setReservoirView('envelope')" id="btn-view-envelope" class="px-3 py-1 text-xs font-bold rounded bg-white text-stone-900 shadow-sm border border-stone-300">
-                  Seasonal Envelope (Clean)
+          
+          <!-- Reservoir Selector Bar (Lake Mead vs Lake Powell) -->
+          <div class="flex flex-wrap items-center justify-between gap-4 bg-white p-3.5 rounded-xl border border-stone-200 shadow-sm">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-stone-500 uppercase tracking-wider">Select Reservoir Record:</span>
+              <div class="inline-flex rounded-lg bg-stone-100 p-1 border border-stone-300">
+                <button id="tab-res-mead" onclick="switchReservoirRecord('mead')" class="px-3.5 py-1 text-xs font-bold rounded-md bg-white text-stone-900 shadow-sm transition">
+                  Lake Mead (1935–Today)
                 </button>
-                <button onclick="setReservoirView('heatmap')" id="btn-view-heatmap" class="px-3 py-1 text-xs font-medium rounded text-stone-600 hover:text-stone-900">
-                  Monthly Heatmap (All 12 Months)
+                <button id="tab-res-powell" onclick="switchReservoirRecord('powell')" class="px-3.5 py-1 text-xs font-medium rounded-md text-stone-600 hover:text-stone-900 transition">
+                  Lake Powell (1963–Today)
                 </button>
               </div>
             </div>
 
-            <!-- Key Operational Threshold Reference Badges -->
+            <!-- Visualization Mode Selector -->
+            <div class="flex items-center gap-2 bg-stone-100 p-1 rounded-lg border border-stone-300">
+              <button onclick="setReservoirView('envelope')" id="btn-view-envelope" class="px-3 py-1 text-xs font-bold rounded bg-white text-stone-900 shadow-sm border border-stone-300">
+                Seasonal Envelope (Clean)
+              </button>
+              <button onclick="setReservoirView('heatmap')" id="btn-view-heatmap" class="px-3 py-1 text-xs font-medium rounded text-stone-600 hover:text-stone-900">
+                Monthly Heatmap (All 12 Months)
+              </button>
+            </div>
+          </div>
+
+          <!-- LAKE MEAD PANEL -->
+          <div id="panel-res-mead" class="card-academic rounded-xl p-5 shadow-sm bg-white">
+            <div class="pb-4 border-b border-stone-200">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-sky-600"></span>
+                <span class="text-xs font-bold text-sky-800 uppercase tracking-wider">Lower Basin Anchor Storage</span>
+              </div>
+              <h2 class="text-xl font-black text-stone-900 tracking-tight mt-0.5">
+                Lake Mead Elevation: 1935 to Present (92-Year Continuous Record)
+              </h2>
+              <p class="text-xs text-stone-600 mt-1">
+                Visualizing the <strong>initial fill (1935–1941)</strong>, the <strong>high intra-annual seasonal swings pre-Glen Canyon Dam (1935–1963)</strong>, the <strong>1983 historical high spill (1,225.4 ft)</strong>, and the <strong>2000–2026 megadrought structural drawdown</strong>.
+              </p>
+            </div>
+
+            <!-- Key Operational Threshold Reference Badges for Mead -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 my-4">
               <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
                 <span class="text-[10px] font-bold text-stone-500 uppercase block">Spillway Crest</span>
@@ -489,19 +504,19 @@
               </div>
             </div>
 
-            <!-- Envelope View Container -->
-            <div id="container-envelope-view">
+            <!-- Mead Envelope View Container -->
+            <div id="container-mead-envelope">
               <div class="h-80 w-full relative">
                 <canvas id="chart-mead-history"></canvas>
               </div>
               <div class="text-[11px] text-stone-500 flex justify-between items-center mt-2 pt-2 border-t border-stone-200">
                 <span>Shaded band shows <strong>monthly seasonal range (Min to Max)</strong> within each calendar year. Notice how the band narrows after 1963 when Glen Canyon Dam began dampening upstream runoff pulses.</span>
-                <span class="font-bold text-stone-700">Source: USBR Hoover Dam Teletype Records</span>
+                <span class="font-bold text-stone-700">Source: USBR Hoover Dam Records</span>
               </div>
             </div>
 
-            <!-- Heatmap View Container (Month vs. Year) -->
-            <div id="container-heatmap-view" class="hidden">
+            <!-- Mead Heatmap View Container (Month vs. Year) -->
+            <div id="container-mead-heatmap" class="hidden">
               <div class="overflow-x-auto pb-2">
                 <div class="min-w-[850px]">
                   <div class="text-xs font-bold text-stone-800 mb-2">Month-by-Month Elevation Matrix (ft NGVD29): High Elevation (Blue) vs. Severe Depletion (Red)</div>
@@ -520,6 +535,78 @@
               </div>
             </div>
           </div>
+
+          <!-- LAKE POWELL PANEL -->
+          <div id="panel-res-powell" class="card-academic rounded-xl p-5 shadow-sm bg-white hidden">
+            <div class="pb-4 border-b border-stone-200">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-teal-600"></span>
+                <span class="text-xs font-bold text-teal-800 uppercase tracking-wider">Upper Basin Anchor Storage</span>
+              </div>
+              <h2 class="text-xl font-black text-stone-900 tracking-tight mt-0.5">
+                Lake Powell Elevation: 1963 to Present (64-Year Continuous Record)
+              </h2>
+              <p class="text-xs text-stone-600 mt-1">
+                Visualizing the <strong>17-year initial fill period (1963–1980)</strong>, the <strong>record 1983 spill (3,708.4 ft)</strong>, the <strong>1999 full pool crest</strong>, and the <strong>2000–2026 megadrought drop toward Minimum Power Pool</strong>.
+              </p>
+            </div>
+
+            <!-- Key Operational Threshold Reference Badges for Powell -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 my-4">
+              <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
+                <span class="text-[10px] font-bold text-stone-500 uppercase block">Spillway Crest / Full Pool</span>
+                <span class="text-sm font-black text-stone-900 mono">3,700.0 ft</span>
+                <span class="text-[10px] text-stone-500 block">Peak 1983: 3,708.4 ft</span>
+              </div>
+              <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
+                <span class="text-[10px] font-bold text-teal-600 uppercase block">Top Joint Use Pool</span>
+                <span class="text-sm font-black text-teal-900 mono">3,648.0 ft</span>
+                <span class="text-[10px] text-stone-500 block">Active conservation storage</span>
+              </div>
+              <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
+                <span class="text-[10px] font-bold text-amber-600 uppercase block">Minimum Power Pool</span>
+                <span class="text-sm font-black text-amber-800 mono">3,490.0 ft</span>
+                <span class="text-[10px] text-stone-500 block">Glen Canyon Dam turbines cease</span>
+              </div>
+              <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
+                <span class="text-[10px] font-bold text-red-600 uppercase block">Dead Pool (No Flow)</span>
+                <span class="text-sm font-black text-red-800 mono">3,370.0 ft</span>
+                <span class="text-[10px] text-stone-500 block">River bypass tubes sill limit</span>
+              </div>
+            </div>
+
+            <!-- Powell Envelope View Container -->
+            <div id="container-powell-envelope">
+              <div class="h-80 w-full relative">
+                <canvas id="chart-powell-elevation-history"></canvas>
+              </div>
+              <div class="text-[11px] text-stone-500 flex justify-between items-center mt-2 pt-2 border-t border-stone-200">
+                <span>Shaded band shows <strong>monthly seasonal range (Min to Max)</strong> within each calendar year, driven by spring snowmelt runoff peaks and winter drawdown.</span>
+                <span class="font-bold text-stone-700">Source: USBR Upper Colorado Region (Glen Canyon)</span>
+              </div>
+            </div>
+
+            <!-- Powell Heatmap View Container (Month vs. Year) -->
+            <div id="container-powell-heatmap" class="hidden">
+              <div class="overflow-x-auto pb-2">
+                <div class="min-w-[850px]">
+                  <div class="text-xs font-bold text-stone-800 mb-2">Month-by-Month Elevation Matrix (ft Pool Elevation): High Storage (Teal/Blue) vs. Severe Depletion (Red)</div>
+                  <div id="powell-heatmap-grid" class="space-y-0.5"></div>
+                </div>
+              </div>
+              <div class="flex items-center justify-between text-xs text-stone-500 mt-3 pt-2 border-t border-stone-200">
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] font-bold">Color Scale:</span>
+                  <span class="w-4 h-3 bg-red-600 inline-block rounded-xs"></span> <span class="text-[10px]">&lt; 3,525 ft</span>
+                  <span class="w-4 h-3 bg-amber-500 inline-block rounded-xs"></span> <span class="text-[10px]">3,560 ft</span>
+                  <span class="w-4 h-3 bg-teal-400 inline-block rounded-xs"></span> <span class="text-[10px]">3,620 ft</span>
+                  <span class="w-4 h-3 bg-teal-800 inline-block rounded-xs"></span> <span class="text-[10px]">&gt; 3,670 ft</span>
+                </div>
+                <span class="text-[10px]">Hover any cell to inspect exact monthly elevation</span>
+              </div>
+            </div>
+          </div>
+
         </div>
 
         <!-- ========================================== -->
@@ -655,24 +742,68 @@
       document.getElementById('api-modal').classList.add('hidden');
     }
 
+    // Active Reservoir Record ('mead' or 'powell') and view mode ('envelope' or 'heatmap')
+    let currentReservoirRecord = 'mead';
+    let currentReservoirView = 'envelope';
+
+    function switchReservoirRecord(reservoir) {
+      currentReservoirRecord = reservoir;
+      const tabMead = document.getElementById('tab-res-mead');
+      const tabPowell = document.getElementById('tab-res-powell');
+      const panelMead = document.getElementById('panel-res-mead');
+      const panelPowell = document.getElementById('panel-res-powell');
+
+      if (reservoir === 'mead') {
+        tabMead.className = 'px-3.5 py-1 text-xs font-bold rounded-md bg-white text-stone-900 shadow-sm transition';
+        tabPowell.className = 'px-3.5 py-1 text-xs font-medium rounded-md text-stone-600 hover:text-stone-900 transition';
+        panelMead.classList.remove('hidden');
+        panelPowell.classList.add('hidden');
+        renderMeadHistoricalCharts();
+        if (currentReservoirView === 'heatmap') {
+          renderHeatmap();
+        }
+      } else {
+        tabPowell.className = 'px-3.5 py-1 text-xs font-bold rounded-md bg-white text-stone-900 shadow-sm transition';
+        tabMead.className = 'px-3.5 py-1 text-xs font-medium rounded-md text-stone-600 hover:text-stone-900 transition';
+        panelMead.classList.add('hidden');
+        panelPowell.classList.remove('hidden');
+        renderPowellHistoricalCharts();
+        if (currentReservoirView === 'heatmap') {
+          renderPowellHeatmap();
+        }
+      }
+    }
+
     // Toggle between Clean Seasonal Envelope and Full 12-Month Heatmap
     function setReservoirView(mode) {
+      currentReservoirView = mode;
       const btnEnv = document.getElementById('btn-view-envelope');
       const btnHeat = document.getElementById('btn-view-heatmap');
-      const contEnv = document.getElementById('container-envelope-view');
-      const contHeat = document.getElementById('container-heatmap-view');
+      
+      const meadEnv = document.getElementById('container-mead-envelope');
+      const meadHeat = document.getElementById('container-mead-heatmap');
+      const powellEnv = document.getElementById('container-powell-envelope');
+      const powellHeat = document.getElementById('container-powell-heatmap');
 
       if (mode === 'envelope') {
         btnEnv.className = 'px-3 py-1 text-xs font-bold rounded bg-white text-stone-900 shadow-sm border border-stone-300';
         btnHeat.className = 'px-3 py-1 text-xs font-medium rounded text-stone-600 hover:text-stone-900';
-        contEnv.classList.remove('hidden');
-        contHeat.classList.add('hidden');
+        meadEnv.classList.remove('hidden');
+        meadHeat.classList.add('hidden');
+        powellEnv.classList.remove('hidden');
+        powellHeat.classList.add('hidden');
       } else {
         btnHeat.className = 'px-3 py-1 text-xs font-bold rounded bg-white text-stone-900 shadow-sm border border-stone-300';
         btnEnv.className = 'px-3 py-1 text-xs font-medium rounded text-stone-600 hover:text-stone-900';
-        contEnv.classList.add('hidden');
-        contHeat.classList.remove('hidden');
-        renderHeatmap();
+        meadEnv.classList.add('hidden');
+        meadHeat.classList.remove('hidden');
+        powellEnv.classList.add('hidden');
+        powellHeat.classList.remove('hidden');
+        if (currentReservoirRecord === 'mead') {
+          renderHeatmap();
+        } else {
+          renderPowellHeatmap();
+        }
       }
     }
 
@@ -1193,6 +1324,153 @@
           cell.style.backgroundColor = getColor(val);
           if (val) {
             cell.title = `${r.year} ${mKey}: ${val.toFixed(1)} ft NGVD29`;
+          }
+          row.appendChild(cell);
+        });
+
+        container.appendChild(row);
+      });
+    }
+
+    // Historical Lake Powell Charts (Envelope & Heatmap)
+    let powellChartRendered = false;
+    function renderPowellHistoricalCharts() {
+      if (powellChartRendered || !portalData) return;
+      powellChartRendered = true;
+
+      const records = portalData.lake_powell_elevation_historical || [];
+      const years = records.map(r => r.year);
+      const minElv = records.map(r => r.min);
+      const maxElv = records.map(r => r.max);
+      const meanElv = records.map(r => r.mean);
+
+      const ctx = document.getElementById('chart-powell-elevation-history').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: years,
+          datasets: [
+            {
+              label: 'Annual Mean Elevation',
+              data: meanElv,
+              borderColor: '#0f766e',
+              backgroundColor: 'rgba(15, 118, 110, 0.08)',
+              borderWidth: 2.2,
+              pointRadius: 0,
+              tension: 0.15
+            },
+            {
+              label: 'Annual Max Elevation',
+              data: maxElv,
+              borderColor: 'rgba(45, 212, 191, 0.6)',
+              borderWidth: 1,
+              borderDash: [2, 2],
+              pointRadius: 0,
+              fill: '+1',
+              backgroundColor: 'rgba(204, 251, 241, 0.35)'
+            },
+            {
+              label: 'Annual Min Elevation',
+              data: minElv,
+              borderColor: 'rgba(45, 212, 191, 0.6)',
+              borderWidth: 1,
+              borderDash: [2, 2],
+              pointRadius: 0,
+              fill: false
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: {
+            mode: 'index',
+            intersect: false
+          },
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: { font: { size: 10, weight: '600' }, boxWidth: 12 }
+            },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => ` ${ctx.dataset.label}: ${ctx.parsed.y ? ctx.parsed.y.toFixed(1) + ' ft' : 'N/A'}`
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { font: { size: 10 }, maxTicksLimit: 15 }
+            },
+            y: {
+              min: 3350,
+              max: 3720,
+              ticks: {
+                font: { size: 10 },
+                callback: (val) => val + ' ft'
+              },
+              grid: { color: '#e5e7eb' }
+            }
+          }
+        }
+      });
+    }
+
+    // Render the 64-year by 12-month heatmap matrix for Lake Powell
+    function renderPowellHeatmap() {
+      const container = document.getElementById('powell-heatmap-grid');
+      if (container.children.length > 0 || !portalData) return;
+
+      const records = portalData.lake_powell_elevation_historical || [];
+      const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+
+      // Header row
+      const headerRow = document.createElement('div');
+      headerRow.className = 'grid grid-cols-13 gap-1 text-[9px] font-bold text-stone-500 mb-1';
+      headerRow.style.gridTemplateColumns = '48px repeat(12, minmax(0, 1fr))';
+      
+      const emptyCell = document.createElement('div');
+      emptyCell.innerText = 'Year';
+      headerRow.appendChild(emptyCell);
+
+      monthNames.forEach(m => {
+        const mCell = document.createElement('div');
+        mCell.className = 'text-center uppercase';
+        mCell.innerText = m;
+        headerRow.appendChild(mCell);
+      });
+      container.appendChild(headerRow);
+
+      // Lake Powell elevation color mapping
+      function getPowellColor(elv) {
+        if (!elv) return '#f1f5f9';
+        if (elv > 3670) return '#115e59'; // High / near full pool (deep teal)
+        if (elv > 3620) return '#0d9488'; // Normal high operating zone
+        if (elv > 3560) return '#2dd4bf'; // Active storage mid pool
+        if (elv > 3525) return '#fde047'; // Approaching min power pool warning (yellow)
+        if (elv > 3490) return '#f97316'; // Critical buffer above min power (orange)
+        return '#dc2626'; // Below Min Power Pool (<3490, red)
+      }
+
+      // Rows for each year
+      records.forEach(r => {
+        const row = document.createElement('div');
+        row.className = 'grid gap-1 items-center';
+        row.style.gridTemplateColumns = '48px repeat(12, minmax(0, 1fr))';
+
+        const yearLabel = document.createElement('div');
+        yearLabel.className = 'text-[9.5px] font-mono font-bold text-stone-600';
+        yearLabel.innerText = r.year;
+        row.appendChild(yearLabel);
+
+        monthNames.forEach(mKey => {
+          const val = r.elevations ? r.elevations[mKey] : null;
+          const cell = document.createElement('div');
+          cell.className = 'h-3 rounded-xs heatmap-cell cursor-pointer relative';
+          cell.style.backgroundColor = getPowellColor(val);
+          if (val) {
+            cell.title = `${r.year} ${mKey}: ${val.toFixed(1)} ft`;
           }
           row.appendChild(cell);
         });

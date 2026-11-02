@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-11-01T18:12:37.836244",
+  "fetched_at": "2026-11-01T18:17:58.791649",
   "streamflows": [
     {
       "id": "09034250",
@@ -14,8 +14,8 @@
       "id": "09057500",
       "name": "Blue River below Green Mtn Reservoir, CO",
       "type": "streamflow",
-      "flow_cfs": 109.0,
-      "timestamp": "2026-11-01T17:00:00.000-07:00",
+      "flow_cfs": 105.0,
+      "timestamp": "2026-11-01T18:00:00.000-07:00",
       "lat": 39.88026354,
       "lon": -106.3339175
     },
@@ -68,8 +68,8 @@
       "id": "09095500",
       "name": "Colorado River near Cameo, CO",
       "type": "streamflow",
-      "flow_cfs": 1910.0,
-      "timestamp": "2026-11-01T17:45:00.000-07:00",
+      "flow_cfs": 1930.0,
+      "timestamp": "2026-11-01T18:00:00.000-07:00",
       "lat": 39.2391463,
       "lon": -108.2661946
     },
@@ -78,7 +78,7 @@
       "name": "Gunnison River below Gunnison Tunnel, CO",
       "type": "streamflow",
       "flow_cfs": 222.0,
-      "timestamp": "2026-11-01T17:45:00.000-07:00",
+      "timestamp": "2026-11-01T18:00:00.000-07:00",
       "lat": 38.52915336,
       "lon": -107.648947
     },
@@ -113,8 +113,8 @@
       "id": "09180500",
       "name": "Colorado River near Cisco, UT",
       "type": "streamflow",
-      "flow_cfs": 3910.0,
-      "timestamp": "2026-11-01T17:00:00.000-07:00",
+      "flow_cfs": 4370.0,
+      "timestamp": "2026-11-01T18:00:00.000-07:00",
       "lat": 38.81054095,
       "lon": -109.2934493
     },
@@ -122,8 +122,8 @@
       "id": "09211200",
       "name": "Green River below Fontenelle Reservoir, WY",
       "type": "streamflow",
-      "flow_cfs": 708.0,
-      "timestamp": "2026-11-01T17:00:00.000-07:00",
+      "flow_cfs": 699.0,
+      "timestamp": "2026-11-01T18:00:00.000-07:00",
       "lat": 42.0209722,
       "lon": -110.0498056
     },
@@ -158,8 +158,8 @@
       "id": "09261000",
       "name": "Green River near Jensen, UT (below Yampa)",
       "type": "streamflow",
-      "flow_cfs": 2640.0,
-      "timestamp": "2026-11-01T17:45:00.000-07:00",
+      "flow_cfs": 2620.0,
+      "timestamp": "2026-11-01T18:00:00.000-07:00",
       "lat": 40.40871944,
       "lon": -109.23523611
     },
@@ -239,8 +239,8 @@
       "id": "09380000",
       "name": "Colorado River at Lees Ferry, AZ",
       "type": "streamflow",
-      "flow_cfs": 7870.0,
-      "timestamp": "2026-11-01T17:00:00.000-07:00",
+      "flow_cfs": 7800.0,
+      "timestamp": "2026-11-01T18:00:00.000-07:00",
       "lat": 36.86433333,
       "lon": -111.58787222
     },
@@ -284,8 +284,8 @@
       "id": "09415000",
       "name": "Virgin River at Littlefield, AZ",
       "type": "streamflow",
-      "flow_cfs": 3490.0,
-      "timestamp": "2026-11-01T16:05:00.000-08:00",
+      "flow_cfs": 3660.0,
+      "timestamp": "2026-11-01T17:05:00.000-08:00",
       "lat": 36.8916437,
       "lon": -113.9244098
     },
@@ -338,8 +338,8 @@
       "id": "09511300",
       "name": "Verde River near Scottsdale, AZ",
       "type": "streamflow",
-      "flow_cfs": 15600.0,
-      "timestamp": "2026-11-01T17:50:00.000-07:00",
+      "flow_cfs": 15700.0,
+      "timestamp": "2026-11-01T18:00:00.000-07:00",
       "lat": 33.5586557,
       "lon": -111.6693043
     },
@@ -361,7 +361,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 1020,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T18:12:36.864398",
+      "timestamp": "2026-11-01T18:17:57.876878",
       "lat": 40.3283,
       "lon": -105.5786
     },
@@ -372,7 +372,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 1280,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T18:12:36.864429",
+      "timestamp": "2026-11-01T18:17:57.876897",
       "lat": 39.9022,
       "lon": -105.6433
     },
@@ -383,7 +383,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 1020,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T18:12:36.864436",
+      "timestamp": "2026-11-01T18:17:57.876903",
       "lat": 39.4633,
       "lon": -105.6797
     },
@@ -394,7 +394,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 945,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T18:12:36.864443",
+      "timestamp": "2026-11-01T18:17:57.876906",
       "lat": 39.2619,
       "lon": -106.5297
     }
@@ -443,7 +443,7 @@
       "capacity_af": 26134000.0,
       "capacity_pct": 33.3,
       "role": "Lower Basin Primary Storage & Delivery Regulation",
-      "timestamp": "2026-11-01T17:00:00",
+      "timestamp": "2026-11-01T18:00:00",
       "lat": 36.0156,
       "lon": -114.7378
     },
@@ -483,7 +483,7 @@
       "river": "Lower Colorado River (AZ/NV)",
       "type": "reservoir",
       "category": "system",
-      "elevation_ft": 638.2,
+      "elevation_ft": 638.3,
       "storage_af": 1569000.0,
       "capacity_af": 1810000.0,
       "capacity_pct": 86.7,
