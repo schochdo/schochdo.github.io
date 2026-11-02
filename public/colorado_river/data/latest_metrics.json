@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-11-01T17:29:31.839895",
+  "fetched_at": "2026-11-01T17:30:27.823253",
   "streamflows": [
     {
       "id": "09034250",
@@ -33,7 +33,7 @@
       "name": "Eagle River below Gypsum, CO",
       "type": "streamflow",
       "flow_cfs": 130.0,
-      "timestamp": "2026-11-01T16:15:00.000-07:00",
+      "timestamp": "2026-11-01T17:15:00.000-07:00",
       "lat": 39.64942954,
       "lon": -106.9536554
     },
@@ -78,7 +78,7 @@
       "name": "Gunnison River below Gunnison Tunnel, CO",
       "type": "streamflow",
       "flow_cfs": 222.0,
-      "timestamp": "2026-11-01T17:00:00.000-07:00",
+      "timestamp": "2026-11-01T17:15:00.000-07:00",
       "lat": 38.52915336,
       "lon": -107.648947
     },
@@ -159,7 +159,7 @@
       "name": "Green River near Jensen, UT (below Yampa)",
       "type": "streamflow",
       "flow_cfs": 2640.0,
-      "timestamp": "2026-11-01T17:00:00.000-07:00",
+      "timestamp": "2026-11-01T17:15:00.000-07:00",
       "lat": 40.40871944,
       "lon": -109.23523611
     },
