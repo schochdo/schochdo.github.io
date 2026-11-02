@@ -459,10 +459,13 @@
               <!-- Multi-Reservoir Display Mode Toggle -->
               <div class="flex items-center gap-2 bg-stone-100 p-1 rounded-lg border border-stone-300">
                 <button onclick="setMacroTimelineMode('lines')" id="btn-timeline-lines" class="px-3 py-1 text-xs font-bold rounded bg-white text-stone-900 shadow-sm border border-stone-300 transition">
-                  Multi-Line Overlay
+                  Individual Reservoirs
                 </button>
                 <button onclick="setMacroTimelineMode('stacked')" id="btn-timeline-stacked" class="px-3 py-1 text-xs font-medium rounded text-stone-600 hover:text-stone-900 transition">
                   Stacked Total Bank
+                </button>
+                <button onclick="setMacroTimelineMode('system_total')" id="btn-timeline-total" class="px-3 py-1 text-xs font-medium rounded text-stone-600 hover:text-stone-900 transition">
+                  Combined Total Trajectory
                 </button>
               </div>
             </div>
@@ -879,20 +882,21 @@
       }
     }
 
-    // Toggle Multi-Reservoir Macro Timeline Mode ('lines' or 'stacked')
+    // Toggle Multi-Reservoir Macro Timeline Mode ('lines', 'stacked', or 'system_total')
     let macroTimelineMode = 'lines';
     function setMacroTimelineMode(mode) {
       macroTimelineMode = mode;
       const btnLines = document.getElementById('btn-timeline-lines');
       const btnStacked = document.getElementById('btn-timeline-stacked');
+      const btnTotal = document.getElementById('btn-timeline-total');
 
-      if (mode === 'lines') {
-        btnLines.className = 'px-3 py-1 text-xs font-bold rounded bg-white text-stone-900 shadow-sm border border-stone-300 transition';
-        btnStacked.className = 'px-3 py-1 text-xs font-medium rounded text-stone-600 hover:text-stone-900 transition';
-      } else {
-        btnStacked.className = 'px-3 py-1 text-xs font-bold rounded bg-white text-stone-900 shadow-sm border border-stone-300 transition';
-        btnLines.className = 'px-3 py-1 text-xs font-medium rounded text-stone-600 hover:text-stone-900 transition';
-      }
+      const inactiveClass = 'px-3 py-1 text-xs font-medium rounded text-stone-600 hover:text-stone-900 transition';
+      const activeClass = 'px-3 py-1 text-xs font-bold rounded bg-white text-stone-900 shadow-sm border border-stone-300 transition';
+
+      btnLines.className = (mode === 'lines') ? activeClass : inactiveClass;
+      btnStacked.className = (mode === 'stacked') ? activeClass : inactiveClass;
+      if (btnTotal) btnTotal.className = (mode === 'system_total') ? activeClass : inactiveClass;
+
       renderMacroStorageTimeline();
     }
 
@@ -1313,73 +1317,96 @@
       }
 
       const isStacked = (macroTimelineMode === 'stacked');
+      const isSystemTotal = (macroTimelineMode === 'system_total');
 
-      const datasets = [
-        {
-          label: 'Lake Mead (26.1M AF)',
-          data: meadMaf,
-          borderColor: '#0284c7',
-          backgroundColor: isStacked ? 'rgba(2, 132, 199, 0.45)' : 'rgba(2, 132, 199, 0.08)',
-          borderWidth: isStacked ? 1 : 2.2,
-          fill: isStacked ? true : false,
-          tension: 0.15,
-          pointRadius: 0
-        },
-        {
-          label: 'Lake Powell (24.3M AF)',
-          data: powellMaf,
-          borderColor: '#0d9488',
-          backgroundColor: isStacked ? 'rgba(13, 148, 136, 0.45)' : 'rgba(13, 148, 136, 0.08)',
-          borderWidth: isStacked ? 1 : 2.2,
-          fill: isStacked ? true : false,
-          tension: 0.15,
-          pointRadius: 0
-        },
-        {
-          label: 'Flaming Gorge (3.75M AF)',
-          data: fgMaf,
-          borderColor: '#16a34a',
-          backgroundColor: isStacked ? 'rgba(22, 163, 74, 0.45)' : 'rgba(22, 163, 74, 0.08)',
-          borderWidth: isStacked ? 1 : 1.8,
-          fill: isStacked ? true : false,
-          tension: 0.15,
-          pointRadius: 0
-        },
-        {
-          label: 'Navajo (1.70M AF)',
-          data: navajoMaf,
-          borderColor: '#0891b2',
-          backgroundColor: isStacked ? 'rgba(8, 145, 178, 0.45)' : 'rgba(8, 145, 178, 0.08)',
-          borderWidth: isStacked ? 1 : 1.8,
-          fill: isStacked ? true : false,
-          tension: 0.15,
-          pointRadius: 0
-        },
-        {
-          label: 'Blue Mesa (0.83M AF)',
-          data: bmMaf,
-          borderColor: '#ea580c',
-          backgroundColor: isStacked ? 'rgba(234, 88, 12, 0.45)' : 'rgba(234, 88, 12, 0.08)',
-          borderWidth: isStacked ? 1 : 1.8,
-          fill: isStacked ? true : false,
-          tension: 0.15,
-          pointRadius: 0
-        }
-      ];
+      let datasets = [];
 
-      // If in unstacked multi-line mode, also display the system total trajectory line
-      if (!isStacked) {
-        datasets.unshift({
-          label: 'Combined Basin Total',
-          data: totalMaf,
-          borderColor: '#1e293b',
-          backgroundColor: 'transparent',
-          borderWidth: 2.8,
-          borderDash: [5, 4],
-          fill: false,
-          tension: 0.15,
-          pointRadius: 0
-        });
+      if (isSystemTotal) {
+        // Pure single-line view of the entire basin storage bank
+        datasets = [
+          {
+            label: 'Combined Basin Total Storage',
+            data: totalMaf,
+            borderColor: '#0f172a',
+            backgroundColor: 'rgba(15, 23, 42, 0.08)',
+            borderWidth: 2.8,
+            fill: true,
+            tension: 0.15,
+            pointRadius: 0
+          }
+        ];
+      } else {
+        // Individual reservoirs or Stacked area
+        datasets = [
+          {
+            label: 'Lake Mead (26.1M AF)',
+            data: meadMaf,
+            borderColor: '#0284c7',
+            backgroundColor: isStacked ? 'rgba(2, 132, 199, 0.45)' : 'rgba(2, 132, 199, 0.08)',
+            borderWidth: isStacked ? 1 : 2.2,
+            fill: isStacked ? true : false,
+            tension: 0.15,
+            pointRadius: 0
+          },
+          {
+            label: 'Lake Powell (24.3M AF)',
+            data: powellMaf,
+            borderColor: '#0d9488',
+            backgroundColor: isStacked ? 'rgba(13, 148, 136, 0.45)' : 'rgba(13, 148, 136, 0.08)',
+            borderWidth: isStacked ? 1 : 2.2,
+            fill: isStacked ? true : false,
+            tension: 0.15,
+            pointRadius: 0
+          },
+          {
+            label: 'Flaming Gorge (3.75M AF)',
+            data: fgMaf,
+            borderColor: '#16a34a',
+            backgroundColor: isStacked ? 'rgba(22, 163, 74, 0.45)' : 'rgba(22, 163, 74, 0.08)',
+            borderWidth: isStacked ? 1 : 1.8,
+            fill: isStacked ? true : false,
+            tension: 0.15,
+            pointRadius: 0
+          },
+          {
+            label: 'Navajo (1.70M AF)',
+            data: navajoMaf,
+            borderColor: '#0891b2',
+            backgroundColor: isStacked ? 'rgba(8, 145, 178, 0.45)' : 'rgba(8, 145, 178, 0.08)',
+            borderWidth: isStacked ? 1 : 1.8,
+            fill: isStacked ? true : false,
+            tension: 0.15,
+            pointRadius: 0
+          },
+          {
+            label: 'Blue Mesa (0.83M AF)',
+            data: bmMaf,
+            borderColor: '#ea580c',
+            backgroundColor: isStacked ? 'rgba(234, 88, 12, 0.45)' : 'rgba(234, 88, 12, 0.08)',
+            borderWidth: isStacked ? 1 : 1.8,
+            fill: isStacked ? true : false,
+            tension: 0.15,
+            pointRadius: 0
+          }
+        ];
+      }
+
+      // Configure scale and thresholds based on mode
+      let yMax = 30;
+      let thresholdLines = [];
+
+      if (isStacked || isSystemTotal) {
+        yMax = 65; // Accommodates full 56.2M AF peak without running off top
+        thresholdLines = [
+          { value: 60.0, label: 'Full System Capacity', color: '#64748b', dash: [6, 4], unit: 'M AF' },
+          { value: 6.0, label: 'Min Power Combined', color: '#d97706', dash: [5, 3], unit: 'M AF' }
+        ];
+      } else {
+        yMax = 30; // Accommodates individual Mead/Powell capacities (26.1M and 24.3M) cleanly
+        thresholdLines = [
+          { value: 26.1, label: 'Mead Capacity', color: '#0284c7', dash: [4, 4], unit: 'M AF' },
+          { value: 24.3, label: 'Powell Capacity', color: '#0d9488', dash: [4, 4], unit: 'M AF' }
+        ];
       }
 
       macroChartInstance = new Chart(ctx, {
@@ -1398,13 +1425,7 @@
           },
           plugins: {
             horizontalThresholdPlugin: {
-              lines: isStacked ? [
-                { value: 60.0, label: 'Full System Capacity', color: '#64748b', dash: [6, 4], unit: 'M AF' },
-                { value: 6.0, label: 'Min Power Combined', color: '#d97706', dash: [5, 3], unit: 'M AF' }
-              ] : [
-                { value: 26.1, label: 'Mead Capacity', color: '#0284c7', dash: [4, 4], unit: 'M AF' },
-                { value: 24.3, label: 'Powell Capacity', color: '#0d9488', dash: [4, 4], unit: 'M AF' }
-              ]
+              lines: thresholdLines
             },
             legend: {
               position: 'top',
@@ -1424,7 +1445,7 @@
             y: {
               stacked: isStacked,
               min: 0,
-              max: isStacked ? 65 : 30,
+              max: yMax,
               ticks: {
                 font: { size: 10 },
                 callback: (val) => val + 'M AF'
