@@ -201,12 +201,12 @@
       </header>
 
       <!-- VIEWPORT CONTAINER: Swaps between Tabs smoothly -->
-      <div class="flex-1 overflow-y-auto relative" id="main-viewport-container">
+      <div class="flex-1 min-h-0 relative flex flex-col overflow-hidden" id="main-viewport-container">
         
         <!-- ========================================== -->
         <!-- TAB 1: OVERVIEW (3-COLUMN ACADEMIC LAYOUT) -->
         <!-- ========================================== -->
-        <div id="section-overview" class="p-4 md:p-6 lg:p-7 max-w-7xl mx-auto space-y-6">
+        <div id="section-overview" class="flex-1 overflow-y-auto p-4 md:p-6 lg:p-7 max-w-7xl mx-auto space-y-6 w-full">
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
             
             <!-- Column 1: STREAMFLOW & RUNOFF (Col Span 4) -->
@@ -440,28 +440,28 @@
         <!-- ========================================== -->
         <!-- TAB 2: GIS HYDROLOGY MAP (Clean Embed)     -->
         <!-- ========================================== -->
-        <div id="section-map" class="hidden w-full h-full relative">
+        <div id="section-map" class="hidden flex-1 w-full h-full min-h-0 relative">
           <iframe id="iframe-map" src="./map_embed.html" class="w-full h-full border-none"></iframe>
         </div>
 
         <!-- ========================================== -->
         <!-- TAB 3: WATER BUDGET (SANKEY FLOW DIAGRAM)  -->
         <!-- ========================================== -->
-        <div id="section-sankey" class="hidden w-full h-full relative">
+        <div id="section-sankey" class="hidden flex-1 w-full h-full min-h-0 relative">
           <iframe id="iframe-sankey" src="./sankey.html" class="w-full h-full border-none"></iframe>
         </div>
 
         <!-- ========================================== -->
         <!-- TAB 4: PIPELINE & TRANSIT SCHEMATIC        -->
         <!-- ========================================== -->
-        <div id="section-pipeline" class="hidden w-full h-full relative">
+        <div id="section-pipeline" class="hidden flex-1 w-full h-full min-h-0 relative">
           <iframe id="iframe-pipeline" src="./pipeline.html" class="w-full h-full border-none"></iframe>
         </div>
 
         <!-- ========================================== -->
         <!-- TAB 5: RESERVOIRS (1935 - TODAY)           -->
         <!-- ========================================== -->
-        <div id="section-reservoirs" class="p-4 md:p-6 lg:p-7 max-w-7xl mx-auto space-y-6 hidden">
+        <div id="section-reservoirs" class="flex-1 overflow-y-auto w-full p-4 md:p-6 lg:p-7 max-w-7xl mx-auto space-y-6 hidden">
           
           <!-- FEATURED 1: MACRO BASIN MULTI-RESERVOIR STORAGE TIMELINE (MAF) -->
           <div class="card-academic rounded-xl p-5 shadow-sm bg-white">
@@ -779,7 +779,7 @@
         <!-- ========================================== -->
         <!-- TAB 5: GAGE TELEMETRY REGISTRY             -->
         <!-- ========================================== -->
-        <div id="section-telemetry" class="hidden w-full h-full relative">
+        <div id="section-telemetry" class="hidden flex-1 w-full h-full min-h-0 relative">
           <iframe id="iframe-telemetry" src="./telemetry.html" class="w-full h-full border-none"></iframe>
         </div>
 

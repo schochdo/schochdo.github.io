@@ -112,6 +112,8 @@ function showFeaturePopup(popup, lngLat) {
   if (!map || !popup) return popup;
   if (tooltipPopup && tooltipPopup.isOpen()) {
     tooltipPopup.remove();
+    currentTooltipHtml = null;
+    activeHoverSource = null;
   }
   if (activeFeaturePopup && activeFeaturePopup.isOpen() && activeFeaturePopup !== popup) {
     const oldPopup = activeFeaturePopup;
@@ -133,21 +135,87 @@ function showFeaturePopup(popup, lngLat) {
   return popup;
 }
 
-function showHoverTooltip(html, lngLat) {
+let activeHoverSource = null;
+let currentTooltipHtml = null;
+let hoverDismissTimer = null;
+
+const HOVER_PRIORITIES = {
+  'dams': 100,
+  'dams-layer': 100,
+  'dams-hit-buffer': 100,
+  'streamflow-gauges': 90,
+  'streamflow-gauges-hit-buffer': 90,
+  'gauge-badge': 90,
+  'tunnels': 80,
+  'tunnels-hit-buffer': 80,
+  'tunnels-portals-layer': 80,
+  'tunnel-badge': 80,
+  'canals': 70,
+  'canals-hit-buffer': 70,
+  'canal-badge': 70,
+  'rivers': 60,
+  'rivers-mainstem-hit': 60,
+  'rivers-major-hit': 60,
+  'rivers-minor-hit': 60,
+  'lakes': 50,
+  'lakes-fill': 50,
+  'divide-line-hit-buffer': 40,
+  'basin-line-hit-buffer': 30
+};
+
+function showHoverTooltip(html, lngLat, sourceKey) {
   // If an active feature card is currently open, suppress hover tooltips to avoid chaotic dual popups
   if (activeFeaturePopup && activeFeaturePopup.isOpen()) {
     if (tooltipPopup && tooltipPopup.isOpen()) tooltipPopup.remove();
     return;
   }
-  if (!tooltipPopup) return;
-  tooltipPopup.setLngLat(lngLat).setHTML(html).addTo(map);
+  if (!tooltipPopup || !map) return;
+
+  const key = sourceKey || 'default';
+  const newPriority = HOVER_PRIORITIES[key] || 10;
+  const currentPriority = activeHoverSource ? (HOVER_PRIORITIES[activeHoverSource] || 10) : 0;
+
+  // If a higher-priority feature is already being hovered, do not let lower layers overwrite it
+  if (activeHoverSource && newPriority < currentPriority) {
+    return;
+  }
+
+  if (hoverDismissTimer) {
+    clearTimeout(hoverDismissTimer);
+    hoverDismissTimer = null;
+  }
+
+  activeHoverSource = key;
+
+  if (map.getCanvas()) map.getCanvas().style.cursor = 'pointer';
+
+  if (currentTooltipHtml !== html) {
+    tooltipPopup.setHTML(html);
+    currentTooltipHtml = html;
+  }
+  tooltipPopup.setLngLat(lngLat);
+  if (!tooltipPopup.isOpen()) {
+    tooltipPopup.addTo(map);
+  }
 }
 
-function hideHoverTooltip() {
-  if (map && map.getCanvas()) map.getCanvas().style.cursor = '';
-  if (tooltipPopup && tooltipPopup.isOpen()) {
-    tooltipPopup.remove();
+function hideHoverTooltip(sourceKey) {
+  // If a specific source is exiting, ignore dismissal if another feature is currently active
+  if (sourceKey && activeHoverSource && sourceKey !== activeHoverSource) {
+    return;
   }
+
+  // Grace debounce allows seamless cursor motion between adjacent hit-boxes without strobe blinking
+  if (hoverDismissTimer) clearTimeout(hoverDismissTimer);
+  const delay = sourceKey ? 45 : 0;
+  hoverDismissTimer = setTimeout(() => {
+    activeHoverSource = null;
+    currentTooltipHtml = null;
+    if (map && map.getCanvas()) map.getCanvas().style.cursor = '';
+    if (tooltipPopup && tooltipPopup.isOpen()) {
+      tooltipPopup.remove();
+    }
+  }, delay);
 }
 
 function hasHigherPriorityFeature(point, layerIds) {
@@ -155,7 +223,7 @@ function hasHigherPriorityFeature(point, layerIds) {
   const existingLayers = layerIds.filter(id => map.getLayer(id));
   if (!existingLayers.length) return false;
   try {
-    const bbox = [[point.x - 4, point.y - 4], [point.x + 4, point.y + 4]];
+    const bbox = [[point.x - 7, point.y - 7], [point.x + 7, point.y + 7]];
     const hits = map.queryRenderedFeatures(bbox, { layers: existingLayers });
     return hits && hits.length > 0;
   } catch (err) {
@@ -351,12 +419,19 @@ function initMap() {
   if (map) {
     map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-left');
 
-    // Shared hover tooltip popup
+    // Shared hover tooltip popup (Non-blocking transparent to pointer events)
     tooltipPopup = new maplibregl.Popup({
       closeButton: false,
       closeOnClick: false,
-      offset: 12
+      className: 'map-hover-tooltip',
+      offset: 14
     });
+
+    if (map.getContainer()) {
+      map.getContainer().addEventListener('mouseleave', () => {
+        hideHoverTooltip();
+      });
+    }
 
     map.on('click', (e) => {
       if (e.originalEvent && e.originalEvent._handled) return;
@@ -430,6 +505,8 @@ function initMap() {
   map.on('zoom', queueBadgePlacements);
   map.on('resize', queueBadgePlacements);
   map.on('pitch', syncPerspectiveState);
+  map.on('movestart', () => hideHoverTooltip());
+  map.on('zoomstart', () => hideHoverTooltip());
   }
 
   // Always kick off telemetry and geography ingestion immediately
@@ -1976,11 +2053,18 @@ function renderGeography(geo, riverNetwork, lakes, powellContours) {
     // Only the perimeter boundary line itself is interactive, NOT the vast interior fill polygon
     map.on('mousemove', 'basin-line-hit-buffer', (e) => {
       if (!e.features.length) return;
-      map.getCanvas().style.cursor = 'pointer';
-      showHoverTooltip(`<strong>${e.features[0].properties.name} Boundary</strong>`, e.lngLat);
+      if (hasHigherPriorityFeature(e.point, [
+        'dams-hit-buffer', 'dams-layer',
+        'streamflow-gauges-hit-buffer',
+        'tunnels-portals-layer', 'tunnels-hit-buffer',
+        'canals-hit-buffer',
+        'rivers-mainstem-hit', 'rivers-major-hit', 'rivers-minor-hit',
+        'lakes-fill'
+      ])) return;
+      showHoverTooltip(`<strong>${e.features[0].properties.name} Boundary</strong>`, e.lngLat, 'basin-line-hit-buffer');
     });
     map.on('mouseleave', 'basin-line-hit-buffer', () => {
-      hideHoverTooltip();
+      hideHoverTooltip('basin-line-hit-buffer');
     });
   }
 
@@ -2026,11 +2110,18 @@ function renderGeography(geo, riverNetwork, lakes, powellContours) {
     });
 
     map.on('mousemove', 'divide-line-hit-buffer', (e) => {
-      map.getCanvas().style.cursor = 'pointer';
-      showHoverTooltip(`<strong>Continental Divide of the Americas</strong><br><span style="font-size:11px;color:#64748b;">Hydrologic Boundary between Pacific & Atlantic Slopes</span>`, e.lngLat);
+      if (hasHigherPriorityFeature(e.point, [
+        'dams-hit-buffer', 'dams-layer',
+        'streamflow-gauges-hit-buffer',
+        'tunnels-portals-layer', 'tunnels-hit-buffer',
+        'canals-hit-buffer',
+        'rivers-mainstem-hit', 'rivers-major-hit', 'rivers-minor-hit',
+        'lakes-fill'
+      ])) return;
+      showHoverTooltip(`<strong>Continental Divide of the Americas</strong><br><span style="font-size:11px;color:#64748b;">Hydrologic Boundary between Pacific & Atlantic Slopes</span>`, e.lngLat, 'divide-line-hit-buffer');
     });
     map.on('mouseleave', 'divide-line-hit-buffer', () => {
-      hideHoverTooltip();
+      hideHoverTooltip('divide-line-hit-buffer');
     });
   }
 
@@ -2083,6 +2174,13 @@ function renderGeography(geo, riverNetwork, lakes, powellContours) {
 
     map.on('mousemove', 'lakes-fill', (e) => {
       if (!e.features.length) return;
+      if (hasHigherPriorityFeature(e.point, [
+        'dams-hit-buffer', 'dams-layer',
+        'streamflow-gauges-hit-buffer',
+        'tunnels-portals-layer', 'tunnels-hit-buffer',
+        'canals-hit-buffer',
+        'rivers-mainstem-hit', 'rivers-major-hit', 'rivers-minor-hit'
+      ])) return;
       map.getCanvas().style.cursor = 'pointer';
       const p = e.features[0].properties;
       const name = p.GNIS_NAME || p.name || "Reservoir";
@@ -2105,15 +2203,15 @@ function renderGeography(geo, riverNetwork, lakes, powellContours) {
               <strong>Role:</strong> ${matchRes.role || 'Basin Storage'}
             </div>
           </div>
-        `, e.lngLat);
+        `, e.lngLat, 'lakes');
       } else {
         const area = p.AREASQKM ? `${Math.round(p.AREASQKM)} sq km` : "";
-        showHoverTooltip(`<strong>${name}</strong><br><span style="font-size:11px;color:#64748b;">USGS NHD Shoreline (${area})</span>`, e.lngLat);
+        showHoverTooltip(`<strong>${name}</strong><br><span style="font-size:11px;color:#64748b;">USGS NHD Shoreline (${area})</span>`, e.lngLat, 'lakes');
       }
     });
 
     map.on('mouseleave', 'lakes-fill', () => {
-      hideHoverTooltip();
+      hideHoverTooltip('lakes');
     });
 
     map.on('click', 'lakes-fill', (e) => {
@@ -2408,6 +2506,12 @@ print("NHD Features found:", len(res.get("features", [])))`;
     ['rivers-mainstem-hit', 'rivers-major-hit', 'rivers-minor-hit'].forEach(layerId => {
       map.on('mousemove', layerId, (e) => {
         if (!e.features.length) return;
+        if (hasHigherPriorityFeature(e.point, [
+          'dams-hit-buffer', 'dams-layer',
+          'streamflow-gauges-hit-buffer',
+          'tunnels-portals-layer', 'tunnels-hit-buffer',
+          'canals-hit-buffer'
+        ])) return;
         map.getCanvas().style.cursor = 'pointer';
         const p = e.features[0].properties;
         const catBadge = p.category === 'mainstem'
@@ -2452,11 +2556,11 @@ print("NHD Features found:", len(res.get("features", [])))`;
             </div>
             ${notesHtml}
           </div>
-        `, e.lngLat);
+        `, e.lngLat, 'rivers');
       });
 
       map.on('mouseleave', layerId, () => {
-        hideHoverTooltip();
+        hideHoverTooltip('rivers');
       });
 
       map.on('click', layerId, (e) => {
@@ -2786,6 +2890,7 @@ print(f"${cleanReachName} Calculated Flow: {reach_flow_cfs:,.0f} cfs")
 
       const handleTunnelHover = (e) => {
         if (!e.features.length) return;
+        if (hasHigherPriorityFeature(e.point, ['dams-hit-buffer', 'dams-layer', 'streamflow-gauges-hit-buffer'])) return;
         map.getCanvas().style.cursor = 'pointer';
         const t = e.features[0].properties;
         const flowVal = Number(t.flow_cfs || 0);
@@ -2820,14 +2925,14 @@ print(f"${cleanReachName} Calculated Flow: {reach_flow_cfs:,.0f} cfs")
               <strong>Operational Status:</strong> ${statusText}
             </div>
           </div>
-        `, e.lngLat);
+        `, e.lngLat, 'tunnels');
       };
 
       map.on('mousemove', 'tunnels-hit-buffer', handleTunnelHover);
       map.on('mousemove', 'tunnels-portals-layer', handleTunnelHover);
 
       const handleTunnelLeave = () => {
-        hideHoverTooltip();
+        hideHoverTooltip('tunnels');
       };
       map.on('mouseleave', 'tunnels-hit-buffer', handleTunnelLeave);
       map.on('mouseleave', 'tunnels-portals-layer', handleTunnelLeave);
@@ -2989,6 +3094,7 @@ print(f"${cleanTName}: {flow_cfs:,.1f} cfs")`;
 
       map.on('mousemove', 'canals-hit-buffer', (e) => {
         if (!e.features.length) return;
+        if (hasHigherPriorityFeature(e.point, ['dams-hit-buffer', 'dams-layer', 'streamflow-gauges-hit-buffer'])) return;
         map.getCanvas().style.cursor = 'pointer';
         const t = e.features[0].properties;
         const flowVal = Number(t.flow_cfs || 0);
@@ -2996,7 +3102,7 @@ print(f"${cleanTName}: {flow_cfs:,.1f} cfs")`;
           ? `<span style="font-size:16px; font-weight:800; color:#0284c7;">${flowVal.toLocaleString()} <span style="font-size:11px; font-weight:600; color:#64748b;">cfs</span></span>`
           : `<span style="font-size:14px; font-weight:700; color:#64748b;">Active Conveyance</span>`;
 
-        tooltipPopup.setLngLat(e.lngLat).setHTML(`
+        showHoverTooltip(`
           <div style="font-family:'Inter',sans-serif; min-width: 220px; max-width: 290px;">
             <span style="font-size:10px;font-weight:700;color:#0369a1;background:#e0f2fe;border:1px solid #bae6fd;padding:2px 6px;border-radius:4px;display:inline-block;margin-bottom:4px;">Major Conveyance Canal</span>
             <strong style="font-size:13px;color:#0f172a;display:block;">${t.name}</strong>
@@ -3016,11 +3122,11 @@ print(f"${cleanTName}: {flow_cfs:,.1f} cfs")`;
               <strong>Infrastructure:</strong> Major Inter-Basin Conveyance Aqueduct
             </div>
           </div>
-        `, e.lngLat);
+        `, e.lngLat, 'canals');
       });
 
       map.on('mouseleave', 'canals-hit-buffer', () => {
-        hideHoverTooltip();
+        hideHoverTooltip('canals');
       });
 
       map.on('click', 'canals-hit-buffer', (e) => {
@@ -3116,6 +3222,17 @@ print(f"${cleanCName}: {flow_cfs:,.0f} cfs")`;
       if (!map.hasImage('dam-icon')) {
         map.addImage('dam-icon', img);
       }
+      if (!map.getLayer('dams-hit-buffer')) {
+        map.addLayer({
+          id: 'dams-hit-buffer',
+          type: 'circle',
+          source: 'dams',
+          paint: {
+            'circle-radius': 20,
+            'circle-opacity': 0.0001
+          }
+        });
+      }
       if (!map.getLayer('dams-layer')) {
         map.addLayer({
           id: 'dams-layer',
@@ -3132,7 +3249,7 @@ print(f"${cleanCName}: {flow_cfs:,.0f} cfs")`;
     };
     img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(damSvg);
 
-    map.on('click', 'dams-layer', (e) => {
+    const handleDamClick = (e) => {
       if (e.originalEvent && e.originalEvent._handled) return;
       if (!e.features.length) return;
       if (hasHigherPriorityFeature(e.point, ['streamflow-gauges-hit-buffer'])) return;
@@ -3176,21 +3293,31 @@ params = {
       });
       const popup = new maplibregl.Popup({ offset: 14 }).setHTML(popupHtml);
       showFeaturePopup(popup, e.lngLat);
-    });
+    };
 
-    map.on('mousemove', 'dams-layer', (e) => {
+    const handleDamHover = (e) => {
       if (!e.features.length) return;
-      map.getCanvas().style.cursor = 'pointer';
       const d = e.features[0].properties;
       showHoverTooltip(`
-        <strong>${d.name}</strong><br>
-        <span style="font-size:11px;color:#64748b;">${d.operator} • Impounds ${d.impounds}</span>
-      `, e.lngLat);
-    });
+        <div style="font-family:'Inter',sans-serif; min-width: 190px;">
+          <span style="font-size:10px; font-weight:700; color:#0369a1; background:#e0f2fe; padding:2px 6px; border-radius:4px; display:inline-block; margin-bottom:4px;">Federal Dam</span>
+          <strong style="font-size:13px; color:#0f172a; display:block;">${d.name}</strong>
+          <div style="font-size:11px; color:#64748b; margin-top:3px;">${d.operator} • Impounds <strong>${d.impounds}</strong></div>
+          <div style="font-size:10.5px; color:#475569; margin-top:4px;">Height: ${d.height_ft} ft • Built ${d.year}</div>
+        </div>
+      `, e.lngLat, 'dams');
+    };
 
-    map.on('mouseleave', 'dams-layer', () => {
-      hideHoverTooltip();
-    });
+    const handleDamLeave = () => {
+      hideHoverTooltip('dams');
+    };
+
+    map.on('click', 'dams-layer', handleDamClick);
+    map.on('click', 'dams-hit-buffer', handleDamClick);
+    map.on('mousemove', 'dams-layer', handleDamHover);
+    map.on('mousemove', 'dams-hit-buffer', handleDamHover);
+    map.on('mouseleave', 'dams-layer', handleDamLeave);
+    map.on('mouseleave', 'dams-hit-buffer', handleDamLeave);
   }
 }
 
@@ -3393,6 +3520,24 @@ function renderMetrics(metrics) {
       ev.stopPropagation();
     });
 
+    el.addEventListener('mouseenter', () => {
+      showHoverTooltip(`
+        <div style="font-family:'Inter',sans-serif; min-width: 190px;">
+          <span style="font-size:10px; font-weight:700; color:#0369a1; background:#e0f2fe; padding:2px 6px; border-radius:4px; display:inline-block; margin-bottom:4px;">USGS Gage</span>
+          <strong style="font-size:13px; color:#0f172a; display:block;">${s.name}</strong>
+          <div style="margin: 6px 0; padding: 6px 10px; background:#f8fafc; border-radius:6px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:baseline;">
+            <span style="font-size:11px; color:#64748b; font-weight:600;">Discharge:</span>
+            <span style="font-size:15px; font-weight:800; color:#0284c7;">${(s.flow_cfs || 0).toLocaleString()} cfs</span>
+          </div>
+          <div style="font-size:10.5px; color:#64748b;">Station ID: #${s.id}</div>
+        </div>
+      `, [s.lon, s.lat], 'gauge-badge');
+    });
+
+    el.addEventListener('mouseleave', () => {
+      hideHoverTooltip('gauge-badge');
+    });
+
     const marker = new maplibregl.Marker({ element: el, anchor: 'center' })
       .setLngLat([s.lon, s.lat])
       .setPopup(popup)
@@ -3525,11 +3670,11 @@ function renderMetrics(metrics) {
             </div>
             <div style="font-size:10.5px; color:#64748b;">Station ID: #${g.id}</div>
           </div>
-        `, e.lngLat);
+        `, e.lngLat, 'streamflow-gauges');
       });
 
       map.on('mouseleave', 'streamflow-gauges-hit-buffer', () => {
-        hideHoverTooltip();
+        hideHoverTooltip('streamflow-gauges');
       });
 
       map.on('click', 'streamflow-gauges-hit-buffer', (e) => {
@@ -3641,6 +3786,25 @@ print(f"${cleanTName}: {flow_cfs:,.0f} cfs")`;
 
     el.addEventListener('click', (ev) => {
       ev.stopPropagation();
+    });
+
+    el.addEventListener('mouseenter', () => {
+      const flowVal = Number(t.flow_cfs || 0);
+      showHoverTooltip(`
+        <div style="font-family:'Inter',sans-serif; min-width: 220px; max-width: 290px;">
+          <span style="font-size:10px;font-weight:700;color:#0369a1;background:#e0f2fe;padding:2px 6px;border-radius:4px;display:inline-block;margin-bottom:4px;">${diversionBadge}</span>
+          <strong style="font-size:13.5px;color:#0f172a;display:block;">${t.name}</strong>
+          <div style="margin: 6px 0; padding: 6px 10px; background:#f8fafc; border-radius:6px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:baseline;">
+            <span style="font-size:11px; color:#64748b; font-weight:600;">Discharge:</span>
+            <span style="font-size:16px; font-weight:800; color:#0284c7;">${flowVal.toLocaleString()} cfs</span>
+          </div>
+          <div style="font-size:11px;color:#475569;">${isFrontRange ? 'Front Range Trans-Divide' : (t.operator || '')}</div>
+        </div>
+      `, [t.lon, t.lat], badgeClass);
+    });
+
+    el.addEventListener('mouseleave', () => {
+      hideHoverTooltip(badgeClass);
     });
 
     const marker = new maplibregl.Marker({ element: el, anchor: 'center' })
