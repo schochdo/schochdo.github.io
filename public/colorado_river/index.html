@@ -444,7 +444,14 @@
         </div>
 
         <!-- ========================================== -->
-        <!-- TAB 4: RESERVOIRS (1935 - TODAY)           -->
+        <!-- TAB 4: PIPELINE & TRANSIT SCHEMATIC        -->
+        <!-- ========================================== -->
+        <div id="section-pipeline" class="hidden w-full h-full relative">
+          <iframe id="iframe-pipeline" src="./pipeline.html" class="w-full h-full border-none"></iframe>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 5: RESERVOIRS (1935 - TODAY)           -->
         <!-- ========================================== -->
         <div id="section-reservoirs" class="p-4 md:p-6 lg:p-7 max-w-7xl mx-auto space-y-6 hidden">
           
@@ -862,6 +869,7 @@
       document.getElementById('section-overview').classList.add('hidden');
       document.getElementById('section-map').classList.add('hidden');
       document.getElementById('section-sankey').classList.add('hidden');
+      document.getElementById('section-pipeline').classList.add('hidden');
       document.getElementById('section-reservoirs').classList.add('hidden');
       document.getElementById('section-telemetry').classList.add('hidden');
 
@@ -872,8 +880,11 @@
         topHeader.classList.add('hidden'); // Allow full-bleed map
         document.getElementById('section-map').classList.remove('hidden');
       } else if (tabId === 'sankey') {
-        topHeader.classList.add('hidden'); // Allow full-bleed flow diagram
+        topHeader.classList.add('hidden'); // Allow full-bleed Sankey budget diagram
         document.getElementById('section-sankey').classList.remove('hidden');
+      } else if (tabId === 'pipeline') {
+        topHeader.classList.add('hidden'); // Allow full-bleed geographic transit schematic
+        document.getElementById('section-pipeline').classList.remove('hidden');
       } else if (tabId === 'reservoirs') {
         topHeader.classList.remove('hidden');
         document.getElementById('section-reservoirs').classList.remove('hidden');

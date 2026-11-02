@@ -342,7 +342,7 @@
           <path id="div-mexico" class="diversion-path" d="M 480,955 L 270,955" stroke="#ea580c" stroke-width="8.5" marker-end="url(#arrow-div)" />
         </g>
 
-        <!-- 4. Main River Channels & Tributaries (Cyan / Cerulean Blue) - True Sankey Width Scaling -->
+        <!-- 4. Main River Channels & Tributaries (Cyan / Cerulean Blue) - Transit Schematic Conveyance -->
         <g id="rivers-layer">
           <!-- Upper Green River (Headwaters to Yampa Confluence - 3.6 MAF) -->
           <path id="river-green-upper" class="river-path" d="M 580,50 L 580,255" stroke="#0284c7" stroke-width="14" />
@@ -655,7 +655,7 @@
         if (!res.ok) return;
         liveMetrics = await res.json();
       } catch (e) {
-        console.warn('Could not load live metrics for Sankey:', e);
+        console.warn('Could not load live metrics for transit schematic:', e);
       }
     }
 
