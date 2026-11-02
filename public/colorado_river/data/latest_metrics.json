@@ -1,12 +1,12 @@
 {
-  "fetched_at": "2026-11-01T21:03:25.715656",
+  "fetched_at": "2026-11-01T21:04:31.183367",
   "streamflows": [
     {
       "id": "09034250",
       "name": "Colorado River at Windy Gap near Granby, CO",
       "type": "streamflow",
       "flow_cfs": 73.6,
-      "timestamp": "2026-11-01T19:45:00.000-07:00",
+      "timestamp": "2026-11-01T20:45:00.000-07:00",
       "lat": 40.108319,
       "lon": -106.0041847
     },
@@ -361,7 +361,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 1020,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T21:03:24.785091",
+      "timestamp": "2026-11-01T21:04:30.248291",
       "lat": 40.3283,
       "lon": -105.5786
     },
@@ -372,7 +372,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 1280,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T21:03:24.785117",
+      "timestamp": "2026-11-01T21:04:30.248303",
       "lat": 39.9022,
       "lon": -105.6433
     },
@@ -383,7 +383,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 1020,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T21:03:24.785123",
+      "timestamp": "2026-11-01T21:04:30.248306",
       "lat": 39.4633,
       "lon": -105.6797
     },
@@ -394,7 +394,7 @@
       "type": "diversion_tunnel",
       "capacity_cfs": 945,
       "flow_cfs": 0.0,
-      "timestamp": "2026-11-01T21:03:24.785129",
+      "timestamp": "2026-11-01T21:04:30.248308",
       "lat": 39.2619,
       "lon": -106.5297
     }
