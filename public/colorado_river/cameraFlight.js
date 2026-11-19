@@ -97,10 +97,12 @@
     return mod < 0 ? mod + 360 : mod;
   }
 
-  // Section 6: Continuous Progressive Pitch Ceiling
+  // Section 6: Continuous Pitch Ceiling
   function getMaxAllowedPitch(zoom) {
     if (zoom === undefined || zoom === null || !isFinite(zoom)) return 82;
-    return Math.max(0, Math.min(82, (zoom - 3.5) * 18));
+    // Allow full 3D terrain tilt (up to 82°) across all operational basin zoom levels
+    // Clamps gracefully only at extreme global view (zoom < 2.0)
+    return zoom < 2.0 ? 60 : 82;
   }
 
   function clampPitch(pitch, zoom) {
@@ -510,7 +512,10 @@
         var nextPitch = clampPitch(curPitch + pitchDelta * pitchSpeed * dt, curZoom);
         map.setPitch(nextPitch);
         if (options.onPitchChange) options.onPitchChange(Math.round(nextPitch));
-        adjustZoomForTargetAltitude(map, heldFlightAltitude);
+        var infoPitch = getCameraInfo(map);
+        if (infoPitch && isFinite(infoPitch.altitude)) {
+          heldFlightAltitude = infoPitch.altitude;
+        }
       }
 
       // 2. Bearing Yaw (A / D): BEARING_SPEED = 42 deg/s (84 deg/s with Shift)
