@@ -432,9 +432,9 @@
         </div>
       </div>
 
-      <!-- 7-Day Flow Replay Scrubber Bar (Docked Bottom Center) -->
+      <!-- 7-Day & 30-Day Flow Replay Scrubber Bar (Docked Bottom Center) -->
       <div id="flow-replay-bar" class="flow-replay-bar hidden" onclick="event.stopPropagation()">
-        <!-- Top Row: Kicker, Timestamp, Sentinel Readouts, Close -->
+        <!-- Top Row: Kicker, Period Selector, Timestamp, Relative Time, and Close Button -->
         <div class="replay-top-row">
           <div class="replay-kicker-group">
             <span class="replay-kicker">FLOW REPLAY</span>
@@ -446,21 +446,25 @@
             <span class="replay-rel-time" id="replay-rel-time">--</span>
           </div>
 
-          <!-- Hydrologic Storytelling / Pulse Tracking Strip -->
-          <div class="replay-sentinel-strip" id="replay-sentinel-strip">
-            <span class="sentinel-pill" title="San Juan River entering Lake Powell (Mexican Hat, UT)">
-              San Juan: <strong id="replay-sanjuan-flow">--</strong> cfs
-            </span>
-            <span class="sentinel-divider">→ Powell →</span>
-            <span class="sentinel-pill" title="Controlled release from Glen Canyon Dam below Lake Powell (Lees Ferry, AZ)">
-              Lees Ferry: <strong id="replay-lees-flow">--</strong> cfs
-            </span>
-            <span class="sentinel-pill" title="Gila River confluence near Yuma, AZ (far downstream of Powell & Mead)">
-              Gila: <strong id="replay-gila-flow">--</strong> cfs
-            </span>
-          </div>
-
           <button class="replay-close-btn" onclick="FlowReplayEngine.close()" title="Exit Flow Replay" aria-label="Close Flow Replay">✕</button>
+        </div>
+
+        <!-- Middle Row: Hydrologic Storytelling / Sentinel Pulse Strip (Full Width, Never Clipped) -->
+        <div class="replay-sentinel-strip" id="replay-sentinel-strip">
+          <div class="sentinel-pill" title="San Juan River entering Lake Powell (Mexican Hat, UT)">
+            <span class="sentinel-label">San Juan</span>
+            <span class="sentinel-val"><strong id="replay-sanjuan-flow">--</strong> <span class="sentinel-unit">cfs</span></span>
+          </div>
+          <span class="sentinel-divider">→ Lake Powell →</span>
+          <div class="sentinel-pill" title="Controlled release from Glen Canyon Dam below Lake Powell (Lees Ferry, AZ)">
+            <span class="sentinel-label">Lees Ferry</span>
+            <span class="sentinel-val"><strong id="replay-lees-flow">--</strong> <span class="sentinel-unit">cfs</span></span>
+          </div>
+          <span class="sentinel-divider">→ Lake Mead →</span>
+          <div class="sentinel-pill" title="Gila River confluence near Dome / Yuma, AZ (Lower Basin Inflow)">
+            <span class="sentinel-label">Gila River</span>
+            <span class="sentinel-val"><strong id="replay-gila-flow">--</strong> <span class="sentinel-unit">cfs</span></span>
+          </div>
         </div>
 
         <!-- Bottom Row: Transport Controls & Scrubber Slider -->
@@ -473,20 +477,20 @@
 
           <div class="replay-slider-wrap">
             <input type="range" id="replay-scrubber-slider" class="replay-slider" min="0" max="169" value="0">
-            <div class="replay-slider-ticks">
+            <div class="replay-slider-ticks" id="replay-slider-ticks">
               <span>T - 7 Days</span>
               <span>T - 5 Days</span>
               <span>T - 3 Days</span>
               <span>T - 1 Day</span>
-              <span>Live</span>
+              <span onclick="FlowReplayEngine.jumpToLive()" style="cursor: pointer;" title="Jump to current live snapshot">Live</span>
             </div>
           </div>
 
           <div class="replay-speed-group">
+            <span class="replay-speed-label">Speed:</span>
             <button class="speed-pill active" id="speed-pill-1" onclick="FlowReplayEngine.setSpeed(1)" title="1 hour per second">1h/s</button>
             <button class="speed-pill" id="speed-pill-4" onclick="FlowReplayEngine.setSpeed(4)" title="4 hours per second">4h/s</button>
             <button class="speed-pill" id="speed-pill-12" onclick="FlowReplayEngine.setSpeed(12)" title="12 hours per second">12h/s</button>
-            <button class="replay-live-btn" onclick="FlowReplayEngine.jumpToLive()" title="Jump to current live conditions">LIVE</button>
           </div>
         </div>
       </div>

@@ -1234,6 +1234,7 @@ function resolveStation(st) {
 
 function applyLiveHydrology(riverNetwork, metrics) {
   if (!riverNetwork || !riverNetwork.features || !metrics) return;
+  if (window.FlowReplayEngine && window.FlowReplayEngine.isOpen) return;
   
   const streamflows = metrics.streamflows || [];
   const byId = {};
@@ -2932,9 +2933,9 @@ print("NHD Features found:", len(res.get("features", [])))`;
         ],
         'line-width': [
           'interpolate', ['linear'], ['zoom'],
-          6, ['+', ['get', 'weight'], 2.0],
-          10, ['+', ['*', ['get', 'weight'], 1.25], 2.5],
-          13, ['+', ['*', ['get', 'weight'], 1.6], 3.0]
+          6, ['+', ['coalesce', ['get', 'weight'], 4.4], 2.0],
+          10, ['+', ['*', ['coalesce', ['get', 'weight'], 4.4], 1.25], 2.5],
+          13, ['+', ['*', ['coalesce', ['get', 'weight'], 4.4], 1.6], 3.0]
         ],
         'line-blur': 1.5,
         'line-opacity': 0.65
@@ -2955,9 +2956,9 @@ print("NHD Features found:", len(res.get("features", [])))`;
         ],
         'line-width': [
           'interpolate', ['linear'], ['zoom'],
-          6, ['get', 'weight'],
-          10, ['*', ['get', 'weight'], 1.25],
-          13, ['*', ['get', 'weight'], 1.6]
+          6, ['coalesce', ['get', 'weight'], 4.4],
+          10, ['*', ['coalesce', ['get', 'weight'], 4.4], 1.25],
+          13, ['*', ['coalesce', ['get', 'weight'], 4.4], 1.6]
         ],
         'line-opacity': 0.95
       }
@@ -2986,9 +2987,9 @@ print("NHD Features found:", len(res.get("features", [])))`;
         ],
         'line-width': [
           'interpolate', ['linear'], ['zoom'],
-          6, ['+', ['get', 'weight'], 2.0],
-          10, ['+', ['*', ['get', 'weight'], 1.25], 2.5],
-          13, ['+', ['*', ['get', 'weight'], 1.6], 3.0]
+          6, ['+', ['coalesce', ['get', 'weight'], 3.2], 2.0],
+          10, ['+', ['*', ['coalesce', ['get', 'weight'], 3.2], 1.25], 2.5],
+          13, ['+', ['*', ['coalesce', ['get', 'weight'], 3.2], 1.6], 3.0]
         ],
         'line-blur': 1.5,
         'line-opacity': 0.65
@@ -3008,9 +3009,9 @@ print("NHD Features found:", len(res.get("features", [])))`;
         ],
         'line-width': [
           'interpolate', ['linear'], ['zoom'],
-          6, ['get', 'weight'],
-          10, ['*', ['get', 'weight'], 1.25],
-          13, ['*', ['get', 'weight'], 1.6]
+          6, ['coalesce', ['get', 'weight'], 3.2],
+          10, ['*', ['coalesce', ['get', 'weight'], 3.2], 1.25],
+          13, ['*', ['coalesce', ['get', 'weight'], 3.2], 1.6]
         ],
         'line-opacity': 0.95
       }
@@ -3058,9 +3059,9 @@ print("NHD Features found:", len(res.get("features", [])))`;
         ],
         'line-width': [
           'interpolate', ['linear'], ['zoom'],
-          6, ['+', ['get', 'weight'], 1.8],
-          10, ['+', ['*', ['get', 'weight'], 1.25], 2.2],
-          13, ['+', ['*', ['get', 'weight'], 1.6], 2.6]
+          6, ['+', ['coalesce', ['get', 'weight'], 2.4], 1.8],
+          10, ['+', ['*', ['coalesce', ['get', 'weight'], 2.4], 1.25], 2.2],
+          13, ['+', ['*', ['coalesce', ['get', 'weight'], 2.4], 1.6], 2.6]
         ],
         'line-blur': 1.2,
         'line-opacity': 0.55
@@ -3080,9 +3081,9 @@ print("NHD Features found:", len(res.get("features", [])))`;
         ],
         'line-width': [
           'interpolate', ['linear'], ['zoom'],
-          6, ['get', 'weight'],
-          10, ['*', ['get', 'weight'], 1.25],
-          13, ['*', ['get', 'weight'], 1.6]
+          6, ['coalesce', ['get', 'weight'], 2.4],
+          10, ['*', ['coalesce', ['get', 'weight'], 2.4], 1.25],
+          13, ['*', ['coalesce', ['get', 'weight'], 2.4], 1.6]
         ],
         'line-opacity': 0.95
       }
@@ -4975,10 +4976,10 @@ print(f"${cleanTName}: {flow_cfs:,.0f} cfs")`;
         'circle-color': '#ffffff',
         'circle-radius': [
           'interpolate', ['linear'], ['zoom'],
-          4, 5.0,
-          7, 6.5,
-          10, 8.5,
-          13, 11.0
+          4, ['coalesce', ['get', 'casing_radius'], 5.0],
+          7, ['+', ['coalesce', ['get', 'casing_radius'], 5.0], 1.5],
+          10, ['+', ['coalesce', ['get', 'casing_radius'], 5.0], 3.5],
+          13, ['+', ['coalesce', ['get', 'casing_radius'], 5.0], 6.0]
         ],
         'circle-stroke-color': '#0f172a',
         'circle-stroke-width': 1.0,
@@ -4996,19 +4997,23 @@ print(f"${cleanTName}: {flow_cfs:,.0f} cfs")`;
       },
       paint: {
         'circle-color': [
-          'match', ['get', 'station_type'],
-          'streamflow', '#0284c7',
-          'diversion_tunnel', '#0891b2',
-          'diversion_canal', '#059669',
-          'reservoir', '#dc2626',
-          '#0284c7'
+          'coalesce',
+          ['get', 'circle_color'],
+          [
+            'match', ['get', 'station_type'],
+            'streamflow', '#0284c7',
+            'diversion_tunnel', '#0891b2',
+            'diversion_canal', '#059669',
+            'reservoir', '#dc2626',
+            '#0284c7'
+          ]
         ],
         'circle-radius': [
           'interpolate', ['linear'], ['zoom'],
-          4, 3.5,
-          7, 5.0,
-          10, 7.0,
-          13, 9.0
+          4, ['coalesce', ['get', 'circle_radius'], 3.5],
+          7, ['+', ['coalesce', ['get', 'circle_radius'], 3.5], 1.5],
+          10, ['+', ['coalesce', ['get', 'circle_radius'], 3.5], 3.5],
+          13, ['+', ['coalesce', ['get', 'circle_radius'], 3.5], 5.5]
         ],
         'circle-opacity': 1.0
       }

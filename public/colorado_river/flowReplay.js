@@ -175,7 +175,7 @@
             <span>T - 5 Days</span>
             <span>T - 3 Days</span>
             <span>T - 1 Day</span>
-            <span>Live</span>
+            <span onclick="FlowReplayEngine.jumpToLive()" style="cursor: pointer;" title="Jump to current live snapshot">Live</span>
           `;
         } else {
           ticksWrap.innerHTML = `
@@ -183,7 +183,7 @@
             <span>T - 20 Days</span>
             <span>T - 10 Days</span>
             <span>T - 3 Days</span>
-            <span>Live</span>
+            <span onclick="FlowReplayEngine.jumpToLive()" style="cursor: pointer;" title="Jump to current live snapshot">Live</span>
           `;
         }
       }
@@ -258,16 +258,18 @@
 
       // Cache raw initial GeoJSON for gauges
       const gaugeSource = this.map.getSource('streamflow-gauges');
-      if (gaugeSource && gaugeSource._data && !this.originalGaugesGeoJSON) {
-        this.originalGaugesGeoJSON = JSON.parse(JSON.stringify(gaugeSource._data));
-        this.cachedGaugesFeatures = JSON.parse(JSON.stringify(gaugeSource._data.features));
+      const gaugeData = gaugeSource?._data || window.cachedGeography?.gauges;
+      if (gaugeData && !this.originalGaugesGeoJSON) {
+        this.originalGaugesGeoJSON = JSON.parse(JSON.stringify(gaugeData));
+        this.cachedGaugesFeatures = JSON.parse(JSON.stringify(gaugeData.features || gaugeData));
       }
 
       // Cache raw initial GeoJSON for reaches
       const riverSource = this.map.getSource('rivers');
-      if (riverSource && riverSource._data && !this.originalReachesGeoJSON) {
-        this.originalReachesGeoJSON = JSON.parse(JSON.stringify(riverSource._data));
-        this.cachedReachesFeatures = JSON.parse(JSON.stringify(riverSource._data.features));
+      const riverData = riverSource?._data || window.cachedRiverNetwork;
+      if (riverData && !this.originalReachesGeoJSON) {
+        this.originalReachesGeoJSON = JSON.parse(JSON.stringify(riverData));
+        this.cachedReachesFeatures = JSON.parse(JSON.stringify(riverData.features || riverData));
       }
     },
 
@@ -527,7 +529,19 @@
       if (this.cachedReachesFeatures) {
         const updatedReaches = this.cachedReachesFeatures.map(reach => {
           const gid = reach.properties.gauge_id;
-          const flowSeries = gid ? stations[gid] : null;
+          let flowSeries = gid ? stations[gid] : null;
+
+          // Operational USBR Dam proxy mapping: ensures continuous downstream pulse below Mead & Havasu
+          if (!flowSeries) {
+            if (gid === 'USBR-PARKER' && stations['09429100']) {
+              flowSeries = stations['09429100']; // USGS below Palo Verde (immediate Parker tailwater)
+            } else if (gid === 'USBR-DAVIS' && stations['09429100']) {
+              flowSeries = stations['09429100'];
+            } else if (gid === 'USBR-HOOVER') {
+              flowSeries = stations['09404200'] || stations['09429100'];
+            }
+          }
+
           let flow = reach.properties.flow_cfs;
           if (flowSeries && flowSeries[index] !== undefined && flowSeries[index] !== null) {
             flow = flowSeries[index];
@@ -537,15 +551,17 @@
           const rType = reach.properties.reach_type;
           const rName = reach.properties.reach || '';
 
-          // Recompute reach weight via sqrt(Q) hydrologic formula
+          // Recompute reach weight via sqrt(Q) hydrologic formula with vivid responsive pulse
           let weight = 2.4;
           if (flow && flow > 0) {
             if (cat === 'mainstem') {
-              weight = Math.min(13.0, Math.max(4.4, 3.2 + Math.sqrt(flow) * 0.085));
+              weight = Math.min(14.0, Math.max(3.6, 2.8 + Math.sqrt(flow) * 0.095));
             } else if (cat === 'major_tributary') {
-              weight = Math.min(8.5, Math.max(3.2, 2.4 + Math.sqrt(flow) * 0.07));
+              weight = Math.min(9.5, Math.max(2.6, 2.0 + Math.sqrt(flow) * 0.085));
+            } else if (rType === 'canal' || rName === 'div_canal_alimentador_central') {
+              weight = Math.min(6.5, Math.max(2.2, 1.8 + Math.sqrt(flow) * 0.065));
             } else {
-              weight = Math.min(5.0, Math.max(2.4, 1.8 + Math.sqrt(flow) * 0.055));
+              weight = Math.min(6.0, Math.max(2.0, 1.6 + Math.sqrt(flow) * 0.065));
             }
           }
 
