@@ -525,44 +525,56 @@
           <span class="legend-toggle-chevron" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
         </div>
         <div class="legend-content" id="legend-content">
-          <div class="legend-section-title">STREAMFLOW VOLUME (CFS)</div>
-          <div class="legend-item"><span class="legend-line river" style="background:#0284c7; height: 6px;"></span> High Flow Mainstem (&gt; 5,000 cfs)</div>
-          <div class="legend-item"><span class="legend-line river" style="background:#0284c7; height: 3.5px;"></span> Major Rivers &amp; Tributaries (1,000 &ndash; 5,000 cfs)</div>
-          <div class="legend-item"><span class="legend-line river" style="background:#0284c7; height: 1.5px;"></span> Secondary Streams &amp; Headwaters (&lt; 1,000 cfs)</div>
-
-          <div class="legend-section-title" style="margin-top: 8px;">WATER INFRASTRUCTURE</div>
-          <div class="legend-item"><span class="legend-box" style="background:#0284c7; width:14px; height:10px; border-radius:2px;"></span> Storage Reservoirs &amp; Lakes</div>
-          <div class="legend-item"><span style="display:inline-block; width:11px; height:11px; background:#1e293b; border:1px solid #fff; border-radius:2px; margin-right:6px; vertical-align:middle;"></span> Major Storage Dams (16)</div>
-          <div class="legend-item"><span class="legend-line divide"></span> Continental Divide</div>
-          <div class="legend-item"><span style="display:inline-flex; align-items:center; width:22px; height:8px; margin-right:6px; vertical-align:middle;"><span style="width:6px; height:6px; border-radius:50%; background:#0284c7; border:1.5px solid #0f172a; flex-shrink:0;"></span><span style="flex:1; height:3px; background:#0284c7; border-top:0.5px solid #0f172a; border-bottom:0.5px solid #0f172a;"></span><span style="width:6px; height:6px; border-radius:50%; background:#0284c7; border:1.5px solid #0f172a; flex-shrink:0;"></span></span> Trans-Mountain Tunnels (Front Range)</div>
-          <div class="legend-item"><span class="legend-line" style="display:inline-block; width:22px; height:3.5px; background:repeating-linear-gradient(90deg, #0284c7, #0284c7 3px, transparent 3px, transparent 6px); margin-right:6px; vertical-align:middle;"></span> Conveyance Canals (AAC / CAP / CRA)</div>
-          
-          <!-- Compact 2-Column Gage Grid -->
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3px 6px; margin: 4px 0 6px 0;">
-            <div class="legend-item" style="margin: 0;"><span class="legend-dot gauge" style="background:#0284c7;"></span> Streamflow (79)</div>
-            <div class="legend-item" style="margin: 0;"><span class="legend-dot gauge" style="background:#dc2626;"></span> Reservoirs (11)</div>
-            <div class="legend-item" style="margin: 0;"><span class="legend-dot gauge" style="background:#0891b2;"></span> Tunnels (4)</div>
-            <div class="legend-item" style="margin: 0;"><span class="legend-dot gauge" style="background:#059669;"></span> Canals (4)</div>
+          <!-- Section 1: Streamflow Volume -->
+          <div id="legend-sec-streamflow">
+            <div class="legend-section-title">STREAMFLOW VOLUME (CFS)</div>
+            <div class="legend-item" id="legend-item-river-mainstem"><span class="legend-line river" style="background:#0284c7; height: 6px;"></span> High Flow Mainstem (&gt; 5,000 cfs)</div>
+            <div class="legend-item" id="legend-item-river-major"><span class="legend-line river" style="background:#0284c7; height: 3.5px;"></span> Major Rivers &amp; Tributaries (1,000 &ndash; 5,000 cfs)</div>
+            <div class="legend-item" id="legend-item-river-minor"><span class="legend-line river" style="background:#0284c7; height: 1.5px;"></span> Secondary Streams &amp; Headwaters (&lt; 1,000 cfs)</div>
           </div>
-          <div class="legend-item"><span class="legend-cfs-badge">7,800 cfs</span> Live Flow Badge</div>
 
-          <!-- Dynamic Topology Diagnostics (Shown when layers active) -->
-          <div id="topology-diagnostics-legend" style="display:none;">
-            <div class="legend-section-title" style="margin-top: 8px;">TOPOLOGY DIAGNOSTICS</div>
-            <div class="legend-item"><span style="color:#0284c7; font-weight:800; font-size:12px; margin-right:6px;">▶</span> Downstream Flow Direction</div>
-            <div class="legend-item"><span style="display:inline-block; width:9px; height:9px; background:#d97706; border:1.5px solid #0f172a; margin-right:6px; vertical-align:middle; border-radius:1px;"></span> Confluence Junctions (■)</div>
-            <div class="legend-item"><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#10b981; border:1.5px solid #0f172a; margin-right:6px; vertical-align:middle;"></span> Reach Start (● Headwaters)</div>
-            <div class="legend-item"><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#0284c7; border:1.5px solid #0f172a; margin-right:6px; vertical-align:middle;"></span> Reach Boundary (● Transition)</div>
+          <!-- Section 2: Water Infrastructure -->
+          <div id="legend-sec-infrastructure" style="margin-top: 8px;">
+            <div class="legend-section-title">WATER INFRASTRUCTURE</div>
+            <div class="legend-item" id="legend-item-reservoirs"><span class="legend-box" style="background:#0284c7; width:14px; height:10px; border-radius:2px;"></span> Storage Reservoirs &amp; Lakes</div>
+            <div class="legend-item" id="legend-item-dams"><span style="display:inline-block; width:11px; height:11px; background:#1e293b; border:1px solid #fff; border-radius:2px; margin-right:6px; vertical-align:middle;"></span> Major Storage Dams (16)</div>
+            <div class="legend-item" id="legend-item-divide"><span class="legend-line divide"></span> Continental Divide</div>
+            <div class="legend-item" id="legend-item-basin"><span class="legend-line" style="display:inline-block; width:22px; height:0px; border-top: 2px dashed #94a3b8; margin-right:6px; vertical-align:middle;"></span> Basin Boundaries</div>
+            <div class="legend-item" id="legend-item-tunnels"><span style="display:inline-flex; align-items:center; width:22px; height:8px; margin-right:6px; vertical-align:middle;"><span style="width:6px; height:6px; border-radius:50%; background:#0284c7; border:1.5px solid #0f172a; flex-shrink:0;"></span><span style="flex:1; height:3px; background:#0284c7; border-top:0.5px solid #0f172a; border-bottom:0.5px solid #0f172a;"></span><span style="width:6px; height:6px; border-radius:50%; background:#0284c7; border:1.5px solid #0f172a; flex-shrink:0;"></span></span> Trans-Mountain Tunnels (Front Range)</div>
+            <div class="legend-item" id="legend-item-canals"><span class="legend-line" style="display:inline-block; width:22px; height:3.5px; background:repeating-linear-gradient(90deg, #0284c7, #0284c7 3px, transparent 3px, transparent 6px); margin-right:6px; vertical-align:middle;"></span> Conveyance Canals (AAC / CAP / CRA)</div>
+          </div>
+          
+          <!-- Compact 2-Column Station Grid -->
+          <div id="legend-stations-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 3px 6px; margin: 8px 0 6px 0;">
+            <div class="legend-item" id="legend-item-station-streamflow" style="margin: 0;"><span class="legend-dot gauge" style="background:#0284c7;"></span> Streamflow (79)</div>
+            <div class="legend-item" id="legend-item-station-reservoirs" style="margin: 0;"><span class="legend-dot gauge" style="background:#dc2626;"></span> Reservoirs (11)</div>
+            <div class="legend-item" id="legend-item-station-tunnels" style="margin: 0;"><span class="legend-dot gauge" style="background:#0891b2;"></span> Tunnels (4)</div>
+            <div class="legend-item" id="legend-item-station-canals" style="margin: 0;"><span class="legend-dot gauge" style="background:#059669;"></span> Canals (4)</div>
+          </div>
+          <div class="legend-item" id="legend-item-flow-badge" style="display: none;"><span class="legend-cfs-badge">7,800 cfs</span> Live Flow Badge</div>
+
+          <!-- Dynamic Topology Diagnostics (Shown when individual layers active) -->
+          <div id="topology-diagnostics-legend" style="display:none; margin-top: 8px;">
+            <div class="legend-section-title">TOPOLOGY DIAGNOSTICS</div>
+            <div class="legend-item" id="legend-item-diag-arrows"><span style="color:#0284c7; font-weight:800; font-size:12px; margin-right:6px;">▶</span> Downstream Flow Direction</div>
+            <div class="legend-item" id="legend-item-diag-junctions"><span style="display:inline-block; width:9px; height:9px; background:#d97706; border:1.5px solid #0f172a; margin-right:6px; vertical-align:middle; border-radius:1px;"></span> Confluence Junctions (■)</div>
+            <div class="legend-item" id="legend-item-diag-sections-start"><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#10b981; border:1.5px solid #0f172a; margin-right:6px; vertical-align:middle;"></span> Reach Start (● Headwaters)</div>
+            <div class="legend-item" id="legend-item-diag-sections-boundary"><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#0284c7; border:1.5px solid #0f172a; margin-right:6px; vertical-align:middle;"></span> Reach Boundary (● Transition)</div>
           </div>
 
           <!-- Dynamic Flow Health (Shown when layer active) -->
-          <div id="flow-health-legend" style="display:none;">
-            <div class="legend-section-title" style="margin-top: 8px;">FLOW HEALTH (% OF DAILY AVERAGE)</div>
+          <div id="flow-health-legend" style="display:none; margin-top: 8px;">
+            <div class="legend-section-title">FLOW HEALTH (% OF DAILY AVERAGE)</div>
             <div class="legend-item"><span class="legend-line river" style="background:#1d4ed8; height: 4px;"></span> Abundant (&gt; 150%)</div>
             <div class="legend-item"><span class="legend-line river" style="background:#0284c7; height: 4px;"></span> Normal (90–150%)</div>
             <div class="legend-item"><span class="legend-line river" style="background:#d97706; height: 4px;"></span> Below Normal (50–90%)</div>
             <div class="legend-item"><span class="legend-line river" style="background:#ea580c; height: 4px;"></span> Low Flow (25–50%)</div>
             <div class="legend-item"><span class="legend-line river" style="background:#b2182b; height: 4px;"></span> Critically Low (&lt; 25%)</div>
+          </div>
+
+          <!-- Notice when all layers are disabled -->
+          <div id="legend-empty-notice" style="display: none; padding: 12px 8px; text-align: center; color: var(--text-muted); font-size: 11px; font-style: italic;">
+            All map layers are currently turned off.
           </div>
 
           <!-- Collapsible 3D Flight & Controls Helper -->

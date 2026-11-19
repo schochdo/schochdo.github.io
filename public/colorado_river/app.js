@@ -623,6 +623,7 @@ function initMap() {
         toggleLayer("topologySections");
       }
     }
+    syncLegendToLayerToggles();
   });
 
   map.on('move', queueBadgePlacements);
@@ -4458,6 +4459,7 @@ function toggleFlowHealthLayer(show) {
   const leg = document.getElementById('flow-health-legend');
   if (leg) leg.style.display = show ? 'block' : 'none';
 
+  syncLegendToLayerToggles();
   ensurePointLayersOnTop();
 }
 
@@ -6427,16 +6429,74 @@ function toggleLayer(layerName) {
       setLayerVisibility('topology-sections-hit-buffer', isChecked);
       break;
   }
-  syncLegendDiagnosticsVisibility();
+  syncLegendToLayerToggles();
 }
 
-function syncLegendDiagnosticsVisibility() {
-  const diagLegend = document.getElementById('topology-diagnostics-legend');
-  if (!diagLegend) return;
+function syncLegendToLayerToggles() {
+  const isMainstem = document.getElementById('toggle-river-mainstem')?.checked ?? true;
+  const isMajor = document.getElementById('toggle-river-major')?.checked ?? true;
+  const isMinor = document.getElementById('toggle-river-minor')?.checked ?? true;
+  const isReservoirs = document.getElementById('toggle-reservoirs')?.checked ?? true;
+  const isDams = document.getElementById('toggle-dams')?.checked ?? true;
+  const isDivide = document.getElementById('toggle-divide')?.checked ?? true;
+  const isBasin = document.getElementById('toggle-basin')?.checked ?? true;
+  const isFlowHealth = document.getElementById('toggle-flow-health')?.checked ?? false;
+  const isStations = document.getElementById('toggle-streamflow-gauges')?.checked ?? true;
+  const isBadges = document.getElementById('toggle-all-badges')?.checked ?? false;
+  const isTunnels = document.getElementById('toggle-tunnels')?.checked ?? true;
+  const isCanals = document.getElementById('toggle-canals')?.checked ?? true;
   const isArrows = document.getElementById('toggle-flow-arrows')?.checked ?? false;
   const isJunctions = document.getElementById('toggle-topology-junctions')?.checked ?? false;
   const isSections = document.getElementById('toggle-topology-sections')?.checked ?? false;
-  diagLegend.style.display = (isArrows || isJunctions || isSections) ? 'block' : 'none';
+
+  const setDisp = (id, show, displayType = 'flex') => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = show ? displayType : 'none';
+  };
+
+  // 1. Streamflow Volume
+  setDisp('legend-item-river-mainstem', isMainstem, 'flex');
+  setDisp('legend-item-river-major', isMajor, 'flex');
+  setDisp('legend-item-river-minor', isMinor, 'flex');
+  const showStreamflowSec = isMainstem || isMajor || isMinor;
+  setDisp('legend-sec-streamflow', showStreamflowSec, 'block');
+
+  // 2. Water Infrastructure
+  setDisp('legend-item-reservoirs', isReservoirs, 'flex');
+  setDisp('legend-item-dams', isDams, 'flex');
+  setDisp('legend-item-divide', isDivide, 'flex');
+  setDisp('legend-item-basin', isBasin, 'flex');
+  setDisp('legend-item-tunnels', isTunnels, 'flex');
+  setDisp('legend-item-canals', isCanals, 'flex');
+  const showInfraSec = isReservoirs || isDams || isDivide || isBasin || isTunnels || isCanals;
+  setDisp('legend-sec-infrastructure', showInfraSec, 'block');
+
+  // 3. Monitoring Stations & Badges
+  setDisp('legend-stations-grid', isStations, 'grid');
+  setDisp('legend-item-station-streamflow', isStations && (isMainstem || isMajor || isMinor), 'flex');
+  setDisp('legend-item-station-reservoirs', isStations && isReservoirs, 'flex');
+  setDisp('legend-item-station-tunnels', isStations && isTunnels, 'flex');
+  setDisp('legend-item-station-canals', isStations && isCanals, 'flex');
+  setDisp('legend-item-flow-badge', isBadges, 'flex');
+
+  // 4. Topology Diagnostics (Each individual item matches its toggle)
+  setDisp('legend-item-diag-arrows', isArrows, 'flex');
+  setDisp('legend-item-diag-junctions', isJunctions, 'flex');
+  setDisp('legend-item-diag-sections-start', isSections, 'flex');
+  setDisp('legend-item-diag-sections-boundary', isSections, 'flex');
+  const showTopologySec = isArrows || isJunctions || isSections;
+  setDisp('topology-diagnostics-legend', showTopologySec, 'block');
+
+  // 5. Flow Health
+  setDisp('flow-health-legend', isFlowHealth, 'block');
+
+  // 6. Empty Notice (Shown if all functional layers are turned off)
+  const hasAnyVisible = showStreamflowSec || showInfraSec || isStations || isBadges || showTopologySec || isFlowHealth;
+  setDisp('legend-empty-notice', !hasAnyVisible, 'block');
+}
+
+function syncLegendDiagnosticsVisibility() {
+  syncLegendToLayerToggles();
 }
 
 // ─── Diagnostics Sync & Toggles (Compatibility Stubs) ──────────────
@@ -6744,7 +6804,7 @@ function initLegendState() {
   if (toggleBtn) {
     toggleBtn.setAttribute('aria-expanded', String(!shouldCollapse));
   }
-  syncLegendDiagnosticsVisibility();
+  syncLegendToLayerToggles();
 }
 
 if (document.readyState === 'loading') {
