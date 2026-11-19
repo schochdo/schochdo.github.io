@@ -445,8 +445,8 @@
             </div>
 
             <!-- Lee's Ferry Marker for Bar 1 (at 13.90 MAF = 69.5%) -->
-            <div class="absolute left-[69.5%] top-full mt-1.5 -translate-x-1/2 flex flex-col items-center z-20 pointer-events-none">
-              <span class="text-[10px] font-extrabold text-amber-700 bg-amber-50 px-1.5 py-0.2 rounded border border-amber-300 shadow-2xs whitespace-nowrap">
+            <div class="absolute left-[69.5%] top-full mt-2 -translate-x-1/2 flex flex-col items-center z-20 pointer-events-none">
+              <span class="text-[10px] font-extrabold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-300 shadow-2xs whitespace-nowrap">
                 ▲ Lee's Ferry (91.4% Physical Water Originates Above)
               </span>
             </div>
@@ -455,7 +455,7 @@
           <!-- ========================================== -->
           <!-- PARADOX CONNECTOR BRACKET (LEE'S FERRY)   -->
           <!-- ========================================== -->
-          <div class="relative py-2.5 my-1 flex items-center justify-between text-[11px] bg-stone-50 border-y border-dashed border-stone-300 px-3 rounded text-stone-700">
+          <div class="relative py-2.5 my-3 flex items-center justify-between text-[11px] bg-stone-50 border-y border-dashed border-stone-300 px-3 rounded text-stone-700">
             <div class="flex items-center gap-2">
               <span class="font-extrabold text-amber-800 uppercase tracking-wide">The Compact Asymmetry:</span>
               <span><strong>91.4%</strong> of wet water is born upstream, but <strong>60.7%</strong> of paper demands are exercised downstream.</span>
@@ -469,15 +469,8 @@
           <!-- ========================================== -->
           <!-- BAR 2: PAPER CLAIMS (STATUTORY DEMANDS)    -->
           <!-- ========================================== -->
-          <div class="relative pt-5">
-            <!-- Lee's Ferry Top Marker for Bar 2 (at 7.50 MAF = 37.5%) -->
-            <div class="absolute left-[37.5%] top-0 -translate-x-1/2 flex flex-col items-center z-20 pointer-events-none">
-              <span class="text-[10px] font-extrabold text-blue-800 bg-blue-50 px-1.5 py-0.2 rounded border border-blue-300 shadow-2xs whitespace-nowrap">
-                ▼ Lee's Ferry (Compact Limit: 39.3% Upper Basin Share)
-              </span>
-            </div>
-
-            <div class="flex items-center justify-between text-xs font-bold pb-1 pt-1">
+          <div class="relative pt-2">
+            <div class="flex items-center justify-between text-xs font-bold pb-1">
               <span class="text-orange-800 flex items-center gap-1.5">
                 <span class="w-2 h-2 rounded-full bg-orange-600"></span>
                 <span>BAR 2: STATUTORY PAPER ALLOCATIONS &amp; COMMITMENTS (BY STATE &amp; TREATY)</span>
@@ -487,8 +480,17 @@
               </span>
             </div>
 
-            <!-- Bar 2 Track (100% = 20 MAF) -->
-            <div class="relative w-full h-9 rounded-lg bg-stone-100 border border-stone-300 flex overflow-hidden shadow-inner">
+            <!-- Bar 2 Track & Marker Container -->
+            <div class="relative mt-7">
+              <!-- Lee's Ferry Top Marker for Bar 2 (at 7.50 MAF = 37.5%) -->
+              <div class="absolute left-[37.5%] bottom-full mb-1.5 -translate-x-1/2 flex flex-col items-center z-20 pointer-events-none">
+                <span class="text-[10px] font-extrabold text-blue-800 bg-blue-50 px-2 py-0.5 rounded border border-blue-300 shadow-2xs whitespace-nowrap">
+                  ▼ Lee's Ferry (Compact Limit: 39.3% Upper Basin Share)
+                </span>
+              </div>
+
+              <!-- Bar 2 Track (100% = 20 MAF) -->
+              <div class="relative w-full h-9 rounded-lg bg-stone-100 border border-stone-300 flex overflow-hidden shadow-inner">
               <!-- Upper Basin Statutory Apportionments (1922 Compact base 7.50 MAF = 37.5%) -->
               <!-- 1. Colorado: 3.86 MAF = 19.30% (51.75% of Upper Basin) -->
               <div class="bar-segment h-full bg-[#1e40af] border-r border-blue-900/30 flex items-center justify-center text-white text-[10.5px] font-bold px-1 overflow-hidden"
@@ -583,6 +585,7 @@
                    style="width: 4.5%;">
               </div>
             </div>
+          </div>
 
             <!-- STRUCTURAL DEFICIT OVERHANG BRACKET (Positioned immediately below Bar 2) -->
             <!-- Spans from 15.20 MAF (76.0%) to 19.10 MAF (95.5%) = 19.5% width -->

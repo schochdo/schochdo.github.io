@@ -615,7 +615,7 @@
           maintainAspectRatio: false,
           animation: false,
           layout: {
-            padding: { left: 18, right: 10, top: 4, bottom: 2 }
+            padding: { left: 18, right: 10, top: 14, bottom: 4 }
           },
           plugins: {
             legend: { display: false },
@@ -835,7 +835,7 @@
           maintainAspectRatio: false,
           animation: false,
           layout: {
-            padding: { left: 18, right: 10, top: 8, bottom: 4 }
+            padding: { left: 18, right: 10, top: 16, bottom: 4 }
           },
           plugins: {
             legend: { display: false },
@@ -951,23 +951,42 @@
         if (xPos < chartArea.left || xPos > chartArea.right) return;
 
         ctx.save();
-        // Dashed vertical rule
+        const labelText = '1963: Glen Canyon Dam Closes';
+        ctx.font = '600 10px "Inter", -apple-system, sans-serif';
+        const textWidth = ctx.measureText(labelText).width;
+        const pillW = textWidth + 14;
+        const pillH = 18;
+        // 10px buffer below top gridline for comfortable breathing room
+        const pillY = chartArea.top + 10;
+        const pillX = xPos - (pillW / 2);
+
+        // Draw protective white badge pill with subtle border
+        ctx.fillStyle = '#ffffff';
+        ctx.strokeStyle = '#cbd5e1';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        if (ctx.roundRect) {
+          ctx.roundRect(pillX, pillY, pillW, pillH, 3);
+        } else {
+          ctx.rect(pillX, pillY, pillW, pillH);
+        }
+        ctx.fill();
+        ctx.stroke();
+
+        // Label text centered inside pill
+        ctx.fillStyle = '#334155';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(labelText, xPos, pillY + (pillH / 2));
+
+        // Dashed vertical rule from bottom of pill to bottom of chart
         ctx.beginPath();
         ctx.setLineDash([4, 3]);
         ctx.strokeStyle = '#64748b';
         ctx.lineWidth = 1.2;
-        ctx.moveTo(xPos, chartArea.top + 16);
+        ctx.moveTo(xPos, pillY + pillH);
         ctx.lineTo(xPos, chartArea.bottom);
         ctx.stroke();
-
-        // Clean unboxed text label
-        ctx.setLineDash([]);
-        ctx.font = '600 10px "Inter", -apple-system, sans-serif';
-        const labelText = '1963: Glen Canyon Dam Closes';
-        ctx.fillStyle = '#475569';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'top';
-        ctx.fillText(labelText, xPos, chartArea.top + 2);
 
         ctx.restore();
       }
@@ -1036,7 +1055,7 @@
           maintainAspectRatio: false,
           animation: false,
           layout: {
-            padding: { left: 18, right: 10, top: 8, bottom: 4 }
+            padding: { left: 18, right: 10, top: 16, bottom: 4 }
           },
           plugins: {
             legend: { display: false },
@@ -1144,7 +1163,7 @@
           maintainAspectRatio: false,
           animation: false,
           layout: {
-            padding: { left: 18, right: 10, top: 8, bottom: 4 }
+            padding: { left: 18, right: 10, top: 16, bottom: 4 }
           },
           plugins: {
             legend: { display: false },

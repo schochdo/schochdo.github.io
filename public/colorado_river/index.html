@@ -2683,10 +2683,14 @@ for ts in data["value"]["timeSeries"]:
 
             if (line.noBox) {
               // Clean unboxed text sitting above the dashed line with protective white halo
-              const xAdjust = line.xAdjust !== undefined ? line.xAdjust : -6;
-              const yAdjust = line.yAdjust !== undefined ? line.yAdjust : -8;
+              const xAdjust = line.xAdjust !== undefined ? line.xAdjust : -8;
+              let yAdjust = line.yAdjust !== undefined ? line.yAdjust : -8;
+              let textY = yPos + yAdjust;
+              // Guard against top frame collision: ensure at least 6px buffer from top edge
+              if (textY - (fontSize / 2) < top + 6) {
+                textY = yPos + fontSize + 4;
+              }
               const textX = (line.position === 'start') ? (left - xAdjust) : (right + xAdjust);
-              const textY = yPos + yAdjust;
 
               ctx.textAlign = (line.position === 'start') ? 'left' : ((line.position === 'center') ? 'center' : 'right');
               ctx.textBaseline = 'middle';
@@ -2707,15 +2711,16 @@ for ts in data["value"]["timeSeries"]:
               const padY = line.padY !== undefined ? line.padY : 3.5;
               const pillW = textWidth + padX * 2;
               const pillH = fontSize + padY * 2;
-              const pillX = right - pillW - 8;
+              const pillX = right - pillW - 10;
               
-              let pillY = yPos - pillH - 3;
+              let pillY = yPos - pillH - 4;
               if (line.yOffset !== undefined) {
                 pillY = yPos + line.yOffset;
-              } else if (pillY < top + 2) {
-                pillY = yPos + 3;
-              } else if (pillY + pillH > bottom - 2) {
-                pillY = yPos - pillH - 3;
+              } else if (pillY < top + 6) {
+                // Guard: at least 6px buffer from top
+                pillY = yPos + 6;
+              } else if (pillY + pillH > bottom - 6) {
+                pillY = yPos - pillH - 4;
               }
 
               ctx.beginPath();
