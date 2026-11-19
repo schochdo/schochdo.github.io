@@ -517,7 +517,6 @@
           </div>
 
         </div>
-      </div>
 
       <!-- Map Legend (Collapsible) -->
       <div class="map-legend" id="map-legend">
@@ -631,6 +630,14 @@
 
       <!-- Docked Bottom Collapsible Telemetry Gage Tray -->
       <div class="map-gage-tray collapsed" id="map-gage-tray">
+        <!-- Full-Width Drawer Handle Strip at Top (Clickable Slide Toggle) -->
+        <div class="tray-handle-strip" id="tray-handle-strip" onclick="toggleMapGageTray()" title="Click to open or collapse telemetry tray" role="button" tabindex="0" aria-expanded="false" aria-label="Toggle telemetry tray">
+          <div class="tray-handle-bar">
+            <span class="tray-handle-arrow" id="tray-handle-arrow">▲</span>
+          </div>
+        </div>
+
+        <!-- Tray Toolbar / Controls Bar -->
         <div class="map-tray-header-bar" id="map-tray-header" onclick="toggleMapGageTray()">
           <div class="tray-header-left">
             <span class="tray-indicator-dot"></span>
@@ -642,7 +649,8 @@
           <div class="tray-header-middle" onclick="event.stopPropagation()">
             <div class="tray-search-wrap">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-              <input type="text" id="tray-search-input" placeholder="Search name, ID, type..." oninput="handleTraySearch(this.value)">
+              <input type="text" id="tray-search-input" placeholder="Search name, ID, type..." oninput="handleTraySearch(this.value)" onfocus="onTraySearchFocus()" onclick="onTraySearchFocus()">
+              <button type="button" id="tray-search-clear" class="tray-search-clear" onclick="clearTraySearch()" title="Clear search" aria-label="Clear search">✕</button>
             </div>
             <div class="tray-filter-pills">
               <button class="tray-pill active" id="tpill-all" onclick="filterTrayCategory('all')">All</button>
@@ -656,9 +664,6 @@
           <div class="tray-header-right" onclick="event.stopPropagation()">
             <button class="tray-action-btn" onclick="openDedicatedLedger()" title="Open Full-Screen Telemetry Ledger in New Tab">
               <span>Full Ledger ↗</span>
-            </button>
-            <button class="tray-toggle-btn" id="tray-toggle-btn" onclick="toggleMapGageTray()" title="Expand or collapse bottom telemetry tray">
-              <span id="tray-toggle-icon">▲ Gages</span>
             </button>
           </div>
         </div>

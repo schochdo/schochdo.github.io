@@ -5230,13 +5230,18 @@ let trayFilterQuery = '';
 
 window.toggleMapGageTray = function(forceOpen) {
   const tray = document.getElementById("map-gage-tray");
-  const icon = document.getElementById("tray-toggle-icon");
+  const arrow = document.getElementById("tray-handle-arrow");
+  const strip = document.getElementById("tray-handle-strip");
   if (!tray) return;
   const shouldOpen = typeof forceOpen === 'boolean' ? forceOpen : tray.classList.contains("collapsed");
   if (shouldOpen) {
     tray.classList.remove("collapsed");
     tray.classList.add("expanded");
-    if (icon) icon.textContent = "▼ Hide";
+    document.body.classList.add("map-gage-tray-expanded");
+    const mc = document.getElementById("map-container");
+    if (mc) mc.classList.add("tray-expanded");
+    if (arrow) arrow.textContent = "▼";
+    if (strip) strip.setAttribute("aria-expanded", "true");
     if (window.innerHeight < 720) {
       const legend = document.getElementById("map-legend");
       if (legend && !legend.classList.contains("collapsed")) {
@@ -5246,12 +5251,44 @@ window.toggleMapGageTray = function(forceOpen) {
   } else {
     tray.classList.remove("expanded");
     tray.classList.add("collapsed");
-    if (icon) icon.textContent = "▲ Gages";
+    document.body.classList.remove("map-gage-tray-expanded");
+    const mc = document.getElementById("map-container");
+    if (mc) mc.classList.remove("tray-expanded");
+    if (arrow) arrow.textContent = "▲";
+    if (strip) strip.setAttribute("aria-expanded", "false");
   }
+};
+
+window.onTraySearchFocus = function() {
+  const tray = document.getElementById("map-gage-tray");
+  if (tray && tray.classList.contains("collapsed")) {
+    window.toggleMapGageTray(true);
+  }
+};
+
+window.clearTraySearch = function() {
+  const input = document.getElementById("tray-search-input");
+  if (input) {
+    input.value = "";
+    input.focus();
+  }
+  const clearBtn = document.getElementById("tray-search-clear");
+  if (clearBtn) clearBtn.style.display = "none";
+  window.handleTraySearch("");
 };
 
 window.handleTraySearch = function(query) {
   trayFilterQuery = (query || '').toLowerCase().trim();
+  const clearBtn = document.getElementById("tray-search-clear");
+  if (clearBtn) {
+    clearBtn.style.display = (query && query.length > 0) ? "flex" : "none";
+  }
+  if (trayFilterQuery.length > 0) {
+    const tray = document.getElementById("map-gage-tray");
+    if (tray && tray.classList.contains("collapsed")) {
+      window.toggleMapGageTray(true);
+    }
+  }
   renderTrayRows();
 };
 
