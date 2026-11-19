@@ -93,45 +93,6 @@
   <!-- Main Body Content -->
   <main class="w-full px-3 sm:px-5 py-3.5 flex-1 flex flex-col gap-3.5">
 
-    <!-- KPI / Metric Highlights Grid -->
-    <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
-        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Active Nodes</span>
-        <div class="flex items-baseline gap-2 mt-1">
-          <span class="text-2xl font-black text-slate-800" id="stat-total-nodes">-</span>
-          <span class="text-xs font-medium text-slate-500">instrumented facilities</span>
-        </div>
-        <span class="text-[11px] text-slate-400 mt-2">USGS, CDSS &amp; USBR APIs</span>
-      </div>
-
-      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
-        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Streamflow Gages</span>
-        <div class="flex items-baseline gap-2 mt-1">
-          <span class="text-2xl font-black text-sky-700" id="stat-streamflow-count">-</span>
-          <span class="text-xs font-medium text-slate-500">river reaches</span>
-        </div>
-        <span class="text-[11px] text-slate-400 mt-2">USGS NWIS Instantaneous Values</span>
-      </div>
-
-      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
-        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Diversions &amp; Tunnels</span>
-        <div class="flex items-baseline gap-2 mt-1">
-          <span class="text-2xl font-black text-emerald-700" id="stat-diversion-count">-</span>
-          <span class="text-xs font-medium text-slate-500">export routes</span>
-        </div>
-        <span class="text-[11px] text-slate-400 mt-2">CDSS Trans-Mountain &amp; Canal Gages</span>
-      </div>
-
-      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
-        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Storage Reservoirs</span>
-        <div class="flex items-baseline gap-2 mt-1">
-          <span class="text-2xl font-black text-red-700" id="stat-reservoir-count">-</span>
-          <span class="text-xs font-medium text-slate-500">dams &amp; impoundments</span>
-        </div>
-        <span class="text-[11px] text-slate-400 mt-2">USBR Upper/Lower Basin &amp; CDSS</span>
-      </div>
-    </div>
-
     <!-- Troubleshooting Controls: Search, Filters & View Mode -->
     <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-3.5">
       <!-- Top Row: Hydrologic Category Pills & View Switcher -->
@@ -789,10 +750,10 @@
     }
 
     function updateKpis(metrics) {
-      document.getElementById('stat-total-nodes').textContent = allNodes.length;
-      document.getElementById('stat-streamflow-count').textContent = metrics.streamflows?.length || 0;
-      document.getElementById('stat-diversion-count').textContent = (metrics.tunnels?.length || 0) + (metrics.canals?.length || 0);
-      document.getElementById('stat-reservoir-count').textContent = metrics.reservoirs?.length || 0;
+      const elTotal = document.getElementById('stat-total-nodes'); if (elTotal) elTotal.textContent = allNodes.length;
+      const elStream = document.getElementById('stat-streamflow-count'); if (elStream) elStream.textContent = metrics.streamflows?.length || 0;
+      const elDivCount = document.getElementById('stat-diversion-count'); if (elDivCount) elDivCount.textContent = (metrics.tunnels?.length || 0) + (metrics.canals?.length || 0);
+      const elResCount = document.getElementById('stat-reservoir-count'); if (elResCount) elResCount.textContent = metrics.reservoirs?.length || 0;
 
       // Update category pill counts
       let sentinelsCount = 0;

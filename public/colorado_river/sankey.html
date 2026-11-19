@@ -177,13 +177,13 @@
 
       <!-- Live Metric Indicator Pills -->
       <div class="flex items-center gap-2 text-xs">
-        <div class="px-3 py-1 rounded-lg bg-sky-50 border border-sky-200 text-sky-900 font-semibold">
+        <div class="px-3 py-1 rounded-lg bg-sky-50 border border-sky-200 text-sky-900 font-semibold" title="Natural river runoff from snowpack">
           Natural Runoff: <strong class="tabular-nums text-sky-950">12.40 MAF</strong>
         </div>
-        <div class="px-3 py-1 rounded-lg bg-red-50 border border-red-200 text-red-900 font-semibold">
-          Consumptive Overdraft: <strong class="tabular-nums text-red-950">-2.05 MAF/yr</strong>
+        <div class="px-3 py-1 rounded-lg bg-red-50 border border-red-200 text-red-900 font-semibold" title="Active physical storage drawdown in Lake Mead and Lake Powell (contrasts with +6.60 MAF full statutory paper over-allocation)">
+          Active Storage Drawdown: <strong class="tabular-nums text-red-950">-2.05 MAF/yr</strong>
         </div>
-        <div class="px-3 py-1 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 font-semibold">
+        <div class="px-3 py-1 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 font-semibold" title="Total basin consumptive depletions, agriculture, cities, Mexico treaty & evaporation">
           Total Depletion: <strong class="tabular-nums text-amber-950">14.45 MAF</strong>
         </div>
       </div>
@@ -193,8 +193,8 @@
     <div class="mb-3 bg-white border border-stone-200 rounded-xl p-3 shadow-xs flex flex-wrap items-center justify-between gap-4 text-xs text-stone-700">
       <div class="flex items-center gap-2.5">
         <span class="w-2.5 h-2.5 rounded-full bg-red-600"></span>
-        <span class="font-black text-stone-900 uppercase tracking-wider text-[11px]">Modern Hydrologic Mass-Balance:</span>
-        <span>Natural snowpack yield (<strong>12.40 MAF</strong>) is insufficient to satisfy total basin depletions &amp; evaporation (<strong>14.45 MAF</strong>).</span>
+        <span class="font-black text-stone-900 uppercase tracking-wider text-[11px]">Physical Mass Balance:</span>
+        <span>Current consumptive depletions (<strong>14.45 MAF</strong>) exceed natural runoff (<strong>12.40 MAF</strong>), actively drawing down <strong>2.05 MAF/yr</strong> from Mead &amp; Powell storage. <span class="text-stone-500 font-medium">(If full paper claims were exercised, overdraft would be +6.60 MAF/yr.)</span></span>
       </div>
       <div class="text-[11px] tabular-nums text-stone-500">
         Unit Conversion: <span class="text-stone-800 font-bold">1 cfs sustained over 1 year = ~724 acre-feet (~0.000724 MAF)</span>
@@ -359,14 +359,14 @@
           <!-- ========================================== -->
           <!-- BAR 1: PHYSICAL RUNOFF (NATURAL SUPPLY)    -->
           <!-- ========================================== -->
-          <div class="relative">
+          <div class="relative pb-5">
             <div class="flex items-center justify-between text-xs font-bold pb-1">
               <span class="text-sky-800 flex items-center gap-1.5">
                 <span class="w-2 h-2 rounded-full bg-sky-600"></span>
                 <span>BAR 1: PHYSICAL NATURAL RUNOFF (BY SOURCE TRIBUTARY &amp; MAIN)</span>
               </span>
               <span class="tabular-nums text-stone-800">
-                Total Supply: <span class="text-sky-700 font-black">15.20 MAF/yr</span> <span class="text-stone-400 font-normal">(Historical 20th-century avg)</span>
+                Total Supply: <span class="text-sky-700 font-black">15.20 MAF/yr</span> <span class="text-stone-400 font-normal">(20th-century historical avg &bull; Drought: 12.50 MAF)</span>
               </span>
             </div>
 
@@ -398,11 +398,11 @@
               </div>
 
               <!-- 4. San Juan River: 2.10 MAF = 10.5% -->
-              <div class="bar-segment h-full bg-[#38bdf8] border-r border-sky-400/30 flex items-center justify-start pl-2 text-stone-900 text-[10px] font-bold px-1 overflow-hidden"
+              <div class="bar-segment h-full bg-[#38bdf8] border-r border-sky-400/30 flex items-center justify-start pl-1 text-stone-900 text-[10px] font-bold overflow-hidden"
                    style="width: 10.5%;"
                    onmouseenter="inspectStackedSegment('San Juan River Basin', '2.10 MAF/yr (2,901 cfs)', '13.8% of Basin Natural Runoff', 'San Juan Mountains in Southwest Colorado and Northwest New Mexico, Navajo Dam and Animas River.', 'Physical Inflow')"
                    onmouseleave="clearStackedInspect()">
-                <span class="truncate bg-sky-300/85 px-1 py-0.2 rounded text-[9.5px] font-black shadow-2xs z-15">San Juan: 2.10</span>
+                <span class="bg-white/95 px-1 py-0.5 rounded text-[8.5px] font-black text-sky-950 border border-sky-300/70 shadow-2xs z-15 whitespace-nowrap">San Juan 2.1</span>
               </div>
 
               <!-- 5. Dolores & Upper Minor Tributaries: 0.80 MAF = 4.0% -->
@@ -410,7 +410,7 @@
                    style="width: 4.0%;"
                    onmouseenter="inspectStackedSegment('Dolores &amp; Minor Upper Tribs', '0.80 MAF/yr (1,105 cfs)', '5.3% of Basin Natural Runoff', 'Dolores River, Escalante, Dirty Devil, and minor headwater drainages upstream of Lee\'s Ferry.', 'Physical Inflow')"
                    onmouseleave="clearStackedInspect()">
-                <span class="truncate">Dolores: 0.8</span>
+                <span class="truncate text-[8.5px] font-bold">Dolores</span>
               </div>
 
               <!-- Lower Basin Runoff Segments (Total: 1.30 MAF = 6.5%) -->
@@ -435,7 +435,7 @@
                    style="width: 4.35%;"
                    onmouseenter="inspectStackedSegment('Bill Williams &amp; Lower Tributaries', '0.87 MAF/yr (1,202 cfs)', '5.7% of Basin Natural Runoff', 'Bill Williams River and lower desert washes; historic Gila River before complete upstream agricultural depletions.', 'Physical Inflow')"
                    onmouseleave="clearStackedInspect()">
-                <span class="truncate">Lower Tribs: 0.87</span>
+                <span class="truncate text-[8.5px] font-bold">Lower Tribs</span>
               </div>
 
               <!-- Buffer / Non-Runoff Zone (15.20 to 20.00 MAF = 24.0%) -->
@@ -449,7 +449,7 @@
             </div>
 
             <!-- Lee's Ferry Marker for Bar 1 (at 13.90 MAF = 69.5%) -->
-            <div class="absolute left-[69.5%] -bottom-3 -translate-x-1/2 flex flex-col items-center z-20 pointer-events-none">
+            <div class="absolute left-[69.5%] top-full mt-1.5 -translate-x-1/2 flex flex-col items-center z-20 pointer-events-none">
               <span class="text-[10px] font-extrabold text-amber-700 bg-amber-50 px-1.5 py-0.2 rounded border border-amber-300 shadow-2xs whitespace-nowrap">
                 ▲ Lee's Ferry (91.4% Physical Water Originates Above)
               </span>
@@ -473,9 +473,9 @@
           <!-- ========================================== -->
           <!-- BAR 2: PAPER CLAIMS (STATUTORY DEMANDS)    -->
           <!-- ========================================== -->
-          <div class="relative">
+          <div class="relative pt-5">
             <!-- Lee's Ferry Top Marker for Bar 2 (at 7.50 MAF = 37.5%) -->
-            <div class="absolute left-[37.5%] -top-3.5 -translate-x-1/2 flex flex-col items-center z-20 pointer-events-none">
+            <div class="absolute left-[37.5%] top-0 -translate-x-1/2 flex flex-col items-center z-20 pointer-events-none">
               <span class="text-[10px] font-extrabold text-blue-800 bg-blue-50 px-1.5 py-0.2 rounded border border-blue-300 shadow-2xs whitespace-nowrap">
                 ▼ Lee's Ferry (Compact Limit: 39.3% Upper Basin Share)
               </span>
@@ -486,8 +486,8 @@
                 <span class="w-2 h-2 rounded-full bg-orange-600"></span>
                 <span>BAR 2: STATUTORY PAPER ALLOCATIONS &amp; COMMITMENTS (BY STATE &amp; TREATY)</span>
               </span>
-              <span class="tabular-numbers text-stone-800">
-                Total Paper Demand: <span class="text-red-700 font-black">19.10 MAF/yr</span> <span class="text-stone-400 font-normal">(Claims exceed 15.2 MAF physical nature)</span>
+              <span class="tabular-nums text-stone-800">
+                Total Paper Demand: <span class="text-red-700 font-black">19.10 MAF/yr</span> <span class="text-stone-400 font-normal">(Paper Over-Allocation: +3.90 to +6.60 MAF)</span>
               </span>
             </div>
 
