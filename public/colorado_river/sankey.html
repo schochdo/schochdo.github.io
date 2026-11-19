@@ -58,6 +58,27 @@
       stroke-opacity: 0.85 !important;
     }
 
+    /* Stacked Bar Segment Hover & Focus */
+    .bar-segment {
+      transition: filter 0.15s ease, transform 0.15s ease;
+      cursor: pointer;
+    }
+    .bar-segment:hover {
+      filter: brightness(1.12) drop-shadow(0 2px 6px rgba(15, 23, 42, 0.25));
+      z-index: 20;
+    }
+
+    /* Pattern for Deficit Hatching */
+    .deficit-stripe {
+      background: repeating-linear-gradient(
+        -45deg,
+        rgba(239, 68, 68, 0.15),
+        rgba(239, 68, 68, 0.15) 6px,
+        rgba(239, 68, 68, 0.28) 6px,
+        rgba(239, 68, 68, 0.28) 12px
+      );
+    }
+
     /* Editorial Tooltip & Popups */
     #sankey-tooltip {
       position: fixed;
@@ -186,84 +207,439 @@
       </div>
     </div>
 
-    <!-- Semantic Color Legend -->
-    <div class="mb-3 bg-white border border-stone-200 rounded-xl px-4 py-2.5 shadow-xs flex flex-wrap items-center justify-between gap-3 text-xs">
-      <div class="flex items-center gap-2 font-bold text-stone-900 uppercase tracking-wider text-[11px]">
-        <span>Standard Color Scheme:</span>
+    <!-- View Sub-Tab Switcher Navigation -->
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+      <div class="flex items-center gap-1.5 p-1 bg-stone-200/90 rounded-lg border border-stone-300">
+        <button id="subtab-btn-sankey" onclick="switchBudgetSubtab('sankey')" class="px-3.5 py-1.5 rounded-md text-xs font-bold transition shadow-xs bg-white text-sky-900 border border-stone-200 flex items-center gap-1.5 cursor-pointer">
+          <span>⇋</span>
+          <span>Unified Sankey Diagram</span>
+        </button>
+        <button id="subtab-btn-stacked" onclick="switchBudgetSubtab('stacked')" class="px-3.5 py-1.5 rounded-md text-xs font-semibold transition text-stone-600 hover:text-stone-900 flex items-center gap-1.5 cursor-pointer">
+          <span>⫸</span>
+          <span>Physical Runoff vs. Paper Allocations</span>
+        </button>
+        <button id="subtab-btn-both" onclick="switchBudgetSubtab('both')" class="px-3.5 py-1.5 rounded-md text-xs font-semibold transition text-stone-600 hover:text-stone-900 flex items-center gap-1.5 cursor-pointer">
+          <span>☰</span>
+          <span>View Both (Continuous Scroll)</span>
+        </button>
       </div>
-      <div class="flex flex-wrap items-center gap-4 text-stone-700 text-xs font-medium">
-        <div class="flex items-center gap-1.5">
-          <span class="w-3 h-3 rounded-xs bg-[#0284c7]"></span>
-          <span>River Inflows &amp; Compact Delivery</span>
-        </div>
-        <div class="flex items-center gap-1.5">
-          <span class="w-3 h-3 rounded-xs bg-[#b2182b]"></span>
-          <span>Storage Overdraft / Deficit</span>
-        </div>
-        <div class="flex items-center gap-1.5">
-          <span class="w-3 h-3 rounded-xs bg-[#15803d]"></span>
-          <span>Agricultural Irrigation (All Basins)</span>
-        </div>
-        <div class="flex items-center gap-1.5">
-          <span class="w-3 h-3 rounded-xs bg-[#b45309]"></span>
-          <span>Municipal Cities &amp; Aqueducts</span>
-        </div>
-        <div class="flex items-center gap-1.5">
-          <span class="w-3 h-3 rounded-xs bg-[#4338ca]"></span>
-          <span>1944 Mexico Treaty Delivery</span>
-        </div>
-        <div class="flex items-center gap-1.5">
-          <span class="w-3 h-3 rounded-xs bg-[#64748b]"></span>
-          <span>Evaporation &amp; System Losses</span>
-        </div>
+
+      <div class="text-[11.5px] text-stone-500 font-medium flex items-center gap-2">
+        <span class="inline-block w-2 h-2 rounded-full bg-sky-600"></span>
+        <span>Macro Accounting: <strong>MAF/yr</strong> (1 MAF/yr ≈ 1,381 cfs)</span>
       </div>
     </div>
 
-    <!-- Main Sankey SVG Canvas -->
-    <div class="relative bg-white rounded-xl border border-stone-300 shadow-sm overflow-hidden p-4">
-      <!-- 4-Tier Column Headers -->
-      <div class="grid grid-cols-4 text-center text-[11px] font-bold tracking-wider uppercase pb-2 mb-2 border-b border-stone-200 text-stone-500">
-        <div class="text-left pl-2">1. Inflow Sources and Drawdown</div>
-        <div>2. Compact Allocations</div>
-        <div>3. Regional Conveyance</div>
-        <div class="text-right pr-2">4. Consumptive Use and Losses</div>
+    <!-- ================================================================= -->
+    <!-- VIEW 1: UNIFIED SANKEY WATER BUDGET DIAGRAM                        -->
+    <!-- ================================================================= -->
+    <div id="view-sankey-section" class="space-y-3">
+      <!-- Semantic Color Legend -->
+      <div class="bg-white border border-stone-200 rounded-xl px-4 py-2.5 shadow-xs flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div class="flex items-center gap-2 font-bold text-stone-900 uppercase tracking-wider text-[11px]">
+          <span>Standard Color Scheme:</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-4 text-stone-700 text-xs font-medium">
+          <div class="flex items-center gap-1.5">
+            <span class="w-3 h-3 rounded-xs bg-[#0284c7]"></span>
+            <span>River Inflows &amp; Compact Delivery</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="w-3 h-3 rounded-xs bg-[#b2182b]"></span>
+            <span>Storage Overdraft / Deficit</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="w-3 h-3 rounded-xs bg-[#15803d]"></span>
+            <span>Agricultural Irrigation (All Basins)</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="w-3 h-3 rounded-xs bg-[#b45309]"></span>
+            <span>Municipal Cities &amp; Aqueducts</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="w-3 h-3 rounded-xs bg-[#4338ca]"></span>
+            <span>1944 Mexico Treaty Delivery</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="w-3 h-3 rounded-xs bg-[#64748b]"></span>
+            <span>Evaporation &amp; System Losses</span>
+          </div>
+        </div>
       </div>
 
-      <div id="sankey-container" class="w-full h-[650px] overflow-x-auto"></div>
-      <!-- Hover / Click Tooltip & Popups -->
-      <div id="sankey-tooltip"></div>
-      <div id="flowComparisonBox" style="display:none;"></div>
-      <div id="combinedInflowBox" style="display:none;"></div>
+      <!-- Main Sankey SVG Canvas (Un-squeezed, Full Height) -->
+      <div class="relative bg-white rounded-xl border border-stone-300 shadow-sm overflow-hidden p-4">
+        <!-- 4-Tier Column Headers -->
+        <div class="grid grid-cols-4 text-center text-[11px] font-bold tracking-wider uppercase pb-2 mb-2 border-b border-stone-200 text-stone-500">
+          <div class="text-left pl-2">1. Inflow Sources and Drawdown</div>
+          <div>2. Compact Allocations</div>
+          <div>3. Regional Conveyance</div>
+          <div class="text-right pr-2">4. Consumptive Use and Losses</div>
+        </div>
+
+        <div id="sankey-container" class="w-full h-[740px] min-h-[720px] overflow-x-auto"></div>
+        <!-- Hover / Click Tooltip & Popups -->
+        <div id="sankey-tooltip"></div>
+        <div id="flowComparisonBox" style="display:none;"></div>
+        <div id="combinedInflowBox" style="display:none;"></div>
+      </div>
+
+      <!-- Explanatory Footnotes (Edward Tufte Editorial Standard) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-stone-600">
+        <div class="bg-white p-3.5 rounded-xl border border-stone-200 shadow-xs">
+          <div class="font-bold text-stone-900 mb-1 flex items-center gap-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span>
+            Upper Basin Sources (12.40 MAF Supply)
+          </div>
+          <p class="leading-relaxed text-stone-600">
+            Over 90% of all basin runoff originates as high-elevation snowpack in Colorado, Wyoming, and Utah. The Upper Colorado mainstem (6.80 MAF), Green River (3.90 MAF), and San Juan (1.70 MAF) feed Upper Basin agricultural and Front Range trans-mountain diversions (4.50 MAF) before passing Lees Ferry (7.90 MAF).
+          </p>
+        </div>
+        <div class="bg-white p-3.5 rounded-xl border border-stone-200 shadow-xs">
+          <div class="font-bold text-stone-900 mb-1 flex items-center gap-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+            Annual Storage Drawdown (2.05 MAF)
+          </div>
+          <p class="leading-relaxed text-stone-600">
+            The red band entering the Lower Basin represents <strong>annual storage drawdown</strong>. Lower Basin consumptive use, Mexico treaty deliveries, and reservoir evaporation total 9.95 MAF per year, while Lees Ferry releases average 7.90 MAF. The basin bridges this 2.05 MAF deficit by drawing down storage in Lake Powell and Lake Mead.
+          </p>
+        </div>
+        <div class="bg-white p-3.5 rounded-xl border border-stone-200 shadow-xs">
+          <div class="font-bold text-stone-900 mb-1 flex items-center gap-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+            Consumptive Fate &amp; Evaporation (14.45 MAF)
+          </div>
+          <p class="leading-relaxed text-stone-600">
+            Water splits between <strong>agriculture (~57%: 8.27 MAF)</strong> (Western Slope 4.00, Imperial Valley 2.80, Arizona Ag 1.47), <strong>municipal cities (3.10 MAF)</strong> (CAP 1.35, SoCal CRA 1.00, Front Range 0.50, Las Vegas 0.25), the <strong>1944 Mexico Treaty (1.50 MAF)</strong>, and <strong>evaporation &amp; transit loss (1.58 MAF)</strong>.
+          </p>
+        </div>
+      </div>
+
+      <!-- Bottom Exploration Strip -->
+      <div class="bg-white border border-stone-200 rounded-xl p-3 shadow-xs flex flex-wrap items-center justify-between gap-3 text-xs text-stone-700">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-900 font-bold text-[10px] uppercase">Comparative Analysis</span>
+          <span class="font-medium">Compare physical runoff sources against legal paper allocations &amp; structural overdraft:</span>
+        </div>
+        <button onclick="switchBudgetSubtab('stacked')" class="px-3 py-1 rounded-md bg-stone-100 hover:bg-stone-200 text-stone-800 border border-stone-300 font-bold text-xs transition flex items-center gap-1.5 cursor-pointer">
+          <span>View Physical Runoff vs. Paper Allocations</span>
+          <span>→</span>
+        </button>
+      </div>
     </div>
 
-    <!-- Explanatory Footnotes (Edward Tufte Editorial Standard) -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 text-xs text-stone-600">
-      <div class="bg-white p-3.5 rounded-xl border border-stone-200 shadow-xs">
-        <div class="font-bold text-stone-900 mb-1 flex items-center gap-1.5">
-          <span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span>
-          Upper Basin Sources (12.40 MAF Supply)
+    <!-- ================================================================= -->
+    <!-- VIEW 2: PHYSICAL RUNOFF VS. STATUTORY PAPER ALLOCATIONS           -->
+    <!-- ================================================================= -->
+    <div id="view-stacked-section" class="space-y-3" style="display: none;">
+      <!-- THE DUAL COMPARATIVE STACKED BARS CARD -->
+      <div id="stacked-comparison-card" class="bg-white border border-stone-300 rounded-xl p-4 shadow-sm">
+        <!-- Header & Explanatory Context -->
+        <div class="flex flex-col md:flex-row md:items-baseline justify-between gap-2 pb-3 border-b border-stone-200">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-amber-50 text-amber-900 border border-amber-300">Macro Basin Imbalance</span>
+              <span class="text-xs text-stone-500 font-medium">Shared Scale: 0 to 20.0 MAF/yr &bull; 100% Horizontal Alignment</span>
+            </div>
+            <h2 class="text-base md:text-lg font-black text-stone-900 tracking-tight mt-0.5">
+              Physical Water Runoff vs. Legal Paper Allocations
+            </h2>
+            <p class="text-xs text-stone-600 mt-0.5 max-w-4xl">
+              Direct physical accounting showing why system storage is depleted: <strong>91.4% (13.9 MAF)</strong> of physical runoff originates <em>upstream</em> of Lee's Ferry, while <strong>60.7% (11.6 MAF)</strong> of statutory paper claims and system losses exist <em>downstream</em>.
+            </p>
+          </div>
+          <div class="flex flex-wrap items-center gap-3 text-[11px] text-stone-600">
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-[#0284c7]"></span> Upper Inflows</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-[#0d9488]"></span> Lower Inflows</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-[#2563eb]"></span> Upper Paper Claims</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-[#ea580c]"></span> Lower Paper Claims</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-red-600"></span> Structural Deficit</span>
+          </div>
         </div>
-        <p class="leading-relaxed text-stone-600">
-          Over 90% of all basin runoff originates as high-elevation snowpack in Colorado, Wyoming, and Utah. The Upper Colorado mainstem (6.80 MAF), Green River (3.90 MAF), and San Juan (1.70 MAF) feed Upper Basin agricultural and Front Range trans-mountain diversions (4.50 MAF) before passing Lees Ferry (7.90 MAF).
-        </p>
+
+        <!-- Shared Scale Axis Ticks (0, 5, 10, 15, 20 MAF) -->
+        <div class="relative w-full mt-3 h-5 text-[10px] text-stone-400 font-bold tabular-nums select-none">
+          <div class="absolute left-0 bottom-0">0 MAF</div>
+          <div class="absolute left-[25%] -translate-x-1/2 bottom-0">5.0 MAF</div>
+          <div class="absolute left-[50%] -translate-x-1/2 bottom-0">10.0 MAF</div>
+          <div class="absolute left-[75%] -translate-x-1/2 bottom-0">15.0 MAF</div>
+          <div class="absolute right-0 bottom-0 text-stone-600">20.0 MAF Scale (100%)</div>
+          <!-- Minor vertical ticks -->
+          <div class="absolute left-0 bottom-0 w-px h-1.5 bg-stone-300"></div>
+          <div class="absolute left-[25%] bottom-0 w-px h-1.5 bg-stone-300"></div>
+          <div class="absolute left-[50%] bottom-0 w-px h-1.5 bg-stone-300"></div>
+          <div class="absolute left-[75%] bottom-0 w-px h-1.5 bg-stone-300"></div>
+          <div class="absolute right-0 bottom-0 w-px h-1.5 bg-stone-300"></div>
+        </div>
+
+        <!-- BARS CONTAINER -->
+        <div class="space-y-4 mt-1">
+          <!-- ========================================== -->
+          <!-- BAR 1: PHYSICAL RUNOFF (NATURAL SUPPLY)    -->
+          <!-- ========================================== -->
+          <div class="relative">
+            <div class="flex items-center justify-between text-xs font-bold pb-1">
+              <span class="text-sky-800 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-sky-600"></span>
+                <span>BAR 1: PHYSICAL NATURAL RUNOFF (BY SOURCE TRIBUTARY &amp; MAIN)</span>
+              </span>
+              <span class="tabular-nums text-stone-800">
+                Total Supply: <span class="text-sky-700 font-black">15.20 MAF/yr</span> <span class="text-stone-400 font-normal">(Historical 20th-century avg)</span>
+              </span>
+            </div>
+
+            <!-- Bar 1 Track (100% = 20 MAF) -->
+            <div class="relative w-full h-9 rounded-lg bg-stone-100 border border-stone-300 flex overflow-hidden shadow-inner">
+              <!-- Upper Basin Runoff Segments (Total: 13.90 MAF = 69.5%) -->
+              <!-- 1. Upper CO Mainstem: 4.00 MAF = 20.0% -->
+              <div class="bar-segment h-full bg-[#0284c7] border-r border-sky-700/30 flex items-center justify-center text-white text-[10.5px] font-bold px-1 overflow-hidden"
+                   style="width: 20.0%;"
+                   onmouseenter="inspectStackedSegment('Mainstem Headwaters', '4.00 MAF/yr (5,525 cfs)', '26.3% of Basin Natural Runoff', 'Rocky Mountain NP, Fraser, Blue &amp; Eagle Rivers. Continental Divide high-altitude snowpack.', 'Physical Inflow')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">Mainstem: 4.00</span>
+              </div>
+
+              <!-- 2. Green River Basin: 4.90 MAF = 24.5% -->
+              <div class="bar-segment h-full bg-[#0369a1] border-r border-sky-800/30 flex items-center justify-center text-white text-[10.5px] font-bold px-1 overflow-hidden"
+                   style="width: 24.5%;"
+                   onmouseenter="inspectStackedSegment('Green River Basin (WY/UT/CO)', '4.90 MAF/yr (6,768 cfs)', '32.2% of Basin Natural Runoff', 'Wind River Range, Flaming Gorge, undammed Yampa River (1.30 MAF), and White River. The largest single Upper Basin tributary system.', 'Physical Inflow')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">Green River: 4.90</span>
+              </div>
+
+              <!-- 3. Gunnison River: 2.10 MAF = 10.5% -->
+              <div class="bar-segment h-full bg-[#0ea5e9] border-r border-sky-600/30 flex items-center justify-center text-white text-[10px] font-bold px-1 overflow-hidden"
+                   style="width: 10.5%;"
+                   onmouseenter="inspectStackedSegment('Gunnison River Basin', '2.10 MAF/yr (2,901 cfs)', '13.8% of Basin Natural Runoff', 'West Slope Colorado snowpack, Blue Mesa Reservoir, Aspinall Unit storage into Grand Junction confluence.', 'Physical Inflow')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">Gunnison: 2.10</span>
+              </div>
+
+              <!-- 4. San Juan River: 2.10 MAF = 10.5% -->
+              <div class="bar-segment h-full bg-[#38bdf8] border-r border-sky-400/30 flex items-center justify-center text-stone-900 text-[10px] font-bold px-1 overflow-hidden"
+                   style="width: 10.5%;"
+                   onmouseenter="inspectStackedSegment('San Juan River Basin', '2.10 MAF/yr (2,901 cfs)', '13.8% of Basin Natural Runoff', 'San Juan Mountains in Southwest Colorado and Northwest New Mexico, Navajo Dam and Animas River.', 'Physical Inflow')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">San Juan: 2.10</span>
+              </div>
+
+              <!-- 5. Dolores & Upper Minor Tributaries: 0.80 MAF = 4.0% -->
+              <div class="bar-segment h-full bg-[#7dd3fc] border-r-2 border-amber-500 flex items-center justify-center text-stone-900 text-[9px] font-bold px-0.5 overflow-hidden"
+                   style="width: 4.0%;"
+                   onmouseenter="inspectStackedSegment('Dolores &amp; Minor Upper Tribs', '0.80 MAF/yr (1,105 cfs)', '5.3% of Basin Natural Runoff', 'Dolores River, Escalante, Dirty Devil, and minor headwater drainages upstream of Lee\'s Ferry.', 'Physical Inflow')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">Dolores: 0.8</span>
+              </div>
+
+              <!-- Lower Basin Runoff Segments (Total: 1.30 MAF = 6.5%) -->
+              <!-- 6. Little Colorado River: 0.25 MAF = 1.25% -->
+              <div class="bar-segment h-full bg-[#0d9488] border-r border-teal-700/30 flex items-center justify-center text-white text-[8px] font-bold px-0.5 overflow-hidden"
+                   style="width: 1.25%;"
+                   onmouseenter="inspectStackedSegment('Little Colorado River (AZ)', '0.25 MAF/yr (345 cfs)', '1.6% of Basin Natural Runoff', 'Northern Arizona White Mountains plateau, enters mainstem in upper Grand Canyon.', 'Physical Inflow')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">L.CO</span>
+              </div>
+
+              <!-- 7. Virgin River: 0.18 MAF = 0.90% -->
+              <div class="bar-segment h-full bg-[#14b8a6] border-r border-teal-600/30 flex items-center justify-center text-white text-[8px] font-bold px-0.5 overflow-hidden"
+                   style="width: 0.90%;"
+                   onmouseenter="inspectStackedSegment('Virgin River (UT/NV/AZ)', '0.18 MAF/yr (249 cfs)', '1.2% of Basin Natural Runoff', 'Zion National Park and Virgin River Gorge, enters Lake Mead Overton Arm.', 'Physical Inflow')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">Virg</span>
+              </div>
+
+              <!-- 8. Gila & Lower Basin Tributaries: 0.87 MAF = 4.35% -->
+              <div class="bar-segment h-full bg-[#2dd4bf] border-r-2 border-stone-400 flex items-center justify-center text-stone-900 text-[9px] font-bold px-0.5 overflow-hidden"
+                   style="width: 4.35%;"
+                   onmouseenter="inspectStackedSegment('Bill Williams &amp; Lower Tributaries', '0.87 MAF/yr (1,202 cfs)', '5.7% of Basin Natural Runoff', 'Bill Williams River and lower desert washes; historic Gila River before complete upstream agricultural depletions.', 'Physical Inflow')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">Lower Tribs: 0.87</span>
+              </div>
+
+              <!-- Buffer / Non-Runoff Zone (15.20 to 20.00 MAF = 24.0%) -->
+              <div class="h-full bg-stone-100 flex items-center justify-center text-stone-400 text-[10px] font-medium italic"
+                   style="width: 24.0%;">
+                <span>Scale Buffer to 20 MAF</span>
+              </div>
+
+              <!-- Modern Drought Reference Line at 12.50 MAF (62.5% of scale) -->
+              <div class="absolute left-[62.5%] top-0 bottom-0 w-0.5 border-l-2 border-dashed border-red-700 pointer-events-none z-10"></div>
+            </div>
+
+            <!-- Lee's Ferry Marker for Bar 1 (at 13.90 MAF = 69.5%) -->
+            <div class="absolute left-[69.5%] -bottom-3 -translate-x-1/2 flex flex-col items-center z-20 pointer-events-none">
+              <span class="text-[10px] font-extrabold text-amber-700 bg-amber-50 px-1.5 py-0.2 rounded border border-amber-300 shadow-2xs whitespace-nowrap">
+                ▲ Lee's Ferry (91.4% Physical Water Originates Above)
+              </span>
+            </div>
+          </div>
+
+          <!-- ========================================== -->
+          <!-- PARADOX CONNECTOR BRACKET (LEE'S FERRY)   -->
+          <!-- ========================================== -->
+          <div class="relative py-2.5 my-1 flex items-center justify-between text-[11px] bg-stone-50 border-y border-dashed border-stone-300 px-3 rounded text-stone-700">
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold text-amber-800 uppercase tracking-wide">The Compact Asymmetry:</span>
+              <span><strong>91.4%</strong> of wet water is born upstream, but <strong>60.7%</strong> of paper demands are exercised downstream.</span>
+            </div>
+            <div class="flex items-center gap-3 text-[10.5px]">
+              <span class="text-red-700 font-semibold">• Modern Drought Flow: <strong>~12.50 MAF/yr</strong> (Red Dashed Line)</span>
+              <span class="text-sky-800 font-semibold">• Statutory Release Target: <strong>8.25 MAF/yr</strong> at Lee's Ferry</span>
+            </div>
+          </div>
+
+          <!-- ========================================== -->
+          <!-- BAR 2: PAPER CLAIMS (STATUTORY DEMANDS)    -->
+          <!-- ========================================== -->
+          <div class="relative">
+            <!-- Lee's Ferry Top Marker for Bar 2 (at 7.50 MAF = 37.5%) -->
+            <div class="absolute left-[37.5%] -top-3.5 -translate-x-1/2 flex flex-col items-center z-20 pointer-events-none">
+              <span class="text-[10px] font-extrabold text-blue-800 bg-blue-50 px-1.5 py-0.2 rounded border border-blue-300 shadow-2xs whitespace-nowrap">
+                ▼ Lee's Ferry (Compact Limit: 39.3% Upper Basin Share)
+              </span>
+            </div>
+
+            <div class="flex items-center justify-between text-xs font-bold pb-1 pt-1">
+              <span class="text-orange-800 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-orange-600"></span>
+                <span>BAR 2: STATUTORY PAPER ALLOCATIONS &amp; COMMITMENTS (BY STATE &amp; TREATY)</span>
+              </span>
+              <span class="tabular-numbers text-stone-800">
+                Total Paper Demand: <span class="text-red-700 font-black">19.10 MAF/yr</span> <span class="text-stone-400 font-normal">(Claims exceed 15.2 MAF physical nature)</span>
+              </span>
+            </div>
+
+            <!-- Bar 2 Track (100% = 20 MAF) -->
+            <div class="relative w-full h-9 rounded-lg bg-stone-100 border border-stone-300 flex overflow-hidden shadow-inner">
+              <!-- Upper Basin Statutory Apportionments (1922 Compact base 7.50 MAF = 37.5%) -->
+              <!-- 1. Colorado: 3.86 MAF = 19.30% (51.75% of Upper Basin) -->
+              <div class="bar-segment h-full bg-[#1e40af] border-r border-blue-900/30 flex items-center justify-center text-white text-[10.5px] font-bold px-1 overflow-hidden"
+                   style="width: 19.30%;"
+                   onmouseenter="inspectStackedSegment('Colorado (Upper Basin)', '3.86 MAF/yr (5,332 cfs)', '51.75% of Upper Basin Apportionment', '1948 Upper Colorado River Basin Compact entitlement. Major in-basin agriculture, West Slope irrigation, and Denver trans-mountain diversions.', 'Paper Allocation')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">CO: 3.86 MAF</span>
+              </div>
+
+              <!-- 2. Utah: 1.71 MAF = 8.55% (23.00% of Upper Basin) -->
+              <div class="bar-segment h-full bg-[#2563eb] border-r border-blue-700/30 flex items-center justify-center text-white text-[10px] font-bold px-1 overflow-hidden"
+                   style="width: 8.55%;"
+                   onmouseenter="inspectStackedSegment('Utah (Upper Basin)', '1.71 MAF/yr (2,362 cfs)', '23.00% of Upper Basin Apportionment', 'Central Utah Project (CUP), Uinta Basin agriculture, and Wasatch Front municipal supplies.', 'Paper Allocation')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">UT: 1.71</span>
+              </div>
+
+              <!-- 3. Wyoming: 1.04 MAF = 5.20% (14.00% of Upper Basin) -->
+              <div class="bar-segment h-full bg-[#3b82f6] border-r border-blue-500/30 flex items-center justify-center text-white text-[9.5px] font-bold px-0.5 overflow-hidden"
+                   style="width: 5.20%;"
+                   onmouseenter="inspectStackedSegment('Wyoming (Upper Basin)', '1.04 MAF/yr (1,437 cfs)', '14.00% of Upper Basin Apportionment', 'Green River basin livestock irrigation and Fontenelle Reservoir diversions.', 'Paper Allocation')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">WY: 1.04</span>
+              </div>
+
+              <!-- 4. New Mexico: 0.84 MAF = 4.20% (11.25% of Upper Basin) -->
+              <div class="bar-segment h-full bg-[#60a5fa] border-r border-blue-300/30 flex items-center justify-center text-stone-900 text-[9px] font-bold px-0.5 overflow-hidden"
+                   style="width: 4.20%;"
+                   onmouseenter="inspectStackedSegment('New Mexico (Upper Basin)', '0.84 MAF/yr (1,160 cfs)', '11.25% of Upper Basin Apportionment', 'San Juan-Chama trans-mountain export to Rio Grande basin and Navajo Indian Irrigation Project (NIIP).', 'Paper Allocation')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">NM: 0.84</span>
+              </div>
+
+              <!-- 5. Arizona Upper Share: 0.05 MAF = 0.25% (50,000 AF) -->
+              <div class="bar-segment h-full bg-[#93c5fd] border-r-2 border-amber-600 flex items-center justify-center text-stone-900 text-[7.5px] font-bold overflow-hidden"
+                   style="width: 0.25%;"
+                   onmouseenter="inspectStackedSegment('Arizona (Upper Basin Share)', '0.05 MAF/yr (69 cfs)', '50,000 AF Statutory Upper Allocation', 'Arizona statutory Upper Basin allocation under the 1948 Compact (primarily for Navajo Generating Station and Page, AZ).', 'Paper Allocation')"
+                   onmouseleave="clearStackedInspect()">
+              </div>
+
+              <!-- Lower Basin Statutory Apportionments (Total: 11.60 MAF = 58.0%) -->
+              <!-- 6. California: 4.40 MAF = 22.00% -->
+              <div class="bar-segment h-full bg-[#c2410c] border-r border-orange-800/30 flex items-center justify-center text-white text-[10.5px] font-bold px-1 overflow-hidden"
+                   style="width: 22.00%;"
+                   onmouseenter="inspectStackedSegment('California (1928 BCPA / 1964 Decree)', '4.40 MAF/yr (6,078 cfs)', 'Largest Lower Basin Consumer', 'Imperial Irrigation District (2.6-3.1 MAF), Coachella Valley, Palo Verde Valley, and MWD Colorado River Aqueduct (CRA) to 19M coastal Californians.', 'Paper Allocation')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">California: 4.40 MAF</span>
+              </div>
+
+              <!-- 7. Arizona Lower Mainstem: 2.80 MAF = 14.00% -->
+              <div class="bar-segment h-full bg-[#ea580c] border-r border-orange-700/30 flex items-center justify-center text-white text-[10px] font-bold px-1 overflow-hidden"
+                   style="width: 14.00%;"
+                   onmouseenter="inspectStackedSegment('Arizona (Lower Basin Mainstem)', '2.80 MAF/yr (3,868 cfs)', 'Junior Mainstem Apportionment', 'Central Arizona Project (CAP 1.5 MAF, junior priority) and senior on-river agricultural rights (Yuma, Wellton-Mohawk, CRIT).', 'Paper Allocation')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">Arizona: 2.80</span>
+              </div>
+
+              <!-- 8. Nevada: 0.30 MAF = 1.50% -->
+              <div class="bar-segment h-full bg-[#fb923c] border-r border-orange-500/30 flex items-center justify-center text-stone-900 text-[8.5px] font-bold px-0.5 overflow-hidden"
+                   style="width: 1.50%;"
+                   onmouseenter="inspectStackedSegment('Nevada', '0.30 MAF/yr (414 cfs)', 'Southern Nevada Water Authority', 'Las Vegas municipal drinking water drawn directly from Lake Mead intake straws.', 'Paper Allocation')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">NV</span>
+              </div>
+
+              <!-- 9. Compact Art. III(b) Right: 1.00 MAF = 5.00% -->
+              <div class="bar-segment h-full bg-[#fdba74] border-r border-orange-400/30 flex items-center justify-center text-stone-900 text-[9px] font-bold px-0.5 overflow-hidden"
+                   style="width: 5.00%;"
+                   onmouseenter="inspectStackedSegment('1922 Compact Article III(b)', '1.00 MAF/yr (1,381 cfs)', 'Lower Basin Apportionment Expansion', 'Allows Lower Basin to increase its consumptive use by 1.0 MAF annually beyond the base 7.5 MAF.', 'Paper Allocation')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">Art. III(b): 1.0</span>
+              </div>
+
+              <!-- 10. 1944 Mexican Water Treaty: 1.50 MAF = 7.50% -->
+              <div class="bar-segment h-full bg-[#7c3aed] border-r border-purple-700/30 flex items-center justify-center text-white text-[10px] font-bold px-1 overflow-hidden"
+                   style="width: 7.50%;"
+                   onmouseenter="inspectStackedSegment('1944 Mexican Water Treaty', '1.50 MAF/yr (2,072 cfs)', 'International Treaty Obligation', 'Guaranteed annual delivery to Mexico at Morelos Dam for Mexicali Valley agriculture and Baja California municipalities.', 'Treaty Obligation')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">Mexico: 1.50</span>
+              </div>
+
+              <!-- 11. Reservoir Evaporation & Transit Losses: 1.60 MAF = 8.00% -->
+              <div class="bar-segment h-full bg-[#64748b] border-r-2 border-red-600 flex items-center justify-center text-white text-[9.5px] font-bold px-1 overflow-hidden"
+                   style="width: 8.00%;"
+                   onmouseenter="inspectStackedSegment('Reservoir Evaporation &amp; Transit Losses', '1.60 MAF/yr (2,210 cfs)', 'Physical Evaporation (Omitted from 1922 Compact)', 'Lake Powell (0.38 MAF), Lake Mead (0.65 MAF), and lower channel transit/riparian seepage (0.55 MAF). The 1922 Compact never deducted evaporation, creating an immediate structural deficit.', 'System Depletion')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">Evap/Loss: 1.60</span>
+              </div>
+
+              <!-- Scale Buffer to 20 MAF (19.10 to 20.00 MAF = 4.5%) -->
+              <div class="h-full bg-stone-100 flex items-center justify-center text-stone-400 text-[9px] font-medium italic"
+                   style="width: 4.5%;">
+              </div>
+            </div>
+
+            <!-- STRUCTURAL DEFICIT OVERHANG BRACKET (Positioned immediately below Bar 2) -->
+            <!-- Spans from 15.20 MAF (76.0%) to 19.10 MAF (95.5%) = 19.5% width -->
+            <div class="relative w-full h-6 mt-1 select-none pointer-events-none">
+              <div class="absolute left-[76.0%] top-0 h-5 border-l-2 border-b-2 border-r-2 border-red-600 deficit-stripe rounded-b flex items-center justify-center z-10"
+                   style="width: 19.5%;">
+                <span class="text-[9px] font-black text-red-700 bg-white/95 px-1.5 py-0.2 rounded border border-red-300 shadow-2xs whitespace-nowrap">
+                  ⚠ +3.90 MAF Structural Deficit (+6.60 MAF Modern Drought)
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Segment Detail Strip (Edward Tufte Restraint) -->
+        <div id="stacked-detail-strip" class="mt-2 p-2.5 rounded-lg bg-stone-50 border border-stone-200 text-xs flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <span id="st-badge" class="px-2 py-0.5 rounded bg-sky-100 text-sky-800 font-extrabold text-[10px] uppercase">Hover any segment</span>
+            <span id="st-title" class="font-bold text-stone-900">Inspect Basin Runoff Origins vs. Statutory Claims</span>
+          </div>
+          <div class="flex items-center gap-4 text-stone-600">
+            <div><span class="text-stone-400">Volume:</span> <strong id="st-vol" class="text-stone-900 tabular-nums">--</strong></div>
+            <div><span class="text-stone-400">Basin Share:</span> <strong id="st-share" class="text-stone-900 tabular-nums">--</strong></div>
+          </div>
+          <div id="st-desc" class="w-full text-stone-600 text-[11.5px] mt-0.5 pt-1 border-t border-stone-200">
+            Move mouse across either bar to evaluate exact MAF volumes, continuous rate conversion (1 MAF/yr ≈ 1,381 cfs), and legal authority.
+          </div>
+        </div>
       </div>
-      <div class="bg-white p-3.5 rounded-xl border border-stone-200 shadow-xs">
-        <div class="font-bold text-stone-900 mb-1 flex items-center gap-1.5">
-          <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
-          Annual Storage Drawdown (2.05 MAF)
-        </div>
-        <p class="leading-relaxed text-stone-600">
-          The red band entering the Lower Basin represents <strong>annual storage drawdown</strong>. Lower Basin consumptive use, Mexico treaty deliveries, and reservoir evaporation total 9.95 MAF per year, while Lees Ferry releases average 7.90 MAF. The basin bridges this 2.05 MAF deficit by drawing down storage in Lake Powell and Lake Mead.
-        </p>
-      </div>
-      <div class="bg-white p-3.5 rounded-xl border border-stone-200 shadow-xs">
-        <div class="font-bold text-stone-900 mb-1 flex items-center gap-1.5">
-          <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
-          Consumptive Fate &amp; Evaporation (14.45 MAF)
-        </div>
-        <p class="leading-relaxed text-stone-600">
-          Water splits between <strong>agriculture (~57%: 8.27 MAF)</strong> (Western Slope 4.00, Imperial Valley 2.80, Arizona Ag 1.47), <strong>municipal cities (3.10 MAF)</strong> (CAP 1.35, SoCal CRA 1.00, Front Range 0.50, Las Vegas 0.25), the <strong>1944 Mexico Treaty (1.50 MAF)</strong>, and <strong>evaporation &amp; transit loss (1.58 MAF)</strong>.
-        </p>
+
+      <!-- Return Button -->
+      <div class="flex justify-end pt-1">
+        <button onclick="switchBudgetSubtab('sankey')" class="text-xs font-semibold text-sky-700 hover:underline flex items-center gap-1 cursor-pointer">
+          <span>← Back to Unified Sankey Flow Diagram</span>
+        </button>
       </div>
     </div>
   </div>
@@ -548,10 +924,11 @@
 
     function renderSankey() {
       const container = document.getElementById('sankey-container');
+      if (!container) return;
       container.innerHTML = '';
 
       const width = Math.max(1260, container.clientWidth || 1400);
-      const height = 650;
+      const height = 740;
 
       const nodes = [
         // --- Tier 1: Inflow Sources & Storage Deficit ---
@@ -818,12 +1195,99 @@
       document.body.classList.add('in-iframe');
     }
 
+    // ==========================================
+    // STACKED BAR CONTROLLER & DETAIL READOUT
+    // ==========================================
+    function inspectStackedSegment(title, vol, share, desc, type) {
+      const badge = document.getElementById('st-badge');
+      const t = document.getElementById('st-title');
+      const v = document.getElementById('st-vol');
+      const s = document.getElementById('st-share');
+      const d = document.getElementById('st-desc');
+
+      if (!badge || !t || !v || !s || !d) return;
+
+      badge.innerText = type;
+      if (type === 'Physical Inflow') {
+        badge.className = 'px-2 py-0.5 rounded bg-sky-100 text-sky-800 font-extrabold text-[10px] uppercase';
+      } else if (type === 'Paper Allocation') {
+        badge.className = 'px-2 py-0.5 rounded bg-orange-100 text-orange-800 font-extrabold text-[10px] uppercase';
+      } else if (type === 'Treaty Obligation') {
+        badge.className = 'px-2 py-0.5 rounded bg-purple-100 text-purple-800 font-extrabold text-[10px] uppercase';
+      } else {
+        badge.className = 'px-2 py-0.5 rounded bg-slate-200 text-slate-800 font-extrabold text-[10px] uppercase';
+      }
+
+      t.innerText = title;
+      v.innerText = vol;
+      s.innerText = share;
+      d.innerHTML = desc;
+    }
+
+    function clearStackedInspect() {
+      const badge = document.getElementById('st-badge');
+      const t = document.getElementById('st-title');
+      const v = document.getElementById('st-vol');
+      const s = document.getElementById('st-share');
+      const d = document.getElementById('st-desc');
+
+      if (!badge || !t || !v || !s || !d) return;
+
+      badge.innerText = 'Macro Accounting';
+      badge.className = 'px-2 py-0.5 rounded bg-slate-200 text-slate-800 font-extrabold text-[10px] uppercase';
+      t.innerText = 'Inspect Basin Runoff Origins vs. Statutory Claims';
+      v.innerText = '--';
+      s.innerText = '--';
+      d.innerText = 'Move mouse across either bar to evaluate exact MAF volumes, continuous rate conversion (1 MAF/yr ≈ 1,381 cfs), and legal authority.';
+    }
+
+    function switchBudgetSubtab(mode) {
+      const btnSankey = document.getElementById('subtab-btn-sankey');
+      const btnStacked = document.getElementById('subtab-btn-stacked');
+      const btnBoth = document.getElementById('subtab-btn-both');
+      const sankeySec = document.getElementById('view-sankey-section');
+      const stackedSec = document.getElementById('view-stacked-section');
+
+      if (!sankeySec || !stackedSec) return;
+
+      const activeClass = "px-3.5 py-1.5 rounded-md text-xs font-bold transition shadow-xs bg-white text-sky-900 border border-stone-200 flex items-center gap-1.5 cursor-pointer";
+      const inactiveClass = "px-3.5 py-1.5 rounded-md text-xs font-semibold transition text-stone-600 hover:text-stone-900 flex items-center gap-1.5 cursor-pointer";
+
+      if (btnSankey) btnSankey.className = (mode === 'sankey') ? activeClass : inactiveClass;
+      if (btnStacked) btnStacked.className = (mode === 'stacked') ? activeClass : inactiveClass;
+      if (btnBoth) btnBoth.className = (mode === 'both') ? activeClass : inactiveClass;
+
+      if (mode === 'sankey') {
+        sankeySec.style.display = 'block';
+        stackedSec.style.display = 'none';
+        renderSankey();
+      } else if (mode === 'stacked') {
+        sankeySec.style.display = 'none';
+        stackedSec.style.display = 'block';
+      } else if (mode === 'both') {
+        sankeySec.style.display = 'block';
+        stackedSec.style.display = 'block';
+        renderSankey();
+      }
+    }
+
     window.addEventListener('resize', () => {
-      renderSankey();
+      const sankeySec = document.getElementById('view-sankey-section');
+      if (sankeySec && sankeySec.style.display !== 'none') {
+        renderSankey();
+      }
     });
 
     document.addEventListener('DOMContentLoaded', () => {
-      renderSankey();
+      const params = new URLSearchParams(window.location.search);
+      const view = params.get('view');
+      if (view === 'stacked') {
+        switchBudgetSubtab('stacked');
+      } else if (view === 'both') {
+        switchBudgetSubtab('both');
+      } else {
+        switchBudgetSubtab('sankey');
+      }
     });
   </script>
 </body>

@@ -609,10 +609,10 @@ function initMap() {
         toggleLayer("flowArrows");
       }
     }
-    if (window.location.search.includes('topology_junctions=0')) {
+    if (window.location.search.includes('topology_junctions=1') || window.location.search.includes('confluences=1')) {
       const toggle = document.getElementById("toggle-topology-junctions");
       if (toggle) {
-        toggle.checked = false;
+        toggle.checked = true;
         toggleLayer("topologyJunctions");
       }
     }
@@ -3281,7 +3281,7 @@ print("NHD Features found:", len(res.get("features", [])))`;
 
     if (!map.getSource('topology-junctions')) {
       map.addSource('topology-junctions', { type: 'geojson', data: junctionsGeoJSON });
-      const showJunctions = document.getElementById('toggle-topology-junctions')?.checked ?? true;
+      const showJunctions = document.getElementById('toggle-topology-junctions')?.checked ?? false;
 
       map.addLayer({
         id: 'topology-junctions',
