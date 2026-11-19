@@ -78,15 +78,6 @@
       </div>
 
       <div class="flex items-center gap-2">
-        <button id="btn-toggle-map" onclick="showStationOnMap('')" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[2px] bg-[#f1f5f9] hover:bg-white text-slate-800 text-xs font-semibold border border-[#94a3b8] transition" title="Switch to Full-Bleed Cartographic Map">
-          <span>Map View</span>
-        </button>
-        <a id="btn-flow-diagram" href="./pipeline.html" onclick="goToFlowDiagram(event)" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[2px] bg-[#f1f5f9] hover:bg-white text-slate-800 text-xs font-semibold border border-[#94a3b8] transition" title="Open River Flow Network Diagram">
-          <span>Flow Network</span>
-        </a>
-        <a id="btn-water-budget" href="./sankey.html" onclick="goToBudgetDiagram(event)" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[2px] bg-[#f1f5f9] hover:bg-white text-slate-800 text-xs font-semibold border border-[#94a3b8] transition" title="Open Annual Water Budget Diagram">
-          <span>Water Budget</span>
-        </a>
         <button id="refresh-btn" onclick="fetchData()" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[2px] bg-[#f1f5f9] hover:bg-white text-slate-800 text-xs font-semibold border border-[#94a3b8] transition">
           <svg id="refresh-icon" class="w-3.5 h-3.5 text-slate-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <polyline points="23 4 23 10 17 10"></polyline>
@@ -1101,20 +1092,6 @@
     function closeSchemaModal() {
       const modal = document.getElementById('schema-modal');
       if (modal) modal.classList.add('hidden');
-    }
-
-    function goToFlowDiagram(e) {
-      if (window.parent && window.parent !== window && typeof window.parent.setTab === 'function') {
-        if (e) e.preventDefault();
-        window.parent.setTab('pipeline');
-      }
-    }
-
-    function goToBudgetDiagram(e) {
-      if (window.parent && window.parent !== window && typeof window.parent.setTab === 'function') {
-        if (e) e.preventDefault();
-        window.parent.setTab('sankey');
-      }
     }
 
     // Detect iframe embed

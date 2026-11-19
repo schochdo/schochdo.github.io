@@ -168,14 +168,8 @@
     <!-- Header -->
     <header class="flex flex-wrap items-center justify-between gap-4 mb-3 pb-3 border-b border-stone-300">
       <div>
-        <div class="flex items-center gap-2">
-          <a id="btn-back-workspace" href="./" onclick="backToWorkspace(event)" class="text-xs px-3 py-1 rounded-md bg-white border border-stone-300 text-stone-700 font-semibold hover:bg-stone-50 transition shadow-xs">← Back to Colorado River Basin</a>
-          <span class="text-xs text-stone-400">•</span>
-          <span class="text-xs font-semibold text-stone-500 uppercase tracking-wider">End-to-End Basin Mass-Balance</span>
-          <span class="text-xs text-stone-400">•</span>
-          <a href="./pipeline.html" onclick="goToPipeline(event)" class="text-xs font-semibold text-sky-700 hover:underline">View River Reach Network Diagram →</a>
-        </div>
-        <h1 class="text-xl md:text-2xl font-black text-stone-900 tracking-tight mt-1 flex items-center gap-3">
+        <span class="text-xs font-semibold text-stone-500 uppercase tracking-wider block">End-to-End Basin Mass-Balance</span>
+        <h1 class="text-xl md:text-2xl font-black text-stone-900 tracking-tight mt-0.5 flex items-center gap-3">
           Colorado River Annual Water Budget
           <span class="text-xs font-bold tabular-nums px-2.5 py-0.5 rounded bg-sky-100 text-sky-900 border border-sky-300">Annual Scale: MAF/yr</span>
         </h1>
@@ -313,18 +307,6 @@
             Water splits between <strong>agriculture (~57%: 8.27 MAF)</strong> (Western Slope 4.00, Imperial Valley 2.80, Arizona Ag 1.47), <strong>municipal cities (3.10 MAF)</strong> (CAP 1.35, SoCal CRA 1.00, Front Range 0.50, Las Vegas 0.25), the <strong>1944 Mexico Treaty (1.50 MAF)</strong>, and <strong>evaporation &amp; transit loss (1.58 MAF)</strong>.
           </p>
         </div>
-      </div>
-
-      <!-- Bottom Exploration Strip -->
-      <div class="bg-white border border-stone-200 rounded-xl p-3 shadow-xs flex flex-wrap items-center justify-between gap-3 text-xs text-stone-700">
-        <div class="flex items-center gap-2">
-          <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-900 font-bold text-[10px] uppercase">Comparative Analysis</span>
-          <span class="font-medium">Compare physical runoff sources against legal paper allocations &amp; structural overdraft:</span>
-        </div>
-        <button onclick="switchBudgetSubtab('stacked')" class="px-3 py-1 rounded-md bg-stone-100 hover:bg-stone-200 text-stone-800 border border-stone-300 font-bold text-xs transition flex items-center gap-1.5 cursor-pointer">
-          <span>View Physical Runoff vs. Paper Allocations</span>
-          <span>→</span>
-        </button>
       </div>
     </div>
 
@@ -1175,20 +1157,6 @@
       if (y + rect.height > window.innerHeight - 16) y = e.clientY - rect.height - 14;
       tooltip.style.left = x + 'px';
       tooltip.style.top = y + 'px';
-    }
-
-    function backToWorkspace(e) {
-      if (window.parent && window.parent !== window && typeof window.parent.setTab === 'function') {
-        if (e) e.preventDefault();
-        window.parent.setTab('overview');
-      }
-    }
-
-    function goToPipeline(e) {
-      if (window.parent && window.parent !== window && typeof window.parent.setTab === 'function') {
-        if (e) e.preventDefault();
-        window.parent.setTab('pipeline');
-      }
     }
 
     if (window.self !== window.top) {

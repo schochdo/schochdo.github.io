@@ -217,19 +217,12 @@
   <div class="max-w-[1360px] mx-auto space-y-3">
     <!-- Top Header & Sub-Tab Switcher Navigation -->
     <header class="flex flex-wrap items-center justify-between gap-2 pb-1.5 border-b border-slate-300">
-      <div class="flex items-center gap-3">
-        <a id="btn-back-workspace" href="./" onclick="backToWorkspace(event)" class="text-xs px-2.5 py-1 rounded-md bg-white border border-slate-300 text-slate-700 font-semibold hover:bg-slate-50 transition shadow-sm">← Back</a>
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Operational Hydrology &amp; Allocations</span>
-            <span class="text-xs text-slate-300">•</span>
-            <a href="./sankey.html" onclick="goToSankey(event)" class="text-[11px] font-semibold text-sky-700 hover:underline">Macro Sankey Water Budget →</a>
-          </div>
-          <h1 class="text-lg md:text-xl font-black text-slate-900 tracking-tight flex items-center gap-2 mt-0.5">
-            Colorado River Flow Schematic &amp; Profile
-            <span class="text-[10.5px] font-bold px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 border border-sky-300">MAF/yr &amp; Thalweg Profile</span>
-          </h1>
-        </div>
+      <div>
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Operational Hydrology &amp; Allocations</span>
+        <h1 class="text-lg md:text-xl font-black text-slate-900 tracking-tight flex items-center gap-2 mt-0.5">
+          Colorado River Flow Schematic &amp; Profile
+          <span class="text-[10.5px] font-bold px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 border border-sky-300">MAF/yr &amp; Thalweg Profile</span>
+        </h1>
       </div>
 
       <!-- Two View Sub-Tabs (Schematic vs Elevation) -->
@@ -1774,20 +1767,6 @@
         label: 'USGS Station #09095500 (Cameo, CO)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09095500/'
       });
-    }
-
-    function backToWorkspace(e) {
-      if (window.parent && window.parent !== window && typeof window.parent.setTab === 'function') {
-        if (e) e.preventDefault();
-        window.parent.setTab('overview');
-      }
-    }
-
-    function goToSankey(e) {
-      if (window.parent && window.parent !== window && typeof window.parent.setTab === 'function') {
-        if (e) e.preventDefault();
-        window.parent.setTab('sankey');
-      }
     }
 
     function focusMapStation(stationId) {

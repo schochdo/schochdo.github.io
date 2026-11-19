@@ -225,16 +225,10 @@
   <!-- 52PX COMPACT EDITORIAL HEADER                                  -->
   <!-- ============================================================== -->
   <header class="h-[52px] min-h-[52px] max-h-[52px] bg-white border-b border-slate-300 px-4 flex items-center justify-between gap-3 box-border z-20">
-    <!-- Left: Navigation & Title -->
-    <div class="flex items-center gap-3 shrink-0">
-      <a href="index.html" onclick="goToTab(event, 'map')" class="back-link inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded border border-slate-300 transition-colors">
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-        <span>Back to Map</span>
-      </a>
-      <div class="flex items-center gap-2">
-        <span class="w-2.5 h-2.5 rounded-full bg-[#0072B2]"></span>
-        <h1 class="text-sm font-bold text-slate-900 tracking-tight">Upper Basin River Dynamics &amp; Lake Powell Water Balance</h1>
-      </div>
+    <!-- Left: Title -->
+    <div class="flex items-center gap-2 shrink-0">
+      <span class="w-2.5 h-2.5 rounded-full bg-[#0072B2]"></span>
+      <h1 class="text-sm font-bold text-slate-900 tracking-tight">Upper Basin River Dynamics &amp; Lake Powell Water Balance</h1>
     </div>
 
     <!-- Center: Interactive Regime Filter Buttons -->
@@ -404,12 +398,6 @@
     // Handle iframe detection and navigation
     if (window.self !== window.top) {
       document.body.classList.add('in-iframe');
-    }
-    function goToTab(e, tabId) {
-      if (window.parent && window.parent !== window && typeof window.parent.setTab === 'function') {
-        if (e) e.preventDefault();
-        window.parent.setTab(tabId);
-      }
     }
 
     // Color conversion utility
