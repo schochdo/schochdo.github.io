@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
   <title>Colorado River Basin Map</title>
   
   <!-- MapLibre GL CSS -->
@@ -16,19 +16,38 @@
 
   <style>
     html, body {
-      height: 100vh !important;
+      height: 100% !important;
+      height: -webkit-fill-available !important;
+      height: 100dvh !important;
+      min-height: 100% !important;
+      min-height: -webkit-fill-available !important;
+      min-height: 100dvh !important;
+      max-height: 100% !important;
+      max-height: -webkit-fill-available !important;
+      max-height: 100dvh !important;
       overflow: hidden !important;
       margin: 0 !important;
       padding: 0 !important;
+      box-sizing: border-box !important;
     }
     .dashboard-body {
-      height: 100vh !important;
+      height: 100% !important;
+      height: -webkit-fill-available !important;
+      height: 100dvh !important;
+      max-height: 100% !important;
+      max-height: -webkit-fill-available !important;
+      max-height: 100dvh !important;
       position: relative !important;
+      display: flex !important;
+      flex-direction: column !important;
+      overflow: hidden !important;
+      box-sizing: border-box !important;
     }
     /* Map Container */
     #map-container {
       flex: 1;
       height: 100% !important;
+      width: 100% !important;
       position: relative;
     }
 

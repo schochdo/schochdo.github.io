@@ -46,11 +46,25 @@
   padding: 0;
 }
 
+html {
+  height: 100%;
+  height: -webkit-fill-available;
+  height: 100dvh;
+}
+
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background-color: var(--bg-primary);
   color: var(--text-main);
-  height: 100vh;
+  height: 100%;
+  height: -webkit-fill-available;
+  height: 100dvh;
+  min-height: 100%;
+  min-height: -webkit-fill-available;
+  min-height: 100dvh;
+  max-height: 100%;
+  max-height: -webkit-fill-available;
+  max-height: 100dvh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -630,8 +644,8 @@ body {
 /* Map Legend (Docked & Collapsible) */
 .map-legend {
   position: absolute;
-  bottom: 48px;
-  left: 20px;
+  bottom: calc(48px + env(safe-area-inset-bottom, 0px));
+  left: max(20px, calc(16px + env(safe-area-inset-left, 0px)));
   z-index: 900;
   width: 290px;
   max-width: calc(100vw - 40px);
@@ -652,7 +666,7 @@ body {
 }
 
 #map-container:has(.map-gage-tray.expanded) .map-legend {
-  bottom: 252px !important;
+  bottom: calc(252px + env(safe-area-inset-bottom, 0px)) !important;
   max-height: min(48vh, 320px) !important;
 }
 
@@ -1415,6 +1429,7 @@ input:checked + .slider:before {
   overflow: hidden;
   max-width: 100vw;
   box-sizing: border-box;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 body.sidebar-drawer-active .map-gage-tray,
@@ -1423,11 +1438,11 @@ body.sidebar-drawer-active .map-gage-tray,
 }
 
 .map-gage-tray.collapsed {
-  height: 36px !important;
+  height: calc(36px + env(safe-area-inset-bottom, 0px)) !important;
 }
 
 .map-gage-tray.expanded {
-  height: 240px !important;
+  height: calc(240px + env(safe-area-inset-bottom, 0px)) !important;
 }
 
 /* Header bar */
@@ -1659,20 +1674,20 @@ body.sidebar-drawer-active .map-gage-tray,
 
 /* Dynamic offset of Map Legend and Trackball above Collapsible Tray */
 .map-legend {
-  bottom: 48px;
+  bottom: calc(48px + env(safe-area-inset-bottom, 0px));
   transition: bottom 0.24s cubic-bezier(0.16, 1, 0.3, 1);
 }
 #map-container:has(.map-gage-tray.expanded) .map-legend {
-  bottom: 252px !important;
-  max-height: calc(100vh - 310px) !important;
+  bottom: calc(256px + env(safe-area-inset-bottom, 0px)) !important;
+  max-height: calc(100dvh - 310px) !important;
 }
 
 .trackball-nav-control {
-  bottom: 48px;
+  bottom: calc(48px + env(safe-area-inset-bottom, 0px));
   transition: bottom 0.24s cubic-bezier(0.16, 1, 0.3, 1);
 }
 #map-container:has(.map-gage-tray.expanded) .trackball-nav-control {
-  bottom: 252px !important;
+  bottom: calc(256px + env(safe-area-inset-bottom, 0px)) !important;
 }
 
 /* ==========================================================================
@@ -1681,7 +1696,7 @@ body.sidebar-drawer-active .map-gage-tray,
 
 .flow-replay-bar {
   position: absolute;
-  bottom: 44px;
+  bottom: calc(48px + env(safe-area-inset-bottom, 0px));
   left: 50%;
   transform: translateX(-50%);
   width: min(840px, calc(100vw - 32px));
@@ -1701,7 +1716,7 @@ body.sidebar-drawer-active .map-gage-tray,
 }
 
 #map-container:has(.map-gage-tray.expanded) .flow-replay-bar {
-  bottom: 248px !important;
+  bottom: calc(252px + env(safe-area-inset-bottom, 0px)) !important;
 }
 
 .flow-replay-bar.hidden {
@@ -1975,7 +1990,7 @@ body.sidebar-drawer-active .map-gage-tray,
   .flow-replay-bar {
     width: calc(100vw - 20px);
     padding: 8px 10px;
-    bottom: 40px;
+    bottom: calc(48px + env(safe-area-inset-bottom, 0px));
   }
   .replay-sentinel-strip {
     display: none;
@@ -2727,8 +2742,8 @@ body.sidebar-drawer-active .map-gage-tray,
 /* Google Earth Style Trackball Navigation Control (Lower Right) */
 .trackball-nav-control {
   position: absolute;
-  bottom: 38px;
-  right: 20px;
+  bottom: calc(48px + env(safe-area-inset-bottom, 0px));
+  right: max(20px, calc(16px + env(safe-area-inset-right, 0px)));
   z-index: 25;
   user-select: none;
   -webkit-user-select: none;
@@ -3013,12 +3028,17 @@ body.sidebar-drawer-active .map-gage-tray,
     transform: rotate(0deg);
   }
 
-  /* Scaled Trackball on Mobile */
+  /* Scaled Trackball on Mobile / Tablet */
   .trackball-nav-control {
-    bottom: 18px;
-    right: 14px;
+    bottom: calc(48px + env(safe-area-inset-bottom, 0px));
+    right: max(14px, calc(10px + env(safe-area-inset-right, 0px)));
     transform: scale(0.82);
     transform-origin: bottom right;
+  }
+
+  .map-legend {
+    bottom: calc(48px + env(safe-area-inset-bottom, 0px));
+    left: max(12px, calc(8px + env(safe-area-inset-left, 0px)));
   }
 
   /* Hide heavyweight bottom table on mobile */
