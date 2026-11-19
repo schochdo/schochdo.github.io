@@ -2902,15 +2902,24 @@ for ts in data["value"]["timeSeries"]:
             const labelText = line.customLabel || `${line.label} (${valStr}${unit})`;
 
             if (line.noBox) {
-              // Clean unboxed text sitting above the dashed line
+              // Clean unboxed text sitting above the dashed line with protective white halo
               const xAdjust = line.xAdjust !== undefined ? line.xAdjust : -6;
               const yAdjust = line.yAdjust !== undefined ? line.yAdjust : -8;
               const textX = (line.position === 'start') ? (left - xAdjust) : (right + xAdjust);
               const textY = yPos + yAdjust;
 
-              ctx.fillStyle = line.textColor || line.color || '#0f172a';
               ctx.textAlign = (line.position === 'start') ? 'left' : ((line.position === 'center') ? 'center' : 'right');
               ctx.textBaseline = 'middle';
+
+              // White halo to prevent intersecting dataset lines from slicing through text
+              ctx.save();
+              ctx.strokeStyle = '#ffffff';
+              ctx.lineWidth = 4;
+              ctx.lineJoin = 'round';
+              ctx.strokeText(labelText, textX, textY);
+              ctx.restore();
+
+              ctx.fillStyle = line.textColor || line.color || '#0f172a';
               ctx.fillText(labelText, textX, textY);
             } else {
               const textWidth = ctx.measureText(labelText).width;

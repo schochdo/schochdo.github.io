@@ -626,6 +626,9 @@
           responsive: true,
           maintainAspectRatio: false,
           animation: false,
+          layout: {
+            padding: { left: 18, right: 10, top: 4, bottom: 2 }
+          },
           plugins: {
             legend: { display: false },
             tooltip: {
@@ -634,9 +637,6 @@
                 label: (ctx) => `Annual Inflow: ${ctx.raw.river.y.toFixed(2)} MAF/yr (${ctx.raw.river.sharePct}% of Powell)`
               }
             }
-          },
-          layout: {
-            padding: { left: 6, right: 10, top: 4, bottom: 2 }
           },
           scales: {
             x: {
@@ -650,6 +650,7 @@
               },
               ticks: {
                 autoSkip: false,
+                align: 'inner',
                 callback: (v) => {
                   if (Math.abs(v - 0.0) < 0.05) return 'Steady / Dam';
                   if (Math.abs(v - 0.8) < 0.05) return 'Desert Flash';
@@ -727,6 +728,14 @@
             const px = xPos + item.xOffset;
             const py = yPos + item.yOffset;
 
+            // White halo to prevent arrival curves slicing through text letters
+            ctx.save();
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 3.5;
+            ctx.lineJoin = 'round';
+            ctx.strokeText(item.label, px, py);
+            ctx.restore();
+
             // Draw clean unboxed text
             ctx.fillStyle = isDimmed ? '#94a3b8' : ds.borderColor;
             ctx.textAlign = 'center';
@@ -745,6 +754,12 @@
             const yPos = yScale.getPixelForValue(peakY);
             if (xPos >= chartArea.left && xPos <= chartArea.right) {
               const label = `${selRiver.name.split(' ')[0]} ${selRiver.travelDays}d`;
+              ctx.save();
+              ctx.strokeStyle = '#ffffff';
+              ctx.lineWidth = 3.5;
+              ctx.lineJoin = 'round';
+              ctx.strokeText(label, xPos, yPos - 12);
+              ctx.restore();
               ctx.fillStyle = '#0f172a';
               ctx.textAlign = 'center';
               ctx.textBaseline = 'middle';
@@ -792,6 +807,9 @@
           responsive: true,
           maintainAspectRatio: false,
           animation: false,
+          layout: {
+            padding: { left: 18, right: 10, top: 8, bottom: 4 }
+          },
           plugins: {
             legend: { display: false },
             tooltip: {
@@ -990,6 +1008,9 @@
           responsive: true,
           maintainAspectRatio: false,
           animation: false,
+          layout: {
+            padding: { left: 18, right: 10, top: 8, bottom: 4 }
+          },
           plugins: {
             legend: { display: false },
             tooltip: {
@@ -1024,7 +1045,7 @@
             },
             y: {
               min: 0,
-              max: 26,
+              max: 25,
               title: {
                 display: true,
                 text: 'Annual Volume (Million Acre-Feet)',
@@ -1032,6 +1053,7 @@
                 color: '#475569'
               },
               ticks: {
+                stepSize: 5,
                 callback: (v) => `${v} MAF`,
                 font: { size: 9.5 },
                 color: '#64748b'
@@ -1094,6 +1116,9 @@
           responsive: true,
           maintainAspectRatio: false,
           animation: false,
+          layout: {
+            padding: { left: 18, right: 10, top: 8, bottom: 4 }
+          },
           plugins: {
             legend: { display: false },
             tooltip: {

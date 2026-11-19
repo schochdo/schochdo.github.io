@@ -358,18 +358,18 @@
         </div>
 
         <!-- Shared Scale Axis Ticks (0, 5, 10, 15, 20 MAF) -->
-        <div class="relative w-full mt-3 h-5 text-[10px] text-stone-400 font-bold tabular-nums select-none">
-          <div class="absolute left-0 bottom-0">0 MAF</div>
-          <div class="absolute left-[25%] -translate-x-1/2 bottom-0">5.0 MAF</div>
-          <div class="absolute left-[50%] -translate-x-1/2 bottom-0">10.0 MAF</div>
-          <div class="absolute left-[75%] -translate-x-1/2 bottom-0">15.0 MAF</div>
-          <div class="absolute right-0 bottom-0 text-stone-600">20.0 MAF Scale (100%)</div>
-          <!-- Minor vertical ticks -->
-          <div class="absolute left-0 bottom-0 w-px h-1.5 bg-stone-300"></div>
-          <div class="absolute left-[25%] bottom-0 w-px h-1.5 bg-stone-300"></div>
-          <div class="absolute left-[50%] bottom-0 w-px h-1.5 bg-stone-300"></div>
-          <div class="absolute left-[75%] bottom-0 w-px h-1.5 bg-stone-300"></div>
-          <div class="absolute right-0 bottom-0 w-px h-1.5 bg-stone-300"></div>
+        <div class="relative w-full mt-3 h-6 text-[10px] text-stone-500 font-bold tabular-nums select-none border-b border-stone-200">
+          <div class="absolute left-0 top-0">0 MAF</div>
+          <div class="absolute left-[25%] -translate-x-1/2 top-0">5.0 MAF</div>
+          <div class="absolute left-[50%] -translate-x-1/2 top-0">10.0 MAF</div>
+          <div class="absolute left-[75%] -translate-x-1/2 top-0">15.0 MAF</div>
+          <div class="absolute right-0 top-0 text-stone-600">20.0 MAF Scale (100%)</div>
+          <!-- Minor vertical ticks pointing to border -->
+          <div class="absolute left-0 bottom-0 w-px h-1.5 bg-stone-400"></div>
+          <div class="absolute left-[25%] bottom-0 w-px h-1.5 bg-stone-400"></div>
+          <div class="absolute left-[50%] bottom-0 w-px h-1.5 bg-stone-400"></div>
+          <div class="absolute left-[75%] bottom-0 w-px h-1.5 bg-stone-400"></div>
+          <div class="absolute right-0 bottom-0 w-px h-1.5 bg-stone-400"></div>
         </div>
 
         <!-- BARS CONTAINER -->
@@ -416,11 +416,11 @@
               </div>
 
               <!-- 4. San Juan River: 2.10 MAF = 10.5% -->
-              <div class="bar-segment h-full bg-[#38bdf8] border-r border-sky-400/30 flex items-center justify-center text-stone-900 text-[10px] font-bold px-1 overflow-hidden"
+              <div class="bar-segment h-full bg-[#38bdf8] border-r border-sky-400/30 flex items-center justify-start pl-2 text-stone-900 text-[10px] font-bold px-1 overflow-hidden"
                    style="width: 10.5%;"
                    onmouseenter="inspectStackedSegment('San Juan River Basin', '2.10 MAF/yr (2,901 cfs)', '13.8% of Basin Natural Runoff', 'San Juan Mountains in Southwest Colorado and Northwest New Mexico, Navajo Dam and Animas River.', 'Physical Inflow')"
                    onmouseleave="clearStackedInspect()">
-                <span class="truncate">San Juan: 2.10</span>
+                <span class="truncate bg-sky-300/85 px-1 py-0.2 rounded text-[9.5px] font-black shadow-2xs z-15">San Juan: 2.10</span>
               </div>
 
               <!-- 5. Dolores & Upper Minor Tributaries: 0.80 MAF = 4.0% -->
@@ -433,19 +433,19 @@
 
               <!-- Lower Basin Runoff Segments (Total: 1.30 MAF = 6.5%) -->
               <!-- 6. Little Colorado River: 0.25 MAF = 1.25% -->
-              <div class="bar-segment h-full bg-[#0d9488] border-r border-teal-700/30 flex items-center justify-center text-white text-[8px] font-bold px-0.5 overflow-hidden"
+              <div class="bar-segment h-full bg-[#0d9488] border-r border-teal-700/30 flex items-center justify-center text-white text-[8px] font-bold px-0.5 overflow-hidden cursor-pointer"
                    style="width: 1.25%;"
+                   title="Little Colorado River: 0.25 MAF/yr (1.6% Inflow)"
                    onmouseenter="inspectStackedSegment('Little Colorado River (AZ)', '0.25 MAF/yr (345 cfs)', '1.6% of Basin Natural Runoff', 'Northern Arizona White Mountains plateau, enters mainstem in upper Grand Canyon.', 'Physical Inflow')"
                    onmouseleave="clearStackedInspect()">
-                <span class="truncate">L.CO</span>
               </div>
 
               <!-- 7. Virgin River: 0.18 MAF = 0.90% -->
-              <div class="bar-segment h-full bg-[#14b8a6] border-r border-teal-600/30 flex items-center justify-center text-white text-[8px] font-bold px-0.5 overflow-hidden"
+              <div class="bar-segment h-full bg-[#14b8a6] border-r border-teal-600/30 flex items-center justify-center text-white text-[8px] font-bold px-0.5 overflow-hidden cursor-pointer"
                    style="width: 0.90%;"
+                   title="Virgin River: 0.18 MAF/yr (1.2% Inflow)"
                    onmouseenter="inspectStackedSegment('Virgin River (UT/NV/AZ)', '0.18 MAF/yr (249 cfs)', '1.2% of Basin Natural Runoff', 'Zion National Park and Virgin River Gorge, enters Lake Mead Overton Arm.', 'Physical Inflow')"
                    onmouseleave="clearStackedInspect()">
-                <span class="truncate">Virg</span>
               </div>
 
               <!-- 8. Gila & Lower Basin Tributaries: 0.87 MAF = 4.35% -->
