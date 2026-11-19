@@ -485,7 +485,9 @@ function initMap() {
       },
       pitch: 0,
       bearing: 0,
-      maxPitch: 85,
+      minZoom: 4.5,
+      maxZoom: 18.5,
+      maxPitch: 80,
       attributionControl: false
     });
     window.map = map;
@@ -533,11 +535,8 @@ function initMap() {
         onPitchChange: (p) => {
           if (p > 5 && !map.getTerrain()) {
             map.setTerrain({ source: 'terrain-dem', exaggeration: 1.5 });
-            map._elevationFreeze = true;
           } else if (p === 0 && map.getTerrain()) {
             map.setTerrain(null);
-            map._elevationFreeze = false;
-            if (map.transform) map.transform.elevation = 0;
           }
           if (typeof window.updateTrackball === 'function') window.updateTrackball();
         },
@@ -575,7 +574,6 @@ function initMap() {
           source: 'terrain-dem',
           exaggeration: 1.5
         });
-        map._elevationFreeze = true;
       }
 
       loadData();
@@ -722,12 +720,9 @@ function syncPerspectiveState() {
       if (!map.getTerrain()) {
         map.setTerrain({ source: 'terrain-dem', exaggeration: 1.5 });
       }
-      map._elevationFreeze = true;
     } else {
       if (currentPitch === 0 && map.getTerrain()) {
         map.setTerrain(null);
-        map._elevationFreeze = false;
-        if (map.transform) map.transform.elevation = 0;
       }
     }
   }
@@ -794,8 +789,6 @@ function setPitchDegrees(deg) {
     setTimeout(() => {
       if (map && map.getPitch() === 0) {
         map.setTerrain(null);
-        map._elevationFreeze = false;
-        if (map.transform) map.transform.elevation = 0;
         isTilted = false;
         updatePerspectiveUI();
       }

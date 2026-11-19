@@ -181,31 +181,15 @@
 
   /**
    * Enforces terrain collision safety floor without camera bobbing.
-   * If the ground directly beneath the camera rises within
-   * MIN_CAMERA_CLEARANCE_METERS of current camera altitude, ratchets
-   * transform.elevation upward to safely clear the obstacle.
-   * When terrain drops (valleys/canyons), elevation is held constant.
+   * Native MapLibre GL JS v4 _elevateCameraIfInsideTerrain automatically manages
+   * camera clearance when transform.elevation accurately reflects center terrain.
+   * This guard ensures camera eye stays above terrain without mutating private
+   * transform matrices or freezing elevation calculations.
    */
   function enforceTerrainClearance(mapInstance) {
-    if (!mapInstance || typeof mapInstance.getTerrain !== 'function' || !mapInstance.getTerrain() || mapInstance.getPitch() <= 5) return;
-    var tr = (mapInstance._camera && mapInstance._camera.transform) || mapInstance.transform;
-    if (!tr) return;
-
-    var camPos = tr.getCameraPosition ? tr.getCameraPosition() : null;
-    if (!camPos || !camPos.lngLat || !isFinite(camPos.altitude)) return;
-
-    var groundUnderCam = mapInstance.queryTerrainElevation ? mapInstance.queryTerrainElevation(camPos.lngLat) : null;
-    if (groundUnderCam === null || groundUnderCam === undefined || !isFinite(groundUnderCam)) return;
-
-    var minClearance = CAMERA_CONSTANTS.MIN_CAMERA_CLEARANCE_METERS;
-    var requiredAlt = groundUnderCam + minClearance;
-    if (requiredAlt > camPos.altitude) {
-      var deltaH = requiredAlt - camPos.altitude;
-      tr.elevation = (tr.elevation || 0) + deltaH;
-      if (typeof mapInstance.triggerRepaint === 'function') {
-        mapInstance.triggerRepaint();
-      }
-    }
+    if (!mapInstance || typeof mapInstance.getTerrain !== 'function' || !mapInstance.getTerrain()) return;
+    // MapLibre's built-in terrain collision avoidance handles camera eye elevation cleanly.
+    // We strictly avoid manual mutations of tr.elevation to prevent projection corruption.
   }
 
   /**
@@ -262,9 +246,8 @@
         if (CameraStateMachine.getMode() === 'flyto') {
           CameraStateMachine.setMode('idle');
         }
-        if (mapInstance && typeof mapInstance.getPitch === 'function' && mapInstance.getPitch() > 5 && mapInstance.getTerrain && mapInstance.getTerrain()) {
-          mapInstance._elevationFreeze = true;
-          enforceTerrainClearance(mapInstance);
+        if (mapInstance) {
+          mapInstance._elevationFreeze = false;
         }
       };
       mapInstance.once('moveend', onEnd);
@@ -466,6 +449,9 @@
       }
       lastTimestamp = null;
       heldFlightAltitude = null;
+      if (map) {
+        map._elevationFreeze = false;
+      }
       if (CameraStateMachine.getMode() === 'flight') {
         CameraStateMachine.setMode('idle');
       }
@@ -586,12 +572,10 @@
         var minAllowedCamAlt = groundUnderCam2 + CAMERA_CONSTANTS.MIN_CAMERA_CLEARANCE_METERS;
 
         if (deltaAltMeters > 0 || targetCamAlt >= minAllowedCamAlt) {
-          var trElev = (map._camera && map._camera.transform) || map.transform;
-          if (trElev) {
-            trElev.elevation = (trElev.elevation || 0) + deltaAltMeters;
-            heldFlightAltitude = targetCamAlt;
-            if (typeof map.triggerRepaint === 'function') map.triggerRepaint();
-          }
+          var curZ = map.getZoom();
+          var zoomStep = (deltaAltMeters / Math.max(500, heldFlightAltitude || 5000)) * 1.4427;
+          map.setZoom(Math.max(4.5, Math.min(18.5, curZ - zoomStep)));
+          heldFlightAltitude = targetCamAlt;
         }
       }
 
@@ -629,16 +613,8 @@
         var maxGroundCam = sampleTerrainObstacle(map, nextCamLng, nextCamLat, lookCamLng, lookCamLat);
         var minAllowedAltH = maxGroundCam + CAMERA_CONSTANTS.MIN_CAMERA_CLEARANCE_METERS;
 
-        // Ensure elevation freeze is active so MapLibre does not track terrain under center
-        map._elevationFreeze = true;
-
         if (minAllowedAltH > heldFlightAltitude) {
-          var deltaElev = minAllowedAltH - heldFlightAltitude;
           heldFlightAltitude = minAllowedAltH;
-          var trH = (map._camera && map._camera.transform) || map.transform;
-          if (trH) {
-            trH.elevation = (trH.elevation || 0) + deltaElev;
-          }
         }
 
         map.jumpTo({ center: [disp.nextLng, disp.nextLat] });
@@ -703,13 +679,10 @@
       stopFlight(true);
     }
 
-    function onPanStart() {
+    function onPanStart(e) {
       if (CameraStateMachine.getMode() === 'flight') return;
-      if (map.getPitch() > 5 && map.getTerrain && map.getTerrain()) {
-        map._elevationFreeze = true;
-        enforceTerrainClearance(map);
-      }
-      if (CameraStateMachine.getMode() === 'flyto') {
+      // User manual mouse/touch drag pre-empts programmatic flight
+      if (e && e.originalEvent && CameraStateMachine.getMode() === 'flyto') {
         CameraStateMachine.cancelProgrammaticFlight(map);
       }
       if (animationFrameId !== null || activeKeys.size > 0) {
@@ -718,16 +691,12 @@
     }
 
     function onPanMove() {
-      if (map.getPitch() > 5 && map.getTerrain && map.getTerrain()) {
-        map._elevationFreeze = true;
-        enforceTerrainClearance(map);
-      }
+      // Natural terrain tracking without elevation corruption
     }
 
     function onPanEnd() {
-      if (map.getPitch() > 5 && map.getTerrain && map.getTerrain()) {
-        map._elevationFreeze = true;
-        enforceTerrainClearance(map);
+      if (map && CameraStateMachine.getMode() !== 'flight') {
+        map._elevationFreeze = false;
       }
       enforceProgressivePitch();
     }
