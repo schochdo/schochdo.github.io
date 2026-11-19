@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upper Basin River Dynamics &amp; Lake Powell Water Balance</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Editorial Design Standard (Edward Tufte / NYT Restrained Palette) -->
+  <link rel="stylesheet" href="editorial.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <style>
+    html, body {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      background-color: #f8fafc;
+      color: #0f172a;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum";
+    }
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    /* Dashboard Grid & Card System */
+    .dashboard-grid {
+      display: grid;
+      gap: 10px;
+      padding: 10px;
+      box-sizing: border-box;
+      background-color: #f8fafc;
+      width: 100%;
+    }
+
+    .dashboard-card {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: var(--radius-card, 4px);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      overflow: hidden;
+      box-sizing: border-box;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    }
+
+    .card-header-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 4px;
+      flex-shrink: 0;
+    }
+
+    /* Compact HTML Legends for Cards 3 & 4 */
+    .chart-html-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 11.5px;
+      color: #334155;
+      margin-top: 2px;
+      margin-bottom: 6px;
+      flex-shrink: 0;
+      align-items: center;
+      line-height: 1.4;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      user-select: none;
+      transition: opacity 0.15s ease, color 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .legend-item:hover {
+      color: #0f172a;
+    }
+
+    .legend-item.dimmed {
+      opacity: 0.38;
+      text-decoration: line-through;
+    }
+
+    .legend-color-box {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    .legend-line {
+      width: 14px;
+      height: 0px;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    /* Responsive Grid Breakpoints */
+    /* 1. Wide Desktop Monitors (> 1100px): Compact 2x2 Single-Screen Layout */
+    @media (min-width: 1101px) {
+      html, body {
+        height: 100vh;
+        overflow: hidden;
+      }
+      .dashboard-grid {
+        height: calc(100vh - 64px);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-rows: repeat(2, minmax(0, 1fr));
+        overflow: hidden;
+      }
+      body.in-iframe .dashboard-grid {
+        height: calc(100vh - 52px);
+      }
+      .dashboard-card {
+        min-height: 0;
+      }
+    }
+
+    /* 2. Narrower Viewports (<= 1100px): Single-Column Scrollable Layout */
+    @media (max-width: 1100px) {
+      html, body {
+        height: auto !important;
+        overflow-y: auto !important;
+        min-height: 100vh;
+      }
+      header {
+        height: auto !important;
+        min-height: 52px;
+        max-height: none !important;
+        flex-wrap: wrap;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        gap: 8px;
+      }
+      .dashboard-grid {
+        height: auto !important;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto;
+        overflow-y: visible !important;
+      }
+      .dashboard-card {
+        min-height: 360px;
+        height: 420px;
+      }
+    }
+
+    /* Shared Academic Sidebar Styles */
+    .sidebar-academic {
+      background-color: #f8fafc;
+      color: #334155;
+      border-right: 1px solid #e2e8f0;
+    }
+    .sidebar-category-header {
+      color: #64748b;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 10px 10px 3px 10px;
+      display: flex;
+      align-items: center;
+    }
+    .sidebar-link {
+      color: #334155;
+      font-weight: 500;
+      font-size: 12px;
+      padding: 6.5px 10px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      text-align: left;
+      border: 1px solid transparent;
+      border-left: 3px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      background: transparent;
+    }
+    .sidebar-link svg {
+      color: #64748b;
+      flex-shrink: 0;
+      transition: color 0.15s ease;
+    }
+    .sidebar-link:hover {
+      background-color: #f1f5f9;
+      color: #0f172a;
+    }
+    .sidebar-link:hover svg {
+      color: #334155;
+    }
+    .sidebar-link.active {
+      background-color: #ffffff;
+      color: #0f172a;
+      font-weight: 700;
+      border: 1px solid #cbd5e1;
+      border-left: 3px solid #0072B2;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    }
+    .sidebar-link.active svg {
+      color: #0072B2 !important;
+    }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen w-screen bg-slate-50">
+
+  <!-- ============================================================== -->
+  <!-- 52PX COMPACT EDITORIAL HEADER                                  -->
+  <!-- ============================================================== -->
+  <header class="h-[52px] min-h-[52px] max-h-[52px] bg-white border-b border-slate-300 px-4 flex items-center justify-between gap-3 box-border z-20">
+    <!-- Left: Navigation & Title -->
+    <div class="flex items-center gap-3 shrink-0">
+      <a href="index.html" onclick="goToTab(event, 'map')" class="back-link inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded border border-slate-300 transition-colors">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+        <span>Back to Map</span>
+      </a>
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-[#0072B2]"></span>
+        <h1 class="text-sm font-bold text-slate-900 tracking-tight">Upper Basin River Dynamics &amp; Lake Powell Water Balance</h1>
+      </div>
+    </div>
+
+    <!-- Center: Interactive Regime Filter Buttons -->
+    <div class="flex items-center gap-1.5 shrink-0" role="group" aria-label="River Regime Filters">
+      <button id="btn-all" onclick="filterRegime('all')" class="px-2.5 py-1 text-xs font-semibold rounded transition-colors bg-slate-800 text-white shadow-xs">
+        All Rivers
+      </button>
+      <button id="btn-snowmelt" onclick="filterRegime('snowmelt')" class="px-2.5 py-1 text-xs font-semibold rounded transition-colors bg-sky-50 hover:bg-sky-100 text-[#0072B2] border border-[#0072B2]/30">
+        Snowmelt Rivers
+      </button>
+      <button id="btn-dam" onclick="filterRegime('dam_controlled')" class="px-2.5 py-1 text-xs font-semibold rounded transition-colors bg-emerald-50 hover:bg-emerald-100 text-[#009E73] border border-[#009E73]/30">
+        Dam-Controlled
+      </button>
+      <button id="btn-flash" onclick="filterRegime('flash_flood')" class="px-2.5 py-1 text-xs font-semibold rounded transition-colors bg-orange-50 hover:bg-orange-100 text-[#D55E00] border border-[#D55E00]/30">
+        Desert Flash-Flood
+      </button>
+    </div>
+
+    <!-- Right: Shared Selection Status Pill -->
+    <div class="flex items-center shrink-0 min-w-0">
+      <div id="status-pill" class="text-[11px] font-medium text-slate-700 bg-slate-100 border border-slate-200 rounded-full px-3 py-0.5 truncate max-w-[440px]" title="Click any river bubble or curve below to highlight">
+        Click any river bubble or curve below to highlight
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================== -->
+  <!-- 2x2 SINGLE-SCREEN EDITORIAL GRID                               -->
+  <!-- ============================================================== -->
+  <main class="dashboard-grid">
+
+    <!-- CARD 1: RIVER BEHAVIOR & SIZE (GAPMINDER BUBBLE CHART) -->
+    <section class="dashboard-card">
+      <div class="card-header-row">
+        <h2 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-[#0072B2]"></span>
+          River Behavior &amp; Annual Water Volume
+        </h2>
+        <span class="text-[10px] text-slate-500 font-medium">Bubble Size = % of Powell Inflow</span>
+      </div>
+      <p class="text-[11px] text-slate-600 mb-1.5 leading-snug shrink-0">
+        Using the Richards–Baker Flashiness Index (how sharply daily flow jumps up and down), steady dam- and snowmelt-fed rivers on the left fill Lake Powell, while flashy desert rivers on the right spike briefly during storms with little total volume.
+      </p>
+      <div class="flex-1 min-h-0 min-w-0 relative w-full">
+        <canvas id="chart-behavior-bubbles" style="position: absolute; top: 0; left: 0; width: 100% !important; height: 100% !important;"></canvas>
+      </div>
+    </section>
+
+    <!-- CARD 2: TRAVEL TIME TO LAKE POWELL (ARRIVAL CURVES) -->
+    <section class="dashboard-card">
+      <div class="card-header-row">
+        <h2 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-[#009E73]"></span>
+          How Many Days Until Water Reaches Lake Powell?
+        </h2>
+        <span class="text-[10px] text-slate-500 font-medium">Arrival Delay: 1.5 to 8 Days</span>
+      </div>
+      <p class="text-[11px] text-slate-600 mb-1.5 leading-snug shrink-0">
+        Water released from upstream headwaters takes up to 8 days to travel through canyon corridors and fill Lake Powell.
+      </p>
+      <div class="flex-1 min-h-0 min-w-0 relative w-full">
+        <canvas id="chart-travel-time" style="position: absolute; top: 0; left: 0; width: 100% !important; height: 100% !important;"></canvas>
+      </div>
+    </section>
+
+    <!-- CARD 3: 100 YEARS OF WET WATER VS. PAPER PROMISES (1922-2026) -->
+    <section class="dashboard-card">
+      <div class="card-header-row">
+        <h2 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-[#1e293b]"></span>
+          100 Years of Wet Water vs. Paper Promises (1922–2026)
+        </h2>
+      </div>
+      <p class="text-[11px] text-slate-600 mb-1.5 leading-snug shrink-0">
+        The 1922 Compact promised 16.5 million acre-feet every year, but actual river flow met that target only 26% of the time—and only once since 2000.
+      </p>
+      <!-- Compact HTML Legend for Card 3 -->
+      <div id="legend-compact-100yr" class="chart-html-legend">
+        <span class="legend-item" onclick="toggleDataset(chartCompact, 0)">
+          <span class="legend-color-box" style="background: #0284c7;"></span>
+          <span class="legend-color-box" style="background: #b2182b; margin-left: -4px;"></span>
+          <span>Actual Supply (Surplus / Deficit)</span>
+        </span>
+        <span class="legend-item" id="legend-item-lees" onclick="toggleDataset(chartCompact, 1)">
+          <span class="legend-line" style="border-top: 2px solid #334155;"></span>
+          <span>Lees Ferry Releases</span>
+        </span>
+        <span class="legend-item" onclick="toggleDataset(chartCompact, 2)">
+          <span class="legend-line" style="border-top: 2px dashed #1e293b;"></span>
+          <span>16.5 MAF/yr Paper Promise</span>
+        </span>
+      </div>
+      <div class="flex-1 min-h-0 min-w-0 relative w-full">
+        <canvas id="chart-compact-100yr" style="position: absolute; top: 0; left: 0; width: 100% !important; height: 100% !important;"></canvas>
+      </div>
+    </section>
+
+    <!-- CARD 4: WHY RESERVOIRS DRAIN 9 MONTHS (SEASONAL SUPPLY VS DEMAND) -->
+    <section class="dashboard-card">
+      <div class="card-header-row">
+        <h2 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-[#0072B2]"></span>
+          Why Reservoirs Drain 9 Months of the Year (Seasonal Supply vs. Demand)
+        </h2>
+      </div>
+      <p class="text-[11px] text-slate-600 mb-1.5 leading-snug shrink-0">
+        Mountain snowmelt arrives in a 3-month spring surge, while canals and compact releases pull water all 12 months.
+      </p>
+      <!-- Compact HTML Legend for Card 4 -->
+      <div id="legend-hydrograph" class="chart-html-legend">
+        <span class="legend-item" onclick="toggleDataset(chartHydro, 0)">
+          <span class="legend-color-box" style="background: #0072B2;"></span>
+          <span>Total Basin Snowmelt Inflow (cfs)</span>
+        </span>
+        <span class="legend-item" onclick="toggleDataset(chartHydro, 1)">
+          <span class="legend-line" style="border-top: 2.2px solid #b45309;"></span>
+          <span>Total System Outflow &amp; Canal Demand (cfs)</span>
+        </span>
+      </div>
+      <div class="flex-1 min-h-0 min-w-0 relative w-full">
+        <canvas id="chart-snowmelt-vs-flash" style="position: absolute; top: 0; left: 0; width: 100% !important; height: 100% !important;"></canvas>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================== -->
+  <!-- JAVASCRIPT: SHARED SELECTION STATE & GAPMINDER INTERACTIVITY   -->
+  <!-- ============================================================== -->
+  <script>
+    Chart.defaults.font.family = "'Inter', -apple-system, sans-serif";
+    Chart.defaults.color = "#334155";
+    Chart.defaults.borderColor = "#cbd5e1";
+    Chart.defaults.animation = false;
+    Chart.defaults.animations = false;
+    Chart.defaults.transitions = false;
+
+    if (Chart.defaults.scale && Chart.defaults.scale.grid) {
+      Chart.defaults.scale.grid.color = '#e2e8f0';
+    }
+    if (Chart.defaults.scales) {
+      if (Chart.defaults.scales.linear && Chart.defaults.scales.linear.grid) {
+        Chart.defaults.scales.linear.grid.color = '#e2e8f0';
+      }
+      if (Chart.defaults.scales.category && Chart.defaults.scales.category.grid) {
+        Chart.defaults.scales.category.grid.color = '#e2e8f0';
+      }
+    }
+
+    // Light editorial card tooltip styling across all charts
+    if (Chart.defaults.plugins && Chart.defaults.plugins.tooltip) {
+      const tt = Chart.defaults.plugins.tooltip;
+      tt.backgroundColor = 'rgba(255, 255, 255, 0.98)';
+      tt.titleColor = '#0f172a';
+      tt.bodyColor = '#334155';
+      tt.footerColor = '#64748b';
+      tt.borderColor = '#cbd5e1';
+      tt.borderWidth = 1;
+      tt.cornerRadius = 3;
+      tt.padding = 10;
+      tt.usePointStyle = true;
+      tt.boxWidth = 8;
+      tt.boxHeight = 8;
+      tt.boxPadding = 6;
+    }
+
+    // Handle iframe detection and navigation
+    if (window.self !== window.top) {
+      document.body.classList.add('in-iframe');
+    }
+    function goToTab(e, tabId) {
+      if (window.parent && window.parent !== window && typeof window.parent.setTab === 'function') {
+        if (e) e.preventDefault();
+        window.parent.setTab(tabId);
+      }
+    }
+
+    // Color conversion utility
+    function hexToRgba(hex, alpha) {
+      const h = hex.replace('#', '');
+      const r = parseInt(h.substring(0, 2), 16);
+      const g = parseInt(h.substring(2, 4), 16);
+      const b = parseInt(h.substring(4, 6), 16);
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+
+    // ================================================================
+    // COLORBLIND-SAFE PALETTE (OKABE-ITO / COLORBREWER STANDARD)
+    //   - Snowmelt Inflow Rivers:            #0072B2 (Okabe-Ito Deep Blue, fill rgba(0, 114, 178, 0.16))
+    //   - Dam-Regulated Releases:            #009E73 (Okabe-Ito Bluish-Green, fill rgba(0, 158, 115, 0.16))
+    //   - Desert Flash-Flood Tributaries:    #D55E00 (Okabe-Ito Vermilion, fill rgba(213, 94, 0, 0.16))
+    //   - Water Year Surplus Supply:         #0284c7 (ColorBrewer Water Blue)
+    //   - Structural Deficit (100-Yr Bar):   #b2182b (ColorBrewer Crimson / Deep Oxblood)
+    //   - Outflow & Diversion Demand (cfs):  #b45309 (ColorBrewer Warm Ochre)
+    //   - 16.5 MAF Compact Target:           #1e293b (Charcoal dashed 2px)
+    // ================================================================
+    const COLOR_SNOWMELT = '#0072B2';
+    const COLOR_DAM = '#009E73';
+    const COLOR_FLASH = '#D55E00';
+    const COLOR_SURPLUS = '#0284c7';
+    const COLOR_DEFICIT = '#b2182b';
+    const COLOR_DEMAND = '#b45309';
+    const COLOR_TARGET = '#1e293b';
+
+    const RIVERS = [
+      {
+        id: 'green_river',
+        name: 'Green River at Green River',
+        station: '#09315000',
+        regime: 'dam_controlled',
+        x: 0.18, // Steady flow
+        y: 4.80, // 4.80 MAF/yr
+        r: 18,
+        color: COLOR_DAM,
+        travelDays: 4.5,
+        distanceMi: 120,
+        sharePct: 40,
+        summary: 'Selected: Green River at Green River — 4.80 MAF/yr (40% of Powell inflow) • Reaches Powell in 4.5 days • Regulated Upper Basin powerhouse',
+        travelCurve: [0.18, 0.31, 0.52, 0.71, 0.80, 0.81, 0.74, 0.62, 0.48, 0.33, 0.21]
+      },
+      {
+        id: 'cisco',
+        name: 'Colorado River near Cisco',
+        station: '#09180500',
+        regime: 'snowmelt',
+        x: 0.28,
+        y: 3.80,
+        r: 16,
+        color: COLOR_SNOWMELT,
+        travelDays: 3.5,
+        distanceMi: 110,
+        sharePct: 32,
+        summary: 'Selected: Colorado River near Cisco — 3.80 MAF/yr (32% of Powell inflow) • Reaches Powell in 3.5 days • Combines Upper Colorado & Gunnison',
+        travelCurve: [0.22, 0.39, 0.62, 0.76, 0.78, 0.72, 0.61, 0.48, 0.35, 0.24, 0.16]
+      },
+      {
+        id: 'cameo',
+        name: 'Upper Colorado at Cameo',
+        station: '#09095500',
+        regime: 'snowmelt',
+        x: 0.32,
+        y: 3.50,
+        r: 15,
+        color: COLOR_SNOWMELT,
+        travelDays: 6.5,
+        distanceMi: 210,
+        sharePct: 29,
+        summary: 'Selected: Upper Colorado at Cameo — 3.50 MAF/yr (29% of Powell inflow) • Reaches Powell in 6.5 days • Natural Rocky Mountain spring snowmelt',
+        travelCurve: [0.08, 0.15, 0.26, 0.41, 0.56, 0.68, 0.74, 0.73, 0.64, 0.49, 0.35]
+      },
+      {
+        id: 'gunnison',
+        name: 'Gunnison near Grand Junction',
+        station: '#09152500',
+        regime: 'dam_controlled',
+        x: 0.15,
+        y: 2.10,
+        r: 13,
+        color: COLOR_DAM,
+        travelDays: 5.5,
+        distanceMi: 180,
+        sharePct: 18,
+        summary: 'Selected: Gunnison near Grand Jct — 2.10 MAF/yr (18% of Powell inflow) • Reaches Powell in 5.5 days • Regulated by Aspinall Unit dams',
+        travelCurve: [0.12, 0.20, 0.34, 0.50, 0.63, 0.69, 0.68, 0.59, 0.46, 0.34, 0.22]
+      },
+      {
+        id: 'flaming_gorge',
+        name: 'Green below Flaming Gorge Dam',
+        station: '#09234500',
+        regime: 'dam_controlled',
+        x: 0.08,
+        y: 1.40,
+        r: 10,
+        color: COLOR_DAM,
+        travelDays: 7.0,
+        distanceMi: 290,
+        sharePct: 12,
+        summary: 'Selected: Green below Flaming Gorge — 1.40 MAF/yr (12% of Powell inflow) • Constant hydropower dam releases',
+        travelCurve: [0.05, 0.10, 0.18, 0.28, 0.42, 0.56, 0.68, 0.72, 0.65, 0.52, 0.38]
+      },
+      {
+        id: 'yampa',
+        name: 'Yampa River at Deerlodge Park',
+        station: '#09260050',
+        regime: 'snowmelt',
+        x: 0.42,
+        y: 1.30,
+        r: 10,
+        color: COLOR_SNOWMELT,
+        travelDays: 8.0,
+        distanceMi: 350,
+        sharePct: 11,
+        summary: 'Selected: Yampa at Deerlodge — 1.30 MAF/yr (11% of Powell inflow) • Reaches Powell in 8.0 days • Last large undammed wild river',
+        travelCurve: [0.05, 0.09, 0.16, 0.25, 0.37, 0.49, 0.59, 0.65, 0.66, 0.61, 0.52]
+      },
+      {
+        id: 'san_juan_bluff',
+        name: 'San Juan River at Bluff',
+        station: '#09379500',
+        regime: 'flash_flood',
+        x: 0.78,
+        y: 1.15,
+        r: 9,
+        color: COLOR_FLASH,
+        travelDays: 1.5,
+        distanceMi: 105,
+        sharePct: 10,
+        summary: 'Selected: San Juan at Bluff — 1.15 MAF/yr (10% of Powell inflow) • Reaches Powell in 1.5 days • Driven by brief desert rainstorms',
+        travelCurve: [0.35, 0.41, 0.42, 0.38, 0.31, 0.23, 0.16, 0.11, 0.08, 0.05, 0.03]
+      },
+      {
+        id: 'dirty_devil',
+        name: 'Dirty Devil near Hanksville',
+        station: '#09333500',
+        regime: 'flash_flood',
+        x: 0.88,
+        y: 0.07,
+        r: 6,
+        color: COLOR_FLASH,
+        travelDays: 1.0,
+        distanceMi: 40,
+        sharePct: 1,
+        summary: 'Selected: Dirty Devil near Hanksville — 0.07 MAF/yr (<1% of Powell inflow) • Reaches Powell in ~1 day • Rapid mudflow arroyo spikes',
+        travelCurve: [0.45, 0.48, 0.30, 0.18, 0.10, 0.05, 0.02, 0.01, 0.00, 0.00, 0.00]
+      },
+      {
+        id: 'escalante',
+        name: 'Escalante River near Escalante',
+        station: '#09337500',
+        regime: 'flash_flood',
+        x: 0.84,
+        y: 0.05,
+        r: 5,
+        color: COLOR_FLASH,
+        travelDays: 1.0,
+        distanceMi: 35,
+        sharePct: 1,
+        summary: 'Selected: Escalante near Escalante — 0.05 MAF/yr (<1% of Powell inflow) • Reaches Powell in ~1 day • Slickrock canyon flash floods',
+        travelCurve: [0.48, 0.44, 0.26, 0.14, 0.08, 0.04, 0.02, 0.01, 0.00, 0.00, 0.00]
+      }
+    ];
+
+    // Shared State
+    let selectedRiverId = null;
+    let selectedRegime = 'all';
+
+    let chartBubble = null;
+    let chartTravel = null;
+    let chartCompact = null;
+    let chartHydro = null;
+
+    let seasonalDataCache = null;
+    async function loadSeasonalData() {
+      if (seasonalDataCache) return seasonalDataCache;
+      try {
+        const resp = await fetch('data/seasonal_regimes.json');
+        if (resp.ok) seasonalDataCache = await resp.json();
+      } catch (e) {
+        try {
+          const resp2 = await fetch('./data/seasonal_regimes.json');
+          if (resp2.ok) seasonalDataCache = await resp2.json();
+        } catch (e2) {}
+      }
+      return seasonalDataCache;
+    }
+
+    // ================================================================
+    // CARD 1: GAPMINDER BUBBLE CHART (RIVER BEHAVIOR VS VOLUME)
+    // ================================================================
+    function initBubbleChart() {
+      const ctx = document.getElementById('chart-behavior-bubbles').getContext('2d');
+      
+      const datasets = RIVERS.map(r => ({
+        label: r.name,
+        riverId: r.id,
+        regime: r.regime,
+        data: [{ x: r.x, y: r.y, r: r.r, river: r }],
+        backgroundColor: hexToRgba(r.color, 0.75),
+        borderColor: r.color,
+        borderWidth: 1.5,
+        hoverBorderWidth: 3,
+        hoverBorderColor: '#0f172a'
+      }));
+
+      chartBubble = new Chart(ctx, {
+        type: 'bubble',
+        data: { datasets },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                title: (items) => items[0].raw.river.name,
+                label: (ctx) => `Annual Inflow: ${ctx.raw.river.y.toFixed(2)} MAF/yr (${ctx.raw.river.sharePct}% of Powell)`
+              }
+            }
+          },
+          layout: {
+            padding: { left: 6, right: 10, top: 4, bottom: 2 }
+          },
+          scales: {
+            x: {
+              min: 0.0,
+              max: 1.0,
+              title: {
+                display: true,
+                text: 'Richards–Baker Flashiness (Steady → Flashy)',
+                font: { size: 10, weight: 600 },
+                color: '#475569'
+              },
+              ticks: {
+                autoSkip: false,
+                callback: (v) => {
+                  if (Math.abs(v - 0.0) < 0.05) return 'Steady / Dam';
+                  if (Math.abs(v - 0.8) < 0.05) return 'Desert Flash';
+                  return '';
+                },
+                font: { size: 9.5, weight: '500' },
+                color: '#64748b'
+              },
+              grid: { display: false }
+            },
+            y: {
+              beginAtZero: true,
+              min: 0,
+              suggestedMax: 5.5,
+              title: {
+                display: true,
+                text: 'Annual Water Volume (Million Acre-Feet / yr)',
+                font: { size: 10, weight: 600 },
+                color: '#475569'
+              },
+              ticks: {
+                callback: (v) => `${v.toFixed(1)} MAF`,
+                font: { size: 9.5 },
+                color: '#64748b'
+              },
+              grid: { color: '#e2e8f0', lineWidth: 1 }
+            }
+          },
+          onClick: (evt, elements) => {
+            if (elements && elements.length > 0) {
+              const datasetIdx = elements[0].datasetIndex;
+              const r = chartBubble.data.datasets[datasetIdx].data[0].river;
+              selectRiver(r.id === selectedRiverId ? null : r.id);
+            } else {
+              selectRiver(null);
+            }
+          }
+        }
+      });
+    }
+
+    // ================================================================
+    // CARD 2: TRAVEL TIME TO LAKE POWELL (ARRIVAL CURVES)
+    // ================================================================
+    // Custom plugin for Card 2: Direct labels for 3-4 main rivers
+    const card2RiverLabelsPlugin = {
+      id: 'card2RiverLabelsPlugin',
+      afterDatasetsDraw(chart) {
+        if (!chart || !chart.chartArea || !chart.scales || !chart.scales.x || !chart.scales.y) return;
+        const { ctx, chartArea } = chart;
+        const xScale = chart.scales.x;
+        const yScale = chart.scales.y;
+
+        const mainRivers = [
+          { id: 'san_juan_bluff', label: 'San Juan 1.5d', xVal: 1.5, yVal: 0.42, xOffset: 0, yOffset: -10 },
+          { id: 'cisco', label: 'Cisco 3.5d', xVal: 3.5, yVal: 0.78, xOffset: -6, yOffset: -11 },
+          { id: 'green_river', label: 'Green 4.5d', xVal: 5.0, yVal: 0.81, xOffset: 6, yOffset: -11 },
+          { id: 'yampa', label: 'Yampa 8d', xVal: 8.0, yVal: 0.66, xOffset: 0, yOffset: -10 }
+        ];
+
+        ctx.save();
+        ctx.font = 'bold 9.5px "Inter", -apple-system, sans-serif';
+
+        mainRivers.forEach(item => {
+          const ds = chart.data.datasets.find(d => d.riverId === item.id);
+          if (!ds) return;
+
+          const isSelected = selectedRiverId ? (ds.riverId === selectedRiverId) : (selectedRegime === 'all' || ds.regime === selectedRegime);
+          const isDimmed = !isSelected;
+
+          const xPos = xScale.getPixelForValue(item.xVal);
+          const yPos = yScale.getPixelForValue(item.yVal);
+
+          if (xPos >= chartArea.left - 20 && xPos <= chartArea.right + 20 && yPos >= chartArea.top - 20 && yPos <= chartArea.bottom + 20) {
+            const px = xPos + item.xOffset;
+            const py = yPos + item.yOffset;
+
+            // Draw clean unboxed text
+            ctx.fillStyle = isDimmed ? '#94a3b8' : ds.borderColor;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(item.label, px, py);
+          }
+        });
+
+        // If another river is selected, label it too
+        if (selectedRiverId && !mainRivers.some(m => m.id === selectedRiverId)) {
+          const selRiver = RIVERS.find(r => r.id === selectedRiverId);
+          if (selRiver) {
+            const peakIdx = Math.round(selRiver.travelDays);
+            const peakY = selRiver.travelCurve[peakIdx] || 0.45;
+            const xPos = xScale.getPixelForValue(peakIdx);
+            const yPos = yScale.getPixelForValue(peakY);
+            if (xPos >= chartArea.left && xPos <= chartArea.right) {
+              const label = `${selRiver.name.split(' ')[0]} ${selRiver.travelDays}d`;
+              ctx.fillStyle = '#0f172a';
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.fillText(label, xPos, yPos - 12);
+            }
+          }
+        }
+
+        ctx.restore();
+      }
+    };
+
+    function initTravelChart() {
+      const ctx = document.getElementById('chart-travel-time').getContext('2d');
+      const days = Array.from({ length: 11 }, (_, i) => i);
+
+      const datasets = RIVERS.map(r => ({
+        label: `${r.name}: ${r.travelDays}d peak`,
+        riverId: r.id,
+        regime: r.regime,
+        data: r.travelCurve,
+        borderColor: r.color,
+        backgroundColor: hexToRgba(r.color, 0.16),
+        borderWidth: 2,
+        tension: 0.35,
+        fill: false,
+        pointRadius: (ctx) => {
+          const peakIdx = Math.round(r.travelDays);
+          return ctx.dataIndex === peakIdx ? 4.5 : 0;
+        },
+        pointBackgroundColor: r.color,
+        pointBorderColor: '#ffffff',
+        pointBorderWidth: 1.5,
+        pointHoverRadius: 6
+      }));
+
+      chartTravel = new Chart(ctx, {
+        type: 'line',
+        plugins: [card2RiverLabelsPlugin],
+        data: {
+          labels: days.map(d => `${d}d`),
+          datasets
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => `${ctx.dataset.label.split(':')[0]}: ${ctx.parsed.x} days arrival`
+              }
+            }
+          },
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: 'Travel Time to Lake Powell (Days)',
+                font: { size: 10, weight: 600 },
+                color: '#475569'
+              },
+              ticks: { font: { size: 9.5 }, color: '#64748b' },
+              grid: { display: false }
+            },
+            y: {
+              min: 0.0,
+              max: 0.90,
+              title: {
+                display: true,
+                text: 'Wave Arrival Strength at Reservoir',
+                font: { size: 10, weight: 600 },
+                color: '#475569'
+              },
+              ticks: {
+                callback: (v) => {
+                  if (v === 0.0) return '0';
+                  if (v === 0.45) return 'Medium';
+                  if (v === 0.80) return 'Peak';
+                  return '';
+                },
+                font: { size: 9.5 },
+                color: '#64748b'
+              },
+              grid: { color: '#e2e8f0', lineWidth: 1 }
+            }
+          },
+          onClick: (evt, elements) => {
+            if (elements && elements.length > 0) {
+              const dsIdx = elements[0].datasetIndex;
+              const rId = chartTravel.data.datasets[dsIdx].riverId;
+              selectRiver(rId === selectedRiverId ? null : rId);
+            } else {
+              selectRiver(null);
+            }
+          }
+        }
+      });
+    }
+
+    // Toggle dataset visibility for Card 3 and Card 4 HTML legends
+    function toggleDataset(chart, datasetIndex) {
+      if (!chart) return;
+      const visible = chart.isDatasetVisible(datasetIndex);
+      chart.setDatasetVisibility(datasetIndex, !visible);
+      chart.update();
+      if (chart === chartCompact && datasetIndex === 1) {
+        const chk = document.getElementById('toggle-lees-releases');
+        if (chk) chk.checked = !visible;
+      }
+      updateHtmlLegends();
+    }
+
+    // Toggle Lees Ferry Releases line visibility from Card 3 header pill
+    function toggleLeesReleases(show) {
+      if (!chartCompact) return;
+      chartCompact.setDatasetVisibility(1, show);
+      chartCompact.update();
+      updateHtmlLegends();
+    }
+
+    function updateHtmlLegends() {
+      if (chartCompact) {
+        const items = document.querySelectorAll('#legend-compact-100yr .legend-item');
+        items.forEach((el, idx) => {
+          if (chartCompact.isDatasetVisible(idx)) {
+            el.classList.remove('dimmed');
+          } else {
+            el.classList.add('dimmed');
+          }
+        });
+      }
+      if (chartHydro) {
+        const items = document.querySelectorAll('#legend-hydrograph .legend-item');
+        items.forEach((el, idx) => {
+          if (chartHydro.isDatasetVisible(idx)) {
+            el.classList.remove('dimmed');
+          } else {
+            el.classList.add('dimmed');
+          }
+        });
+      }
+    }
+
+    // Custom plugin for Card 3: Glen Canyon Dam Closes vertical reference marker at 1963
+    const glenCanyonDamMarkerPlugin = {
+      id: 'glenCanyonDamMarkerPlugin',
+      afterDatasetsDraw(chart) {
+        if (!chart || !chart.chartArea || !chart.scales || !chart.scales.x) return;
+        const { ctx, chartArea } = chart;
+        const xScale = chart.scales.x;
+        
+        const labels = chart.data.labels || [];
+        const idx1963 = labels.findIndex(y => String(y) === '1963');
+        if (idx1963 === -1) return;
+        
+        const xPos = xScale.getPixelForValue(idx1963);
+        if (xPos < chartArea.left || xPos > chartArea.right) return;
+
+        ctx.save();
+        // Dashed vertical rule
+        ctx.beginPath();
+        ctx.setLineDash([4, 3]);
+        ctx.strokeStyle = '#64748b';
+        ctx.lineWidth = 1.2;
+        ctx.moveTo(xPos, chartArea.top + 16);
+        ctx.lineTo(xPos, chartArea.bottom);
+        ctx.stroke();
+
+        // Clean unboxed text label
+        ctx.setLineDash([]);
+        ctx.font = '600 10px "Inter", -apple-system, sans-serif';
+        const labelText = '1963: Glen Canyon Dam Closes';
+        ctx.fillStyle = '#475569';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.fillText(labelText, xPos, chartArea.top + 2);
+
+        ctx.restore();
+      }
+    };
+
+    // ================================================================
+    // CARD 3: 100 YEARS WET WATER VS PAPER PROMISES (1922-2026)
+    // Okabe-Ito Colorblind-Safe Palette:
+    //   - Wet Water Surplus: COLOR_SNOWMELT (#0072B2)
+    //   - Structural Deficit: COLOR_FLASH (#D55E00)
+    //   - Lees Ferry Releases: Slate Ink (#334155, 1.75px)
+    //   - 16.5 MAF Target Line: COLOR_TARGET (#1e293b dashed 2px)
+    // ================================================================
+    async function initCompactChart() {
+      const seasonalData = await loadSeasonalData();
+      if (!seasonalData || !seasonalData.compact_accounting_100yr) return;
+
+      const comp = seasonalData.compact_accounting_100yr;
+      const ts = comp.annual_time_series || [];
+      const labels = ts.map(d => d.wy);
+      const supplyVals = ts.map(d => d.supply_maf);
+      const releaseVals = ts.map(d => d.lees_ferry_release_maf);
+      const bgColors = ts.map(d => d.meets_compact ? COLOR_SURPLUS : COLOR_DEFICIT);
+
+      const ctx = document.getElementById('chart-compact-100yr').getContext('2d');
+      chartCompact = new Chart(ctx, {
+        type: 'bar',
+        plugins: [glenCanyonDamMarkerPlugin],
+        data: {
+          labels,
+          datasets: [
+            {
+              type: 'bar',
+              label: 'Actual Basin Water Supply (MAF)',
+              data: supplyVals,
+              backgroundColor: bgColors,
+              borderRadius: 1.5,
+              barPercentage: 0.85,
+              order: 2
+            },
+            {
+              type: 'line',
+              label: 'Lees Ferry Releases (MAF)',
+              data: releaseVals,
+              borderColor: '#334155',
+              borderWidth: 1.75,
+              pointRadius: 0,
+              tension: 0.1,
+              order: 1
+            },
+            {
+              type: 'line',
+              label: '16.5 MAF/yr Paper Promise (1922 Compact)',
+              data: labels.map(() => 16.5),
+              borderColor: COLOR_TARGET,
+              borderWidth: 2,
+              borderDash: [5, 4],
+              pointRadius: 0,
+              fill: false,
+              order: 0
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                title: (items) => `Water Year ${items[0].label}`,
+                label: (ctx) => {
+                  if (ctx.dataset.type === 'bar') {
+                    const item = ts[ctx.dataIndex];
+                    return `Actual Supply: ${item.supply_maf.toFixed(2)} MAF`;
+                  }
+                  const name = ctx.dataset.label.includes('Lees Ferry') ? 'Lees Ferry Releases' : '1922 Compact Target';
+                  return `${name}: ${ctx.parsed.y.toFixed(2)} MAF`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              ticks: {
+                autoSkip: false,
+                maxRotation: 0,
+                minRotation: 0,
+                callback: function(val, idx) {
+                  const yr = String(labels[idx]);
+                  const milestones = ['1922', '1940', '1960', '1980', '2000', '2020', '2026'];
+                  return milestones.includes(yr) ? yr : null;
+                },
+                font: { size: 9.5, weight: '600' },
+                color: '#64748b'
+              },
+              grid: { display: false }
+            },
+            y: {
+              min: 0,
+              max: 26,
+              title: {
+                display: true,
+                text: 'Annual Volume (Million Acre-Feet)',
+                font: { size: 10, weight: 600 },
+                color: '#475569'
+              },
+              ticks: {
+                callback: (v) => `${v} MAF`,
+                font: { size: 9.5 },
+                color: '#64748b'
+              },
+              grid: { color: '#e2e8f0', lineWidth: 1 }
+            }
+          }
+        }
+      });
+      updateHtmlLegends();
+    }
+
+    // ================================================================
+    // CARD 4: REAL 365-DAY SEASONAL SUPPLY VS. DEMAND MISMATCH
+    // Driven by real daily hydrology from web/data/seasonal_regimes.json
+    //   - Total Basin Snowmelt Inflow: COLOR_SNOWMELT (#0072B2 Blue, fill rgba(0, 114, 178, 0.16))
+    //   - Total System Outflow & Demand: COLOR_FLASH (#D55E00 Vermilion line)
+    // ================================================================
+    async function initHydrographChart() {
+      const data = await loadSeasonalData();
+      if (!data || !data.supply_demand_mismatch) return;
+
+      const sd = data.supply_demand_mismatch;
+      const doys = sd.doy; // 1 to 365
+      const supply = sd.supply_cfs;
+      const demand = sd.demand_cfs;
+
+      const ctx = document.getElementById('chart-snowmelt-vs-flash').getContext('2d');
+
+      chartHydro = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: doys,
+          datasets: [
+            {
+              label: 'Total Basin Snowmelt Inflow (cfs)',
+              data: supply,
+              borderColor: COLOR_SNOWMELT,
+              backgroundColor: 'rgba(0, 114, 178, 0.16)',
+              fill: true,
+              borderWidth: 2,
+              tension: 0.25,
+              pointRadius: 0,
+              order: 2
+            },
+            {
+              label: 'Total System Outflow & Canal Demand (cfs)',
+              data: demand,
+              borderColor: COLOR_DEMAND,
+              backgroundColor: 'transparent',
+              fill: false,
+              borderWidth: 2.2,
+              tension: 0.15,
+              pointRadius: 0,
+              order: 1
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                title: (items) => {
+                  const idx = items[0].dataIndex;
+                  const dt = new Date(2025, 0, idx + 1);
+                  return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                },
+                label: (ctx) => {
+                  const val = ctx.parsed.y;
+                  const name = ctx.dataset.label.includes('Snowmelt') ? 'Basin Inflow' : 'System Demand';
+                  return `${name}: ${Math.round(val).toLocaleString()} cfs`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: 'Seasonal Timeline (January through December)',
+                font: { size: 10, weight: 600 },
+                color: '#475569'
+              },
+              ticks: {
+                callback: (val, idx) => {
+                  const monthStarts = { 0: 'Jan', 31: 'Feb', 59: 'Mar', 90: 'Apr', 120: 'May', 151: 'Jun', 181: 'Jul', 212: 'Aug', 243: 'Sep', 273: 'Oct', 304: 'Nov', 334: 'Dec' };
+                  return monthStarts[idx] || '';
+                },
+                autoSkip: false,
+                font: { size: 9.5, weight: 600 },
+                color: '#64748b'
+              },
+              grid: { display: false }
+            },
+            y: {
+              min: 0,
+              max: 52000,
+              title: {
+                display: true,
+                text: 'Daily River Flow Rate (cfs)',
+                font: { size: 10, weight: 600 },
+                color: '#475569'
+              },
+              ticks: {
+                callback: (v) => `${(v / 1000).toFixed(0)}k cfs`,
+                font: { size: 9.5 },
+                color: '#64748b'
+              },
+              grid: { color: '#e2e8f0', lineWidth: 1 }
+            }
+          }
+        }
+      });
+      updateHtmlLegends();
+    }
+
+    // ================================================================
+    // INTERACTIVITY: GAPMINDER SELECTION & REGIME FILTER
+    // ================================================================
+    function selectRiver(riverId) {
+      selectedRiverId = riverId;
+      const pill = document.getElementById('status-pill');
+
+      if (!riverId) {
+        if (selectedRegime === 'all') {
+          pill.textContent = 'Click any river bubble or curve below to highlight';
+          pill.className = 'text-[11px] font-medium text-slate-700 bg-slate-100 border border-slate-200 rounded-full px-3 py-0.5 truncate max-w-[440px]';
+        } else {
+          updateRegimePillText();
+        }
+      } else {
+        const river = RIVERS.find(r => r.id === riverId);
+        if (river) {
+          pill.textContent = river.summary;
+          const pillClass = river.regime === 'snowmelt' ? 'text-[#0072B2] bg-sky-50 border-[#0072B2]/40' :
+                            river.regime === 'flash_flood' ? 'text-[#D55E00] bg-orange-50 border-[#D55E00]/40' :
+                            'text-[#009E73] bg-emerald-50 border-[#009E73]/40';
+          pill.className = `text-[11px] font-semibold ${pillClass} border rounded-full px-3 py-0.5 truncate max-w-[440px]`;
+        }
+      }
+
+      applyVisualSelection();
+    }
+
+    function filterRegime(regime) {
+      selectedRegime = regime;
+      selectedRiverId = null;
+
+      // Update button styling
+      const btns = {
+        'all': document.getElementById('btn-all'),
+        'snowmelt': document.getElementById('btn-snowmelt'),
+        'dam_controlled': document.getElementById('btn-dam'),
+        'flash_flood': document.getElementById('btn-flash')
+      };
+
+      for (const [key, btn] of Object.entries(btns)) {
+        if (!btn) continue;
+        if (key === regime) {
+          btn.className = 'px-2.5 py-1 text-xs font-semibold rounded transition-colors bg-slate-800 text-white shadow-xs';
+        } else {
+          if (key === 'snowmelt') btn.className = 'px-2.5 py-1 text-xs font-semibold rounded transition-colors bg-sky-50 hover:bg-sky-100 text-[#0072B2] border border-[#0072B2]/30';
+          else if (key === 'dam_controlled') btn.className = 'px-2.5 py-1 text-xs font-semibold rounded transition-colors bg-emerald-50 hover:bg-emerald-100 text-[#009E73] border border-[#009E73]/30';
+          else if (key === 'flash_flood') btn.className = 'px-2.5 py-1 text-xs font-semibold rounded transition-colors bg-orange-50 hover:bg-orange-100 text-[#D55E00] border border-[#D55E00]/30';
+          else btn.className = 'px-2.5 py-1 text-xs font-semibold rounded transition-colors bg-white hover:bg-slate-100 text-slate-700 border border-slate-200';
+        }
+      }
+
+      updateRegimePillText();
+      applyVisualSelection();
+    }
+
+    function updateRegimePillText() {
+      const pill = document.getElementById('status-pill');
+      if (selectedRegime === 'all') {
+        pill.textContent = 'Click any river bubble or curve below to highlight';
+        pill.className = 'text-[11px] font-medium text-slate-700 bg-slate-100 border border-slate-200 rounded-full px-3 py-0.5 truncate max-w-[440px]';
+      } else if (selectedRegime === 'snowmelt') {
+        pill.textContent = 'Filter: Mountain Snowmelt Rivers — Deliver 37% of inflow in a concentrated 60-day spring surge';
+        pill.className = 'text-[11px] font-semibold text-[#0072B2] bg-sky-50 border border-[#0072B2]/30 rounded-full px-3 py-0.5 truncate max-w-[440px]';
+      } else if (selectedRegime === 'dam_controlled') {
+        pill.textContent = 'Filter: Dam-Controlled Rivers — Deliver 53% of inflow via upstream storage releases';
+        pill.className = 'text-[11px] font-semibold text-[#009E73] bg-emerald-50 border border-[#009E73]/30 rounded-full px-3 py-0.5 truncate max-w-[440px]';
+      } else if (selectedRegime === 'flash_flood') {
+        pill.textContent = 'Filter: Desert Flash-Flood Streams — Sudden mudflow spikes that drain out in hours';
+        pill.className = 'text-[11px] font-semibold text-[#D55E00] bg-orange-50 border border-[#D55E00]/30 rounded-full px-3 py-0.5 truncate max-w-[440px]';
+      }
+    }
+
+    function applyVisualSelection() {
+      // 1. Update Card 1 Bubble Chart (Crisp 1.5px border on unselected bubbles)
+      if (chartBubble) {
+        chartBubble.data.datasets.forEach(ds => {
+          const r = ds.data[0].river;
+          const isSelected = selectedRiverId ? (r.id === selectedRiverId) : (selectedRegime === 'all' || r.regime === selectedRegime);
+
+          if (isSelected) {
+            ds.backgroundColor = hexToRgba(r.color, 0.85);
+            ds.borderColor = selectedRiverId ? '#1e293b' : r.color;
+            ds.borderWidth = selectedRiverId ? 3.0 : 1.5;
+          } else {
+            ds.backgroundColor = hexToRgba(r.color, 0.16);
+            ds.borderColor = hexToRgba(r.color, 0.75); // Crisp 1.5px border with 0.75 opacity
+            ds.borderWidth = 1.5;
+          }
+        });
+        chartBubble.update('none');
+      }
+
+      // 2. Update Card 2 Travel Curves
+      if (chartTravel) {
+        chartTravel.data.datasets.forEach(ds => {
+          const isSelected = selectedRiverId ? (ds.riverId === selectedRiverId) : (selectedRegime === 'all' || ds.regime === selectedRegime);
+          const r = RIVERS.find(item => item.id === ds.riverId);
+
+          if (isSelected) {
+            ds.borderColor = r ? r.color : COLOR_DAM;
+            ds.backgroundColor = hexToRgba(r ? r.color : COLOR_DAM, 0.16);
+            ds.borderWidth = selectedRiverId ? 3.5 : 2.0;
+          } else {
+            const baseColor = r ? r.color : '#94a3b8';
+            ds.borderColor = hexToRgba(baseColor, 0.18);
+            ds.backgroundColor = 'transparent';
+            ds.borderWidth = 1.0;
+          }
+        });
+        chartTravel.update('none');
+      }
+    }
+
+    // Initialize all 4 charts on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      initBubbleChart();
+      initTravelChart();
+      initCompactChart();
+      initHydrographChart();
+    });
+  </script>
+</body>
+</html>

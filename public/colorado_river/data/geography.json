@@ -11071,7 +11071,12 @@
           -105.578,
           40.328
         ]
-      ]
+      ],
+      "era": "Era 3 (1947\u20131953): Mexican Treaty & C-BT Era",
+      "tier": "Tier 3: Trans-Mountain Collection & Export (1,020 cfs)",
+      "legal_priority": "Northern Water / C-BT 1937 Priority",
+      "historical_note": "13.1-mile tunnel beneath Rocky Mountain National Park delivering Colorado River headwaters to Estes Park, the Big Thompson River, and Front Range farms.",
+      "year": 1947
     },
     {
       "id": "MOFTUNCO",
@@ -11090,7 +11095,12 @@
           -105.643,
           39.902
         ]
-      ]
+      ],
+      "era": "Era 2 (1935\u20131943): Boulder Canyon Project Act / CA First Mover",
+      "tier": "Tier 3: Trans-Mountain Collection & Export (1,280 cfs)",
+      "legal_priority": "Senior 1921/1936 Denver Water Municipal Priority",
+      "historical_note": "Pioneer bore of railroad tunnel repurposed to convey Fraser River collection system under Continental Divide to Gross Reservoir / Denver.",
+      "year": 1936
     },
     {
       "id": "ROBTUNCO",
@@ -11109,7 +11119,12 @@
           -105.679,
           39.463
         ]
-      ]
+      ],
+      "era": "Era 4 (1962\u20131972): CRSP Act / Upper Basin Escrow Bank",
+      "tier": "Tier 3: Trans-Mountain Municipal Diversion (1,020 cfs)",
+      "legal_priority": "Senior 1946 Denver Water Municipal Priority",
+      "historical_note": "23.3-mile trans-mountain tunnel conveying Blue River water from Dillon Reservoir beneath Continental Divide to the South Platte Basin.",
+      "year": 1962
     },
     {
       "id": "BOUTUNCO",
@@ -11128,7 +11143,12 @@
           -106.4,
           39.261
         ]
-      ]
+      ],
+      "era": "Era 4 (1962\u20131972): CRSP Act / Upper Basin Escrow Bank",
+      "tier": "Tier 3: Trans-Mountain Collection & Export (945 cfs)",
+      "legal_priority": "Fryingpan-Arkansas Project (1962 Act)",
+      "historical_note": "5.4-mile tunnel carrying Fryingpan and Roaring Fork headwaters beneath the Continental Divide to Turquoise Lake / Arkansas Basin.",
+      "year": 1972
     },
     {
       "id": "09424150",
@@ -12990,7 +13010,12 @@
           -117.38873,
           33.84141
         ]
-      ]
+      ],
+      "era": "Era 2 (1935\u20131943): Boulder Canyon Project Act / CA First Mover",
+      "tier": "Tier 3: Trans-Basin Municipal Aqueduct (1,600 cfs)",
+      "legal_priority": "Priority 4 & 5 (Metropolitan Water District of SoCal)",
+      "historical_note": "242-mile aqueduct lifting water 1,617 vertical feet over mountain ranges via 5 pumping plants to supply 19 million people in coastal Southern California.",
+      "year": 1941
     },
     {
       "id": "09527700",
@@ -13780,7 +13805,12 @@
           -115.66222,
           32.65321
         ]
-      ]
+      ],
+      "era": "Era 2 (1935\u20131943): Boulder Canyon Project Act / CA First Mover",
+      "tier": "Tier 3: Trans-Basin Agricultural Canal (11,500 cfs)",
+      "legal_priority": "Senior 1901 Present Perfected Rights (3.1+ MAF/yr)",
+      "historical_note": "80-mile canal conveying water entirely within US territory to Imperial and Coachella valleys. Holds the most senior, uncurtailable priority on the Lower Colorado River.",
+      "year": 1940
     },
     {
       "id": "09426650",
@@ -16667,7 +16697,95 @@
           -110.95794,
           32.01953
         ]
-      ]
+      ],
+      "era": "Era 5 (1985\u20131993): Junior Lower Basin Straw & Modern Upgrades",
+      "tier": "Tier 3: Trans-Basin Canal (3,000 cfs, 336 Miles)",
+      "legal_priority": "Junior 1968 Priority (Subordinated to California 4.4 MAF)",
+      "historical_note": "336-mile canal lifting water 2,900 vertical feet to Phoenix and Tucson. In exchange for federal construction authorization, Arizona accepted that CAP is legally junior to California, absorbing the first mandatory shortage cuts under Lake Mead restrictions.",
+      "year": 1985
+    },
+    {
+      "id": "09522000",
+      "name": "Canal Alimentador Central (Central Feeder Canal)",
+      "length_miles": 45.0,
+      "operator": "Comisi\u00f3n Nacional del Agua (CONAGUA) / CILA (IBWC)",
+      "from": "Morelos Dam Diversion Works / Northerly International Boundary",
+      "to": "Mexicali Valley Irrigation District 014 (Baja California & Sonora)",
+      "destination": "Mexicali Valley Agriculture & Municipal Users (District 014)",
+      "capacity_cfs": 7500,
+      "coords": [
+        [
+          -114.72917,
+          32.70556
+        ],
+        [
+          -114.7335,
+          32.7032
+        ],
+        [
+          -114.7412,
+          32.6985
+        ],
+        [
+          -114.752,
+          32.6918
+        ],
+        [
+          -114.7685,
+          32.6812
+        ],
+        [
+          -114.792,
+          32.6668
+        ],
+        [
+          -114.821,
+          32.6495
+        ],
+        [
+          -114.856,
+          32.628
+        ],
+        [
+          -114.898,
+          32.6025
+        ],
+        [
+          -114.945,
+          32.574
+        ],
+        [
+          -114.998,
+          32.542
+        ],
+        [
+          -115.056,
+          32.511
+        ],
+        [
+          -115.118,
+          32.482
+        ],
+        [
+          -115.185,
+          32.454
+        ],
+        [
+          -115.228,
+          32.441
+        ],
+        [
+          -115.26258,
+          32.43592
+        ]
+      ],
+      "era": "Era 3 (1947\u20131953): Mexican Treaty & C-BT Era",
+      "tier": "Tier 4: International Treaty Diversion Canal (1.5 MAF/yr)",
+      "legal_priority": "1944 Mexican Water Treaty Sovereign Commitment (Guaranteed 1.5 MAF/yr)",
+      "historical_note": "Primary Mexican diversion canal distributing Colorado River water diverted at Morelos Dam across 500,000+ acres in the Mexicali and San Luis valleys. Conveyance is guaranteed under the 1944 United States\u2013Mexico Water Treaty.",
+      "year": 1950,
+      "lat": 32.70556,
+      "lon": -114.72917
     }
   ],
   "upper_basin_outline": [
@@ -16855,10 +16973,14 @@
       "impounds": "Lake Mead (Colorado River)",
       "operator": "U.S. Bureau of Reclamation",
       "height_ft": 726,
-      "year": 1936,
+      "year": 1935,
       "purpose": "Lower Basin mega-storage, flood control, hydropower",
-      "lat": 36.0156,
-      "lon": -114.7377
+      "lat": 36.0153,
+      "lon": -114.7368,
+      "era": "Era 2 (1935\u20131943): Boulder Canyon Project Act / CA First Mover",
+      "tier": "Tier 1: Lower Basin Megabank (26.13 MAF)",
+      "legal_priority": "Senior Statutory Lower Basin Anchor (1928 Act)",
+      "historical_note": "First mega-dam on the Colorado River. Impounds Lake Mead, controls lower river floods, and anchors Lower Basin water banking."
     },
     {
       "id": "glen_canyon_dam",
@@ -16869,7 +16991,11 @@
       "year": 1963,
       "purpose": "Upper Basin Compact compliance storage, hydropower",
       "lat": 36.9372,
-      "lon": -111.4839
+      "lon": -111.4839,
+      "era": "Era 4 (1962\u20131972): CRSP Act / Upper Basin Escrow Bank",
+      "tier": "Tier 1: Upper Basin Escrow Bank (24.32 MAF)",
+      "legal_priority": "CRSP Keystone Facility (1956 Act / 1922 Compact Delivery)",
+      "historical_note": "The Upper Basin's 'insurance policy'. Impounds Lake Powell 15 miles upstream of Lees Ferry to guarantee the 75 MAF 10-year rolling compact release to the Lower Basin."
     },
     {
       "id": "parker_dam",
@@ -16879,8 +17005,12 @@
       "height_ft": 320,
       "year": 1938,
       "purpose": "Deepest dam in the world; diversion pool for Colorado River Aqueduct (MWD)",
-      "lat": 34.2964,
-      "lon": -114.1331
+      "lat": 34.29639,
+      "lon": -114.13972,
+      "era": "Era 2 (1935\u20131943): Boulder Canyon Project Act / CA First Mover",
+      "tier": "Tier 4: Constant-Level Pumping Forebay (Lake Havasu)",
+      "legal_priority": "Metropolitan Water District (MWD) & CA/AZ Municipal Priority",
+      "historical_note": "Deepest dam foundation in the world (73% below riverbed). Impounds Lake Havasu as the constant-level pumping pool for both CRA (Los Angeles) and CAP (Phoenix)."
     },
     {
       "id": "imperial_dam",
@@ -16890,8 +17020,12 @@
       "height_ft": 31,
       "year": 1938,
       "purpose": "Diversion dam headworks for the All-American Canal to California",
-      "lat": 32.8839,
-      "lon": -114.4678
+      "lat": 32.88325,
+      "lon": -114.4667,
+      "era": "Era 2 (1935\u20131943): Boulder Canyon Project Act / CA First Mover",
+      "tier": "Tier 4: Diversion Dam & Desilting Works",
+      "legal_priority": "Senior 1901 Present Perfected Rights Diversion",
+      "historical_note": "Diverts up to 15,000 cfs into the All-American Canal and Gila Gravity Canal with giant radial desilting basins."
     },
     {
       "id": "green_mountain_dam",
@@ -16899,10 +17033,14 @@
       "impounds": "Green Mountain Reservoir (Blue River)",
       "operator": "U.S. Bureau of Reclamation",
       "height_ft": 309,
-      "year": 1942,
+      "year": 1943,
       "purpose": "Official C-BT Compensatory Storage protecting West Slope senior rights",
       "lat": 39.8778,
-      "lon": -106.3314
+      "lon": -106.3314,
+      "era": "Era 2 (1935\u20131943): Boulder Canyon Project Act / CA First Mover",
+      "tier": "Tier 3: West Slope Compensatory Storage (153,600 AF)",
+      "legal_priority": "Senate Document 80 Compensatory Mandate",
+      "historical_note": "Built by Bureau of Reclamation on the Blue River exclusively to compensate Western Slope water users for upstream Colorado-Big Thompson exports."
     },
     {
       "id": "dillon_dam",
@@ -16912,8 +17050,12 @@
       "height_ft": 231,
       "year": 1963,
       "purpose": "Denver's largest water storage facility & Roberts Tunnel intake",
-      "lat": 39.6258,
-      "lon": -106.0642
+      "lat": 39.6234,
+      "lon": -106.06556,
+      "era": "Era 4 (1962\u20131972): CRSP Act / Upper Basin Escrow Bank",
+      "tier": "Tier 3: Collection Forebay (Dillon Reservoir, 257,114 AF)",
+      "legal_priority": "Denver Water Largest Storage Facility",
+      "historical_note": "Impounds Blue River at Silverthorne; Denver Water's primary storage reservoir diverting water through Roberts Tunnel to Front Range taps."
     },
     {
       "id": "granby_dam",
@@ -16923,8 +17065,12 @@
       "height_ft": 298,
       "year": 1950,
       "purpose": "Primary collection reservoir for C-BT Adams Tunnel trans-mountain diversion",
-      "lat": 40.1492,
-      "lon": -105.86
+      "lat": 40.1481,
+      "lon": -105.8675,
+      "era": "Era 3 (1947\u20131953): Mexican Treaty & C-BT Era",
+      "tier": "Tier 3: Collection Forebay (Lake Granby, 539,800 AF)",
+      "legal_priority": "Colorado-Big Thompson Project Storage",
+      "historical_note": "Impounds Lake Granby, the primary storage reservoir of the C-BT project, from which water is pumped to Shadow Mountain Lake and Grand Lake into Adams Tunnel."
     },
     {
       "id": "ruedi_dam",
@@ -16934,8 +17080,12 @@
       "height_ft": 285,
       "year": 1968,
       "purpose": "Compensatory storage for West Slope (Fryingpan-Arkansas Project)",
-      "lat": 39.3639,
-      "lon": -106.8208
+      "lat": 39.36332,
+      "lon": -106.81893,
+      "era": "Era 4 (1962\u20131972): CRSP Act / Upper Basin Escrow Bank",
+      "tier": "Tier 3: West Slope Compensatory Storage (102,374 AF)",
+      "legal_priority": "Fryingpan-Arkansas Project Act (1962)",
+      "historical_note": "Impounds Ruedi Reservoir on Fryingpan River to compensate Western Slope water users for headwaters diverted eastward through Boustead Tunnel."
     },
     {
       "id": "homestake_dam",
@@ -16945,8 +17095,12 @@
       "height_ft": 265,
       "year": 1967,
       "purpose": "Trans-mountain diversion to Aurora and Colorado Springs (Homestake Project)",
-      "lat": 39.3683,
-      "lon": -106.4678
+      "lat": 39.3678,
+      "lon": -106.4618,
+      "era": "Era 4 (1962\u20131972): CRSP Act / Upper Basin Escrow Bank",
+      "tier": "Tier 3: Trans-Mountain Collection (43,600 AF)",
+      "legal_priority": "Aurora & Colorado Springs Municipal Partnership",
+      "historical_note": "High-altitude collection system in Eagle County tunneling water to Arkansas River and across South Park to Aurora and Colorado Springs."
     },
     {
       "id": "flaming_gorge_dam",
@@ -16957,7 +17111,11 @@
       "year": 1964,
       "purpose": "Major CRSP Upper Basin storage unit, Green River regulation, hydropower",
       "lat": 40.915,
-      "lon": -109.421
+      "lon": -109.421,
+      "era": "Era 4 (1962\u20131972): CRSP Act / Upper Basin Escrow Bank",
+      "tier": "Tier 2: CRSP Initial Unit Backup Storage (3.79 MAF)",
+      "legal_priority": "CRSP Storage & Drought Response Operations",
+      "historical_note": "Largest storage unit in the Green River sub-basin; subject to DROA emergency releases to protect Lake Powell minimum power pool elevations."
     },
     {
       "id": "navajo_dam",
@@ -16967,8 +17125,12 @@
       "height_ft": 402,
       "year": 1962,
       "purpose": "Major CRSP storage unit; supplies San Juan\u2013Chama diversion & Navajo Nation",
-      "lat": 36.8028,
-      "lon": -107.6144
+      "lat": 36.8064,
+      "lon": -107.6144,
+      "era": "Era 4 (1962\u20131972): CRSP Act / Upper Basin Escrow Bank",
+      "tier": "Tier 2: CRSP Initial Unit Backup Storage (1.70 MAF)",
+      "legal_priority": "Colorado River Storage Project (CRSP 1956 Act)",
+      "historical_note": "Major CRSP storage unit on the San Juan River supplying Navajo Indian Irrigation Project, San Juan-Chama diversion, and downstream endangered fish flows."
     },
     {
       "id": "davis_dam",
@@ -16978,8 +17140,12 @@
       "height_ft": 200,
       "year": 1951,
       "purpose": "Regulates Hoover Dam releases to satisfy 1944 Mexican Water Treaty obligations",
-      "lat": 35.1989,
-      "lon": -114.5694
+      "lat": 35.1979,
+      "lon": -114.5706,
+      "era": "Era 3 (1947\u20131953): Mexican Treaty & C-BT Era",
+      "tier": "Tier 4: Hourly Hydropower Re-regulation & Treaty Forebay",
+      "legal_priority": "Lower Basin Re-regulation (1944 Treaty Compliance)",
+      "historical_note": "Impounds Lake Mohave to re-regulate peaking power releases from Hoover Dam into uniform deliveries satisfying downstream contract and Mexican Treaty demands."
     },
     {
       "id": "morelos_dam",
@@ -16989,8 +17155,12 @@
       "height_ft": 35,
       "year": 1950,
       "purpose": "Terminal diversion dam routing Mexican 1.5M AF treaty water into Mexicali Valley canals",
-      "lat": 32.7144,
-      "lon": -114.7297
+      "lat": 32.70516,
+      "lon": -114.72874,
+      "era": "Era 3 (1947\u20131953): Mexican Treaty & C-BT Era",
+      "tier": "Tier 4: International Treaty Diversion Dam",
+      "legal_priority": "1944 Mexican Water Treaty Sovereign Commitment (1.5 MAF/yr)",
+      "historical_note": "International diversion structure near Los Algodones diverting Mexico's guaranteed 1.5 MAF treaty water into the Reforma Canal for the Mexicali Valley."
     },
     {
       "id": "blue_mesa_dam",
@@ -16998,10 +17168,14 @@
       "impounds": "Blue Mesa Reservoir (Gunnison River)",
       "operator": "U.S. Bureau of Reclamation",
       "height_ft": 390,
-      "year": 1965,
+      "year": 1966,
       "purpose": "Wayne N. Aspinall Storage Unit impounding Colorado largest reservoir body",
-      "lat": 38.4522,
-      "lon": -107.3325
+      "lat": 38.45312,
+      "lon": -107.33572,
+      "era": "Era 4 (1962\u20131972): CRSP Act / Upper Basin Escrow Bank",
+      "tier": "Tier 2: CRSP Aspinall Unit Backup Storage (829,500 AF)",
+      "legal_priority": "CRSP Storage & Drought Response Operations",
+      "historical_note": "Keystone unit of the Wayne N. Aspinall Unit on the Gunnison River; largest body of water in Colorado."
     },
     {
       "id": "mcphee_dam",
@@ -17009,10 +17183,14 @@
       "impounds": "McPhee Reservoir (Dolores River)",
       "operator": "U.S. Bureau of Reclamation",
       "height_ft": 270,
-      "year": 1985,
+      "year": 1984,
       "purpose": "Dolores Project storage providing water for Ute Mountain Ute Tribe & Cortez agriculture",
-      "lat": 37.5786,
-      "lon": -108.5753
+      "lat": 37.5775,
+      "lon": -108.5724,
+      "era": "Era 5 (1985\u20131993): Junior Lower Basin Straw & Modern Upgrades",
+      "tier": "Tier 3: Dolores Project Storage (381,100 AF)",
+      "legal_priority": "Dolores Project / Ute Mountain Ute Tribal Water Rights",
+      "historical_note": "Impounds Dolores River to provide agricultural irrigation to Montezuma Valley and satisfy Ute Mountain Ute Indian Tribe water rights compact settlement."
     },
     {
       "id": "theodore_roosevelt_dam",
@@ -17022,8 +17200,192 @@
       "height_ft": 357,
       "year": 1911,
       "purpose": "Historic 1911 cornerstone of the Salt River Project feeding Phoenix agricultural & urban grid",
-      "lat": 33.6706,
-      "lon": -111.1611
+      "lat": 33.6718,
+      "lon": -111.1613,
+      "era": "Era 1 (1901\u20131915): Pre-Compact Ag & Salton Sea Trigger",
+      "tier": "Tier 2: Salt River Project (SRP) Storage (1.65 MAF)",
+      "legal_priority": "Senior 1903 Salt River Valley Water Users Rights",
+      "historical_note": "First major Reclamation Act project, impounding the Salt River for Phoenix agriculture before Arizona joined the Colorado River Compact."
+    },
+    {
+      "id": "morrow_point_dam",
+      "name": "Morrow Point Dam",
+      "impounds": "Morrow Point Reservoir (Gunnison River)",
+      "operator": "U.S. Bureau of Reclamation",
+      "height_ft": 468,
+      "year": 1968,
+      "purpose": "Wayne N. Aspinall Unit middle reservoir; first double-curvature thin-arch concrete dam built by Reclamation",
+      "lat": 38.452,
+      "lon": -107.5381,
+      "era": "Era 4 (1962\u20131972): CRSP Act / Upper Basin Escrow Bank",
+      "tier": "Tier 2: CRSP Aspinall Unit Hydro Peaking (117,190 AF)",
+      "legal_priority": "CRSP Storage & Wayne N. Aspinall Unit",
+      "historical_note": "Thin-arch concrete dam in the Black Canyon of the Gunnison; houses Colorado's first underground hydroelectric power plant."
+    },
+    {
+      "id": "crystal_dam",
+      "name": "Crystal Dam",
+      "impounds": "Crystal Reservoir (Gunnison River)",
+      "operator": "U.S. Bureau of Reclamation",
+      "height_ft": 323,
+      "year": 1976,
+      "purpose": "Aspinall Unit terminal regulating dam; stabilizes downstream Black Canyon baseflows and supplies Gunnison Tunnel diversion",
+      "lat": 38.51041,
+      "lon": -107.62413,
+      "era": "Era 4 (1962\u20131972): CRSP Act / Upper Basin Escrow Bank",
+      "tier": "Tier 4: Aspinall Unit Re-regulation Forebay (26,000 AF)",
+      "legal_priority": "CRSP Wayne N. Aspinall Unit Re-regulation",
+      "historical_note": "Downstream re-regulation dam in the Gunnison River gorge buffering peaking hydropower surges from Blue Mesa and Morrow Point dams."
+    },
+    {
+      "id": "taylor_park_dam",
+      "name": "Taylor Park Dam",
+      "impounds": "Taylor Park Reservoir (Taylor River)",
+      "operator": "U.S. Bureau of Reclamation / UVWUA",
+      "height_ft": 206,
+      "year": 1937,
+      "purpose": "Upper Gunnison headwater storage providing late-season irrigation exchange for the Uncompahgre Valley",
+      "lat": 38.81845,
+      "lon": -106.6062,
+      "era": "Era 2 (1935\u20131943): Boulder Canyon Project Act / CA First Mover",
+      "tier": "Tier 3: Uncompahgre Project Upper Storage (106,200 AF)",
+      "legal_priority": "Senior 1904/1937 Uncompahgre Valley Decree",
+      "historical_note": "High mountain reservoir storing Gunnison headwaters for late-season release to the Gunnison Tunnel."
+    },
+    {
+      "id": "fontenelle_dam",
+      "name": "Fontenelle Dam",
+      "impounds": "Fontenelle Reservoir (Green River)",
+      "operator": "U.S. Bureau of Reclamation",
+      "height_ft": 139,
+      "year": 1964,
+      "purpose": "CRSP seed storage unit regulating the upper Green River in Wyoming upstream of Flaming Gorge",
+      "lat": 42.02782,
+      "lon": -110.06358,
+      "era": "Era 4 (1962\u20131972): CRSP Act / Upper Basin Escrow Bank",
+      "tier": "Tier 2: CRSP Seedskadee Unit Storage (345,360 AF)",
+      "legal_priority": "CRSP Participating Project (1956 Act)",
+      "historical_note": "Impounds Upper Green River near La Barge, WY to supply Seedskadee National Wildlife Refuge, municipal trona mining, and Upper Basin storage."
+    },
+    {
+      "id": "shadow_mountain_dam",
+      "name": "Shadow Mountain Dam",
+      "impounds": "Shadow Mountain Lake (Colorado River)",
+      "operator": "U.S. Bureau of Reclamation",
+      "height_ft": 63,
+      "year": 1946,
+      "purpose": "Connects Grand Lake and Lake Granby as part of the C-BT trans-mountain collection system",
+      "lat": 40.2078,
+      "lon": -105.841,
+      "era": "Era 3 (1947\u20131953): Mexican Treaty & C-BT Era",
+      "tier": "Tier 3: C-BT Collection & Pumping Forebay (18,400 AF)",
+      "legal_priority": "Colorado-Big Thompson Project",
+      "historical_note": "Connects with Grand Lake to maintain water levels for continuous gravity feeding into the Adams Tunnel intake."
+    },
+    {
+      "id": "windy_gap_dam",
+      "name": "Windy Gap Dam",
+      "impounds": "Windy Gap Reservoir (Colorado River)",
+      "operator": "Northern Water",
+      "height_ft": 26,
+      "year": 1985,
+      "purpose": "Diversion weir below Fraser confluence pumping Colorado River water back to Lake Granby via Windy Gap Pumping Plant; site of 2023-2024 Colorado River Connectivity Channel bypass",
+      "lat": 40.105,
+      "lon": -105.9814,
+      "era": "Era 5 (1985\u20131993): Junior Lower Basin Straw & Modern Upgrades",
+      "tier": "Tier 3: Trans-Mountain Pumping Diversion",
+      "legal_priority": "Junior 1967 Northern Water / Municipal Priority",
+      "historical_note": "Pumping diversion below Granby diverting Colorado River and Fraser River runoff into Lake Granby for delivery through Adams Tunnel."
+    },
+    {
+      "id": "williams_fork_dam",
+      "name": "Williams Fork Dam",
+      "impounds": "Williams Fork Reservoir (Williams Fork River)",
+      "operator": "Denver Water",
+      "height_ft": 217,
+      "year": 1959,
+      "purpose": "Denver Water municipal storage dam impounding Williams Fork Reservoir on Williams Fork River",
+      "lat": 40.0349,
+      "lon": -106.2054,
+      "era": "Era 3 (1947\u20131953): Mexican Treaty & C-BT Era",
+      "tier": "Tier 3: Denver Water Compensatory Storage (96,822 AF)",
+      "legal_priority": "Denver Water Western Slope Exchange Agreement",
+      "historical_note": "Denver Water exchange reservoir on Williams Fork tributary used to release replacement water downstream so Moffat Tunnel can divert headwaters upstream."
+    },
+    {
+      "id": "wolford_mountain_dam",
+      "name": "Wolford Mountain Dam",
+      "impounds": "Wolford Mountain Reservoir (Muddy Creek)",
+      "operator": "Colorado River District",
+      "height_ft": 122,
+      "year": 1995,
+      "purpose": "Colorado River District storage dam impounding Wolford Mountain Reservoir on Muddy Creek",
+      "lat": 40.113,
+      "lon": -106.415,
+      "era": "Era 5 (1985\u20131993): Junior Lower Basin Straw & Modern Upgrades",
+      "tier": "Tier 3: Colorado River District Compensatory Storage (65,985 AF)",
+      "legal_priority": "Colorado River District Water Management",
+      "historical_note": "Muddy Creek reservoir constructed to provide drought mitigation, endangered fish recovery water, and West Slope replacement storage."
+    },
+    {
+      "id": "palo_verde_dam",
+      "name": "Palo Verde Dam",
+      "impounds": "Colorado River (Diversion Pool)",
+      "operator": "U.S. Bureau of Reclamation / PVID",
+      "height_ft": 33,
+      "year": 1968,
+      "purpose": "Diversion dam routing senior California priority water into Palo Verde Canal for Blythe agriculture",
+      "lat": 33.73255,
+      "lon": -114.511,
+      "era": "Era 4 (1962\u20131972): CRSP Act / Upper Basin Escrow Bank",
+      "tier": "Tier 4: Run-of-the-River Agricultural Diversion Dam",
+      "legal_priority": "Senior 1877 Present Perfected Rights (First Lower Basin Priority)",
+      "historical_note": "Diverts Colorado River streamflow into the Palo Verde Canal serving 131,000 acres in the Blythe agricultural valley with the most senior non-tribal priority in California."
+    },
+    {
+      "id": "headgate_rock_dam",
+      "name": "Headgate Rock Dam",
+      "impounds": "Colorado River (Diversion Pool)",
+      "operator": "Bureau of Indian Affairs (BIA)",
+      "height_ft": 72,
+      "year": 1941,
+      "purpose": "Diversion dam providing irrigation water for the Colorado River Indian Tribes reservation",
+      "lat": 34.16845,
+      "lon": -114.27712,
+      "era": "Era 2 (1935\u20131943): Boulder Canyon Project Act / CA First Mover",
+      "tier": "Tier 4: Indian Reservation Agricultural Diversion Dam",
+      "legal_priority": "Senior 1865 Federal Reserved Tribal Water Rights",
+      "historical_note": "Diverts Colorado River water directly into canals serving the Colorado River Indian Tribes reservation with priority dating to 1865."
+    },
+    {
+      "id": "bartlett_dam",
+      "name": "Bartlett Dam",
+      "impounds": "Bartlett Reservoir (Verde River)",
+      "operator": "Salt River Project (SRP) / USBR",
+      "height_ft": 287,
+      "year": 1939,
+      "purpose": "Salt River Project multiple-arch dam storing Verde River flows for the Phoenix metropolitan area",
+      "lat": 33.8186,
+      "lon": -111.6317,
+      "era": "Era 2 (1935\u20131943): Boulder Canyon Project Act / CA First Mover",
+      "tier": "Tier 2: Salt River Project (Verde River) Storage (178,000 AF)",
+      "legal_priority": "SRP / Salt River Valley Water Users Association",
+      "historical_note": "Multiple-arch dam on Verde River providing flood control and municipal/ag water for the Salt River Valley / Phoenix metro area."
+    },
+    {
+      "id": "stewart_mountain_dam",
+      "name": "Stewart Mountain Dam",
+      "impounds": "Saguaro Lake (Salt River)",
+      "operator": "Salt River Project (SRP) / USBR",
+      "height_ft": 207,
+      "year": 1930,
+      "purpose": "Terminal storage and hydroelectric dam on the Salt River chain upstream of Granite Reef Diversion Dam",
+      "lat": 33.5658,
+      "lon": -111.5367,
+      "era": "Era 2 (1935\u20131943): Boulder Canyon Project Act / CA First Mover",
+      "tier": "Tier 2: Salt River Project (Saguaro Lake) Storage (69,765 AF)",
+      "legal_priority": "SRP / Salt River Valley Water Users Association",
+      "historical_note": "Impounds Saguaro Lake on the Salt River, re-regulating upstream discharges from Apache and Canyon lakes."
     }
   ]
 }

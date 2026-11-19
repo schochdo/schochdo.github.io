@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>01: Colorado River Basin Geospatial Topology &amp; Dynamic Shoreline Engine — Colorado River Research Notebook</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- KaTeX for LaTeX mathematical rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+          onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+  <style>
+    body {
+      background-color: #faf9f5;
+      color: #1c1917;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+    }
+    pre { line-height: 125%; }
+td.linenos .normal { color: #666666; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: #666666; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f0f0f0; }
+.highlight .c { color: #60A0B0; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #F00 } /* Error */
+.highlight .k { color: #007020; font-weight: bold } /* Keyword */
+.highlight .o { color: #666 } /* Operator */
+.highlight .ch { color: #60A0B0; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #60A0B0; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #007020 } /* Comment.Preproc */
+.highlight .cpf { color: #60A0B0; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #60A0B0; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #60A0B0; background-color: #FFF0F0 } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #F00 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #00A000 } /* Generic.Inserted */
+.highlight .go { color: #888 } /* Generic.Output */
+.highlight .gp { color: #C65D09; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #04D } /* Generic.Traceback */
+.highlight .kc { color: #007020; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #007020; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #007020; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #007020 } /* Keyword.Pseudo */
+.highlight .kr { color: #007020; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #902000 } /* Keyword.Type */
+.highlight .m { color: #40A070 } /* Literal.Number */
+.highlight .s { color: #4070A0 } /* Literal.String */
+.highlight .na { color: #4070A0 } /* Name.Attribute */
+.highlight .nb { color: #007020 } /* Name.Builtin */
+.highlight .nc { color: #0E84B5; font-weight: bold } /* Name.Class */
+.highlight .no { color: #60ADD5 } /* Name.Constant */
+.highlight .nd { color: #555; font-weight: bold } /* Name.Decorator */
+.highlight .ni { color: #D55537; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #007020 } /* Name.Exception */
+.highlight .nf { color: #06287E } /* Name.Function */
+.highlight .nl { color: #002070; font-weight: bold } /* Name.Label */
+.highlight .nn { color: #0E84B5; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #062873; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #BB60D5 } /* Name.Variable */
+.highlight .ow { color: #007020; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #BBB } /* Text.Whitespace */
+.highlight .mb { color: #40A070 } /* Literal.Number.Bin */
+.highlight .mf { color: #40A070 } /* Literal.Number.Float */
+.highlight .mh { color: #40A070 } /* Literal.Number.Hex */
+.highlight .mi { color: #40A070 } /* Literal.Number.Integer */
+.highlight .mo { color: #40A070 } /* Literal.Number.Oct */
+.highlight .sa { color: #4070A0 } /* Literal.String.Affix */
+.highlight .sb { color: #4070A0 } /* Literal.String.Backtick */
+.highlight .sc { color: #4070A0 } /* Literal.String.Char */
+.highlight .dl { color: #4070A0 } /* Literal.String.Delimiter */
+.highlight .sd { color: #4070A0; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #4070A0 } /* Literal.String.Double */
+.highlight .se { color: #4070A0; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #4070A0 } /* Literal.String.Heredoc */
+.highlight .si { color: #70A0D0; font-style: italic } /* Literal.String.Interpol */
+.highlight .sx { color: #C65D09 } /* Literal.String.Other */
+.highlight .sr { color: #235388 } /* Literal.String.Regex */
+.highlight .s1 { color: #4070A0 } /* Literal.String.Single */
+.highlight .ss { color: #517918 } /* Literal.String.Symbol */
+.highlight .bp { color: #007020 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #06287E } /* Name.Function.Magic */
+.highlight .vc { color: #BB60D5 } /* Name.Variable.Class */
+.highlight .vg { color: #BB60D5 } /* Name.Variable.Global */
+.highlight .vi { color: #BB60D5 } /* Name.Variable.Instance */
+.highlight .vm { color: #BB60D5 } /* Name.Variable.Magic */
+.highlight .il { color: #40A070 } /* Literal.Number.Integer.Long */
+    .highlight {
+      background-color: #f6f8fa;
+      border: 1px solid #e1e4e8;
+      border-radius: 6px;
+      padding: 12px 16px;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .inline-code {
+      background-color: rgba(27, 31, 35, 0.05);
+      border-radius: 3px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 85%;
+      padding: 0.2em 0.4em;
+    }
+    .notebook-cell {
+      margin-bottom: 1.75rem;
+    }
+    .code-cell {
+      background: #ffffff;
+      border: 1px solid #e7e5e4;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .code-header {
+      background: #fbfbfa;
+      border-b: 1px solid #e7e5e4;
+      padding: 6px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      font-family: ui-monospace, monospace;
+    }
+    .prompt-in {
+      color: #0284c7;
+      font-weight: 700;
+    }
+    .code-lang {
+      color: #78716c;
+      text-transform: uppercase;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+    .outputs-wrapper {
+      border-top: 1px solid #e7e5e4;
+      background: #ffffff;
+      padding: 10px 14px;
+    }
+    .notebook-output {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11px;
+      white-space: pre-wrap;
+      word-break: break-all;
+      background: #fafaf9;
+      padding: 8px 12px;
+      border-radius: 4px;
+      border: 1px solid #f5f5f4;
+      color: #292524;
+      max-height: 380px;
+      overflow-y: auto;
+    }
+    .notebook-h1 { font-size: 1.75rem; font-weight: 900; color: #1c1917; margin-top: 1.5rem; margin-bottom: 0.75rem; border-bottom: 2px solid #e7e5e4; padding-bottom: 0.5rem; }
+    .notebook-h2 { font-size: 1.35rem; font-weight: 800; color: #1c1917; margin-top: 1.75rem; margin-bottom: 0.6rem; border-bottom: 1px solid #e7e5e4; padding-bottom: 0.35rem; }
+    .notebook-h3 { font-size: 1.15rem; font-weight: 700; color: #292524; margin-top: 1.25rem; margin-bottom: 0.5rem; }
+    .notebook-h4 { font-size: 1.0rem; font-weight: 600; color: #44403c; margin-top: 1rem; margin-bottom: 0.4rem; }
+    .notebook-p { margin-bottom: 0.85rem; font-size: 0.9375rem; color: #292524; }
+    .notebook-ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 0.85rem; font-size: 0.9375rem; color: #292524; }
+    .notebook-ol { list-style-type: decimal; margin-left: 1.5rem; margin-bottom: 0.85rem; font-size: 0.9375rem; color: #292524; }
+    .notebook-quote { border-left: 4px solid #0284c7; padding-left: 1rem; margin: 1rem 0; color: #44403c; background: #f0f9ff; padding: 0.75rem 1rem; border-radius: 0 4px 4px 0; }
+    .notebook-link { color: #0284c7; text-decoration: underline; text-underline-offset: 2px; font-weight: 500; }
+    .notebook-link:hover { color: #0369a1; }
+    .anchor-link { color: #a8a29e; margin-left: 0.35rem; text-decoration: none; opacity: 0; transition: opacity 0.2s; font-size: 0.9rem; }
+    h1:hover .anchor-link, h2:hover .anchor-link, h3:hover .anchor-link { opacity: 1; }
+    .notebook-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 1rem 0; }
+    .notebook-table th { background: #f5f5f4; border: 1px solid #d6d3d1; padding: 6px 10px; text-align: left; font-weight: 700; color: #1c1917; }
+    .notebook-table td { border: 1px solid #e7e5e4; padding: 6px 10px; color: #292524; }
+    .notebook-table tr:nth-child(even) { background: #fafaf9; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Top Sticky Navigation Bar -->
+  <header class="sticky top-0 z-50 bg-[#1c1917] text-stone-100 border-b border-stone-800 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 py-2.5 flex items-center justify-between flex-wrap gap-2">
+      <div class="flex items-center gap-3">
+        <a href="../index.html?tab=overview" class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded bg-stone-800 hover:bg-stone-700 text-sky-300 hover:text-sky-200 transition">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+          <span>Return to Portal</span>
+        </a>
+        <div class="h-4 w-px bg-stone-700 hidden sm:block"></div>
+        <span class="text-xs font-bold text-stone-300 hidden md:inline truncate max-w-md">01: Colorado River Basin Geospatial Topology &amp; Dynamic Shoreline Engine</span>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <a href="01_build_river_network.ipynb" download class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700 transition" title="Download raw .ipynb file">
+          <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          <span>Download .ipynb</span>
+        </a>
+        <a href="https://colab.research.google.com/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded bg-amber-950/60 hover:bg-amber-900/80 text-amber-300 border border-amber-800/80 transition" title="Open in Google Colab (Upload from computer or link)">
+          <svg class="w-3.5 h-3.5 text-amber-400" viewBox="0 0 24 24" fill="currentColor"><path d="M16.9 8.2a4.8 4.8 0 00-6.8 0L3.5 14.8a4.8 4.8 0 106.8 6.8l6.6-6.6a4.8 4.8 0 000-6.8zm-1.4 5.4l-6.6 6.6a2.8 2.8 0 11-4-4l6.6-6.6a2.8 2.8 0 114 4z"/></svg>
+          <span>Google Colab</span>
+        </a>
+        <a href="https://nbviewer.org/" target="_blank" rel="noopener noreferrer" class="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700 transition" title="Project Jupyter nbviewer">
+          <span>nbviewer ↗</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="max-w-7xl mx-auto px-4 py-8 flex-1 w-full grid grid-cols-1 lg:grid-cols-4 gap-8">
+    
+    <!-- Left Reading Content (3 Columns) -->
+    <main class="lg:col-span-3 bg-white p-6 md:p-10 rounded-xl border border-stone-200 shadow-sm min-w-0">
+      <div class="mb-6 pb-6 border-b border-stone-200">
+        <div class="flex items-center gap-2 mb-2 flex-wrap">
+          <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-sky-100 text-sky-800 border border-sky-200">DAT 1001 Research</span>
+          <span class="text-[10px] font-bold text-stone-500">Colorado River Basin Data Pipeline</span>
+          <span class="text-[10px] font-bold text-stone-400">•</span>
+          <span class="text-[10px] font-mono text-stone-500">01_build_river_network.ipynb</span>
+        </div>
+        <h1 class="text-2xl md:text-3xl font-black text-stone-900 tracking-tight leading-tight">01: Colorado River Basin Geospatial Topology &amp; Dynamic Shoreline Engine</h1>
+        <p class="text-xs text-stone-600 mt-2">Static archival rendering generated from the master research repository. Interactive code blocks, mathematical formulations, and data figures preserved.</p>
+      </div>
+
+      <!-- Notebook Rendered Content -->
+      <div class="notebook-content">
+        <div class="notebook-cell markdown-cell"><h1 id="01-colorado-river-basin-geospatial-topology-dynamic-shoreline-engine" class="notebook-h1">01: Colorado River Basin Geospatial Topology & Dynamic Shoreline Engine <a href="#01-colorado-river-basin-geospatial-topology-dynamic-shoreline-engine" class="anchor-link">#</a></h1>
+<p class="notebook-p"><strong>DAT1001 • Geospatial Pipeline Decoupling</strong></p>
+<p class="notebook-p">This notebook builds the foundational spatial topology for the Colorado River Basin platform:</p>
+<ol class="notebook-ol">
+<li><strong>NHDPlus Network Navigation:</strong> Navigates upstream from Lees Ferry (<code class="inline-code">USGS-09380000</code>) along the Colorado River mainstem and key tributaries.</li>
+<li><strong>Artificial Path Separation:</strong> Isolates <code class="inline-code">FTYPE == 'ArtificialPath'</code> (<code class="inline-code">FCODE = 55800</code>) through reservoirs from <code class="inline-code">FTYPE == 'StreamRiver'</code>.</li>
+<li><strong>Bed Elevation Extraction:</strong> Retains smoothed bed elevations (<code class="inline-code">minelevsmo</code>, <code class="inline-code">maxelevsmo</code>) to model canyon bathymetry.</li>
+<li><strong>Cataract Canyon Dynamic Re-Emergence Rule:</strong> Detects reaches inside the historical 3,700' Full Pool boundary where bed elevation exceeds active pool elevation, flipping them dynamically from <code class="inline-code">submerged<em>path</code> to <code class="inline-code">free</em>flowing</code> river rapids.</li>
+<li><strong>Topobathymetric Slices:</strong> Generates discrete elevation contour polygons (3,490' to 3,700') for Lake Powell calibrated to USBR elevation-storage curves.</li>
+<li><strong>Optimized Export:</strong> Reprojects to <code class="inline-code">EPSG:5070</code> for topological simplification, reprojects back to <code class="inline-code">EPSG:4326</code>, and exports <code class="inline-code">web/data/powell<em>contours.geojson</code> and <code class="inline-code">web/data/river</em>network.geojson</code>.</li>
+</ol></div>
+
+            <div class="notebook-cell code-cell">
+              <div class="code-header">
+                <span class="prompt-in">In [1]:</span>
+                <span class="code-lang">Python 3</span>
+              </div>
+              <div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shapely</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">shape</span><span class="p">,</span> <span class="n">mapping</span><span class="p">,</span> <span class="n">LineString</span><span class="p">,</span> <span class="n">MultiLineString</span><span class="p">,</span> <span class="n">Polygon</span><span class="p">,</span> <span class="n">MultiPolygon</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">shapely.ops</span><span class="w"> </span><span class="kn">import</span> <span class="n">unary_union</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">rasterio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">rasterio.features</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rasterio.transform</span><span class="w"> </span><span class="kn">import</span> <span class="n">from_bounds</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.ndimage</span><span class="w"> </span><span class="kn">import</span> <span class="n">distance_transform_edt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pynhd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pynhd</span><span class="w"> </span><span class="kn">import</span> <span class="n">NLDI</span><span class="p">,</span> <span class="n">WaterData</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Geospatial &amp; hydrological libraries loaded successfully."</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"PyNHD version: </span><span class="si">{</span><span class="n">pynhd</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2"> | GeoPandas version: </span><span class="si">{</span><span class="n">gpd</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+            <div class="outputs-wrapper"><div class="output-item stream-output"><pre class="notebook-output">Geospatial &amp; hydrological libraries loaded successfully.
+PyNHD version: 0.20.0 | GeoPandas version: 1.1.4
+</pre></div></div></div>
+<div class="notebook-cell markdown-cell"><h2 id="step-1-upstream-hydrographic-navigation-via-nldi" class="notebook-h2">Step 1: Upstream Hydrographic Navigation via NLDI <a href="#step-1-upstream-hydrographic-navigation-via-nldi" class="anchor-link">#</a></h2>
+<p class="notebook-p">We query the USGS Network-Linked Data Index (NLDI) starting at <strong>Lees Ferry (<code class="inline-code">USGS-09380000</code>)</strong>, the legal dividing point between the Upper and Lower Basins, navigating upstream along the mainstem and key tributaries.</p></div>
+
+            <div class="notebook-cell code-cell">
+              <div class="code-header">
+                <span class="prompt-in">In [2]:</span>
+                <span class="code-lang">Python 3</span>
+              </div>
+              <div class="highlight"><pre><span></span><span class="n">nldi</span> <span class="o">=</span> <span class="n">NLDI</span><span class="p">()</span>
+
+<span class="c1"># 1. Navigate upstream mainstem from Lees Ferry (1922 Compact Divide)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Querying upstream mainstem flowlines from Lees Ferry (USGS-09380000)..."</span><span class="p">)</span>
+<span class="n">mainstem_nldi</span> <span class="o">=</span> <span class="n">nldi</span><span class="o">.</span><span class="n">navigate_byid</span><span class="p">(</span>
+    <span class="n">fsource</span><span class="o">=</span><span class="s2">"nwissite"</span><span class="p">,</span>
+    <span class="n">fid</span><span class="o">=</span><span class="s2">"USGS-09380000"</span><span class="p">,</span>
+    <span class="n">navigation</span><span class="o">=</span><span class="s2">"upstreamMain"</span><span class="p">,</span>
+    <span class="n">source</span><span class="o">=</span><span class="s2">"flowlines"</span><span class="p">,</span>
+    <span class="n">distance</span><span class="o">=</span><span class="mi">999</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Retrieved </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">mainstem_nldi</span><span class="p">)</span><span class="si">}</span><span class="s2"> mainstem flowline segments."</span><span class="p">)</span>
+
+<span class="c1"># 2. Retrieve USGS streamflow gauge stations along the network</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Retrieving USGS monitoring stations along the upstream network..."</span><span class="p">)</span>
+<span class="n">nwis_stations</span> <span class="o">=</span> <span class="n">nldi</span><span class="o">.</span><span class="n">navigate_byid</span><span class="p">(</span>
+    <span class="n">fsource</span><span class="o">=</span><span class="s2">"nwissite"</span><span class="p">,</span>
+    <span class="n">fid</span><span class="o">=</span><span class="s2">"USGS-09380000"</span><span class="p">,</span>
+    <span class="n">navigation</span><span class="o">=</span><span class="s2">"upstreamMain"</span><span class="p">,</span>
+    <span class="n">source</span><span class="o">=</span><span class="s2">"nwissite"</span><span class="p">,</span>
+    <span class="n">distance</span><span class="o">=</span><span class="mi">999</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Retrieved </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">nwis_stations</span><span class="p">)</span><span class="si">}</span><span class="s2"> USGS gauge sites along mainstem."</span><span class="p">)</span>
+</pre></div>
+            <div class="outputs-wrapper"><div class="output-item stream-output"><pre class="notebook-output">Querying upstream mainstem flowlines from Lees Ferry (USGS-09380000)...
+Retrieved 715 mainstem flowline segments.
+Retrieving USGS monitoring stations along the upstream network...
+Retrieved 303 USGS gauge sites along mainstem.
+</pre></div></div></div>
+<div class="notebook-cell markdown-cell"><h2 id="step-2-nhdplus-value-added-attributes-bed-elevation" class="notebook-h2">Step 2: NHDPlus Value Added Attributes & Bed Elevation <a href="#step-2-nhdplus-value-added-attributes-bed-elevation" class="anchor-link">#</a></h2>
+<p class="notebook-p">We pull the enriched NHDPlus flowline network with Value Added Attributes (VAA) via <code class="inline-code">WaterData('nhdflowline_network')</code> across the Lake Powell & Cataract Canyon corridor <code class="inline-code">(-111.7, 36.8, -109.8, 38.3)</code>.</p>
+<p class="notebook-p">This provides:</p>
+<ul class="notebook-ul">
+<li><code class="inline-code">ftype</code> and <code class="inline-code">fcode</code>: Distinguishing open flowing rivers (<code class="inline-code">StreamRiver</code> / <code class="inline-code">46003</code>) from drowned reservoir centerlines (<code class="inline-code">ArtificialPath</code> / <code class="inline-code">55800</code>).</li>
+<li><code class="inline-code">minelevsmo</code> and <code class="inline-code">maxelevsmo</code>: Smoothed bed elevation (in centimeters), which we convert to feet (x 0.0328084) to evaluate pool inundation.</li>
+</ul></div>
+
+            <div class="notebook-cell code-cell">
+              <div class="code-header">
+                <span class="prompt-in">In [3]:</span>
+                <span class="code-lang">Python 3</span>
+              </div>
+              <div class="highlight"><pre><span></span><span class="c1"># Query NHDPlus VAA across the Lake Powell &amp; Cataract Canyon corridor</span>
+<span class="n">powell_bbox</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">111.7</span><span class="p">,</span> <span class="mf">36.8</span><span class="p">,</span> <span class="o">-</span><span class="mf">109.8</span><span class="p">,</span> <span class="mf">38.3</span><span class="p">)</span>
+<span class="n">wd</span> <span class="o">=</span> <span class="n">WaterData</span><span class="p">(</span><span class="s2">"nhdflowline_network"</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Querying NHDPlus flowlines across Lake Powell / Cataract Canyon corridor </span><span class="si">{</span><span class="n">powell_bbox</span><span class="si">}</span><span class="s2">..."</span><span class="p">)</span>
+<span class="n">powell_flowlines</span> <span class="o">=</span> <span class="n">wd</span><span class="o">.</span><span class="n">bybox</span><span class="p">(</span><span class="n">powell_bbox</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Retrieved </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">powell_flowlines</span><span class="p">)</span><span class="si">}</span><span class="s2"> NHDPlus flowlines."</span><span class="p">)</span>
+
+<span class="c1"># Convert smoothed bed elevations from centimeters to feet</span>
+<span class="n">CM_TO_FT</span> <span class="o">=</span> <span class="mf">0.0328084</span>
+<span class="n">powell_flowlines</span><span class="p">[</span><span class="s2">"minelev_ft"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">powell_flowlines</span><span class="p">[</span><span class="s2">"minelevsmo"</span><span class="p">]</span> <span class="o">*</span> <span class="n">CM_TO_FT</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">powell_flowlines</span><span class="p">[</span><span class="s2">"maxelev_ft"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">powell_flowlines</span><span class="p">[</span><span class="s2">"maxelevsmo"</span><span class="p">]</span> <span class="o">*</span> <span class="n">CM_TO_FT</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">co_in_canyon</span> <span class="o">=</span> <span class="n">powell_flowlines</span><span class="p">[</span><span class="n">powell_flowlines</span><span class="p">[</span><span class="s2">"gnis_name"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"Colorado River"</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Colorado River corridor segments: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">co_in_canyon</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Bed elevation range: </span><span class="si">{</span><span class="n">co_in_canyon</span><span class="p">[</span><span class="s1">'minelev_ft'</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="si">:</span><span class="s2">,.1f</span><span class="si">}</span><span class="s2"> ft (Glen Canyon Dam foundation) to </span><span class="si">{</span><span class="n">co_in_canyon</span><span class="p">[</span><span class="s1">'minelev_ft'</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">:</span><span class="s2">,.1f</span><span class="si">}</span><span class="s2"> ft (Cataract Canyon Confluence)"</span><span class="p">)</span>
+</pre></div>
+            <div class="outputs-wrapper"><div class="output-item stream-output"><pre class="notebook-output">Querying NHDPlus flowlines across Lake Powell / Cataract Canyon corridor (-111.7, 36.8, -109.8, 38.3)...
+</pre></div><div class="output-item stream-output"><pre class="notebook-output">Retrieved 4931 NHDPlus flowlines.
+Colorado River corridor segments: 227
+Bed elevation range: 3,134.2 ft (Glen Canyon Dam foundation) to 3,910.1 ft (Cataract Canyon Confluence)
+</pre></div></div></div>
+<div class="notebook-cell markdown-cell"><h2 id="step-3-artificial-path-separation-topology-disaggregation" class="notebook-h2">Step 3: Artificial Path Separation & Topology Disaggregation <a href="#step-3-artificial-path-separation-topology-disaggregation" class="anchor-link">#</a></h2>
+<p class="notebook-p">Here we enforce the core topology rule:</p>
+<ul class="notebook-ul">
+<li>Reaches where <code class="inline-code">FTYPE == 'ArtificialPath'</code> (<code class="inline-code">FCODE = 55800</code>) through reservoirs are isolated from free-flowing rivers.</li>
+<li>Specifically in Lake Powell, the drowned historical river thalweg is segregated into <code class="inline-code">powell<em>submerged</em>path</code> (<code class="inline-code">reach<em>type = "submerged</em>path"</code>).</li>
+<li>The reach <code class="inline-code">lees<em>ferry</code> retains the active free-flowing tailrace below Glen Canyon Dam down to Lees Ferry (<code class="inline-code">reach</em>type = "free_flowing"</code>).</li>
+<li>Reaches across the upper and lower basin are enriched with bed elevation bounds and reach classification.</li>
+</ul></div>
+
+            <div class="notebook-cell code-cell">
+              <div class="code-header">
+                <span class="prompt-in">In [4]:</span>
+                <span class="code-lang">Python 3</span>
+              </div>
+              <div class="highlight"><pre><span></span><span class="c1"># Load base basin reaches</span>
+<span class="n">river_net_path</span> <span class="o">=</span> <span class="s2">"../web/data/river_network.json"</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">"../web/data/river_network.json"</span><span class="p">)</span> <span class="k">else</span> <span class="s2">"web/data/river_network.json"</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">river_net_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">base_rn</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Loaded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">base_rn</span><span class="p">[</span><span class="s1">'features'</span><span class="p">])</span><span class="si">}</span><span class="s2"> curated basin reaches."</span><span class="p">)</span>
+
+<span class="n">enriched_features</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">feat</span> <span class="ow">in</span> <span class="n">base_rn</span><span class="p">[</span><span class="s2">"features"</span><span class="p">]:</span>
+    <span class="n">props</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">feat</span><span class="p">[</span><span class="s2">"properties"</span><span class="p">])</span>
+    <span class="n">reach</span> <span class="o">=</span> <span class="n">props</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"reach"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+    <span class="n">geom_type</span> <span class="o">=</span> <span class="n">feat</span><span class="p">[</span><span class="s2">"geometry"</span><span class="p">][</span><span class="s2">"type"</span><span class="p">]</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="n">feat</span><span class="p">[</span><span class="s2">"geometry"</span><span class="p">][</span><span class="s2">"coordinates"</span><span class="p">]</span>
+    
+    <span class="k">if</span> <span class="n">reach</span> <span class="o">==</span> <span class="s2">"lees_ferry"</span> <span class="ow">and</span> <span class="n">geom_type</span> <span class="o">==</span> <span class="s2">"MultiLineString"</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">8</span><span class="p">:</span>
+        <span class="c1"># Lines 0 to 6: Tailrace below Glen Canyon Dam to Lees Ferry (Free-Flowing River)</span>
+        <span class="n">downstream_lines</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[:</span><span class="mi">7</span><span class="p">]</span>
+        <span class="c1"># Line 7: Drowned Thalweg inside Lake Powell (San Juan Confluence to Dam)</span>
+        <span class="n">submerged_line</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
+        
+        <span class="n">downstream_feat</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Feature"</span><span class="p">,</span>
+            <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="o">**</span><span class="n">props</span><span class="p">,</span>
+                <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Colorado River - Glen Canyon Dam to Lees Ferry"</span><span class="p">,</span>
+                <span class="s2">"reach_type"</span><span class="p">:</span> <span class="s2">"free_flowing"</span><span class="p">,</span>
+                <span class="s2">"re_emerged"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">"minelev_ft"</span><span class="p">:</span> <span class="mf">3105.0</span><span class="p">,</span>
+                <span class="s2">"maxelev_ft"</span><span class="p">:</span> <span class="mf">3150.0</span><span class="p">,</span>
+                <span class="s2">"ftype"</span><span class="p">:</span> <span class="s2">"StreamRiver"</span>
+            <span class="p">},</span>
+            <span class="s2">"geometry"</span><span class="p">:</span> <span class="n">mapping</span><span class="p">(</span><span class="n">MultiLineString</span><span class="p">(</span><span class="n">downstream_lines</span><span class="p">))</span>
+        <span class="p">}</span>
+        <span class="n">enriched_features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">downstream_feat</span><span class="p">)</span>
+        
+        <span class="n">submerged_feat</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Feature"</span><span class="p">,</span>
+            <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Lake Powell Submerged River Channel (Glen Canyon)"</span><span class="p">,</span>
+                <span class="s2">"reach"</span><span class="p">:</span> <span class="s2">"powell_submerged_path"</span><span class="p">,</span>
+                <span class="s2">"category"</span><span class="p">:</span> <span class="s2">"submerged_path"</span><span class="p">,</span>
+                <span class="s2">"reach_type"</span><span class="p">:</span> <span class="s2">"submerged_path"</span><span class="p">,</span>
+                <span class="s2">"re_emerged"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">"minelev_ft"</span><span class="p">:</span> <span class="mf">3134.0</span><span class="p">,</span>
+                <span class="s2">"maxelev_ft"</span><span class="p">:</span> <span class="mf">3550.0</span><span class="p">,</span>
+                <span class="s2">"ftype"</span><span class="p">:</span> <span class="s2">"ArtificialPath"</span><span class="p">,</span>
+                <span class="s2">"flow_cfs"</span><span class="p">:</span> <span class="n">props</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"flow_cfs"</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                <span class="s2">"weight"</span><span class="p">:</span> <span class="mf">3.0</span><span class="p">,</span>
+                <span class="s2">"gauge_id"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">"notes"</span><span class="p">:</span> <span class="s2">"Submerged Colorado River canyon floor impounded behind Glen Canyon Dam."</span>
+            <span class="p">},</span>
+            <span class="s2">"geometry"</span><span class="p">:</span> <span class="n">mapping</span><span class="p">(</span><span class="n">LineString</span><span class="p">(</span><span class="n">submerged_line</span><span class="p">))</span>
+        <span class="p">}</span>
+        <span class="n">enriched_features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">submerged_feat</span><span class="p">)</span>
+        
+    <span class="k">elif</span> <span class="n">reach</span> <span class="o">==</span> <span class="s2">"cataract_canyon"</span><span class="p">:</span>
+        <span class="n">cat_feat</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Feature"</span><span class="p">,</span>
+            <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="o">**</span><span class="n">props</span><span class="p">,</span>
+                <span class="s2">"reach_type"</span><span class="p">:</span> <span class="s2">"free_flowing"</span><span class="p">,</span>
+                <span class="s2">"re_emerged"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">"minelev_ft"</span><span class="p">:</span> <span class="mf">3540.0</span><span class="p">,</span>
+                <span class="s2">"maxelev_ft"</span><span class="p">:</span> <span class="mf">3890.0</span><span class="p">,</span>
+                <span class="s2">"ftype"</span><span class="p">:</span> <span class="s2">"StreamRiver"</span><span class="p">,</span>
+                <span class="s2">"notes"</span><span class="p">:</span> <span class="s2">"Combined Colorado &amp; Green river flow through Cataract Canyon rapids above Lake Powell active pool."</span>
+            <span class="p">},</span>
+            <span class="s2">"geometry"</span><span class="p">:</span> <span class="n">feat</span><span class="p">[</span><span class="s2">"geometry"</span><span class="p">]</span>
+        <span class="p">}</span>
+        <span class="n">enriched_features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cat_feat</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">props</span><span class="p">[</span><span class="s2">"reach_type"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"submerged_path"</span> <span class="k">if</span> <span class="n">props</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"category"</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"submerged_path"</span> <span class="k">else</span> <span class="s2">"free_flowing"</span>
+        <span class="n">props</span><span class="p">[</span><span class="s2">"re_emerged"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">props</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">"ftype"</span><span class="p">,</span> <span class="s2">"StreamRiver"</span><span class="p">)</span>
+        <span class="n">props</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">"minelev_ft"</span><span class="p">,</span> <span class="mf">4000.0</span><span class="p">)</span>
+        <span class="n">props</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">"maxelev_ft"</span><span class="p">,</span> <span class="mf">4200.0</span><span class="p">)</span>
+        <span class="n">enriched_features</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Feature"</span><span class="p">,</span> <span class="s2">"properties"</span><span class="p">:</span> <span class="n">props</span><span class="p">,</span> <span class="s2">"geometry"</span><span class="p">:</span> <span class="n">feat</span><span class="p">[</span><span class="s2">"geometry"</span><span class="p">]})</span>
+
+<span class="n">basin_gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="o">.</span><span class="n">from_features</span><span class="p">(</span><span class="n">enriched_features</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="s2">"EPSG:4326"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Topology disaggregation complete: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">basin_gdf</span><span class="p">)</span><span class="si">}</span><span class="s2"> reaches."</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">rtype</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">basin_gdf</span><span class="p">[</span><span class="s2">"reach_type"</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">rtype</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2"> reaches"</span><span class="p">)</span>
+</pre></div>
+            <div class="outputs-wrapper"><div class="output-item stream-output"><pre class="notebook-output">Loaded 41 curated basin reaches.
+Topology disaggregation complete: 42 reaches.
+  free_flowing: 41 reaches
+  submerged_path: 1 reaches
+</pre></div></div></div>
+<div class="notebook-cell markdown-cell"><h2 id="step-4-cataract-canyon-dynamic-re-emergence-rule" class="notebook-h2">Step 4: Cataract Canyon Dynamic Re-Emergence Rule <a href="#step-4-cataract-canyon-dynamic-re-emergence-rule" class="anchor-link">#</a></h2>
+<p class="notebook-p">In Lake Powell, the static Full Pool boundary (3,700') drowns 30+ miles of Cataract Canyon and upper Glen Canyon.</p>
+<p class="notebook-p">When the active reservoir elevation drops to drought levels (e.g., 3,570'), any flowline segment where:</p>
+<p class="notebook-p">$$\text{bed\<em>elevation\</em>ft} > \text{current\<em>pool\</em>elevation}$$</p>
+<p class="notebook-p">is physically above water. It has <strong>re-emerged as active river rapids</strong>.</p>
+<p class="notebook-p">This function evaluates re-emergence against any pool elevation:</p></div>
+
+            <div class="notebook-cell code-cell">
+              <div class="code-header">
+                <span class="prompt-in">In [5]:</span>
+                <span class="code-lang">Python 3</span>
+              </div>
+              <div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">apply_reservoir_reemergence</span><span class="p">(</span><span class="n">flowlines_gdf</span><span class="p">,</span> <span class="n">current_powell_elev_ft</span><span class="o">=</span><span class="mf">3570.0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Dynamically switches submerged artificial path reaches to free-flowing</span>
+<span class="sd">    if their bed elevation exceeds the active reservoir water surface.</span>
+<span class="sd">    """</span>
+    <span class="n">gdf</span> <span class="o">=</span> <span class="n">flowlines_gdf</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    
+    <span class="c1"># Check Cataract Canyon and Glen Canyon reaches</span>
+    <span class="n">powell_mask</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">"reach"</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s2">"cataract_canyon"</span><span class="p">,</span> <span class="s2">"powell_submerged_path"</span><span class="p">])</span>
+    
+    <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">gdf</span><span class="p">[</span><span class="n">powell_mask</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
+        <span class="n">min_elev</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="s2">"minelev_ft"</span><span class="p">]</span>
+        <span class="n">max_elev</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="s2">"maxelev_ft"</span><span class="p">]</span>
+        
+        <span class="c1"># If the minimum bed elevation exceeds active pool, 100% of reach has re-emerged as rapids</span>
+        <span class="k">if</span> <span class="n">min_elev</span> <span class="o">&gt;=</span> <span class="n">current_powell_elev_ft</span><span class="p">:</span>
+            <span class="n">gdf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="s2">"reach_type"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"free_flowing"</span>
+            <span class="n">gdf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="s2">"re_emerged"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">max_elev</span> <span class="o">&gt;</span> <span class="n">current_powell_elev_ft</span><span class="p">:</span>
+            <span class="c1"># Partially re-emerged (upper rapids active, lower pool inundated)</span>
+            <span class="n">gdf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="s2">"reach_type"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"free_flowing"</span>
+            <span class="n">gdf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="s2">"re_emerged"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Fully drowned</span>
+            <span class="n">gdf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="s2">"reach_type"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"submerged_path"</span>
+            <span class="n">gdf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="s2">"re_emerged"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+            
+    <span class="n">re_count</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">"re_emerged"</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"At pool elevation </span><span class="si">{</span><span class="n">current_powell_elev_ft</span><span class="si">}</span><span class="s2"> ft: Cataract Canyon (</span><span class="si">{</span><span class="n">re_count</span><span class="si">}</span><span class="s2"> reaches) dynamically active as free-flowing river rapids!"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">gdf</span>
+
+<span class="c1"># Evaluate against current Lake Powell elevation (~3,520 ft to 3,570 ft)</span>
+<span class="n">evaluated_rivers</span> <span class="o">=</span> <span class="n">apply_reservoir_reemergence</span><span class="p">(</span><span class="n">basin_gdf</span><span class="p">,</span> <span class="n">current_powell_elev_ft</span><span class="o">=</span><span class="mf">3570.0</span><span class="p">)</span>
+</pre></div>
+            <div class="outputs-wrapper"><div class="output-item stream-output"><pre class="notebook-output">At pool elevation 3570.0 ft: Cataract Canyon (1 reaches) dynamically active as free-flowing river rapids!
+</pre></div></div></div>
+<div class="notebook-cell markdown-cell"><h2 id="step-5-in-memory-topobathymetric-slices-powell-contour-deck" class="notebook-h2">Step 5: In-Memory Topobathymetric Slices (Powell Contour Deck) <a href="#step-5-in-memory-topobathymetric-slices-powell-contour-deck" class="anchor-link">#</a></h2>
+<p class="notebook-p">Rather than downloading multi-gigabyte raster DEMs, we synthesize the topobathymetric model <strong>entirely in memory</strong>:</p>
+<ol class="notebook-ol">
+<li>Take the 3,700' Full Pool polygon from <code class="inline-code">web/data/lakes.geojson</code>.</li>
+<li>Compute an in-memory canyon elevation surface between the submerged NHD thalweg (3,150' at Glen Canyon Dam) and the rim (3,700') using <code class="inline-code">scipy.ndimage.distance<em>transform</em>edt</code>.</li>
+<li>Extract discrete contours from 3,490' (Minimum Power Pool) to 3,700' in 20-ft increments using <code class="inline-code">rasterio.features.shapes</code>.</li>
+<li>Calibrate polygon properties to official <strong>USBR Lake Powell Elevation-Storage tables</strong>.</li>
+</ol></div>
+
+            <div class="notebook-cell code-cell">
+              <div class="code-header">
+                <span class="prompt-in">In [6]:</span>
+                <span class="code-lang">Python 3</span>
+              </div>
+              <div class="highlight"><pre><span></span><span class="c1"># Load base lakes polygon</span>
+<span class="n">lakes_path</span> <span class="o">=</span> <span class="s2">"../web/data/lakes.geojson"</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">"../web/data/lakes.geojson"</span><span class="p">)</span> <span class="k">else</span> <span class="s2">"web/data/lakes.geojson"</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">lakes_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">lakes_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+<span class="n">powell_feat</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span>
+    <span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">lakes_data</span><span class="p">[</span><span class="s2">"features"</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">"powell"</span> <span class="ow">in</span> <span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="s2">"properties"</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"name"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">f</span><span class="p">[</span><span class="s2">"properties"</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"GNIS_NAME"</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+<span class="p">)</span>
+<span class="n">powell_full_geom</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">make_valid</span><span class="p">(</span><span class="n">shape</span><span class="p">(</span><span class="n">powell_feat</span><span class="p">[</span><span class="s2">"geometry"</span><span class="p">]))</span>
+
+<span class="c1"># Rasterization Grid Bounds</span>
+<span class="n">minx</span><span class="p">,</span> <span class="n">miny</span><span class="p">,</span> <span class="n">maxx</span><span class="p">,</span> <span class="n">maxy</span> <span class="o">=</span> <span class="n">powell_full_geom</span><span class="o">.</span><span class="n">bounds</span>
+<span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">650</span><span class="p">,</span> <span class="mi">650</span>
+<span class="n">transform</span> <span class="o">=</span> <span class="n">from_bounds</span><span class="p">(</span><span class="n">minx</span><span class="p">,</span> <span class="n">miny</span><span class="p">,</span> <span class="n">maxx</span><span class="p">,</span> <span class="n">maxy</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+
+<span class="c1"># 1. Full Pool 3700 ft binary mask</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">rasterio</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">rasterize</span><span class="p">(</span>
+    <span class="p">[(</span><span class="n">powell_full_geom</span><span class="p">,</span> <span class="mi">1</span><span class="p">)],</span>
+    <span class="n">out_shape</span><span class="o">=</span><span class="p">(</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">),</span>
+    <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">,</span>
+    <span class="n">default_value</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span>
+<span class="p">)</span>
+
+<span class="c1"># 2. Canyon Thalweg Vector: Glen Canyon Dam -&gt; Cataract Canyon / Hite</span>
+<span class="n">dam_x</span><span class="p">,</span> <span class="n">dam_y</span> <span class="o">=</span> <span class="o">~</span><span class="n">transform</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="mf">111.484</span><span class="p">,</span> <span class="mf">36.937</span><span class="p">)</span>
+<span class="n">hite_x</span><span class="p">,</span> <span class="n">hite_y</span> <span class="o">=</span> <span class="o">~</span><span class="n">transform</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="mf">110.40</span><span class="p">,</span> <span class="mf">37.88</span><span class="p">)</span>
+
+<span class="n">y_coords</span><span class="p">,</span> <span class="n">x_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">indices</span><span class="p">((</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">))</span>
+<span class="n">canyon_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">hite_x</span> <span class="o">-</span> <span class="n">dam_x</span><span class="p">,</span> <span class="n">hite_y</span> <span class="o">-</span> <span class="n">dam_y</span><span class="p">])</span>
+<span class="n">canyon_len_sq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">canyon_vec</span><span class="p">,</span> <span class="n">canyon_vec</span><span class="p">)</span>
+<span class="n">proj</span> <span class="o">=</span> <span class="p">((</span><span class="n">x_coords</span> <span class="o">-</span> <span class="n">dam_x</span><span class="p">)</span> <span class="o">*</span> <span class="n">canyon_vec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">y_coords</span> <span class="o">-</span> <span class="n">dam_y</span><span class="p">)</span> <span class="o">*</span> <span class="n">canyon_vec</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">canyon_len_sq</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">proj</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+
+<span class="c1"># Thalweg bed elevation profile (3,150 ft at dam foundation rising to 3,700 ft at Hite)</span>
+<span class="n">thalweg_elev</span> <span class="o">=</span> <span class="mf">3150.0</span> <span class="o">+</span> <span class="n">s</span> <span class="o">*</span> <span class="p">(</span><span class="mf">3700.0</span> <span class="o">-</span> <span class="mf">3150.0</span><span class="p">)</span>
+
+<span class="c1"># Distance transform to canyon wall</span>
+<span class="n">dist_to_shore</span> <span class="o">=</span> <span class="n">distance_transform_edt</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+<span class="n">max_dist</span> <span class="o">=</span> <span class="n">dist_to_shore</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="k">if</span> <span class="n">dist_to_shore</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">1.0</span>
+<span class="n">norm_dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">dist_to_shore</span> <span class="o">/</span> <span class="p">(</span><span class="n">max_dist</span> <span class="o">*</span> <span class="mf">0.4</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+
+<span class="c1"># Topobathymetric surface: thalweg at center, 3,700 at rim</span>
+<span class="n">elev_grid</span> <span class="o">=</span> <span class="mf">3700.0</span> <span class="o">-</span> <span class="p">(</span><span class="mf">3700.0</span> <span class="o">-</span> <span class="n">thalweg_elev</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">norm_dist</span> <span class="o">**</span> <span class="mf">0.6</span><span class="p">)</span>
+<span class="n">elev_grid</span><span class="p">[</span><span class="n">mask</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">9999.0</span>
+
+<span class="c1"># USBR Official Elevation-Storage Capacity Table (Acre-Feet &amp; Capacity %)</span>
+<span class="n">usbr_elev_storage</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">3490</span><span class="p">:</span> <span class="p">(</span><span class="mi">3880000</span><span class="p">,</span> <span class="mf">16.0</span><span class="p">),</span>   <span class="c1"># Minimum Power Pool (turbines disable below this)</span>
+    <span class="mi">3510</span><span class="p">:</span> <span class="p">(</span><span class="mi">4850000</span><span class="p">,</span> <span class="mf">19.9</span><span class="p">),</span>
+    <span class="mi">3530</span><span class="p">:</span> <span class="p">(</span><span class="mi">5980000</span><span class="p">,</span> <span class="mf">24.6</span><span class="p">),</span>
+    <span class="mi">3550</span><span class="p">:</span> <span class="p">(</span><span class="mi">7250000</span><span class="p">,</span> <span class="mf">29.8</span><span class="p">),</span>
+    <span class="mi">3570</span><span class="p">:</span> <span class="p">(</span><span class="mi">8680000</span><span class="p">,</span> <span class="mf">35.7</span><span class="p">),</span>
+    <span class="mi">3590</span><span class="p">:</span> <span class="p">(</span><span class="mi">10280000</span><span class="p">,</span> <span class="mf">42.3</span><span class="p">),</span>
+    <span class="mi">3610</span><span class="p">:</span> <span class="p">(</span><span class="mi">12060000</span><span class="p">,</span> <span class="mf">49.6</span><span class="p">),</span>
+    <span class="mi">3630</span><span class="p">:</span> <span class="p">(</span><span class="mi">14040000</span><span class="p">,</span> <span class="mf">57.7</span><span class="p">),</span>
+    <span class="mi">3650</span><span class="p">:</span> <span class="p">(</span><span class="mi">16240000</span><span class="p">,</span> <span class="mf">66.8</span><span class="p">),</span>
+    <span class="mi">3670</span><span class="p">:</span> <span class="p">(</span><span class="mi">18670000</span><span class="p">,</span> <span class="mf">76.8</span><span class="p">),</span>
+    <span class="mi">3700</span><span class="p">:</span> <span class="p">(</span><span class="mi">24322000</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">)</span>  <span class="c1"># Full Pool</span>
+<span class="p">}</span>
+
+<span class="n">contour_features</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">elev</span><span class="p">,</span> <span class="p">(</span><span class="n">storage_af</span><span class="p">,</span> <span class="n">pct</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">usbr_elev_storage</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+    <span class="n">slice_mask</span> <span class="o">=</span> <span class="p">((</span><span class="n">elev_grid</span> <span class="o">&lt;=</span> <span class="n">elev</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">mask</span> <span class="o">==</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int16</span><span class="p">)</span>
+    <span class="n">shapes_gen</span> <span class="o">=</span> <span class="n">rasterio</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">shapes</span><span class="p">(</span><span class="n">slice_mask</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="p">(</span><span class="n">slice_mask</span> <span class="o">==</span> <span class="mi">1</span><span class="p">),</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span>
+    <span class="n">geoms</span> <span class="o">=</span> <span class="p">[</span><span class="n">shape</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="k">for</span> <span class="n">g</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">shapes_gen</span> <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">geoms</span><span class="p">:</span>
+        <span class="n">poly</span> <span class="o">=</span> <span class="n">unary_union</span><span class="p">(</span><span class="n">geoms</span><span class="p">)</span><span class="o">.</span><span class="n">simplify</span><span class="p">(</span><span class="mf">0.0008</span><span class="p">,</span> <span class="n">preserve_topology</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">tier</span> <span class="o">=</span> <span class="s2">"crimson"</span> <span class="k">if</span> <span class="n">pct</span> <span class="o">&lt;</span> <span class="mf">25.0</span> <span class="k">else</span> <span class="p">(</span><span class="s2">"amber"</span> <span class="k">if</span> <span class="n">pct</span> <span class="o">&lt;=</span> <span class="mf">50.0</span> <span class="k">else</span> <span class="s2">"blue"</span><span class="p">)</span>
+        <span class="n">tier_color</span> <span class="o">=</span> <span class="s2">"#DC2626"</span> <span class="k">if</span> <span class="n">pct</span> <span class="o">&lt;</span> <span class="mf">25.0</span> <span class="k">else</span> <span class="p">(</span><span class="s2">"#D97706"</span> <span class="k">if</span> <span class="n">pct</span> <span class="o">&lt;=</span> <span class="mf">50.0</span> <span class="k">else</span> <span class="s2">"#0284C7"</span><span class="p">)</span>
+        <span class="n">contour_features</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Feature"</span><span class="p">,</span>
+            <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"pool_elev_ft"</span><span class="p">:</span> <span class="n">elev</span><span class="p">,</span>
+                <span class="s2">"storage_af"</span><span class="p">:</span> <span class="n">storage_af</span><span class="p">,</span>
+                <span class="s2">"capacity_pct"</span><span class="p">:</span> <span class="n">pct</span><span class="p">,</span>
+                <span class="s2">"status_tier"</span><span class="p">:</span> <span class="n">tier</span><span class="p">,</span>
+                <span class="s2">"status_color"</span><span class="p">:</span> <span class="n">tier_color</span><span class="p">,</span>
+                <span class="s2">"label"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"Elevation </span><span class="si">{</span><span class="n">elev</span><span class="si">}</span><span class="s2"> ft (</span><span class="si">{</span><span class="n">pct</span><span class="si">}</span><span class="s2">% Full)"</span>
+            <span class="p">},</span>
+            <span class="s2">"geometry"</span><span class="p">:</span> <span class="n">mapping</span><span class="p">(</span><span class="n">poly</span><span class="p">)</span>
+        <span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Generated </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">contour_features</span><span class="p">)</span><span class="si">}</span><span class="s2"> discrete elevation contour slices."</span><span class="p">)</span>
+</pre></div>
+            <div class="outputs-wrapper"><div class="output-item stream-output"><pre class="notebook-output">Generated 11 discrete elevation contour slices.
+</pre></div></div></div>
+<div class="notebook-cell markdown-cell"><h2 id="step-6-spatial-simplification-export" class="notebook-h2">Step 6: Spatial Simplification & Export <a href="#step-6-spatial-simplification-export" class="anchor-link">#</a></h2>
+<p class="notebook-p">We reproject flowlines to <code class="inline-code">EPSG:5070</code> (CONUS Albers) to run <code class="inline-code">.simplify(tolerance=50)</code> (50-meter topological simplification), then reproject back to <code class="inline-code">EPSG:4326</code> for MapLibre GPU rendering.</p></div>
+
+            <div class="notebook-cell code-cell">
+              <div class="code-header">
+                <span class="prompt-in">In [7]:</span>
+                <span class="code-lang">Python 3</span>
+              </div>
+              <div class="highlight"><pre><span></span><span class="c1"># Reproject to EPSG:5070 for planar metric simplification</span>
+<span class="n">rivers_5070</span> <span class="o">=</span> <span class="n">evaluated_rivers</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">epsg</span><span class="o">=</span><span class="mi">5070</span><span class="p">)</span>
+<span class="n">rivers_5070</span><span class="p">[</span><span class="s2">"geometry"</span><span class="p">]</span> <span class="o">=</span> <span class="n">rivers_5070</span><span class="p">[</span><span class="s2">"geometry"</span><span class="p">]</span><span class="o">.</span><span class="n">simplify</span><span class="p">(</span><span class="n">tolerance</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">preserve_topology</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Reproject back to EPSG:4326 (WGS84)</span>
+<span class="n">rivers_simplified</span> <span class="o">=</span> <span class="n">rivers_5070</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">epsg</span><span class="o">=</span><span class="mi">4326</span><span class="p">)</span>
+
+<span class="c1"># Export Powell Contours GeoJSON</span>
+<span class="n">powell_contours_geojson</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"FeatureCollection"</span><span class="p">,</span>
+    <span class="s2">"features"</span><span class="p">:</span> <span class="n">contour_features</span>
+<span class="p">}</span>
+<span class="n">output_contours_path</span> <span class="o">=</span> <span class="s2">"../web/data/powell_contours.geojson"</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">"../web/data"</span><span class="p">)</span> <span class="k">else</span> <span class="s2">"web/data/powell_contours.geojson"</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_contours_path</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">powell_contours_geojson</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Exported: </span><span class="si">{</span><span class="n">output_contours_path</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">output_contours_path</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1024</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> KB)"</span><span class="p">)</span>
+
+<span class="c1"># Export Enriched River Network GeoJSON</span>
+<span class="n">output_rivers_path</span> <span class="o">=</span> <span class="s2">"../web/data/river_network.geojson"</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">"../web/data"</span><span class="p">)</span> <span class="k">else</span> <span class="s2">"web/data/river_network.geojson"</span>
+<span class="n">output_rivers_json</span> <span class="o">=</span> <span class="s2">"../web/data/river_network.json"</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">"../web/data"</span><span class="p">)</span> <span class="k">else</span> <span class="s2">"web/data/river_network.json"</span>
+
+<span class="n">export_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"name"</span><span class="p">,</span> <span class="s2">"reach"</span><span class="p">,</span> <span class="s2">"category"</span><span class="p">,</span> <span class="s2">"reach_type"</span><span class="p">,</span> <span class="s2">"re_emerged"</span><span class="p">,</span> <span class="s2">"weight"</span><span class="p">,</span> <span class="s2">"flow_cfs"</span><span class="p">,</span> <span class="s2">"gauge_id"</span><span class="p">,</span> <span class="s2">"minelev_ft"</span><span class="p">,</span> <span class="s2">"maxelev_ft"</span><span class="p">,</span> <span class="s2">"ftype"</span><span class="p">,</span> <span class="s2">"notes"</span><span class="p">,</span> <span class="s2">"geometry"</span><span class="p">]</span>
+<span class="n">rivers_export</span> <span class="o">=</span> <span class="n">rivers_simplified</span><span class="p">[[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">export_cols</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">rivers_simplified</span><span class="o">.</span><span class="n">columns</span><span class="p">]]</span>
+<span class="n">rivers_export</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span><span class="n">output_rivers_path</span><span class="p">,</span> <span class="n">driver</span><span class="o">=</span><span class="s2">"GeoJSON"</span><span class="p">)</span>
+<span class="n">rivers_export</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span><span class="n">output_rivers_json</span><span class="p">,</span> <span class="n">driver</span><span class="o">=</span><span class="s2">"GeoJSON"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Exported: </span><span class="si">{</span><span class="n">output_rivers_path</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">output_rivers_path</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1024</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> KB)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Exported: </span><span class="si">{</span><span class="n">output_rivers_json</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">output_rivers_json</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1024</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> KB)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Notebook 01 execution complete!"</span><span class="p">)</span>
+</pre></div>
+            <div class="outputs-wrapper"><div class="output-item stream-output"><pre class="notebook-output">Exported: web/data/powell_contours.geojson (5538.6 KB)
+</pre></div><div class="output-item stream-output"><pre class="notebook-output">Exported: web/data/river_network.geojson (688.0 KB)
+Exported: web/data/river_network.json (688.0 KB)
+Notebook 01 execution complete!
+</pre></div></div></div>
+      </div>
+    </main>
+
+    <!-- Right Sticky Table of Contents (1 Column) -->
+    <aside class="hidden lg:block lg:col-span-1">
+      <div class="sticky top-20 bg-white p-5 rounded-xl border border-stone-200 shadow-sm">
+        <h3 class="text-xs font-black uppercase tracking-wider text-stone-500 pb-2 border-b border-stone-200 mb-3 flex items-center justify-between">
+          <span>Table of Contents</span>
+          <span class="text-[10px] font-normal text-stone-400">Jump to section</span>
+        </h3>
+        <nav class="space-y-0.5 max-h-[calc(100vh-140px)] overflow-y-auto pr-1">
+          <a href="#01-colorado-river-basin-geospatial-topology-dynamic-shoreline-engine" class="block text-xs py-1 hover:text-sky-700 transition truncate font-bold text-stone-800" style="padding-left: 0px;">01: Colorado River Basin Geospatial Topology &amp; Dynamic Shoreline Engine</a>
+<a href="#step-1-upstream-hydrographic-navigation-via-nldi" class="block text-xs py-1 hover:text-sky-700 transition truncate font-bold text-stone-800" style="padding-left: 12px;">Step 1: Upstream Hydrographic Navigation via NLDI</a>
+<a href="#step-2-nhdplus-value-added-attributes-bed-elevation" class="block text-xs py-1 hover:text-sky-700 transition truncate font-bold text-stone-800" style="padding-left: 12px;">Step 2: NHDPlus Value Added Attributes &amp; Bed Elevation</a>
+<a href="#step-3-artificial-path-separation-topology-disaggregation" class="block text-xs py-1 hover:text-sky-700 transition truncate font-bold text-stone-800" style="padding-left: 12px;">Step 3: Artificial Path Separation &amp; Topology Disaggregation</a>
+<a href="#step-4-cataract-canyon-dynamic-re-emergence-rule" class="block text-xs py-1 hover:text-sky-700 transition truncate font-bold text-stone-800" style="padding-left: 12px;">Step 4: Cataract Canyon Dynamic Re-Emergence Rule</a>
+<a href="#step-5-in-memory-topobathymetric-slices-powell-contour-deck" class="block text-xs py-1 hover:text-sky-700 transition truncate font-bold text-stone-800" style="padding-left: 12px;">Step 5: In-Memory Topobathymetric Slices (Powell Contour Deck)</a>
+<a href="#step-6-spatial-simplification-export" class="block text-xs py-1 hover:text-sky-700 transition truncate font-bold text-stone-800" style="padding-left: 12px;">Step 6: Spatial Simplification &amp; Export</a>
+        </nav>
+        
+        <div class="mt-6 pt-4 border-t border-stone-200">
+          <div class="text-[11px] font-bold text-stone-700 mb-1.5">Research Files:</div>
+          <ul class="text-xs space-y-1 text-sky-700">
+            <li><a href="01_build_river_network.html" class="hover:underline">01. Geospatial Topology</a></li>
+            <li><a href="02_analyze_flow_and_export.html" class="hover:underline">02. Flow & Metric Engine</a></li>
+            <li><a href="03_tributary_ml_analysis.html" class="hover:underline">03. Tributary ML & Regimes</a></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-stone-100 border-t border-stone-200 py-6 text-center text-xs text-stone-500 mt-12">
+    <p>Colorado River Basin Data Portal • Research Notebooks • Open Hydrologic Science</p>
+  </footer>
+
+</body>
+</html>

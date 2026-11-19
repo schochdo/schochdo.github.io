@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Colorado River Basin: System Compendium & Knowledge Base</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="editorial.css">
+  
+  <style>
+    body {
+      background-color: #fafaf9;
+      color: #334155;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+    }
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum";
+    }
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
+    .knowledge-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+      padding: 1rem 1.25rem;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+    
+    <!-- Navigation back to summary dashboard -->
+    <div class="mb-6 flex items-center justify-between gap-4 flex-wrap">
+      <a href="./" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 transition">
+        <span>← Back to Summary Dashboard</span>
+      </a>
+      <div class="flex items-center gap-2">
+        <a href="./telemetry.html" class="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300 transition">
+          <span>Facility Database (98 Stations) ↗</span>
+        </a>
+        <a href="./map.html" class="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300 transition">
+          <span>System Map ↗</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Document Header -->
+    <header class="pb-6 border-b border-[#d6d3d1]">
+      <div class="text-[11px] font-bold tracking-[0.08em] uppercase text-[#475569] mb-1.5">
+        Master System Compendium <span class="mx-1.5 text-slate-400">•</span> Operational Hydrology, Mass Balance &amp; Law of the River
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-black text-[#0f172a] tracking-tight">
+        Colorado River Basin: Comprehensive Knowledge Base
+      </h1>
+      <p class="text-sm text-[#475569] mt-2 max-w-3xl leading-relaxed">
+        The complete physical, statutory, and operational reference behind the dashboard: from 1849 mining customs and the 1922 pluvial calculation error, to hydropeaking sine waves, reservoir slackwater surge absorption, and post-2026 cliff negotiations.
+      </p>
+      <div class="mt-3 flex items-center gap-3 text-xs text-slate-500 font-medium">
+        <span class="font-bold text-slate-800">Douglas Schoch</span>
+        <span>•</span>
+        <span>Colorado Mountain College</span>
+        <span>•</span>
+        <span>DAT1001 Fall 2026</span>
+      </div>
+
+      <!-- Quick Search Bar -->
+      <div class="mt-5 relative">
+        <input 
+          type="text" 
+          id="kb-search" 
+          placeholder="Search knowledge base (e.g., hydropeaking, Lees Ferry, 17.5 MAF, Winters doctrine, bug flows, CAP)..." 
+          class="w-full pl-9 pr-4 py-2 text-xs bg-white border border-[#cbd5e1] rounded-[3px] focus:outline-none focus:ring-2 focus:ring-[#0072B2] text-slate-800 placeholder-slate-400 shadow-sm transition"
+          oninput="filterKnowledgeBase()"
+        />
+        <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </div>
+    </header>
+
+    <!-- Jump To Navigation Bar -->
+    <nav class="sticky top-0 z-20 bg-[#fafaf9] border-b border-[#e2e8f0] py-3 my-4 flex items-center gap-2 sm:gap-3 flex-wrap" aria-label="Chapter Index">
+      <span class="text-[10px] uppercase font-bold tracking-[0.08em] text-[#64748b]">Jump To:</span>
+      <div class="flex items-center gap-2 sm:gap-3 flex-wrap text-xs font-medium">
+        <a href="#ch1" class="text-slate-700 hover:text-[#0072B2] hover:underline">1. Basin Math</a>
+        <span class="text-slate-300">•</span>
+        <a href="#ch2" class="text-slate-700 hover:text-[#0072B2] hover:underline">2. Hydropeaking</a>
+        <span class="text-slate-300">•</span>
+        <a href="#ch3" class="text-slate-700 hover:text-[#0072B2] hover:underline">3. Flood Routing</a>
+        <span class="text-slate-300">•</span>
+        <a href="#ch4" class="text-slate-700 hover:text-[#0072B2] hover:underline">4. Mass Balance &amp; RBI</a>
+        <span class="text-slate-300">•</span>
+        <a href="#ch5" class="text-slate-700 hover:text-[#0072B2] hover:underline">5. Law of the River</a>
+        <span class="text-slate-300">•</span>
+        <a href="#ch6" class="text-slate-700 hover:text-[#0072B2] hover:underline">6. Post-2026 Cliff</a>
+        <span class="text-slate-300">•</span>
+        <a href="#ch7" class="text-slate-700 hover:text-[#0072B2] hover:underline">7. Database Architecture</a>
+      </div>
+    </nav>
+
+    <!-- Document Body -->
+    <main class="space-y-10 text-xs sm:text-[13px] text-slate-700 leading-relaxed pt-2" id="kb-content">
+
+      <!-- Chapter 1: The Basin Math Rosetta Stone -->
+      <section id="ch1" class="kb-section pt-2">
+        <div class="flex items-baseline justify-between gap-3 mb-1">
+          <h2 class="text-lg font-black text-[#0f172a] tracking-tight">
+            1. The Basin Math Rosetta Stone: Paper Water vs. Wet Water
+          </h2>
+          <span class="text-[10px] font-semibold text-slate-600 bg-slate-100 border border-slate-300 px-2 py-0.5 rounded-[2px] whitespace-nowrap">
+            Hydrologic Accounting
+          </span>
+        </div>
+        <p class="text-xs text-slate-500 mb-3">
+          A step-by-step mathematical reconciliation of the 6 conflicting water figures cited in policy literature.
+        </p>
+
+        <p>
+          Water literature on the Colorado River frequently cites mutually contradictory totals (15.0, 16.0, 16.5, 17.5, 19.5, or 12.4 MAF/yr). These discrepancies stem from differing statutory scopes, treaty obligations, and the fundamental gap between legal paper entitlements and physical wet water:
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
+          <div class="knowledge-card">
+            <div class="text-[10px] font-bold text-slate-500 uppercase">15.0 MAF/yr • Core 1922 Compact</div>
+            <div class="text-sm font-black text-slate-900 mt-0.5">7.5 MAF Upper + 7.5 MAF Lower (Article III.a)</div>
+            <p class="text-[11px] text-slate-600 mt-1 leading-normal">
+              The perpetual apportionments of exclusive beneficial consumptive use signed at Santa Fe, dividing the basin at Lees Ferry, Arizona.
+            </p>
+          </div>
+          <div class="knowledge-card">
+            <div class="text-[10px] font-bold text-slate-500 uppercase">16.0 MAF/yr • Statutory Lower Basin Add-On</div>
+            <div class="text-sm font-black text-slate-900 mt-0.5">15.0 MAF + 1.0 MAF (Article III.b)</div>
+            <p class="text-[11px] text-slate-600 mt-1 leading-normal">
+              Article III(b) granted the Lower Basin the right to increase its annual beneficial consumptive use by 1,000,000 acre-feet, intended to accommodate Arizona's Gila River tributary use.
+            </p>
+          </div>
+          <div class="knowledge-card">
+            <div class="text-[10px] font-bold text-slate-500 uppercase">16.5 MAF/yr • Core Compact + 1944 Treaty</div>
+            <div class="text-sm font-black text-slate-900 mt-0.5">15.0 MAF + 1.5 MAF Mexico (Article III.c)</div>
+            <p class="text-[11px] text-slate-600 mt-1 leading-normal">
+              The 1944 Mexican Water Treaty committed 1.5 MAF/yr delivered at Morelos Dam. Under Article III(c), if surplus water is insufficient, the burden is split equally between basins (0.75 MAF each).
+            </p>
+          </div>
+          <div class="knowledge-card border-t-[3px] border-t-[#0072B2]">
+            <div class="text-[10px] font-bold text-[#0072B2] uppercase">17.5 MAF/yr • Total Statutory Paper Rights</div>
+            <div class="text-sm font-black text-[#0072B2] mt-0.5">7.5 (UB) + 7.5 (LB III.a) + 1.0 (LB III.b) + 1.5 (Mexico)</div>
+            <p class="text-[11px] text-slate-600 mt-1 leading-normal">
+              The complete theoretical maximum legal claims under federal statutes and international treaties, excluding reservoir evaporation.
+            </p>
+          </div>
+          <div class="knowledge-card border-t-[3px] border-t-slate-800">
+            <div class="text-[10px] font-bold text-slate-500 uppercase">~19.5 MAF/yr • Gross System Demand</div>
+            <div class="text-sm font-black text-slate-900 mt-0.5">17.5 MAF Paper Rights + ~2.0 MAF System Losses</div>
+            <p class="text-[11px] text-slate-600 mt-1 leading-normal">
+              Includes ~1.5 MAF/yr of reservoir evaporation (Powell, Mead, Mohave, Havasu) and ~0.5 MAF/yr of riparian transpiration and channel seepage.
+            </p>
+          </div>
+          <div class="knowledge-card border-t-[3px] border-t-[#D55E00]">
+            <div class="text-[10px] font-bold text-[#D55E00] uppercase">~12.4 MAF/yr • 21st-Century Wet Reality</div>
+            <div class="text-sm font-black text-[#D55E00] mt-0.5">Observed Natural Inflow (2000–2026 Average)</div>
+            <p class="text-[11px] text-slate-600 mt-1 leading-normal">
+              USGS naturalized flow records show 21st-century inflow averages ~12.4 MAF/yr, creating a persistent, structural overdraft of <strong>-5.1 MAF/yr</strong> against statutory promises.
+            </p>
+          </div>
+        </div>
+
+        <div class="p-3.5 bg-[#f5f5f4] border-l-[3px] border-l-[#334155] rounded-none my-3">
+          <div class="font-bold text-xs text-[#0f172a] mb-0.5">The Physical Dimensional Conversion Bridge:</div>
+          <p class="text-xs text-slate-700 m-0 leading-relaxed">
+            Instantaneous streamflow rates ($Q$, in cubic feet per second, cfs) convert to annualized cumulative volumes ($V$, in Acre-Feet, AF or Million Acre-Feet, MAF) through physical integration over time:
+            <br>
+            <span class="font-semibold text-slate-900">1 cfs sustained for 1 continuous year = 723.97 AF &approx; 0.000724 MAF</span>.
+            <br>
+            Conversely, to deliver 1.0 MAF over 1 year requires a continuous, non-stop discharge of <strong>1,381.25 cfs</strong>.
+          </p>
+        </div>
+      </section>
+
+      <!-- Chapter 2: Dam Hydrodynamics & The Diurnal Peaking Wave -->
+      <section id="ch2" class="kb-section pt-7 border-t border-[#d6d3d1]">
+        <div class="flex items-baseline justify-between gap-3 mb-1">
+          <h2 class="text-lg font-black text-[#0f172a] tracking-tight">
+            2. Dam Hydrodynamics &amp; The Diurnal Peaking Wave
+          </h2>
+          <span class="text-[10px] font-semibold text-[#475569] bg-[#f1f5f9] border border-[#cbd5e1] px-2 py-0.5 rounded-[2px] whitespace-nowrap">
+            Operational Engineering
+          </span>
+        </div>
+        <p class="text-xs text-slate-500 mb-3">
+          Why tailwater gages below hydroelectric dams pulse in 24-hour cycles that round into smooth kinematic sine waves.
+        </p>
+
+        <p>
+          When inspecting high-resolution 15-minute USGS telemetry below Glen Canyon Dam (Lees Ferry, <code>09380000</code>) or Hoover Dam, users immediately observe regular 24-hour cyclic oscillations. This is not natural river variability; it is the <strong>diurnal hydropeaking wave</strong> driven by grid economics and statutory environmental constraints:
+        </p>
+
+        <div class="space-y-2.5 mt-3">
+          <div class="knowledge-card">
+            <strong class="text-slate-900">1. Peaking Economics &amp; Wholesale Spot Power Pricing:</strong>
+            <p class="text-xs text-slate-600 mt-1">
+              Glen Canyon Dam (1,320 MW) and Hoover Dam (2,080 MW) operate as high-value "peaking" power plants for the Western Area Power Administration (WAPA). Electricity cannot be easily stored on the Western Interconnection grid. Wholesale spot electricity prices surge during peak demand hours (12:00 PM to 8:00 PM, when air conditioning and commercial loads peak) and collapse in the early morning hours (1:00 AM to 5:00 AM). Turbines open to generate maximum power during high-price hours, surging flow from 7,000 cfs up to 14,000+ cfs, then throttle back overnight.
+            </p>
+          </div>
+
+          <div class="knowledge-card">
+            <strong class="text-slate-900">2. Statutory Ramp-Rate Limits (1996 ROD &amp; 2016 LTEMP):</strong>
+            <p class="text-xs text-slate-600 mt-1">
+              Before 1991, releases swung wildly from 1,000 cfs to 31,500 cfs in minutes, eroding Grand Canyon sandbars and stranding endangered humpback chub. Under the 1996 Record of Decision (ROD) and 2016 Long-Term Experimental and Management Plan (LTEMP), federal regulations legally constrain dam operations:
+            </p>
+            <ul class="list-disc list-inside text-xs text-slate-600 mt-1 space-y-0.5 ml-2">
+              <li><strong>Maximum Up-Ramp Rate:</strong> 4,000 cfs per hour.</li>
+              <li><strong>Maximum Down-Ramp Rate:</strong> 1,500 cfs per hour (preventing sandbar collapse due to pore-water suction).</li>
+              <li><strong>Daily Fluctuation Band:</strong> Capped between 5,000 and 8,000 cfs/day depending on the monthly release volume.</li>
+            </ul>
+          </div>
+
+          <div class="knowledge-card">
+            <strong class="text-slate-900">3. Kinematic Wave Dispersion (Rounding into Sine Waves):</strong>
+            <p class="text-xs text-slate-600 mt-1">
+              The turbine governors produce a trapezoidal release schedule. However, as the pulse travels down the sandstone corridor of Marble Canyon and Grand Canyon, channel friction, eddies, and channel storage round off the sharp corners into a smooth, sinusoidal kinematic wave that propagates downstream at roughly 3 to 4 miles per hour.
+            </p>
+          </div>
+
+          <div class="knowledge-card">
+            <strong class="text-slate-900">4. Re-Regulation: Davis &amp; Parker Dams vs. Unregulated Wave Transit:</strong>
+            <p class="text-xs text-slate-600 mt-1">
+              Below Glen Canyon Dam, the river flows unobstructed through 240 miles of Grand Canyon into Lake Mead, taking 36 to 48 hours for the wave to attenuate into the reservoir pool. Below Hoover Dam, however, massive peaking pulses cannot be released directly to agricultural canals. The Bureau of Reclamation uses <strong>Lake Mohave (Davis Dam)</strong> and <strong>Lake Havasu (Parker Dam)</strong> as physical "afterbays" to swallow Hoover's power swings and deliver steady, flat flows to the Colorado River Aqueduct and Central Arizona Project.
+            </p>
+          </div>
+
+          <div class="knowledge-card">
+            <strong class="text-slate-900">5. Summer Weekend "Bug Flows":</strong>
+            <p class="text-xs text-slate-600 mt-1">
+              Under LTEMP, during summer weekends (May through August), operators hold releases steady at low levels (~8,000 cfs) rather than peaking for power. This keeps shoreline gravels continuously submerged, preventing caddisfly and mayfly eggs from drying out in desert heat and restoring the aquatic food web for rainbow trout and native fish.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Chapter 3: Flood Pulse Routing & Reservoir Buffering Physics -->
+      <section id="ch3" class="kb-section pt-7 border-t border-[#d6d3d1]">
+        <div class="flex items-baseline justify-between gap-3 mb-1">
+          <h2 class="text-lg font-black text-[#0f172a] tracking-tight">
+            3. Flood Pulse Routing &amp; Reservoir Buffering Physics
+          </h2>
+          <span class="text-[10px] font-semibold text-[#475569] bg-[#f1f5f9] border border-[#cbd5e1] px-2 py-0.5 rounded-[2px] whitespace-nowrap">
+            Slackwater Dynamics
+          </span>
+        </div>
+        <p class="text-xs text-slate-500 mb-3">
+          How massive tributary flash floods are swallowed by reservoirs while controlled dam tailwaters remain flat.
+        </p>
+
+        <p>
+          During the 30-day temporal replay, users can observe extreme desert flash floods—such as the November 3 surge on the San Juan River near Bluff (<code>09379500</code>), which crested at <strong>32,900 cfs</strong>. Concurrently, the gage at Lees Ferry (<code>09380000</code>) immediately downstream remained perfectly flat at 6,990 cfs. Two physical laws explain this behavior:
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 my-3">
+          <div class="knowledge-card">
+            <div class="font-bold text-xs text-slate-900">Lake Powell Slackwater Buffering</div>
+            <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+              The San Juan River discharges directly into the east arm of Lake Powell near Piute Farms. When a 32,900 cfs flood hits the reservoir pool, its kinetic velocity drops to zero ($v \approx 0$). Lake Powell spans over 160,000 surface acres; absorbing a 30,000 cfs flood for 24 hours raises the lake surface by barely <strong>0.3 inches</strong>. Releases at Glen Canyon Dam are dictated strictly by the monthly 24-Month Study schedule, completely decoupling upstream flash floods from downstream Lees Ferry flow.
+            </p>
+          </div>
+          <div class="knowledge-card">
+            <div class="font-bold text-xs text-slate-900">Gila River Elevation Decoupling</div>
+            <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+              Novices often ask if Gila River floods can refill Lake Mead or Lake Powell. Geomorphology makes this physically impossible: the Gila River joins the Colorado River at Dome/Yuma at an elevation of <strong>120 feet MSL</strong>, over 350 miles downstream of Hoover Dam (1,221 ft MSL) and Glen Canyon Dam (3,700 ft MSL). Water cannot flow uphill; Gila flows bypass all storage and discharge directly into Mexico or the Colorado Delta.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Chapter 4: Dimensional Standards & Richards-Baker Flashiness Index -->
+      <section id="ch4" class="kb-section pt-7 border-t border-[#d6d3d1]">
+        <div class="flex items-baseline justify-between gap-3 mb-1">
+          <h2 class="text-lg font-black text-[#0f172a] tracking-tight">
+            4. Dimensional Standards &amp; The Richards-Baker Flashiness Index
+          </h2>
+          <span class="text-[10px] font-semibold text-[#475569] bg-[#f1f5f9] border border-[#cbd5e1] px-2 py-0.5 rounded-[2px] whitespace-nowrap">
+            Statistical Physics
+          </span>
+        </div>
+        <p class="text-xs text-slate-500 mb-3">
+          Quantifying hydrograph volatility and verifying hydrologic mass-balance closure at all river confluences.
+        </p>
+
+        <p>
+          The platform evaluates streamflow regime behavior across all dashboard stations using the <strong>Richards-Baker Flashiness Index (RBI)</strong>:
+        </p>
+        <div class="p-3 bg-white border border-[#cbd5e1] rounded font-mono text-xs text-center my-2 text-slate-800">
+          RBI = &Sigma; |q<sub>t</sub> - q<sub>t-1</sub>| / &Sigma; q<sub>t</sub>
+        </div>
+        <p class="text-xs text-slate-600">
+          The index measures the oscillations in daily discharge relative to total cumulative volume. In the Colorado River Basin, facilities fall into 4 distinct hydrologic regimes:
+        </p>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 my-3 text-center tabular-nums">
+          <div class="knowledge-card">
+            <div class="text-[9.5px] font-bold text-sky-700 uppercase">Regulated Tailwater</div>
+            <div class="text-xs font-black text-slate-900 mt-0.5">RBI &lt; 0.020</div>
+            <div class="text-[10px] text-slate-500 mt-0.5">Lees Ferry (0.0146)</div>
+          </div>
+          <div class="knowledge-card">
+            <div class="text-[9.5px] font-bold text-emerald-700 uppercase">Snowmelt Runoff</div>
+            <div class="text-xs font-black text-slate-900 mt-0.5">0.020 &le; RBI &lt; 0.060</div>
+            <div class="text-[10px] text-slate-500 mt-0.5">Cameo, Cisco, Jensen</div>
+          </div>
+          <div class="knowledge-card">
+            <div class="text-[9.5px] font-bold text-amber-700 uppercase">Flashy Desert Basin</div>
+            <div class="text-xs font-black text-slate-900 mt-0.5">RBI &ge; 0.060</div>
+            <div class="text-[10px] text-slate-500 mt-0.5">Little CO, San Juan, Paria</div>
+          </div>
+          <div class="knowledge-card">
+            <div class="text-[9.5px] font-bold text-red-700 uppercase">Storage Impoundment</div>
+            <div class="text-xs font-black text-slate-900 mt-0.5">RBI &approx; 0.000</div>
+            <div class="text-[10px] text-slate-500 mt-0.5">Mead, Powell, Navajo</div>
+          </div>
+        </div>
+
+        <div class="p-3 bg-slate-50 border border-slate-200 rounded text-xs">
+          <strong class="text-slate-900">Hydrologic Mass-Balance Closure at Confluences:</strong>
+          <p class="text-slate-600 mt-0.5 leading-relaxed">
+            At any junction along the river network, mass conservation requires that:
+            <br>
+            <span class="font-mono text-slate-800">Q<sub>downstream</sub> = Q<sub>mainstem_upstream</sub> + &Sigma; Q<sub>tributaries</sub> &plusmn; &Delta;Q</span>
+            <br>
+            Where &Delta;Q accounts for ungaged groundwater accretion/springs (&Delta;Q &gt; 0) or canal diversions, channel seepage, and open-water evaporation (&Delta;Q &lt; 0).
+          </p>
+        </div>
+      </section>
+
+      <!-- Chapter 5: The Law of the River: Compacts, Treaties & Court Cases -->
+      <section id="ch5" class="kb-section pt-7 border-t border-[#d6d3d1]">
+        <div class="flex items-baseline justify-between gap-3 mb-1">
+          <h2 class="text-lg font-black text-[#0f172a] tracking-tight">
+            5. The Law of the River: Compacts, Treaties &amp; Landmark Court Decrees
+          </h2>
+          <span class="text-[10px] font-semibold text-[#475569] bg-[#f1f5f9] border border-[#cbd5e1] px-2 py-0.5 rounded-[2px] whitespace-nowrap">
+            Statutory Framework
+          </span>
+        </div>
+        <p class="text-xs text-slate-500 mb-3">
+          The century-long legal architecture governing every drop of water in the basin.
+        </p>
+
+        <div class="space-y-3">
+          <div class="knowledge-card">
+            <strong class="text-slate-900">A. 1849 Gold Rush Mining Customs &amp; The "Use It or Lose It" Trap:</strong>
+            <p class="text-xs text-slate-600 mt-1">
+              Western water law originated in California mining camps: "First in time, first in right" (prior appropriation) replaced English riparian common law. Crucially, statutory law dictates that if an appropriator diverts less than their full paper right, they risk forfeiting the unused portion to subsequent claimants. This creates a perverse disincentive to conserve, actively encouraging flood-irrigation of low-value forage crops (alfalfa) in desert heat to defend senior paper priority.
+            </p>
+          </div>
+
+          <div class="knowledge-card">
+            <strong class="text-slate-900">B. Wyoming v. Colorado (1922) — The Catalyst Case:</strong>
+            <p class="text-xs text-slate-600 mt-1">
+              In June 1922, the Supreme Court ruled in <em>Wyoming v. Colorado</em> (259 U.S. 419) that prior appropriation applied across state lines regardless of state borders. Upstream states realized that California's rapid agricultural growth in the Imperial Valley would legally monopolize the entire Colorado River before Upper Basin states could develop. Upper Basin states refused to allow federal dam construction without an interstate compact dividing the river.
+            </p>
+          </div>
+
+          <div class="knowledge-card">
+            <strong class="text-slate-900">C. The 1922 Colorado River Compact:</strong>
+            <p class="text-xs text-slate-600 mt-1">
+              Signed in Santa Fe, New Mexico, splitting the basin at Lees Ferry, Arizona. Apportioned 7.5 MAF/yr to the Upper Basin (III.a), 7.5 MAF/yr to the Lower Basin (III.a), plus an extra 1.0 MAF/yr to the Lower Basin (III.b). Imposed the Article III(d) mandate that the Upper Basin shall not cause the flow at Lees Ferry to be depleted below <strong>75.0 MAF over any consecutive 10-year period</strong>.
+            </p>
+          </div>
+
+          <div class="knowledge-card">
+            <strong class="text-slate-900">D. Winters v. United States (1908) &amp; Tribal Reserved Rights:</strong>
+            <p class="text-xs text-slate-600 mt-1">
+              Under the <em>Winters</em> doctrine, federal establishment of Indian reservations carried implied water rights with priority dating to reservation creation. Sidelined in 1922 (Article VII), the basin's 30 federally recognized tribes hold recognized rights to <strong>~3.2 MAF/yr</strong> (&gt;25% of basin flow)—many senior to municipal rights, with several claims still awaiting quantification and infrastructure funding.
+            </p>
+          </div>
+
+          <div class="knowledge-card">
+            <strong class="text-slate-900">E. 1928 Boulder Canyon Act, 1944 Mexican Treaty &amp; 1948 Upper Basin Compact:</strong>
+            <p class="text-xs text-slate-600 mt-1">
+              The 1928 Act authorized Hoover Dam and divided the Lower Basin: CA (4.4 MAF), AZ (2.8 MAF), NV (0.3 MAF). The 1944 Treaty guaranteed 1.5 MAF/yr to Mexico. In 1948, the Upper Basin Compact adopted a resilient <strong>percentage allocation model</strong>: Colorado (51.75%), Utah (23.00%), Wyoming (14.00%), and New Mexico (11.25%). In 1956, the CRSP Act authorized Glen Canyon Dam as Upper Basin drought storage to fulfill the 10-year Lees Ferry delivery obligation.
+            </p>
+          </div>
+
+          <div class="knowledge-card">
+            <strong class="text-slate-900">F. Arizona v. California (1963 / 1964 Decree) &amp; CAP Subordination (1968):</strong>
+            <p class="text-xs text-slate-600 mt-1">
+              The Supreme Court held that the 1928 Act apportioned <em>only the mainstream Colorado River</em>, leaving the Gila River exclusively to Arizona. It confirmed California's 1901 Present Perfected Rights (IID ~3.1 MAF), crowned the Secretary of the Interior as sole Lower Basin Water Master, and applied the Practicably Irrigable Acreage (PIA) standard for tribal rights. To fund the Central Arizona Project (CAP) in 1968, Arizona accepted a fatal deal: <strong>CAP deliveries are legally subordinate to California's 4.4 MAF allocation</strong>, forcing Arizona to take the first and deepest cuts during shortages.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Chapter 6: Modern Drought Frameworks & Post-2026 Cliff -->
+      <section id="ch6" class="kb-section pt-7 border-t border-[#d6d3d1]">
+        <div class="flex items-baseline justify-between gap-3 mb-1">
+          <h2 class="text-lg font-black text-[#0f172a] tracking-tight">
+            6. Modern Drought Frameworks &amp; The Post-2026 Operating Cliff
+          </h2>
+          <span class="text-[10px] font-semibold text-[#475569] bg-[#f1f5f9] border border-[#cbd5e1] px-2 py-0.5 rounded-[2px] whitespace-nowrap">
+            Current Negotiations
+          </span>
+        </div>
+        <p class="text-xs text-slate-500 mb-3">
+          The expiration of interim guidelines and the legal battle to eliminate the structural deficit.
+        </p>
+
+        <p>
+          The 2007 Interim Guidelines (which coupled Glen Canyon releases to Lake Mead elevations) and the 2019 Drought Contingency Plans (DCP) expire simultaneously on <strong>December 31, 2026</strong>. Because Powell and Mead storage dropped from 95% full (50 MAF) in 1999 to ~25% (13 MAF) in 2022, the basin can no longer buffer deficits by draining storage.
+        </p>
+
+        <div class="knowledge-card my-3">
+          <div class="font-bold text-xs text-slate-900">The Two Post-2026 Pillars Under Federal NEPA Review:</div>
+          <ol class="list-decimal list-inside text-xs text-slate-600 mt-2 space-y-1 ml-1">
+            <li><strong>Lower Basin Evaporation Debiting:</strong> Currently, ~1.5 MAF/yr of reservoir evaporation and transit losses are ignored in Lower Basin accounting. Proposed rules mandate deducting evaporation directly from Lower Basin state deliveries.</li>
+            <li><strong>Structural Reductions of 2.0 to 4.0 MAF/yr:</strong> Permanent, basin-wide consumption cuts are required to align paper demand with the 12.4 MAF 21st-century wet water supply.</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- Chapter 7: Geodatabase & Cartographic Architecture -->
+      <section id="ch7" class="kb-section pt-7 border-t border-[#d6d3d1]">
+        <div class="flex items-baseline justify-between gap-3 mb-1">
+          <h2 class="text-lg font-black text-[#0f172a] tracking-tight">
+            7. Geodatabase Architecture &amp; Data Provenance
+          </h2>
+          <span class="text-[10px] font-semibold text-[#475569] bg-[#f1f5f9] border border-[#cbd5e1] px-2 py-0.5 rounded-[2px] whitespace-nowrap">
+            Data Engineering
+          </span>
+        </div>
+        <p class="text-xs text-slate-500 mb-3">
+          How 98 telemetry nodes, 83 river reaches, and multi-period columnar replay matrices are structured.
+        </p>
+
+        <p>
+          To maintain zero hosting cost and avoid sleeping server instances, the platform operates as a high-performance static geodatabase deployed on GitHub Pages. Data assets are queried directly by the client:
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 my-3">
+          <div class="knowledge-card">
+            <div class="font-bold text-xs text-slate-800">Master River Network GeoJSON</div>
+            <div class="text-[11px] font-mono text-slate-500 mt-0.5">web/data/river_network.geojson</div>
+            <p class="text-[11px] text-slate-600 mt-1">
+              83 topologically snapped reaches (55 tributaries, 21 mainstem, 7 submerged thalwegs) with 0.00m tolerance and downstream direction vectors.
+            </p>
+          </div>
+          <div class="knowledge-card">
+            <div class="font-bold text-xs text-slate-800">Telemetry Hierarchy &amp; Flashiness</div>
+            <div class="text-[11px] font-mono text-slate-500 mt-0.5">web/data/station_hierarchy.json</div>
+            <p class="text-[11px] text-slate-600 mt-1">
+              Indexes all 98 facilities across 6 Sentinel Tiers and Richards-Baker Flashiness scores with 366-day daily mean normals.
+            </p>
+          </div>
+          <div class="knowledge-card">
+            <div class="font-bold text-xs text-slate-800">7-Day Flow Replay Matrix</div>
+            <div class="text-[11px] font-mono text-slate-500 mt-0.5">web/data/replay_7d.json (81.9 KB)</div>
+            <p class="text-[11px] text-slate-600 mt-1">
+              Hourly resolution matrix across 70 USGS stations (170 timesteps) with zero null holes, downsampled for 60 FPS playback.
+            </p>
+          </div>
+          <div class="knowledge-card">
+            <div class="font-bold text-xs text-slate-800">30-Day Flow Replay Matrix</div>
+            <div class="text-[11px] font-mono text-slate-500 mt-0.5">web/data/replay_30d.json (166.4 KB)</div>
+            <p class="text-[11px] text-slate-600 mt-1">
+              2-hour resolution matrix capturing flash floods and reservoir attenuation across 362 timesteps and 25,340 observations.
+            </p>
+          </div>
+        </div>
+
+        <div class="p-3 bg-white border border-[#cbd5e1] rounded text-xs flex items-center justify-between gap-3 flex-wrap">
+          <div>
+            <strong class="text-slate-900">Need direct programmatic API access?</strong>
+            <div class="text-[11px] text-slate-500">Query live feeds via USGS NWIS, USBR, or download our clean datasets.</div>
+          </div>
+          <a href="./telemetry.html" class="px-3 py-1.5 rounded bg-slate-900 text-white font-semibold text-xs hover:bg-slate-800 transition">
+            Open Facility Database Explorer &amp; Data Exports ↗
+          </a>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Document Footer -->
+    <footer class="pt-8 mt-12 border-t border-[#d6d3d1] flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500">
+      <div>
+        Sources: USGS NWIS, U.S. Bureau of Reclamation, CDWR HydroBase &amp; Supreme Court Consolidated Decrees
+      </div>
+      <div>
+        Academic Standard • Douglas Schoch (DAT1001 Fall 2026)
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    function filterKnowledgeBase() {
+      const q = document.getElementById('kb-search').value.toLowerCase().trim();
+      const sections = document.querySelectorAll('.kb-section');
+      
+      if (!q) {
+        sections.forEach(s => s.style.display = '');
+        return;
+      }
+
+      sections.forEach(s => {
+        const text = s.textContent.toLowerCase();
+        s.style.display = text.includes(q) ? '' : 'none';
+      });
+    }
+  </script>
+
+</body>
+</html>

@@ -20,5 +20,8 @@ pnpm-debug.log*
 # macOS-specific files
 .DS_Store
 
+# Colorado River local cache
+public/colorado_river/data/.cache_usgs*/
+
 # jetbrains setting folder
 .idea/

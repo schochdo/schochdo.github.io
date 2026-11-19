@@ -219,6 +219,18 @@
       "health_label": "High Flow",
       "health_color": "#1D4ED8",
       "health_tier": "high"
+    },
+    "09342500": {
+      "flow_cfs": 940.0,
+      "stage_ft": 4.25,
+      "timestamp": "2026-11-06 20:00:00-07:00",
+      "name": "San Juan River at Pagosa Springs, CO",
+      "river": "San Juan River Headwaters",
+      "historical_median_cfs": 107.0,
+      "pct_of_median": 878.5,
+      "health_label": "High Flow",
+      "health_color": "#059669",
+      "health_tier": "high_flow"
     }
   },
   "reach_deltas": [

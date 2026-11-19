@@ -1,0 +1,297 @@
+/* ==============================================================
+   EDITORIAL DESIGN SYSTEM (Edward Tufte / NYT Editorial Standard)
+   ============================================================== */
+
+:root {
+  --canvas-bg: #fafaf9;
+  --surface-bg: #ffffff;
+  --ink-heading: #0f172a;
+  --ink-body: #334155;
+  --ink-muted: #64748b;
+  --ink-subtle: #94a3b8;
+  --hairline: #e2e8f0;
+  --hairline-dark: #d6d3d1;
+  --radius-card: 3px;
+  --radius-button: 2px;
+  --radius-tag: 2px;
+}
+
+/* 1. Canvas & Ink Foundations */
+body {
+  background-color: var(--canvas-bg);
+  color: var(--ink-body);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ink-heading);
+}
+
+/* 2. Tabular Numbers for Metrics, Years, and Hydrologic Accounting */
+.tabular-nums, [data-metric], .stat-val, .metric-val, .law-stat-val, td, th {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* 3. Kill "Bubble-Wrap" Rounded Borders across UI Cards & Containers */
+.card, .card-academic, .stat-card, .editorial-card,
+.modal-card, .rounded-xl, .rounded-2xl, .rounded-3xl, .rounded-lg {
+  border-radius: var(--radius-card) !important;
+}
+
+/* Restrained radii for buttons, badges, and tags */
+button:not(.circle-btn):not(#compass-container button),
+.tag, .badge, .law-tag, .api-tag {
+  border-radius: var(--radius-button) !important;
+}
+
+/* 4. Hairlines Instead of Drop Shadows */
+.shadow-2xl, .shadow-xl, .shadow-lg, .shadow-md, .shadow-sm, .shadow-xs, .shadow {
+  box-shadow: none !important;
+}
+
+.border-hairline {
+  border: 1px solid var(--hairline);
+}
+.border-hairline-dark {
+  border: 1px solid var(--hairline-dark);
+}
+
+/* 5. Law of the River & Editorial Document Styling */
+.law-page-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 36px 24px 64px 24px;
+}
+
+.law-header-block {
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--hairline-dark);
+}
+
+.law-kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.law-kicker-dot {
+  color: #94a3b8;
+}
+
+.law-title {
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--ink-heading);
+  margin-top: 6px;
+  margin-bottom: 6px;
+  line-height: 1.25;
+}
+
+.law-subtitle {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-body);
+  max-width: 780px;
+}
+
+/* Sticky / Clean Normal Flow Jump-To Index */
+.law-jump-bar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--canvas-bg);
+  border-bottom: 1px solid var(--hairline);
+  padding: 10px 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.law-jump-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.law-jump-links {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.law-jump-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: #334155;
+  text-decoration: none;
+  transition: color 0.15s ease;
+  white-space: nowrap;
+}
+
+.law-jump-link:hover {
+  color: #0072B2;
+  text-decoration: underline;
+}
+
+/* Flattened Chapter Sections */
+.law-chapter {
+  padding-top: 28px;
+  margin-top: 32px;
+  border-top: 1px solid var(--hairline-dark);
+}
+
+.law-chapter:first-of-type {
+  border-top: none;
+  margin-top: 16px;
+  padding-top: 0;
+}
+
+.law-chapter-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.law-chapter-title {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--ink-heading);
+  margin: 0;
+}
+
+.law-chapter-subtitle {
+  font-size: 12px;
+  color: var(--ink-muted);
+  line-height: 1.45;
+  margin-top: 3px;
+  margin-bottom: 14px;
+}
+
+/* Subtle single-line label for Legal Hierarchy */
+.law-tag-hierarchy {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  white-space: nowrap;
+  border-radius: var(--radius-tag);
+  padding: 2.5px 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+/* Chapter 1 Left-Bordered Editorial Note */
+.law-callout-note {
+  border-left: 3px solid #334155;
+  background: #f5f5f4;
+  padding: 14px 18px;
+  border-radius: 0;
+  margin: 16px 0;
+}
+
+.law-callout-note-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 4px;
+}
+
+.law-callout-note-text {
+  font-size: 12px;
+  line-height: 1.55;
+  color: #334155;
+  margin: 0;
+}
+
+/* 6-Metric Strip (Uniform White + 1px Border + 3px Radius + Top Accent Border) */
+.law-metrics-strip {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 16px 0;
+}
+
+@media (min-width: 640px) {
+  .law-metrics-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .law-metrics-strip {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+.law-stat-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 3px;
+  padding: 10px 12px;
+  text-align: center;
+}
+
+.law-stat-card-total {
+  border-top: 3px solid #0072B2;
+}
+
+.law-stat-card-inflow {
+  border-top: 3px solid #D55E00;
+}
+
+.law-stat-card-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+  margin-bottom: 2px;
+}
+
+.law-stat-card-val {
+  font-size: 13px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+/* Priority list items (unboxed with hairlines) */
+.law-item-box {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 3px;
+  padding: 12px 14px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: #334155;
+}
+
+/* Chapter 5 Italic Quote Box */
+.law-quote-editorial {
+  border-left: 3px solid #0072B2;
+  background: #f8fafc;
+  padding: 12px 16px;
+  border-radius: 0;
+  font-style: italic;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #0f172a;
+  margin: 16px 0;
+}
