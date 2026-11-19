@@ -290,30 +290,39 @@
           <!-- 1. Background State Boundaries & Regional Watermarks -->
           <g id="state-layer">
             <!-- WY-UT/CO border (41st parallel) -->
-            <line x1="350" y1="82" x2="1240" y2="82" class="state-line" />
+            <line x1="360" y1="82" x2="1240" y2="82" class="state-line" />
             <!-- UT-CO border (109th meridian) -->
             <line x1="900" y1="82" x2="900" y2="351" class="state-line" />
-            <!-- NV-UT border (114th meridian) -->
-            <line x1="350" y1="82" x2="350" y2="351" class="state-line" />
+            <!-- NV-UT border (114th meridian from 42° N to 37° N) -->
+            <line x1="360" y1="82" x2="360" y2="351" class="state-line" />
             <!-- UT/AZ border (37th parallel) -->
-            <line x1="350" y1="351" x2="900" y2="351" class="state-line" />
-            <!-- CO-NM border -->
+            <line x1="360" y1="351" x2="900" y2="351" class="state-line" />
+            <!-- CO-NM border (37th parallel) -->
             <line x1="900" y1="351" x2="1240" y2="351" class="state-line" />
-            <!-- AZ-NM border -->
+            <!-- AZ-NM border (109th meridian) -->
             <line x1="900" y1="351" x2="900" y2="671" class="state-line" />
-            <!-- NV-CA border -->
-            <line x1="350" y1="351" x2="260" y2="430" class="state-line" />
-            <!-- US-Mexico International Boundary -->
-            <line x1="160" y1="671" x2="900" y2="671" class="state-line" stroke-width="1.8" stroke="#fca5a5" />
 
-            <!-- State Watermark Names -->
+            <!-- NV-AZ border: 114th meridian drops south from 37th parallel into Lake Mead, then runs down river through Hoover Dam -->
+            <path d="M 360,351 L 360,430 L 480,515" class="state-line" />
+            <line x1="480" y1="515" x2="480" y2="575" class="state-line" stroke="#94a3b8" stroke-dasharray="4 4" />
+
+            <!-- NV-CA diagonal border (from Colorado River at ~35° N near Laughlin/Needles northwest toward Lake Tahoe) -->
+            <line x1="480" y1="575" x2="140" y2="370" class="state-line" />
+
+            <!-- CA-AZ border (down the Colorado River from ~35° N to Mexican Border) -->
+            <line x1="480" y1="575" x2="480" y2="671" class="state-line" stroke="#94a3b8" stroke-dasharray="4 4" />
+
+            <!-- US-Mexico International Boundary -->
+            <line x1="120" y1="671" x2="900" y2="671" class="state-line" stroke-width="1.8" stroke="#fca5a5" />
+
+            <!-- State Watermark Names (Positioned accurately inside each state jurisdiction) -->
             <text id="state-wy" x="750" y="32" class="state-name" text-anchor="middle">WYOMING</text>
             <text id="state-co" x="1140" y="225" class="state-name" text-anchor="middle">COLORADO</text>
             <text id="state-ut" x="465" y="160" class="state-name" text-anchor="middle">UTAH</text>
             <text id="state-nm" x="1070" y="415" class="state-name" text-anchor="middle">NEW MEXICO</text>
-            <text id="state-az" x="750" y="555" class="state-name" text-anchor="middle">ARIZONA</text>
-            <text id="state-nv" x="230" y="335" class="state-name" text-anchor="middle">NEVADA</text>
-            <text id="state-ca" x="150" y="480" class="state-name" text-anchor="middle">CALIFORNIA</text>
+            <text id="state-nv" x="250" y="390" class="state-name" text-anchor="middle">NEVADA</text>
+            <text id="state-az" x="790" y="550" class="state-name" text-anchor="middle">ARIZONA</text>
+            <text id="state-ca" x="150" y="450" class="state-name text-[12px]" text-anchor="middle">CALIFORNIA</text>
             <text id="state-baja" x="240" y="715" class="state-name text-[11px]" text-anchor="middle">BAJA CALIFORNIA</text>
             <text id="state-mex" x="830" y="715" class="state-name text-[11px]" text-anchor="middle">MEXICO</text>
           </g>
@@ -326,9 +335,9 @@
             <text x="380" y="296" fill="#64748b" font-size="9" font-weight="500">0.38 MAF / yr lost to desert sun</text>
 
             <!-- Lake Mead Evaporation Plume -->
-            <path id="loss-mead" class="loss-path" d="M 445,535 L 360,505 L 300,505" stroke="#64748b" stroke-width="3" stroke-dasharray="6 4" marker-end="url(#arrow-loss)" />
-            <text x="290" y="501" fill="#475569" font-size="10.5" font-weight="700" text-anchor="end">Lake Mead Evaporation &amp; Loss</text>
-            <text x="290" y="514" fill="#64748b" font-size="9" font-weight="500" text-anchor="end">0.65 MAF / yr lost to desert sun</text>
+            <path id="loss-mead" class="loss-path" d="M 445,532 L 360,498 L 300,498" stroke="#64748b" stroke-width="3" stroke-dasharray="6 4" marker-end="url(#arrow-loss)" />
+            <text x="290" y="494" fill="#475569" font-size="10.5" font-weight="700" text-anchor="end">Lake Mead Evaporation &amp; Loss</text>
+            <text x="290" y="507" fill="#64748b" font-size="9" font-weight="500" text-anchor="end">0.65 MAF / yr lost to desert sun</text>
 
             <!-- Lower Basin Channel Transit & Riparian Loss -->
             <path id="loss-lower" class="loss-path" d="M 480,629 L 570,629" stroke="#64748b" stroke-width="3" stroke-dasharray="6 4" marker-end="url(#arrow-loss)" />
@@ -349,6 +358,17 @@
             <rect x="1025" y="190" width="68" height="18" rx="4" class="badge-bg orange" />
             <text x="1059" y="199" class="maf-badge badge-text-orange text-[9.5px]">0.55 MAF</text>
 
+            <!-- Southern Nevada Water Authority (SNWA / Las Vegas) (0.30 MAF) -->
+            <text x="45" y="528" fill="#ea580c" font-size="12" font-weight="800">Southern Nevada (Las Vegas / SNWA)</text>
+            <text x="45" y="541" fill="#475569" font-size="9.5" font-weight="500">Lake Mead Deep Intake Straws &bull; Las Vegas Valley</text>
+            <rect x="45" y="546" width="68" height="17" rx="4" class="badge-bg orange" />
+            <text x="79" y="555" class="maf-badge badge-text-orange text-[9.5px]">0.30 MAF</text>
+            <path id="div-snwa" class="diversion-path" d="M 445,542 L 270,542" stroke="#ea580c" stroke-width="4.5" marker-end="url(#arrow-div)" />
+            <g transform="translate(355, 542)" class="cursor-help">
+              <rect x="-8" y="-7" width="16" height="14" rx="3" fill="#ffffff" stroke="#ea580c" stroke-width="1.5" />
+              <circle cx="0" cy="0" r="3.5" fill="#ea580c" />
+            </g>
+
             <!-- Central Arizona Project (CAP) (1.50 MAF) -->
             <path id="div-cap" class="diversion-path" d="M 480,604 L 880,604" stroke="#ea580c" stroke-width="8" marker-end="url(#arrow-div)" />
             <g transform="translate(600, 604)" class="cursor-help">
@@ -365,9 +385,9 @@
             <text x="934" y="625" class="maf-badge badge-text-orange text-[9.5px]">1.50 MAF</text>
 
             <!-- Colorado River Aqueduct (CRA) (1.05 MAF) -->
-            <text x="45" y="573" fill="#ea580c" font-size="12" font-weight="800">Colorado River Aqueduct (CRA)</text>
-            <text x="45" y="587" fill="#475569" font-size="9.5" font-weight="500">Metropolitan Water District → Los Angeles &amp; SoCal</text>
-            <rect x="45" y="593" width="68" height="18" rx="4" class="badge-bg orange" />
+            <text x="45" y="575" fill="#ea580c" font-size="12" font-weight="800">Colorado River Aqueduct (CRA)</text>
+            <text x="45" y="588" fill="#475569" font-size="9.5" font-weight="500">Metropolitan Water District &rarr; Los Angeles &amp; SoCal</text>
+            <rect x="45" y="593" width="68" height="17" rx="4" class="badge-bg orange" />
             <text x="79" y="602" class="maf-badge badge-text-orange text-[9.5px]">1.05 MAF</text>
             <path id="div-cra" class="diversion-path" d="M 480,604 L 270,604" stroke="#ea580c" stroke-width="6.5" marker-end="url(#arrow-div)" />
             <g transform="translate(370, 604)" class="cursor-help">
@@ -376,9 +396,9 @@
             </g>
 
             <!-- All-American Canal (AAC) & Imperial Valley (2.90 MAF) -->
-            <text x="45" y="623" fill="#ea580c" font-size="12.5" font-weight="800">Imperial Valley &amp; All-American Canal</text>
-            <text x="45" y="637" fill="#475569" font-size="9.5" font-weight="500">Imperial &amp; Coachella Valleys (Largest Single Diversion)</text>
-            <rect x="45" y="643" width="68" height="18" rx="4" class="badge-bg orange" />
+            <text x="45" y="625" fill="#ea580c" font-size="12" font-weight="800">Imperial Valley &amp; All-American Canal</text>
+            <text x="45" y="638" fill="#475569" font-size="9.5" font-weight="500">Imperial &amp; Coachella Valleys (Largest Single Diversion)</text>
+            <rect x="45" y="643" width="68" height="17" rx="4" class="badge-bg orange" />
             <text x="79" y="652" class="maf-badge badge-text-orange text-[9.5px]">2.90 MAF</text>
             <path id="div-aac" class="diversion-path" d="M 480,654 L 270,654" stroke="#ea580c" stroke-width="12" marker-end="url(#arrow-div)" />
             <g transform="translate(370, 654)" class="cursor-help">
@@ -387,10 +407,10 @@
             </g>
 
             <!-- 1944 Mexican Treaty Delivery (Morelos Dam - 1.50 MAF) -->
-            <text x="45" y="670" fill="#ea580c" font-size="12" font-weight="800">1944 Mexican Water Treaty</text>
-            <text x="45" y="683" fill="#475569" font-size="9.5" font-weight="500">Guaranteed annual delivery at Morelos Dam</text>
-            <rect x="45" y="688" width="68" height="18" rx="4" class="badge-bg orange" />
-            <text x="79" y="697" class="maf-badge badge-text-orange text-[9.5px]">1.50 MAF</text>
+            <text x="45" y="672" fill="#ea580c" font-size="12" font-weight="800">1944 Mexican Water Treaty</text>
+            <text x="45" y="685" fill="#475569" font-size="9.5" font-weight="500">Guaranteed annual delivery at Morelos Dam</text>
+            <rect x="45" y="690" width="68" height="17" rx="4" class="badge-bg orange" />
+            <text x="79" y="699" class="maf-badge badge-text-orange text-[9.5px]">1.50 MAF</text>
             <path id="div-mexico" class="diversion-path" d="M 480,682 L 270,682" stroke="#ea580c" stroke-width="7.5" marker-end="url(#arrow-div)" />
           </g>
 
@@ -555,8 +575,9 @@
                 <rect x="-24" y="-8" width="48" height="16" rx="3" fill="#ffffff" stroke="#0284c7" stroke-width="2" />
                 <path d="M -16 -4 L -16 4 M -8 -4 L -8 4 M 0 -4 L 0 4 M 8 -4 L 8 4 M 16 -4 L 16 4" stroke="#0284c7" stroke-width="1.5" />
               </g>
-              <text x="510" y="556" fill="#0f172a" font-size="12" font-weight="900">Lake Mead / Hoover Dam</text>
-              <text x="510" y="570" fill="#0284c7" font-size="9.5" font-weight="600">Capacity: 26.1M AF • Lower Basin Control</text>
+              <text x="515" y="553" fill="#0f172a" font-size="11.5" font-weight="900">Hoover Dam &amp; Lake Mead</text>
+              <text x="515" y="566" fill="#0284c7" font-size="9" font-weight="700">NV–AZ Border &bull; 26.1M AF Capacity</text>
+              <text x="515" y="577" fill="#64748b" font-size="8" font-weight="600">West: Nevada (SNWA) &bull; East: Arizona</text>
             </g>
 
             <!-- Parker Dam / Lake Havasu -->
@@ -1886,14 +1907,25 @@
         url: 'https://waterdata.usgs.gov/monitoring-location/09415000/'
       });
 
-      attachElement('dam-hoover', 'Lake Mead & Hoover Dam', () => `
+      attachElement('dam-hoover', 'Hoover Dam &amp; Lake Mead (NV–AZ Border)', () => `
+        <strong>Location:</strong> Black Canyon on Nevada–Arizona State Border<br>
         <strong>Total Capacity:</strong> 26.13 Million Acre-Feet (Largest reservoir in the US by volume)<br>
-        <strong>Function:</strong> Primary distribution hub for Lower Basin municipal &amp; agricultural deliveries<br>
-        <strong>Evaporative Loss:</strong> ~0.65 MAF/yr (~650,000 AF) evaporated annually into desert air<br>
+        <strong>Function:</strong> Master Lower Basin regulatory hub; releases water to NV (SNWA), AZ, CA, and Mexico<br>
+        <strong>Evaporative Loss:</strong> ~0.65 MAF/yr (~650,000 AF) evaporated annually into Mojave Desert air<br>
         <strong>Dead Pool Elevation:</strong> 895 ft (water cannot physically pass through intake towers)` + reservoirStorageBox('lake_mead', 'Shortage Tier 1 Trigger: 1,075 ft. Dead Pool: 895 ft (~142 ft cushion). Total Capacity: 26.13M AF.') + `
       `, {
         label: 'USBR Hoover Dam / Lake Mead Portal',
         url: 'https://www.usbr.gov/lc/region/g4000/hourly/mead-elv.html'
+      });
+
+      attachElement('div-snwa', 'Southern Nevada Water Authority (SNWA / Las Vegas)', () => `
+        <strong>Intake:</strong> Lake Mead Intake No. 3 (depth 860 ft) &amp; Low Lake Level Pumping Station<br>
+        <strong>Legal Apportionment:</strong> 0.30 MAF/yr (Boulder Canyon Project Act 1928)<br>
+        <strong>Net Consumption:</strong> ~0.24 MAF/yr (recycles indoor municipal water back to Lake Mead via Las Vegas Wash for return flow credits)<br>
+        <strong>Beneficiary:</strong> 2.3+ million residents across Las Vegas, Henderson, North Las Vegas, and Boulder City
+      `, {
+        label: 'SNWA Lake Mead Operations Portal',
+        url: 'https://www.snwa.com/'
       });
 
       attachElement('dam-parker', 'Parker Dam & Lake Havasu', () => `
