@@ -11,6 +11,17 @@
   <!-- Editorial Design Standard (Edward Tufte / NYT Restrained Palette) -->
   <link rel="stylesheet" href="editorial.css">
   <style>
+    :root {
+      --river-blue: #0284c7;
+      --river-core: #0369a1;
+      --trib-color: #0d9488;
+      --res-pool: #e0f2fe;
+      --res-stroke: #0284c7;
+      --dam-color: #334155;
+      --gap-fill: rgba(254, 243, 199, 0.45);
+      --gap-stroke: #f59e0b;
+      --gap-text: #b45309;
+    }
     * { box-sizing: border-box; }
     body {
       background: #f1f5f9;
@@ -19,7 +30,7 @@
       margin: 0;
       min-height: 100vh;
       overflow-x: hidden;
-      padding: 16px 24px;
+      padding: 10px 14px;
     }
 
     /* River & Diversion Flow Lines */
@@ -57,7 +68,7 @@
       opacity: 0.95 !important;
     }
 
-    /* Active Selected / Click Highlight States (Editorial Restraint) */
+    /* Active Selected / Click Highlight States */
     .river-path.selected {
       stroke: #0284c7 !important;
       filter: drop-shadow(0 1px 3px rgba(15, 23, 42, 0.35)) !important;
@@ -89,7 +100,6 @@
     svg.has-selection text:not(.selected-label),
     svg.has-selection .badge-bg:not(.selected-badge),
     svg.has-selection .maf-badge:not(.selected-badge) {
-      /* Keep labels readable but slightly softer */
       opacity: 0.7;
     }
 
@@ -168,492 +178,1278 @@
     body.in-iframe #btn-back-workspace {
       display: none !important;
     }
+
+    /* Elevation Profile Specific Styles */
+    .profile-node {
+      transition: transform 0.15s ease, r 0.15s ease;
+      cursor: pointer;
+    }
+    .profile-node:hover {
+      r: 6.5;
+      filter: drop-shadow(0 2px 5px rgba(2, 132, 199, 0.4));
+    }
+    .gap-zone {
+      transition: opacity 0.2s ease;
+      cursor: pointer;
+    }
+    .gap-zone:hover {
+      opacity: 0.55 !important;
+    }
+    .tabular-numbers {
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Stacked Bar Segment Hover & Focus */
+    .bar-segment {
+      transition: filter 0.15s ease, transform 0.15s ease;
+      cursor: pointer;
+    }
+    .bar-segment:hover {
+      filter: brightness(1.12) drop-shadow(0 2px 6px rgba(15, 23, 42, 0.25));
+      z-index: 20;
+    }
+
+    /* Pattern for Deficit Hatching */
+    .deficit-stripe {
+      background: repeating-linear-gradient(
+        -45deg,
+        rgba(239, 68, 68, 0.15),
+        rgba(239, 68, 68, 0.15) 6px,
+        rgba(239, 68, 68, 0.28) 6px,
+        rgba(239, 68, 68, 0.28) 12px
+      );
+    }
   </style>
 </head>
 <body>
-  <div class="max-w-[1320px] mx-auto">
-    <!-- Header -->
-    <header class="flex flex-wrap items-center justify-between gap-4 mb-4 pb-3 border-b border-slate-300">
-      <div>
-        <div class="flex items-center gap-2">
-          <a id="btn-back-workspace" href="./" onclick="backToWorkspace(event)" class="text-xs px-3 py-1 rounded-md bg-white border border-slate-300 text-slate-700 font-semibold hover:bg-slate-50 transition shadow-sm">← Back to Colorado River Basin</a>
-          <span class="text-xs text-slate-400">•</span>
-          <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Topological River Reach &amp; Conveyance Network</span>
-          <span class="text-xs text-slate-400">•</span>
-          <a href="./sankey.html" onclick="goToSankey(event)" class="text-xs font-semibold text-sky-700 hover:underline">View Annual Water Budget Diagram →</a>
+  <div class="max-w-[1360px] mx-auto space-y-3">
+    <!-- Top Header & Sub-Tab Switcher Navigation -->
+    <header class="flex flex-wrap items-center justify-between gap-2 pb-1.5 border-b border-slate-300">
+      <div class="flex items-center gap-3">
+        <a id="btn-back-workspace" href="./" onclick="backToWorkspace(event)" class="text-xs px-2.5 py-1 rounded-md bg-white border border-slate-300 text-slate-700 font-semibold hover:bg-slate-50 transition shadow-sm">← Back</a>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Operational Hydrology &amp; Allocations</span>
+            <span class="text-xs text-slate-300">•</span>
+            <a href="./sankey.html" onclick="goToSankey(event)" class="text-[11px] font-semibold text-sky-700 hover:underline">Macro Sankey Water Budget →</a>
+          </div>
+          <h1 class="text-lg md:text-xl font-black text-slate-900 tracking-tight flex items-center gap-2 mt-0.5">
+            Colorado River Flow Schematic &amp; Profile
+            <span class="text-[10.5px] font-bold px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 border border-sky-300">MAF/yr &amp; Thalweg Profile</span>
+          </h1>
         </div>
-        <h1 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight mt-1.5 flex items-center gap-3">
-          Colorado River Reach Flow and Diversions
-          <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-800 border border-sky-300">Million Acre-Feet / Year (MAF/yr)</span>
-        </h1>
       </div>
 
-      <div class="flex items-center gap-3 text-xs font-medium text-slate-600 bg-white px-3.5 py-2 rounded-lg border border-slate-200 shadow-sm">
-        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span> Natural Runoff: <strong>~12.5 – 15.0 MAF/yr</strong></span>
-        <span class="text-slate-300">|</span>
-        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-orange-500"></span> Statutory Apportionments: <strong>~16.5 MAF/yr</strong></span>
-        <span class="text-slate-300">|</span>
-        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-red-500"></span> Structural Basin Deficit: <strong>~1.5 – 2.5 MAF/yr</strong></span>
+      <!-- Two View Sub-Tabs (Schematic vs Elevation) -->
+      <div class="flex items-center gap-1.5 p-1 bg-slate-200/90 rounded-lg border border-slate-300">
+        <button id="subtab-btn-schematic" onclick="switchPipelineSubtab('schematic')" class="px-3.5 py-1.5 rounded-md text-xs font-bold transition shadow-sm bg-white text-sky-800 border border-slate-200 flex items-center gap-1.5">
+          <span>⬡</span>
+          <span>Topological River Reach &amp; Budget</span>
+        </button>
+        <button id="subtab-btn-elevation" onclick="switchPipelineSubtab('elevation')" class="px-3.5 py-1.5 rounded-md text-xs font-semibold transition text-slate-600 hover:text-slate-900 flex items-center gap-1.5">
+          <span>◬</span>
+          <span>Longitudinal Elevation Profile (1,400+ mi)</span>
+        </button>
       </div>
     </header>
 
-    <!-- River Network Schematic SVG Container -->
-    <div class="relative bg-white rounded-2xl border border-slate-300 shadow-xl overflow-hidden">
-      <svg id="canvas" viewBox="0 0 1280 1050" class="w-full h-auto block select-none">
-        <defs>
-          <!-- Gradients -->
-          <linearGradient id="mainstemGrad" x1="100%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#38bdf8" />
-            <stop offset="50%" stop-color="#0284c7" />
-            <stop offset="100%" stop-color="#0369a1" />
-          </linearGradient>
+    <!-- ================================================================= -->
+    <!-- VIEW 1: TOPOLOGICAL RIVER REACH SCHEMATIC & COMPARATIVE BARS       -->
+    <!-- ================================================================= -->
+    <div id="view-schematic" class="space-y-2.5">
+      <!-- River Network Schematic SVG Container (Compressed to fit single screen) -->
+      <div class="relative bg-white rounded-xl border border-slate-300 shadow-md overflow-hidden flex items-center justify-center max-h-[46vh] min-h-[350px]">
+        <svg id="canvas" viewBox="0 0 1280 750" class="w-full h-full block select-none max-h-[46vh]">
+          <defs>
+            <!-- Gradients -->
+            <linearGradient id="mainstemGrad" x1="100%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#38bdf8" />
+              <stop offset="50%" stop-color="#0284c7" />
+              <stop offset="100%" stop-color="#0369a1" />
+            </linearGradient>
 
-          <linearGradient id="greenRiverGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#38bdf8" />
-            <stop offset="100%" stop-color="#0284c7" />
-          </linearGradient>
+            <linearGradient id="greenRiverGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#38bdf8" />
+              <stop offset="100%" stop-color="#0284c7" />
+            </linearGradient>
 
-          <linearGradient id="diversionGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#fb923c" />
-            <stop offset="100%" stop-color="#ea580c" />
-          </linearGradient>
+            <linearGradient id="diversionGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#fb923c" />
+              <stop offset="100%" stop-color="#ea580c" />
+            </linearGradient>
 
-          <linearGradient id="diversionGradRev" x1="100%" y1="0%" x2="0%" y2="0%">
-            <stop offset="0%" stop-color="#fb923c" />
-            <stop offset="100%" stop-color="#ea580c" />
-          </linearGradient>
+            <!-- Fixed-Dimension Arrowheads -->
+            <marker id="arrow-div" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+              <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#ea580c" />
+            </marker>
+            <marker id="arrow-loss" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto">
+              <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#64748b" />
+            </marker>
+          </defs>
 
-          <linearGradient id="lossGradUp" x1="0%" y1="100%" x2="0%" y2="0%">
-            <stop offset="0%" stop-color="rgba(217, 119, 6, 0.85)" />
-            <stop offset="100%" stop-color="rgba(217, 119, 6, 0.15)" />
-          </linearGradient>
+          <!-- 1. Background State Boundaries & Regional Watermarks -->
+          <g id="state-layer">
+            <!-- WY-UT/CO border (41st parallel) -->
+            <line x1="350" y1="82" x2="1240" y2="82" class="state-line" />
+            <!-- UT-CO border (109th meridian) -->
+            <line x1="900" y1="82" x2="900" y2="351" class="state-line" />
+            <!-- NV-UT border (114th meridian) -->
+            <line x1="350" y1="82" x2="350" y2="351" class="state-line" />
+            <!-- UT/AZ border (37th parallel) -->
+            <line x1="350" y1="351" x2="900" y2="351" class="state-line" />
+            <!-- CO-NM border -->
+            <line x1="900" y1="351" x2="1240" y2="351" class="state-line" />
+            <!-- AZ-NM border -->
+            <line x1="900" y1="351" x2="900" y2="671" class="state-line" />
+            <!-- NV-CA border -->
+            <line x1="350" y1="351" x2="260" y2="430" class="state-line" />
+            <!-- US-Mexico International Boundary -->
+            <line x1="160" y1="671" x2="900" y2="671" class="state-line" stroke-width="1.8" stroke="#fca5a5" />
 
-          <!-- Fixed-Dimension Arrowheads -->
-          <marker id="arrow-div" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
-            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#ea580c" />
-          </marker>
-          <marker id="arrow-loss" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto">
-            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#64748b" />
-          </marker>
-        </defs>
-
-        <!-- 1. Background State Boundaries & Regional Watermarks -->
-        <g id="state-layer">
-          <!-- WY-UT/CO border (41st parallel) - Set north of Yampa reach -->
-          <line x1="350" y1="115" x2="1240" y2="115" class="state-line" />
-          <!-- UT-CO border (109th meridian) -->
-          <line x1="900" y1="115" x2="900" y2="492" class="state-line" />
-          <!-- NV-UT border (114th meridian) -->
-          <line x1="350" y1="115" x2="350" y2="492" class="state-line" />
-          <!-- UT/AZ border (37th parallel) - Set south of San Juan, north of Glen Canyon Dam -->
-          <line x1="350" y1="492" x2="900" y2="492" class="state-line" />
-          <!-- CO-NM border -->
-          <line x1="900" y1="492" x2="1240" y2="492" class="state-line" />
-          <!-- AZ-NM border -->
-          <line x1="900" y1="492" x2="900" y2="940" class="state-line" />
-          <!-- NV-CA border -->
-          <line x1="350" y1="492" x2="260" y2="600" class="state-line" />
-          <!-- US-Mexico International Boundary -->
-          <line x1="160" y1="940" x2="900" y2="940" class="state-line" stroke-width="1.8" stroke="#fca5a5" />
-
-          <!-- State Watermark Names (Positioned in Clear Desert Quadrants) -->
-          <text id="state-wy" x="750" y="45" class="state-name" text-anchor="middle">WYOMING</text>
-          <text id="state-co" x="1140" y="315" class="state-name" text-anchor="middle">COLORADO</text>
-          <text id="state-ut" x="465" y="220" class="state-name" text-anchor="middle">UTAH</text>
-          <text id="state-nm" x="1070" y="580" class="state-name" text-anchor="middle">NEW MEXICO</text>
-          <text id="state-az" x="750" y="780" class="state-name" text-anchor="middle">ARIZONA</text>
-          <text id="state-nv" x="230" y="470" class="state-name" text-anchor="middle">NEVADA</text>
-          <text id="state-ca" x="150" y="670" class="state-name" text-anchor="middle">CALIFORNIA</text>
-          <text id="state-baja" x="240" y="1000" class="state-name text-[11px]" text-anchor="middle">BAJA CALIFORNIA</text>
-          <text id="state-mex" x="830" y="1000" class="state-name text-[11px]" text-anchor="middle">MEXICO</text>
-        </g>
-
-        <!-- 2. Evaporation & Losses (Background Plumes) -->
-        <g id="losses-layer">
-          <!-- Lake Powell Evaporation (Plume into Utah desert sky) -->
-          <path id="loss-powell" class="loss-path" d="M 605,482 L 530,422 L 375,422" stroke="#64748b" stroke-width="3.5" stroke-dasharray="7 5" marker-end="url(#arrow-loss)" />
-          <text x="380" y="404" fill="#475569" font-size="11" font-weight="700">Lake Powell Evaporation &amp; Loss</text>
-          <text x="380" y="417" fill="#64748b" font-size="9.5" font-weight="500">0.38 MAF / yr lost to desert sun</text>
-
-          <!-- Lake Mead Evaporation Plume (Plume into Nevada desert sky) -->
-          <path id="loss-mead" class="loss-path" d="M 445,752 L 360,715 L 300,715" stroke="#64748b" stroke-width="3.5" stroke-dasharray="7 5" marker-end="url(#arrow-loss)" />
-          <text x="290" y="711" fill="#475569" font-size="11" font-weight="700" text-anchor="end">Lake Mead Evaporation &amp; Loss</text>
-          <text x="290" y="725" fill="#64748b" font-size="9.5" font-weight="500" text-anchor="end">0.65 MAF / yr lost to desert sun</text>
-
-          <!-- Lower Basin Channel Transit & Riparian Loss -->
-          <path id="loss-lower" class="loss-path" d="M 480,880 L 570,880" stroke="#64748b" stroke-width="3.5" stroke-dasharray="7 5" marker-end="url(#arrow-loss)" />
-          <text x="585" y="877" fill="#475569" font-size="11" font-weight="700">Channel Transit &amp; Riparian Loss</text>
-          <text x="585" y="891" fill="#64748b" font-size="9.5" font-weight="500">0.55 MAF / yr lower channel depletions</text>
-        </g>
-
-        <!-- 3. Diversions & Aqueducts (Orange / Copper) -->
-        <!-- 3. Diversions & Aqueducts (Orange / Copper) - Scaled proportionally to volume -->
-        <g id="diversions-layer">
-          <!-- Denver & Front Range Trans-Mountain Tunnels (0.55 MAF) -->
-          <path id="div-frontrange" class="diversion-path" d="M 1000,210 L 1200,210" stroke="#ea580c" stroke-width="5.5" marker-end="url(#arrow-div)" />
-          <g transform="translate(1100, 210)" class="cursor-help">
-            <title>Tunnel Portal: Trans-Mountain Divide Bore (Moffat / Roberts / Adams / Boustead)</title>
-            <rect x="-8" y="-7" width="16" height="14" rx="3" fill="#ffffff" stroke="#ea580c" stroke-width="1.5" />
-            <circle cx="0" cy="0" r="3.5" fill="#ea580c" />
-          </g>
-          <text x="1025" y="238" fill="#ea580c" font-size="12.5" font-weight="800">Denver &amp; Front Range Diversions</text>
-          <text x="1025" y="253" fill="#475569" font-size="10" font-weight="500">Moffat, Roberts, Adams &amp; Boustead Tunnels</text>
-          <rect x="1025" y="260" width="68" height="19" rx="4" class="badge-bg orange" />
-          <text x="1059" y="269" class="maf-badge badge-text-orange">0.55 MAF</text>
-
-          <!-- Central Arizona Project (CAP) - Main Aqueduct to Phoenix & Central AZ (1.50 MAF) -->
-          <path id="div-cap" class="diversion-path" d="M 480,845 L 880,845" stroke="#ea580c" stroke-width="9" marker-end="url(#arrow-div)" />
-          <g transform="translate(600, 845)" class="cursor-help">
-            <!-- Mark Wilmer Pumping Plant Icon -->
-            <title>Pumping Plant (✕): Mark Wilmer Lift Station (pumps water 824 ft uphill out of Lake Havasu)</title>
-            <rect x="-9" y="-8" width="18" height="16" rx="3" fill="#ffffff" stroke="#ea580c" stroke-width="1.5" />
-            <path d="M -4 -3 L 4 3 M -4 3 L 4 -3" stroke="#ea580c" stroke-width="1.5" />
-          </g>
-          <!-- Secondary branch toward Tucson/Pinal Ag (0.35 MAF) -->
-          <path class="diversion-path opacity-80" d="M 770,845 L 830,905" stroke="#ea580c" stroke-width="4.5" marker-end="url(#arrow-div)" />
-          <text x="845" y="908" fill="#ea580c" font-size="10.5" font-weight="700">Tucson &amp; Pinal Agriculture</text>
-
-          <text x="900" y="837" fill="#ea580c" font-size="13" font-weight="800">Central Arizona Project (CAP)</text>
-          <text x="900" y="852" fill="#475569" font-size="10.5" font-weight="500">Lake Havasu → Phoenix &amp; Central Arizona</text>
-          <rect x="900" y="859" width="68" height="19" rx="4" class="badge-bg orange" />
-          <text x="934" y="868" class="maf-badge badge-text-orange">1.50 MAF</text>
-
-          <!-- Colorado River Aqueduct (CRA) to SoCal (1.05 MAF) -->
-          <text x="45" y="810" fill="#ea580c" font-size="12.5" font-weight="800">Colorado River Aqueduct (CRA)</text>
-          <text x="45" y="824" fill="#475569" font-size="10" font-weight="500">Metropolitan Water District → Los Angeles &amp; SoCal</text>
-          <rect x="45" y="830" width="68" height="19" rx="4" class="badge-bg orange" />
-          <text x="79" y="839" class="maf-badge badge-text-orange">1.05 MAF</text>
-          <path id="div-cra" class="diversion-path" d="M 480,845 L 270,845" stroke="#ea580c" stroke-width="7" marker-end="url(#arrow-div)" />
-          <g transform="translate(370, 845)" class="cursor-help">
-            <title>Tunnel Intake (●): Whitsett Intake &amp; Whipple Mountain Tunnel Portal</title>
-            <rect x="-8" y="-7" width="16" height="14" rx="3" fill="#ffffff" stroke="#ea580c" stroke-width="1.5" />
-            <circle cx="0" cy="0" r="3.5" fill="#ea580c" />
+            <!-- State Watermark Names -->
+            <text id="state-wy" x="750" y="32" class="state-name" text-anchor="middle">WYOMING</text>
+            <text id="state-co" x="1140" y="225" class="state-name" text-anchor="middle">COLORADO</text>
+            <text id="state-ut" x="465" y="160" class="state-name" text-anchor="middle">UTAH</text>
+            <text id="state-nm" x="1070" y="415" class="state-name" text-anchor="middle">NEW MEXICO</text>
+            <text id="state-az" x="750" y="555" class="state-name" text-anchor="middle">ARIZONA</text>
+            <text id="state-nv" x="230" y="335" class="state-name" text-anchor="middle">NEVADA</text>
+            <text id="state-ca" x="150" y="480" class="state-name" text-anchor="middle">CALIFORNIA</text>
+            <text id="state-baja" x="240" y="715" class="state-name text-[11px]" text-anchor="middle">BAJA CALIFORNIA</text>
+            <text id="state-mex" x="830" y="715" class="state-name text-[11px]" text-anchor="middle">MEXICO</text>
           </g>
 
-          <!-- All-American Canal (AAC) & Imperial Valley (2.90 MAF - Largest Single Diversion) -->
-          <text x="45" y="880" fill="#ea580c" font-size="13" font-weight="800">Imperial Valley &amp; All-American Canal</text>
-          <text x="45" y="894" fill="#475569" font-size="10" font-weight="500">Imperial &amp; Coachella Valleys (Largest Single Diversion)</text>
-          <rect x="45" y="900" width="68" height="19" rx="4" class="badge-bg orange" />
-          <text x="79" y="909" class="maf-badge badge-text-orange">2.90 MAF</text>
-          <path id="div-aac" class="diversion-path" d="M 480,915 L 270,915" stroke="#ea580c" stroke-width="14" marker-end="url(#arrow-div)" />
-          <g transform="translate(370, 915)" class="cursor-help">
-            <title>Gravity Sluice Gate (–): Imperial Dam Headworks (gravity diversion, no pumps)</title>
-            <rect x="-9" y="-8" width="18" height="16" rx="3" fill="#ffffff" stroke="#ea580c" stroke-width="1.5" />
-            <line x1="-5" y1="0" x2="5" y2="0" stroke="#ea580c" stroke-width="2" />
+          <!-- 2. Evaporation & Losses (Background Plumes) -->
+          <g id="losses-layer">
+            <!-- Lake Powell Evaporation -->
+            <path id="loss-powell" class="loss-path" d="M 605,345 L 530,300 L 375,300" stroke="#64748b" stroke-width="3" stroke-dasharray="6 4" marker-end="url(#arrow-loss)" />
+            <text x="380" y="284" fill="#475569" font-size="10.5" font-weight="700">Lake Powell Evaporation &amp; Loss</text>
+            <text x="380" y="296" fill="#64748b" font-size="9" font-weight="500">0.38 MAF / yr lost to desert sun</text>
+
+            <!-- Lake Mead Evaporation Plume -->
+            <path id="loss-mead" class="loss-path" d="M 445,535 L 360,505 L 300,505" stroke="#64748b" stroke-width="3" stroke-dasharray="6 4" marker-end="url(#arrow-loss)" />
+            <text x="290" y="501" fill="#475569" font-size="10.5" font-weight="700" text-anchor="end">Lake Mead Evaporation &amp; Loss</text>
+            <text x="290" y="514" fill="#64748b" font-size="9" font-weight="500" text-anchor="end">0.65 MAF / yr lost to desert sun</text>
+
+            <!-- Lower Basin Channel Transit & Riparian Loss -->
+            <path id="loss-lower" class="loss-path" d="M 480,629 L 570,629" stroke="#64748b" stroke-width="3" stroke-dasharray="6 4" marker-end="url(#arrow-loss)" />
+            <text x="585" y="626" fill="#475569" font-size="10.5" font-weight="700">Channel Transit &amp; Riparian Loss</text>
+            <text x="585" y="639" fill="#64748b" font-size="9" font-weight="500">0.55 MAF / yr lower depletions</text>
           </g>
 
-          <!-- 1944 Mexican Treaty Delivery (Morelos Dam - 1.50 MAF) -->
-          <text x="45" y="936" fill="#ea580c" font-size="12.5" font-weight="800">1944 Mexican Water Treaty</text>
-          <text x="45" y="950" fill="#475569" font-size="10" font-weight="500">Guaranteed annual delivery at Morelos Dam</text>
-          <rect x="45" y="956" width="68" height="19" rx="4" class="badge-bg orange" />
-          <text x="79" y="965" class="maf-badge badge-text-orange">1.50 MAF</text>
-          <path id="div-mexico" class="diversion-path" d="M 480,955 L 270,955" stroke="#ea580c" stroke-width="8.5" marker-end="url(#arrow-div)" />
-        </g>
-
-        <!-- 4. Main River Channels & Tributaries (Cyan / Cerulean Blue) - Topological Network Conveyance -->
-        <g id="rivers-layer">
-          <!-- Upper Green River (Headwaters to Yampa Confluence - 3.6 MAF) -->
-          <path id="river-green-upper" class="river-path" d="M 580,50 L 580,255" stroke="#0284c7" stroke-width="14" />
-          <text x="550" y="65" fill="#0284c7" font-size="13" font-weight="800" text-anchor="end">Green River</text>
-          <text x="550" y="80" fill="#475569" font-size="10" font-weight="500" text-anchor="end">Wyoming Headwaters &amp; Flaming Gorge</text>
-          <rect x="480" y="87" width="70" height="20" rx="4" class="badge-bg blue" />
-          <text x="515" y="97" class="maf-badge badge-text-blue">4.9 MAF</text>
-
-          <!-- Yampa River (CO -> Green River - 1.3 MAF) -->
-          <path id="river-yampa" class="river-path" d="M 880,185 L 650,185 L 580,255" stroke="#0284c7" stroke-width="7" />
-          <text x="670" y="142" fill="#0284c7" font-size="11.5" font-weight="700">Yampa River</text>
-          <text x="670" y="156" fill="#475569" font-size="9.5" font-weight="500">Dinosaur National Monument</text>
-          <rect x="670" y="161" width="60" height="17" rx="4" class="badge-bg blue" />
-          <text x="700" y="169" class="maf-badge badge-text-blue text-[9.5px]">1.3 MAF</text>
-
-          <!-- Green River (Post-Yampa, expands to 18px / 4.9 MAF) -->
-          <path id="river-green" class="river-path" d="M 580,255 L 580,350 L 640,410" stroke="#0284c7" stroke-width="18" />
-
-          <!-- Colorado River Headwaters (Rocky Mountain NP -> Continental Divide - 8.0 MAF) -->
-          <path id="river-headwaters" class="river-path" d="M 1000,50 L 1000,210" stroke="#0284c7" stroke-width="18" />
-          <text x="1025" y="65" fill="#0284c7" font-size="12.5" font-weight="900">COLORADO RIVER HEADWATERS</text>
-          <text x="1025" y="80" fill="#475569" font-size="10" font-weight="500">Rocky Mountain NP • Continental Divide</text>
-          <rect x="1025" y="87" width="60" height="20" rx="4" class="badge-bg blue" />
-          <text x="1055" y="97" class="maf-badge badge-text-blue text-[10.5px]">8.0 MAF</text>
-
-          <!-- Upper Mainstem Reach (Post-Front Range Diversion, shrinks to 16px / 7.45 MAF) -->
-          <path id="river-upper-main-pre" class="river-path" d="M 1000,210 L 860,350" stroke="#0284c7" stroke-width="16" />
-
-          <!-- Gunnison River (CO -> Grand Junction - 2.1 MAF) -->
-          <path id="river-gunnison" class="river-path" d="M 1060,350 L 860,350" stroke="#0284c7" stroke-width="9" />
-          <text x="1075" y="345" fill="#0284c7" font-size="11.5" font-weight="700">Gunnison River</text>
-          <text x="1075" y="359" fill="#475569" font-size="10" font-weight="500">Blue Mesa Reservoir</text>
-          <rect x="1075" y="365" width="60" height="18" rx="4" class="badge-bg blue" />
-          <text x="1105" y="374" class="maf-badge badge-text-blue text-[9.5px]">2.1 MAF</text>
-
-          <!-- Upper Mainstem Reach (Post-Gunnison, expands to 22px / 9.55 MAF) -->
-          <path id="river-upper-main" class="river-path" d="M 860,350 L 700,350 L 640,410" stroke="#0284c7" stroke-width="22" />
-          <text x="840" y="295" fill="#0284c7" font-size="12.5" font-weight="800" text-anchor="end">Colorado River Mainstem</text>
-          <text x="840" y="310" fill="#475569" font-size="10" font-weight="500" text-anchor="end">Grand Valley &amp; Ruby Canyon</text>
-          <rect x="772" y="317" width="68" height="18" rx="4" class="badge-bg blue" />
-          <text x="806" y="326" class="maf-badge badge-text-blue text-[9.5px]">9.0 MAF</text>
-
-          <!-- Cataract Canyon (Green + Mainstem Confluence - 14.8 MAF Total Powell Inflow) -->
-          <path id="river-cataract" class="river-path" d="M 640,410 L 640,470" stroke="#0284c7" stroke-width="30" />
-          <text x="700" y="425" fill="#0284c7" font-size="12.5" font-weight="900">Cataract Canyon</text>
-          <text x="700" y="441" fill="#0369a1" font-size="10.5" font-weight="700">14.8 MAF Total Powell Inflow</text>
-
-          <!-- San Juan River (CO/NM -> Lake Powell - 2.5 MAF) -->
-          <path id="river-sanjuan" class="river-path" d="M 1060,470 L 640,470" stroke="#0284c7" stroke-width="10" />
-          <text x="1075" y="465" fill="#0284c7" font-size="11.5" font-weight="700">San Juan River</text>
-          <text x="1075" y="479" fill="#475569" font-size="10" font-weight="500">Navajo Dam &amp; Animas River</text>
-          <rect x="1075" y="485" width="60" height="18" rx="4" class="badge-bg blue" />
-          <text x="1105" y="494" class="maf-badge badge-text-blue text-[9.5px]">2.5 MAF</text>
-
-          <!-- Lake Powell Reservoir Body & Core Reach (In-line on River at x=640) -->
-          <g id="reservoir-powell-group" class="cursor-pointer">
-            <rect id="body-powell" x="605" y="470" width="70" height="44" rx="8" fill="#0284c7" fill-opacity="0.25" stroke="#0284c7" stroke-width="2" />
-          </g>
-          <path id="river-powell-reach" class="river-path" d="M 640,470 L 640,520" stroke="#0284c7" stroke-width="36" />
-
-          <!-- Grand Canyon Reach: Glen Canyon Dam -> Lees Ferry -> Lake Mead (8.23 MAF Compact Release) -->
-          <path id="river-grandcanyon" class="river-path" d="M 640,520 L 640,600 L 480,760 L 480,785" stroke="#0284c7" stroke-width="24" />
-          <text x="615" y="715" fill="#0284c7" font-size="12.5" font-weight="800">Grand Canyon Reach</text>
-          <text x="615" y="730" fill="#0369a1" font-size="10" font-weight="600">10.0 MAF Inflow • 8.23 MAF Compact Release</text>
-
-          <!-- Little Colorado River (0.25 MAF) -->
-          <path id="river-littleco" class="river-path" d="M 840,675 L 565,675" stroke="#0284c7" stroke-width="4.5" />
-          <text x="650" y="646" fill="#0284c7" font-size="11.5" font-weight="700">Little Colorado River</text>
-          <text x="650" y="660" fill="#475569" font-size="9.5" font-weight="500">Northern Arizona Plateau</text>
-          <rect x="780" y="637" width="56" height="18" rx="4" class="badge-bg blue" />
-          <text x="808" y="646" class="maf-badge badge-text-blue text-[9px]">0.25 MAF</text>
-
-          <!-- Virgin River (0.18 MAF) -->
-          <path id="river-virgin" class="river-path" d="M 380,660 L 480,760" stroke="#0284c7" stroke-width="4" />
-          <text x="360" y="645" fill="#0284c7" font-size="11.5" font-weight="700" text-anchor="end">Virgin River</text>
-          <text x="360" y="659" fill="#475569" font-size="9.5" font-weight="500" text-anchor="end">Zion NP &amp; Utah/Nevada</text>
-          <rect x="300" y="665" width="60" height="18" rx="4" class="badge-bg blue" />
-          <text x="330" y="674" class="maf-badge badge-text-blue text-[9px]">0.18 MAF</text>
-
-          <!-- Lake Mead Reservoir Body (In-line on River at x=480) -->
-          <g id="reservoir-mead-group" class="cursor-pointer">
-            <rect id="body-mead" x="445" y="738" width="70" height="42" rx="8" fill="#0284c7" fill-opacity="0.25" stroke="#0284c7" stroke-width="2" />
-          </g>
-
-          <!-- Lower Basin Spine: Dynamically Shrinks as Diversions & Losses Exit -->
-          <!-- Reach 1: Hoover Dam to Parker Dam (Full managed release: 9.0 MAF, conserved width 21px narrower than 24px Grand Canyon inflow) -->
-          <path id="river-lower-spine" class="river-path" d="M 480,785 L 480,845" stroke="#0284c7" stroke-width="21" />
-
-          <!-- Reach 2: Parker Dam to Transit Loss (Post-CRA & CAP: 6.45 MAF remaining) -->
-          <path id="river-lower-mid" class="river-path" d="M 480,845 L 480,880" stroke="#0284c7" stroke-width="16" />
-
-          <!-- Reach 3: Transit Loss to Imperial Dam (Post-Loss: 5.90 MAF remaining) -->
-          <path id="river-lower-canal" class="river-path" d="M 480,880 L 480,915" stroke="#0284c7" stroke-width="14.5" />
-
-          <!-- Reach 4: Imperial Dam to Morelos Dam (Post-AAC: 1.50 MAF treaty water) -->
-          <path id="river-lower-treaty" class="river-path" d="M 480,915 L 480,955" stroke="#0284c7" stroke-width="8" />
-
-          <!-- Reach 5: Colorado River Delta (Post-Mexico: 0 MAF dry channel to Sea of Cortez) -->
-          <path id="river-delta-dry" class="river-path dry-river-channel" d="M 480,955 L 480,1035" stroke="#94a3b8" stroke-width="4.5" stroke-dasharray="6 6" />
-
-          <!-- Delta Terminus Station Card -->
-          <g id="node-delta" class="cursor-pointer" transform="translate(510, 985)">
-            <rect x="0" y="0" width="275" height="44" rx="6" fill="#fff5f5" stroke="#fca5a5" stroke-width="1.2" filter="drop-shadow(0 2px 4px rgba(220, 38, 38, 0.06))" />
-            <text x="12" y="18" fill="#dc2626" font-size="12" font-weight="900">Gulf of California (Dry / No Flow)</text>
-            <text x="12" y="33" fill="#64748b" font-size="9.5" font-weight="600">Historically dewatered delta ecosystem</text>
-            <rect x="210" y="12" width="52" height="20" rx="4" class="badge-bg red" />
-            <text x="236" y="22" class="maf-badge badge-text-red text-[10px]">0 MAF</text>
-          </g>
-        </g>
-
-        <!-- 5. Dams & Major Storage Reservoirs (Architectural Icons & Division Points) -->
-        <g id="dams-layer">
-          <!-- Flaming Gorge Dam & Reservoir (3.75M AF capacity: 28x18 body) -->
-          <g id="dam-flaminggorge" class="cursor-pointer">
-            <rect id="body-flaminggorge" x="566" y="145" width="28" height="18" rx="5" fill="#0284c7" fill-opacity="0.22" stroke="#0284c7" stroke-width="1.5" />
-            <g transform="translate(580, 160)">
-              <rect x="-11" y="-5" width="22" height="10" rx="2" fill="#ffffff" stroke="#0284c7" stroke-width="1.6" />
-              <path d="M -7 -3 L -7 3 M 0 -3 L 0 3 M 7 -3 L 7 3" stroke="#0284c7" stroke-width="1.2" />
+          <!-- 3. Diversions & Aqueducts (Orange / Copper) -->
+          <g id="diversions-layer">
+            <!-- Denver & Front Range Trans-Mountain Tunnels (0.55 MAF) -->
+            <path id="div-frontrange" class="diversion-path" d="M 1000,150 L 1200,150" stroke="#ea580c" stroke-width="5" marker-end="url(#arrow-div)" />
+            <g transform="translate(1100, 150)" class="cursor-help">
+              <rect x="-8" y="-7" width="16" height="14" rx="3" fill="#ffffff" stroke="#ea580c" stroke-width="1.5" />
+              <circle cx="0" cy="0" r="3.5" fill="#ea580c" />
             </g>
-            <text x="560" y="152" fill="#0f172a" font-size="11" font-weight="800" text-anchor="end">Flaming Gorge Dam</text>
-            <text x="560" y="164" fill="#0284c7" font-size="9" font-weight="600" text-anchor="end">3.75M AF Storage</text>
+            <text x="1025" y="170" fill="#ea580c" font-size="12" font-weight="800">Denver &amp; Front Range Diversions</text>
+            <text x="1025" y="184" fill="#475569" font-size="9.5" font-weight="500">Moffat, Roberts, Adams &amp; Boustead Tunnels</text>
+            <rect x="1025" y="190" width="68" height="18" rx="4" class="badge-bg orange" />
+            <text x="1059" y="199" class="maf-badge badge-text-orange text-[9.5px]">0.55 MAF</text>
+
+            <!-- Central Arizona Project (CAP) (1.50 MAF) -->
+            <path id="div-cap" class="diversion-path" d="M 480,604 L 880,604" stroke="#ea580c" stroke-width="8" marker-end="url(#arrow-div)" />
+            <g transform="translate(600, 604)" class="cursor-help">
+              <rect x="-9" y="-8" width="18" height="16" rx="3" fill="#ffffff" stroke="#ea580c" stroke-width="1.5" />
+              <path d="M -4 -3 L 4 3 M -4 3 L 4 -3" stroke="#ea580c" stroke-width="1.5" />
+            </g>
+            <!-- Secondary branch toward Tucson/Pinal Ag -->
+            <path class="diversion-path opacity-80" d="M 770,604 L 830,646" stroke="#ea580c" stroke-width="4" marker-end="url(#arrow-div)" />
+            <text x="845" y="649" fill="#ea580c" font-size="10" font-weight="700">Tucson &amp; Pinal Ag</text>
+
+            <text x="900" y="596" fill="#ea580c" font-size="12.5" font-weight="800">Central Arizona Project (CAP)</text>
+            <text x="900" y="610" fill="#475569" font-size="10" font-weight="500">Lake Havasu → Phoenix &amp; Central AZ</text>
+            <rect x="900" y="616" width="68" height="18" rx="4" class="badge-bg orange" />
+            <text x="934" y="625" class="maf-badge badge-text-orange text-[9.5px]">1.50 MAF</text>
+
+            <!-- Colorado River Aqueduct (CRA) (1.05 MAF) -->
+            <text x="45" y="573" fill="#ea580c" font-size="12" font-weight="800">Colorado River Aqueduct (CRA)</text>
+            <text x="45" y="587" fill="#475569" font-size="9.5" font-weight="500">Metropolitan Water District → Los Angeles &amp; SoCal</text>
+            <rect x="45" y="593" width="68" height="18" rx="4" class="badge-bg orange" />
+            <text x="79" y="602" class="maf-badge badge-text-orange text-[9.5px]">1.05 MAF</text>
+            <path id="div-cra" class="diversion-path" d="M 480,604 L 270,604" stroke="#ea580c" stroke-width="6.5" marker-end="url(#arrow-div)" />
+            <g transform="translate(370, 604)" class="cursor-help">
+              <rect x="-8" y="-7" width="16" height="14" rx="3" fill="#ffffff" stroke="#ea580c" stroke-width="1.5" />
+              <circle cx="0" cy="0" r="3.5" fill="#ea580c" />
+            </g>
+
+            <!-- All-American Canal (AAC) & Imperial Valley (2.90 MAF) -->
+            <text x="45" y="623" fill="#ea580c" font-size="12.5" font-weight="800">Imperial Valley &amp; All-American Canal</text>
+            <text x="45" y="637" fill="#475569" font-size="9.5" font-weight="500">Imperial &amp; Coachella Valleys (Largest Single Diversion)</text>
+            <rect x="45" y="643" width="68" height="18" rx="4" class="badge-bg orange" />
+            <text x="79" y="652" class="maf-badge badge-text-orange text-[9.5px]">2.90 MAF</text>
+            <path id="div-aac" class="diversion-path" d="M 480,654 L 270,654" stroke="#ea580c" stroke-width="12" marker-end="url(#arrow-div)" />
+            <g transform="translate(370, 654)" class="cursor-help">
+              <rect x="-9" y="-8" width="18" height="16" rx="3" fill="#ffffff" stroke="#ea580c" stroke-width="1.5" />
+              <line x1="-5" y1="0" x2="5" y2="0" stroke="#ea580c" stroke-width="2" />
+            </g>
+
+            <!-- 1944 Mexican Treaty Delivery (Morelos Dam - 1.50 MAF) -->
+            <text x="45" y="670" fill="#ea580c" font-size="12" font-weight="800">1944 Mexican Water Treaty</text>
+            <text x="45" y="683" fill="#475569" font-size="9.5" font-weight="500">Guaranteed annual delivery at Morelos Dam</text>
+            <rect x="45" y="688" width="68" height="18" rx="4" class="badge-bg orange" />
+            <text x="79" y="697" class="maf-badge badge-text-orange text-[9.5px]">1.50 MAF</text>
+            <path id="div-mexico" class="diversion-path" d="M 480,682 L 270,682" stroke="#ea580c" stroke-width="7.5" marker-end="url(#arrow-div)" />
           </g>
 
-          <!-- Blue Mesa Dam & Reservoir (0.83M AF capacity: 18x12 body) -->
-          <g id="dam-bluemesa" class="cursor-pointer">
-            <rect id="body-bluemesa" x="971" y="344" width="18" height="12" rx="4" fill="#0284c7" fill-opacity="0.22" stroke="#0284c7" stroke-width="1.3" />
-            <g transform="translate(980, 350)">
-              <rect x="-8" y="-4" width="16" height="8" rx="2" fill="#ffffff" stroke="#0284c7" stroke-width="1.4" />
-              <path d="M -4 -2 L -4 2 M 4 -2 L 4 2" stroke="#0284c7" stroke-width="1" />
+          <!-- 4. Main River Channels & Tributaries (Cyan / Cerulean Blue) -->
+          <g id="rivers-layer">
+            <!-- Upper Green River (Headwaters to Yampa Confluence - 3.6 MAF) -->
+            <path id="river-green-upper" class="river-path" d="M 580,36 L 580,182" stroke="#0284c7" stroke-width="13" />
+            <text x="550" y="50" fill="#0284c7" font-size="12.5" font-weight="800" text-anchor="end">Green River</text>
+            <text x="550" y="64" fill="#475569" font-size="9.5" font-weight="500" text-anchor="end">Wyoming Headwaters &amp; Flaming Gorge</text>
+            <rect x="480" y="70" width="70" height="19" rx="4" class="badge-bg blue" />
+            <text x="515" y="80" class="maf-badge badge-text-blue text-[9.5px]">4.9 MAF</text>
+
+            <!-- Yampa River (CO -> Green River - 1.3 MAF) -->
+            <path id="river-yampa" class="river-path" d="M 880,132 L 650,132 L 580,182" stroke="#0284c7" stroke-width="6.5" />
+            <text x="670" y="100" fill="#0284c7" font-size="11" font-weight="700">Yampa River</text>
+            <text x="670" y="113" fill="#475569" font-size="9" font-weight="500">Dinosaur National Monument</text>
+            <rect x="670" y="118" width="58" height="16" rx="4" class="badge-bg blue" />
+            <text x="699" y="126" class="maf-badge badge-text-blue text-[9px]">1.3 MAF</text>
+
+            <!-- Green River (Post-Yampa, expands to 16px / 4.9 MAF) -->
+            <path id="river-green" class="river-path" d="M 580,182 L 580,250 L 640,293" stroke="#0284c7" stroke-width="16" />
+
+            <!-- Colorado River Headwaters (Rocky Mountain NP -> Continental Divide - 8.0 MAF) -->
+            <path id="river-headwaters" class="river-path" d="M 1000,36 L 1000,150" stroke="#0284c7" stroke-width="16" />
+            <text x="1025" y="50" fill="#0284c7" font-size="12" font-weight="900">COLORADO RIVER HEADWATERS</text>
+            <text x="1025" y="64" fill="#475569" font-size="9.5" font-weight="500">Rocky Mountain NP • Continental Divide</text>
+            <rect x="1025" y="70" width="60" height="19" rx="4" class="badge-bg blue" />
+            <text x="1055" y="80" class="maf-badge badge-text-blue text-[10px]">8.0 MAF</text>
+
+            <!-- Upper Mainstem Reach (Post-Front Range Diversion, shrinks to 15px) -->
+            <path id="river-upper-main-pre" class="river-path" d="M 1000,150 L 860,250" stroke="#0284c7" stroke-width="15" />
+
+            <!-- Gunnison River (CO -> Grand Junction - 2.1 MAF) -->
+            <path id="river-gunnison" class="river-path" d="M 1060,250 L 860,250" stroke="#0284c7" stroke-width="8" />
+            <text x="1075" y="245" fill="#0284c7" font-size="11" font-weight="700">Gunnison River</text>
+            <text x="1075" y="258" fill="#475569" font-size="9.5" font-weight="500">Blue Mesa Reservoir</text>
+            <rect x="1075" y="264" width="58" height="17" rx="4" class="badge-bg blue" />
+            <text x="1104" y="273" class="maf-badge badge-text-blue text-[9px]">2.1 MAF</text>
+
+            <!-- Upper Mainstem Reach (Post-Gunnison, expands to 20px / 9.55 MAF) -->
+            <path id="river-upper-main" class="river-path" d="M 860,250 L 700,250 L 640,293" stroke="#0284c7" stroke-width="20" />
+            <text x="840" y="210" fill="#0284c7" font-size="12" font-weight="800" text-anchor="end">Colorado River Mainstem</text>
+            <text x="840" y="224" fill="#475569" font-size="9.5" font-weight="500" text-anchor="end">Grand Valley &amp; Ruby Canyon</text>
+            <rect x="772" y="230" width="68" height="17" rx="4" class="badge-bg blue" />
+            <text x="806" y="239" class="maf-badge badge-text-blue text-[9px]">9.0 MAF</text>
+
+            <!-- Cataract Canyon (Green + Mainstem Confluence - 14.8 MAF Total Powell Inflow) -->
+            <path id="river-cataract" class="river-path" d="M 640,293 L 640,336" stroke="#0284c7" stroke-width="26" />
+            <text x="700" y="303" fill="#0284c7" font-size="12" font-weight="900">Cataract Canyon</text>
+            <text x="700" y="318" fill="#0369a1" font-size="10" font-weight="700">14.8 MAF Total Powell Inflow</text>
+
+            <!-- San Juan River (CO/NM -> Lake Powell - 2.5 MAF) -->
+            <path id="river-sanjuan" class="river-path" d="M 1060,336 L 640,336" stroke="#0284c7" stroke-width="9" />
+            <text x="1075" y="331" fill="#0284c7" font-size="11" font-weight="700">San Juan River</text>
+            <text x="1075" y="344" fill="#475569" font-size="9.5" font-weight="500">Navajo Dam &amp; Animas River</text>
+            <rect x="1075" y="350" width="58" height="17" rx="4" class="badge-bg blue" />
+            <text x="1104" y="359" class="maf-badge badge-text-blue text-[9px]">2.5 MAF</text>
+
+            <!-- Lake Powell Reservoir Body & Core Reach (In-line on River at x=640) -->
+            <g id="reservoir-powell-group" class="cursor-pointer">
+              <rect id="body-powell" x="605" y="336" width="70" height="35" rx="7" fill="#0284c7" fill-opacity="0.25" stroke="#0284c7" stroke-width="2" />
+            </g>
+            <path id="river-powell-reach" class="river-path" d="M 640,336 L 640,371" stroke="#0284c7" stroke-width="30" />
+
+            <!-- Grand Canyon Reach: Glen Canyon Dam -> Lees Ferry -> Lake Mead (8.23 MAF Compact Release) -->
+            <path id="river-grandcanyon" class="river-path" d="M 640,371 L 640,429 L 480,543 L 480,561" stroke="#0284c7" stroke-width="21" />
+            <text x="615" y="505" fill="#0284c7" font-size="12" font-weight="800">Grand Canyon Reach</text>
+            <text x="615" y="519" fill="#0369a1" font-size="9.5" font-weight="600">10.0 MAF Inflow • 8.23 MAF Compact Release</text>
+
+            <!-- Little Colorado River (0.25 MAF) -->
+            <path id="river-littleco" class="river-path" d="M 840,482 L 565,482" stroke="#0284c7" stroke-width="4" />
+            <text x="650" y="456" fill="#0284c7" font-size="11" font-weight="700">Little Colorado River</text>
+            <text x="650" y="469" fill="#475569" font-size="9" font-weight="500">Northern Arizona Plateau</text>
+            <rect x="780" y="448" width="56" height="17" rx="4" class="badge-bg blue" />
+            <text x="808" y="457" class="maf-badge badge-text-blue text-[8.5px]">0.25 MAF</text>
+
+            <!-- Virgin River (0.18 MAF) -->
+            <path id="river-virgin" class="river-path" d="M 380,471 L 480,543" stroke="#0284c7" stroke-width="3.5" />
+            <text x="360" y="458" fill="#0284c7" font-size="11" font-weight="700" text-anchor="end">Virgin River</text>
+            <text x="360" y="471" fill="#475569" font-size="9" font-weight="500" text-anchor="end">Zion NP &amp; Utah/Nevada</text>
+            <rect x="300" y="477" width="58" height="17" rx="4" class="badge-bg blue" />
+            <text x="329" y="486" class="maf-badge badge-text-blue text-[8.5px]">0.18 MAF</text>
+
+            <!-- Lake Mead Reservoir Body (In-line on River at x=480) -->
+            <g id="reservoir-mead-group" class="cursor-pointer">
+              <rect id="body-mead" x="445" y="527" width="70" height="34" rx="7" fill="#0284c7" fill-opacity="0.25" stroke="#0284c7" stroke-width="2" />
+            </g>
+
+            <!-- Lower Basin Spine: Dynamically Shrinks as Diversions & Losses Exit -->
+            <path id="river-lower-spine" class="river-path" d="M 480,561 L 480,604" stroke="#0284c7" stroke-width="19" />
+            <path id="river-lower-mid" class="river-path" d="M 480,604 L 480,629" stroke="#0284c7" stroke-width="15" />
+            <path id="river-lower-canal" class="river-path" d="M 480,629 L 480,654" stroke="#0284c7" stroke-width="13.5" />
+            <path id="river-lower-treaty" class="river-path" d="M 480,654 L 480,682" stroke="#0284c7" stroke-width="7.5" />
+            <path id="river-delta-dry" class="river-path dry-river-channel" d="M 480,682 L 480,739" stroke="#94a3b8" stroke-width="4" stroke-dasharray="5 5" />
+
+            <!-- Delta Terminus Station Card -->
+            <g id="node-delta" class="cursor-pointer" transform="translate(510, 700)">
+              <rect x="0" y="0" width="270" height="38" rx="6" fill="#fff5f5" stroke="#fca5a5" stroke-width="1.2" filter="drop-shadow(0 2px 4px rgba(220, 38, 38, 0.06))" />
+              <text x="12" y="16" fill="#dc2626" font-size="11.5" font-weight="900">Gulf of California (Dry / No Flow)</text>
+              <text x="12" y="29" fill="#64748b" font-size="9" font-weight="600">Historically dewatered delta ecosystem</text>
+              <rect x="206" y="9" width="52" height="19" rx="4" class="badge-bg red" />
+              <text x="232" y="19" class="maf-badge badge-text-red text-[9.5px]">0 MAF</text>
             </g>
           </g>
 
-          <!-- Navajo Dam & Reservoir (1.70M AF capacity: 22x14 body) -->
-          <g id="dam-navajo" class="cursor-pointer">
-            <rect id="body-navajo" x="959" y="463" width="22" height="14" rx="4" fill="#0284c7" fill-opacity="0.22" stroke="#0284c7" stroke-width="1.4" />
-            <g transform="translate(970, 470)">
-              <rect x="-9" y="-5" width="18" height="10" rx="2" fill="#ffffff" stroke="#0284c7" stroke-width="1.5" />
-              <path d="M -5 -3 L -5 3 M 0 -3 L 0 3 M 5 -3 L 5 3" stroke="#0284c7" stroke-width="1" />
+          <!-- 5. Dams & Major Storage Reservoirs -->
+          <g id="dams-layer">
+            <!-- Flaming Gorge Dam & Reservoir -->
+            <g id="dam-flaminggorge" class="cursor-pointer">
+              <rect id="body-flaminggorge" x="566" y="104" width="28" height="16" rx="4" fill="#0284c7" fill-opacity="0.22" stroke="#0284c7" stroke-width="1.4" />
+              <g transform="translate(580, 114)">
+                <rect x="-11" y="-5" width="22" height="10" rx="2" fill="#ffffff" stroke="#0284c7" stroke-width="1.6" />
+                <path d="M -7 -3 L -7 3 M 0 -3 L 0 3 M 7 -3 L 7 3" stroke="#0284c7" stroke-width="1.2" />
+              </g>
+              <text x="560" y="110" fill="#0f172a" font-size="10.5" font-weight="800" text-anchor="end">Flaming Gorge Dam</text>
+              <text x="560" y="121" fill="#0284c7" font-size="8.5" font-weight="600" text-anchor="end">3.75M AF Storage</text>
+            </g>
+
+            <!-- Blue Mesa Dam & Reservoir -->
+            <g id="dam-bluemesa" class="cursor-pointer">
+              <rect id="body-bluemesa" x="971" y="244" width="18" height="12" rx="3" fill="#0284c7" fill-opacity="0.22" stroke="#0284c7" stroke-width="1.3" />
+              <g transform="translate(980, 250)">
+                <rect x="-8" y="-4" width="16" height="8" rx="2" fill="#ffffff" stroke="#0284c7" stroke-width="1.4" />
+                <path d="M -4 -2 L -4 2 M 4 -2 L 4 2" stroke="#0284c7" stroke-width="1" />
+              </g>
+            </g>
+
+            <!-- Navajo Dam & Reservoir -->
+            <g id="dam-navajo" class="cursor-pointer">
+              <rect id="body-navajo" x="959" y="328" width="22" height="14" rx="3" fill="#0284c7" fill-opacity="0.22" stroke="#0284c7" stroke-width="1.4" />
+              <g transform="translate(970, 335)">
+                <rect x="-9" y="-5" width="18" height="10" rx="2" fill="#ffffff" stroke="#0284c7" stroke-width="1.5" />
+                <path d="M -5 -3 L -5 3 M 0 -3 L 0 3 M 5 -3 L 5 3" stroke="#0284c7" stroke-width="1" />
+              </g>
+            </g>
+
+            <!-- Lake Powell / Glen Canyon Dam -->
+            <g id="dam-glencanyon" class="cursor-pointer">
+              <g transform="translate(640, 371)">
+                <rect x="-24" y="-8" width="48" height="16" rx="3" fill="#ffffff" stroke="#0284c7" stroke-width="2" />
+                <path d="M -16 -4 L -16 4 M -8 -4 L -8 4 M 0 -4 L 0 4 M 8 -4 L 8 4 M 16 -4 L 16 4" stroke="#0284c7" stroke-width="1.5" />
+              </g>
+              <text x="690" y="367" fill="#0f172a" font-size="12" font-weight="900">Lake Powell / Glen Canyon Dam</text>
+              <text x="690" y="381" fill="#0284c7" font-size="9.5" font-weight="600">Capacity: 24.3M AF • Master Storage Bank</text>
+            </g>
+
+            <!-- Lee's Ferry Compact Point Divider -->
+            <g id="node-leesferry" class="cursor-pointer">
+              <rect x="612" y="399" width="56" height="20" rx="10" fill="#ffffff" stroke="#d97706" stroke-width="2.2" filter="drop-shadow(0 2px 4px rgba(15, 23, 42, 0.1))" />
+              <circle cx="640" cy="409" r="4.5" fill="#d97706" />
+              <circle cx="640" cy="409" r="1.8" fill="#ffffff" />
+              <g transform="translate(690, 395)">
+                <rect x="0" y="0" width="250" height="34" rx="5" fill="#ffffff" stroke="#d97706" stroke-width="1.4" filter="drop-shadow(0 2px 4px rgba(15, 23, 42, 0.08))" />
+                <text x="12" y="15" fill="#d97706" font-size="11" font-weight="800">Lee's Ferry (Compact Point)</text>
+                <text x="12" y="27" fill="#475569" font-size="9" font-weight="600">1922 Compact Division Point • 8.23 MAF Release</text>
+              </g>
+            </g>
+
+            <!-- Lake Mead / Hoover Dam -->
+            <g id="dam-hoover" class="cursor-pointer">
+              <g transform="translate(480, 561)">
+                <rect x="-24" y="-8" width="48" height="16" rx="3" fill="#ffffff" stroke="#0284c7" stroke-width="2" />
+                <path d="M -16 -4 L -16 4 M -8 -4 L -8 4 M 0 -4 L 0 4 M 8 -4 L 8 4 M 16 -4 L 16 4" stroke="#0284c7" stroke-width="1.5" />
+              </g>
+              <text x="510" y="556" fill="#0f172a" font-size="12" font-weight="900">Lake Mead / Hoover Dam</text>
+              <text x="510" y="570" fill="#0284c7" font-size="9.5" font-weight="600">Capacity: 26.1M AF • Lower Basin Control</text>
+            </g>
+
+            <!-- Parker Dam / Lake Havasu -->
+            <g id="dam-parker" class="cursor-pointer">
+              <rect id="body-havasu" x="472" y="598" width="16" height="11" rx="3" fill="#0284c7" fill-opacity="0.25" stroke="#0284c7" stroke-width="1.2" />
+              <circle cx="480" cy="604" r="7" fill="#ffffff" stroke="#ea580c" stroke-width="2.2" />
+              <text x="510" y="583" fill="#0f172a" font-size="11.5" font-weight="800">Parker Dam / Lake Havasu</text>
+              <text x="510" y="596" fill="#475569" font-size="9" font-weight="600">CRA &amp; CAP Intakes • 0.62M AF Forebay</text>
+            </g>
+
+            <!-- Imperial Dam -->
+            <g id="dam-imperial" class="cursor-pointer">
+              <circle cx="480" cy="654" r="7" fill="#ffffff" stroke="#ea580c" stroke-width="2.2" />
+              <text x="510" y="647" fill="#0f172a" font-size="11.5" font-weight="800">Imperial Dam</text>
+              <text x="510" y="660" fill="#475569" font-size="9" font-weight="600">All-American Canal Intake</text>
+            </g>
+
+            <!-- Morelos Dam -->
+            <g id="dam-morelos" class="cursor-pointer">
+              <circle cx="480" cy="682" r="7" fill="#ffffff" stroke="#ea580c" stroke-width="2.2" />
+              <text x="510" y="675" fill="#0f172a" font-size="11.5" font-weight="800">Morelos Dam</text>
+              <text x="510" y="688" fill="#475569" font-size="9" font-weight="600">Mexican Treaty Delivery Headworks</text>
             </g>
           </g>
 
-          <!-- Lake Powell / Glen Canyon Dam -->
-          <g id="dam-glencanyon" class="cursor-pointer">
-            <g transform="translate(640, 520)">
-              <rect x="-24" y="-9" width="48" height="18" rx="3" fill="#ffffff" stroke="#0284c7" stroke-width="2.2" />
-              <path d="M -16 -5 L -16 5 M -8 -5 L -8 5 M 0 -5 L 0 5 M 8 -5 L 8 5 M 16 -5 L 16 5" stroke="#0284c7" stroke-width="1.6" />
+          <!-- 6. Compact Legend Box -->
+          <g id="legend-box" transform="translate(35, 18)">
+            <rect x="0" y="0" width="270" height="168" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2" filter="drop-shadow(0 3px 12px rgba(15, 23, 42, 0.05))" />
+            <text x="16" y="20" fill="#0f172a" font-size="12" font-weight="900" letter-spacing="0.04em">Legend</text>
+            <text x="16" y="33" fill="#64748b" font-size="8" font-weight="700" letter-spacing="0.04em">FLOW WIDTHS (MAF/YR) &amp; POOLS (MAF)</text>
+            
+            <line x1="16" y1="48" x2="48" y2="48" stroke="#0284c7" stroke-width="5" stroke-linecap="round" />
+            <text x="58" y="52" fill="#1e293b" font-size="10.5" font-weight="600">River Flow / Inflow (MAF/yr)</text>
+            
+            <line x1="16" y1="70" x2="46" y2="70" stroke="#ea580c" stroke-width="4.5" stroke-linecap="round" marker-end="url(#arrow-div)" />
+            <text x="58" y="74" fill="#1e293b" font-size="10.5" font-weight="600">Major Diversions &amp; Aqueducts</text>
+            
+            <g transform="translate(20, 88)">
+              <rect x="0" y="0" width="20" height="12" rx="2.5" fill="#0284c7" fill-opacity="0.22" stroke="#0284c7" stroke-width="1.1" />
+              <rect x="3" y="1.5" width="14" height="9" rx="1.5" fill="#ffffff" stroke="#0284c7" stroke-width="1.1" />
             </g>
-            <text x="690" y="516" fill="#0f172a" font-size="12.5" font-weight="900">Lake Powell / Glen Canyon Dam</text>
-            <text x="690" y="532" fill="#0284c7" font-size="10" font-weight="600">Capacity: 24.3M AF • Master Storage Bank</text>
+            <text x="58" y="97" fill="#1e293b" font-size="10.5" font-weight="600">Dam &amp; Capacity Reservoir (MAF)</text>
+            
+            <line x1="16" y1="116" x2="46" y2="116" stroke="#d97706" stroke-width="3" stroke-dasharray="6 4" stroke-linecap="butt" marker-end="url(#arrow-loss)" />
+            <text x="58" y="120" fill="#1e293b" font-size="10.5" font-weight="600">Reservoir Evaporation &amp; Loss</text>
+
+            <text x="16" y="140" fill="#0369a1" font-size="8.5" font-weight="700">Dimensions: Flow = Rate • Pools = Max Capacity</text>
+            <text x="16" y="153" fill="#64748b" font-size="8" font-weight="500">Click any feature to inspect live operational data ↗</text>
           </g>
+        </svg>
 
-          <!-- Lee's Ferry Compact Point Divider (Continuous In-line Checkpoint Station) -->
-          <g id="node-leesferry" class="cursor-pointer">
-            <!-- In-line station collar straddling the continuous flowing river conduit -->
-            <rect x="612" y="558" width="56" height="24" rx="12" fill="#ffffff" stroke="#d97706" stroke-width="2.5" filter="drop-shadow(0 2px 4px rgba(15, 23, 42, 0.1))" />
-            <circle cx="640" cy="570" r="5" fill="#d97706" />
-            <circle cx="640" cy="570" r="2" fill="#ffffff" />
-            <!-- Compact Division Station Card -->
-            <g transform="translate(690, 552)">
-              <rect x="0" y="0" width="255" height="38" rx="6" fill="#ffffff" stroke="#d97706" stroke-width="1.5" filter="drop-shadow(0 2px 4px rgba(15, 23, 42, 0.08))" />
-              <text x="12" y="16" fill="#d97706" font-size="11.5" font-weight="800">Lee's Ferry (Compact Point)</text>
-              <text x="12" y="30" fill="#475569" font-size="9.5" font-weight="600">1922 Compact Division Point • 8.23 MAF Release</text>
-            </g>
-          </g>
+        <!-- Hover Tooltip -->
+        <div id="flow-tooltip"></div>
+      </div>
 
-          <!-- Lake Mead / Hoover Dam -->
-          <g id="dam-hoover" class="cursor-pointer">
-            <g transform="translate(480, 785)">
-              <rect x="-24" y="-9" width="48" height="18" rx="3" fill="#ffffff" stroke="#0284c7" stroke-width="2.2" />
-              <path d="M -16 -5 L -16 5 M -8 -5 L -8 5 M 0 -5 L 0 5 M 8 -5 L 8 5 M 16 -5 L 16 5" stroke="#0284c7" stroke-width="1.6" />
-            </g>
-            <text x="420" y="780" fill="#0f172a" font-size="12.5" font-weight="900" text-anchor="end">Lake Mead / Hoover Dam</text>
-            <text x="420" y="796" fill="#0284c7" font-size="10" font-weight="600" text-anchor="end">Capacity: 26.1M AF • Lower Basin Control</text>
-          </g>
+      <!-- ================================================================= -->
+      <!-- THE DUAL COMPARATIVE STACKED BARS (Replacing the 4 Old Cards)      -->
+      <!-- ================================================================= -->
+      <div id="stacked-comparison-card" class="bg-white border border-slate-300 rounded-xl p-3.5 shadow-sm">
+        <!-- Header & Explanatory Context -->
+        <div class="flex flex-col md:flex-row md:items-baseline justify-between gap-2 pb-3 border-b border-slate-200">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-amber-50 text-amber-900 border border-amber-300">Macro Basin Imbalance</span>
+              <span class="text-xs text-slate-500 font-medium">Shared Scale: 0 to 20.0 MAF/yr &bull; 100% Horizontal Alignment</span>
+            </div>
+            <h2 class="text-base md:text-lg font-black text-slate-900 tracking-tight mt-0.5">
+              Physical Water Runoff vs. Legal Paper Allocations
+            </h2>
+            <p class="text-xs text-slate-600 mt-0.5 max-w-4xl">
+              Direct physical accounting showing why system storage is depleted: <strong>91.4% (13.9 MAF)</strong> of physical runoff originates <em>upstream</em> of Lee's Ferry, while <strong>60.7% (11.6 MAF)</strong> of statutory paper claims and system losses exist <em>downstream</em>.
+            </p>
+          </div>
+          <div class="flex flex-wrap items-center gap-3 text-[11px] text-slate-600">
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-[#0284c7]"></span> Upper Inflows</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-[#0d9488]"></span> Lower Inflows</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-[#2563eb]"></span> Upper Paper Claims</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-[#ea580c]"></span> Lower Paper Claims</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-red-600"></span> Structural Deficit</span>
+          </div>
+        </div>
 
-          <!-- Parker Dam / Lake Havasu (0.62M AF Forebay Pool: 16x11 body) -->
-          <g id="dam-parker" class="cursor-pointer">
-            <rect id="body-havasu" x="472" y="839" width="16" height="12" rx="3" fill="#0284c7" fill-opacity="0.25" stroke="#0284c7" stroke-width="1.2" />
-            <circle cx="480" cy="845" r="7.5" fill="#ffffff" stroke="#ea580c" stroke-width="2.5" />
-            <text x="510" y="814" fill="#0f172a" font-size="12" font-weight="800">Parker Dam / Lake Havasu</text>
-            <text x="510" y="828" fill="#475569" font-size="9.5" font-weight="600">CRA &amp; CAP Intakes • 0.62M AF Forebay</text>
-          </g>
+        <!-- Shared Scale Axis Ticks (0, 5, 10, 15, 20 MAF) -->
+        <div class="relative w-full mt-3 h-5 text-[10px] text-slate-400 font-bold tabular-numbers select-none">
+          <div class="absolute left-0 bottom-0">0 MAF</div>
+          <div class="absolute left-[25%] -translate-x-1/2 bottom-0">5.0 MAF</div>
+          <div class="absolute left-[50%] -translate-x-1/2 bottom-0">10.0 MAF</div>
+          <div class="absolute left-[75%] -translate-x-1/2 bottom-0">15.0 MAF</div>
+          <div class="absolute right-0 bottom-0 text-slate-600">20.0 MAF Scale (100%)</div>
+          <!-- Minor vertical ticks -->
+          <div class="absolute left-0 bottom-0 w-px h-1.5 bg-slate-300"></div>
+          <div class="absolute left-[25%] bottom-0 w-px h-1.5 bg-slate-300"></div>
+          <div class="absolute left-[50%] bottom-0 w-px h-1.5 bg-slate-300"></div>
+          <div class="absolute left-[75%] bottom-0 w-px h-1.5 bg-slate-300"></div>
+          <div class="absolute right-0 bottom-0 w-px h-1.5 bg-slate-300"></div>
+        </div>
 
-          <!-- Imperial Dam -->
-          <g id="dam-imperial" class="cursor-pointer">
-            <circle cx="480" cy="915" r="7.5" fill="#ffffff" stroke="#ea580c" stroke-width="2.5" />
-            <text x="510" y="908" fill="#0f172a" font-size="12" font-weight="800">Imperial Dam</text>
-            <text x="510" y="922" fill="#475569" font-size="9.5" font-weight="600">All-American Canal Intake</text>
-          </g>
+        <!-- BARS CONTAINER -->
+        <div class="space-y-4 mt-1">
+          <!-- ========================================== -->
+          <!-- BAR 1: PHYSICAL RUNOFF (NATURAL SUPPLY)    -->
+          <!-- ========================================== -->
+          <div class="relative">
+            <div class="flex items-center justify-between text-xs font-bold pb-1">
+              <span class="text-sky-800 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-sky-600"></span>
+                <span>BAR 1: PHYSICAL NATURAL RUNOFF (BY SOURCE TRIBUTARY &amp; MAIN)</span>
+              </span>
+              <span class="tabular-numbers text-slate-800">
+                Total Supply: <span class="text-sky-700 font-black">15.20 MAF/yr</span> <span class="text-slate-400 font-normal">(Historical 20th-century avg)</span>
+              </span>
+            </div>
 
-          <!-- Morelos Dam -->
-          <g id="dam-morelos" class="cursor-pointer">
-            <circle cx="480" cy="955" r="7.5" fill="#ffffff" stroke="#ea580c" stroke-width="2.5" />
-            <text x="510" y="946" fill="#0f172a" font-size="12" font-weight="800">Morelos Dam</text>
-            <text x="510" y="960" fill="#475569" font-size="9.5" font-weight="600">Mexican Treaty Delivery Headworks</text>
-          </g>
-        </g>
+            <!-- Bar 1 Track (100% = 20 MAF) -->
+            <div class="relative w-full h-9 rounded-lg bg-slate-100 border border-slate-300 flex overflow-hidden shadow-inner">
+              <!-- Upper Basin Runoff Segments (Total: 13.90 MAF = 69.5%) -->
+              <!-- 1. Upper CO Mainstem: 4.00 MAF = 20.0% -->
+              <div class="bar-segment h-full bg-[#0284c7] border-r border-sky-700/30 flex items-center justify-center text-white text-[10.5px] font-bold px-1 overflow-hidden"
+                   style="width: 20.0%;"
+                   onmouseenter="inspectStackedSegment('Mainstem Headwaters', '4.00 MAF/yr (5,525 cfs)', '26.3% of Basin Natural Runoff', 'Rocky Mountain NP, Fraser, Blue & Eagle Rivers. Continental Divide high-altitude snowpack.', 'Physical Inflow')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">Mainstem: 4.00</span>
+              </div>
 
-        <!-- 6. Legend Box (Top Left Open Quadrant) -->
-        <g id="legend-box" transform="translate(45, 25)">
-          <rect x="0" y="0" width="285" height="195" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2" filter="drop-shadow(0 4px 16px rgba(15, 23, 42, 0.06))" />
-          
-          <text x="18" y="24" fill="#0f172a" font-size="13" font-weight="900" letter-spacing="0.04em">Legend</text>
-          <text x="18" y="39" fill="#64748b" font-size="8.5" font-weight="700" letter-spacing="0.04em">FLOW WIDTHS (MAF/YR) &amp; RESERVOIR BODIES (MAF)</text>
-          
-          <!-- Flow Line -->
-          <line x1="18" y1="58" x2="54" y2="58" stroke="#0284c7" stroke-width="6" stroke-linecap="round" />
-          <text x="66" y="62" fill="#1e293b" font-size="11.5" font-weight="600">River Flow / Inflow (MAF/yr)</text>
-          
-          <!-- Diversions -->
-          <line x1="18" y1="82" x2="50" y2="82" stroke="#ea580c" stroke-width="5" stroke-linecap="round" marker-end="url(#arrow-div)" />
-          <text x="66" y="86" fill="#1e293b" font-size="11.5" font-weight="600">Major Diversions &amp; Aqueducts</text>
-          
-          <!-- Dams & Reservoir Storage Indicator -->
-          <g transform="translate(24, 102)">
-            <rect x="0" y="0" width="22" height="14" rx="3" fill="#0284c7" fill-opacity="0.22" stroke="#0284c7" stroke-width="1.2" />
-            <rect x="4" y="2" width="14" height="10" rx="1.5" fill="#ffffff" stroke="#0284c7" stroke-width="1.2" />
-            <line x1="9" y1="4" x2="9" y2="10" stroke="#0284c7" stroke-width="0.9" />
-            <line x1="13" y1="4" x2="13" y2="10" stroke="#0284c7" stroke-width="0.9" />
-          </g>
-          <text x="66" y="112" fill="#1e293b" font-size="11.5" font-weight="600">Dam &amp; Capacity Reservoir (MAF)</text>
-          
-          <!-- Losses -->
-          <line x1="18" y1="136" x2="50" y2="136" stroke="#d97706" stroke-width="3.5" stroke-dasharray="7 5" stroke-linecap="butt" marker-end="url(#arrow-loss)" />
-          <text x="66" y="140" fill="#1e293b" font-size="11.5" font-weight="600">Reservoir Evaporation &amp; Loss</text>
+              <!-- 2. Green River Basin: 4.90 MAF = 24.5% -->
+              <div class="bar-segment h-full bg-[#0369a1] border-r border-sky-800/30 flex items-center justify-center text-white text-[10.5px] font-bold px-1 overflow-hidden"
+                   style="width: 24.5%;"
+                   onmouseenter="inspectStackedSegment('Green River Basin (WY/UT/CO)', '4.90 MAF/yr (6,768 cfs)', '32.2% of Basin Natural Runoff', 'Wind River Range, Flaming Gorge, undammed Yampa River (1.30 MAF), and White River. The largest single Upper Basin tributary system.', 'Physical Inflow')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">Green River: 4.90</span>
+              </div>
 
-          <text x="18" y="162" fill="#0369a1" font-size="9.5" font-weight="700">Dimensions: River = Flow Rate • Pools = Max Capacity</text>
-          <text x="18" y="178" fill="#64748b" font-size="9" font-weight="500">Click any feature to inspect live operational data ↗</text>
-        </g>
-      </svg>
+              <!-- 3. Gunnison River: 2.10 MAF = 10.5% -->
+              <div class="bar-segment h-full bg-[#0ea5e9] border-r border-sky-600/30 flex items-center justify-center text-white text-[10px] font-bold px-1 overflow-hidden"
+                   style="width: 10.5%;"
+                   onmouseenter="inspectStackedSegment('Gunnison River Basin', '2.10 MAF/yr (2,901 cfs)', '13.8% of Basin Natural Runoff', 'West Slope Colorado snowpack, Blue Mesa Reservoir, Aspinall Unit storage into Grand Junction confluence.', 'Physical Inflow')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">Gunnison: 2.10</span>
+              </div>
 
-      <!-- Hover Tooltip -->
-      <div id="flow-tooltip"></div>
+              <!-- 4. San Juan River: 2.10 MAF = 10.5% -->
+              <div class="bar-segment h-full bg-[#38bdf8] border-r border-sky-400/30 flex items-center justify-center text-slate-900 text-[10px] font-bold px-1 overflow-hidden"
+                   style="width: 10.5%;"
+                   onmouseenter="inspectStackedSegment('San Juan River Basin', '2.10 MAF/yr (2,901 cfs)', '13.8% of Basin Natural Runoff', 'San Juan Mountains in Southwest Colorado and Northwest New Mexico, Navajo Dam and Animas River.', 'Physical Inflow')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">San Juan: 2.10</span>
+              </div>
+
+              <!-- 5. Dolores & Upper Minor Tributaries: 0.80 MAF = 4.0% -->
+              <div class="bar-segment h-full bg-[#7dd3fc] border-r-2 border-amber-500 flex items-center justify-center text-slate-900 text-[9px] font-bold px-0.5 overflow-hidden"
+                   style="width: 4.0%;"
+                   onmouseenter="inspectStackedSegment('Dolores & Minor Upper Tribs', '0.80 MAF/yr (1,105 cfs)', '5.3% of Basin Natural Runoff', 'Dolores River, Escalante, Dirty Devil, and minor headwater drainages upstream of Lee\'s Ferry.', 'Physical Inflow')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">Dolores: 0.8</span>
+              </div>
+
+              <!-- Lower Basin Runoff Segments (Total: 1.30 MAF = 6.5%) -->
+              <!-- 6. Little Colorado River: 0.25 MAF = 1.25% -->
+              <div class="bar-segment h-full bg-[#0d9488] border-r border-teal-700/30 flex items-center justify-center text-white text-[8px] font-bold px-0.5 overflow-hidden"
+                   style="width: 1.25%;"
+                   onmouseenter="inspectStackedSegment('Little Colorado River (AZ)', '0.25 MAF/yr (345 cfs)', '1.6% of Basin Natural Runoff', 'Northern Arizona White Mountains plateau, enters mainstem in upper Grand Canyon.', 'Physical Inflow')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">L.CO</span>
+              </div>
+
+              <!-- 7. Virgin River: 0.18 MAF = 0.90% -->
+              <div class="bar-segment h-full bg-[#14b8a6] border-r border-teal-600/30 flex items-center justify-center text-white text-[8px] font-bold px-0.5 overflow-hidden"
+                   style="width: 0.90%;"
+                   onmouseenter="inspectStackedSegment('Virgin River (UT/NV/AZ)', '0.18 MAF/yr (249 cfs)', '1.2% of Basin Natural Runoff', 'Zion National Park and Virgin River Gorge, enters Lake Mead Overton Arm.', 'Physical Inflow')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">Virg</span>
+              </div>
+
+              <!-- 8. Gila & Lower Basin Tributaries: 0.87 MAF = 4.35% -->
+              <div class="bar-segment h-full bg-[#2dd4bf] border-r-2 border-slate-400 flex items-center justify-center text-slate-900 text-[9px] font-bold px-0.5 overflow-hidden"
+                   style="width: 4.35%;"
+                   onmouseenter="inspectStackedSegment('Bill Williams & Lower Tributaries', '0.87 MAF/yr (1,202 cfs)', '5.7% of Basin Natural Runoff', 'Bill Williams River and lower desert washes; historic Gila River before complete upstream agricultural depletions.', 'Physical Inflow')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">Lower Tribs: 0.87</span>
+              </div>
+
+              <!-- Buffer / Non-Runoff Zone (15.20 to 20.00 MAF = 24.0%) -->
+              <div class="h-full bg-slate-100 flex items-center justify-center text-slate-400 text-[10px] font-medium italic"
+                   style="width: 24.0%;">
+                <span>Unutilized Scale Buffer to 20 MAF</span>
+              </div>
+
+              <!-- Modern Drought Reference Line at 12.50 MAF (62.5% of scale) -->
+              <div class="absolute left-[62.5%] top-0 bottom-0 w-0.5 border-l-2 border-dashed border-red-700 pointer-events-none z-10"></div>
+            </div>
+
+            <!-- Lee's Ferry Marker for Bar 1 (at 13.90 MAF = 69.5%) -->
+            <div class="absolute left-[69.5%] -bottom-3 -translate-x-1/2 flex flex-col items-center z-20 pointer-events-none">
+              <span class="text-[10px] font-extrabold text-amber-700 bg-amber-50 px-1.5 py-0.2 rounded border border-amber-300 shadow-2xs whitespace-nowrap">
+                ▲ Lee's Ferry (91.4% Physical Water Originates Above)
+              </span>
+            </div>
+          </div>
+
+          <!-- ========================================== -->
+          <!-- PARADOX CONNECTOR BRACKET (LEE'S FERRY)   -->
+          <!-- ========================================== -->
+          <div class="relative py-2.5 my-1 flex items-center justify-between text-[11px] bg-slate-50 border-y border-dashed border-slate-300 px-3 rounded text-slate-700">
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold text-amber-800 uppercase tracking-wide">The Compact Asymmetry:</span>
+              <span><strong>91.4%</strong> of wet water is born upstream, but <strong>60.7%</strong> of paper demands are exercised downstream.</span>
+            </div>
+            <div class="flex items-center gap-3 text-[10.5px]">
+              <span class="text-red-700 font-semibold">• Modern Drought Flow: <strong>~12.50 MAF/yr</strong> (Red Dashed Line)</span>
+              <span class="text-sky-800 font-semibold">• Statutory Release Target: <strong>8.25 MAF/yr</strong> at Lee's Ferry</span>
+            </div>
+          </div>
+
+          <!-- ========================================== -->
+          <!-- BAR 2: PAPER CLAIMS (STATUTORY DEMANDS)    -->
+          <!-- ========================================== -->
+          <div class="relative">
+            <!-- Lee's Ferry Top Marker for Bar 2 (at 7.50 MAF = 37.5%) -->
+            <div class="absolute left-[37.5%] -top-3.5 -translate-x-1/2 flex flex-col items-center z-20 pointer-events-none">
+              <span class="text-[10px] font-extrabold text-blue-800 bg-blue-50 px-1.5 py-0.2 rounded border border-blue-300 shadow-2xs whitespace-nowrap">
+                ▼ Lee's Ferry (Compact Limit: 39.3% Upper Basin Share)
+              </span>
+            </div>
+
+            <div class="flex items-center justify-between text-xs font-bold pb-1 pt-1">
+              <span class="text-orange-800 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-orange-600"></span>
+                <span>BAR 2: STATUTORY PAPER ALLOCATIONS &amp; COMMITMENTS (BY STATE &amp; TREATY)</span>
+              </span>
+              <span class="tabular-numbers text-slate-800">
+                Total Paper Demand: <span class="text-red-700 font-black">19.10 MAF/yr</span> <span class="text-slate-400 font-normal">(Claims exceed 15.2 MAF physical nature)</span>
+              </span>
+            </div>
+
+            <!-- Bar 2 Track (100% = 20 MAF) -->
+            <div class="relative w-full h-9 rounded-lg bg-slate-100 border border-slate-300 flex overflow-hidden shadow-inner">
+              <!-- Upper Basin Statutory Apportionments (1922 Compact base 7.50 MAF = 37.5%) -->
+              <!-- 1. Colorado: 3.86 MAF = 19.30% (51.75% of Upper Basin) -->
+              <div class="bar-segment h-full bg-[#1e40af] border-r border-blue-900/30 flex items-center justify-center text-white text-[10.5px] font-bold px-1 overflow-hidden"
+                   style="width: 19.30%;"
+                   onmouseenter="inspectStackedSegment('Colorado (Upper Basin)', '3.86 MAF/yr (5,332 cfs)', '51.75% of Upper Basin Apportionment', '1948 Upper Colorado River Basin Compact entitlement. Major in-basin agriculture, West Slope irrigation, and Denver trans-mountain diversions.', 'Paper Allocation')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">CO: 3.86 MAF</span>
+              </div>
+
+              <!-- 2. Utah: 1.71 MAF = 8.55% (23.00% of Upper Basin) -->
+              <div class="bar-segment h-full bg-[#2563eb] border-r border-blue-700/30 flex items-center justify-center text-white text-[10px] font-bold px-1 overflow-hidden"
+                   style="width: 8.55%;"
+                   onmouseenter="inspectStackedSegment('Utah (Upper Basin)', '1.71 MAF/yr (2,362 cfs)', '23.00% of Upper Basin Apportionment', 'Central Utah Project (CUP), Uinta Basin agriculture, and Wasatch Front municipal supplies.', 'Paper Allocation')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">UT: 1.71</span>
+              </div>
+
+              <!-- 3. Wyoming: 1.04 MAF = 5.20% (14.00% of Upper Basin) -->
+              <div class="bar-segment h-full bg-[#3b82f6] border-r border-blue-500/30 flex items-center justify-center text-white text-[9.5px] font-bold px-0.5 overflow-hidden"
+                   style="width: 5.20%;"
+                   onmouseenter="inspectStackedSegment('Wyoming (Upper Basin)', '1.04 MAF/yr (1,437 cfs)', '14.00% of Upper Basin Apportionment', 'Green River basin livestock irrigation and Fontenelle Reservoir diversions.', 'Paper Allocation')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">WY: 1.04</span>
+              </div>
+
+              <!-- 4. New Mexico: 0.84 MAF = 4.20% (11.25% of Upper Basin) -->
+              <div class="bar-segment h-full bg-[#60a5fa] border-r border-blue-300/30 flex items-center justify-center text-slate-900 text-[9px] font-bold px-0.5 overflow-hidden"
+                   style="width: 4.20%;"
+                   onmouseenter="inspectStackedSegment('New Mexico (Upper Basin)', '0.84 MAF/yr (1,160 cfs)', '11.25% of Upper Basin Apportionment', 'San Juan-Chama trans-mountain export to Rio Grande basin and Navajo Indian Irrigation Project (NIIP).', 'Paper Allocation')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">NM: 0.84</span>
+              </div>
+
+              <!-- 5. Arizona Upper Share: 0.05 MAF = 0.25% (50,000 AF) -->
+              <div class="bar-segment h-full bg-[#93c5fd] border-r-2 border-amber-600 flex items-center justify-center text-slate-900 text-[7.5px] font-bold overflow-hidden"
+                   style="width: 0.25%;"
+                   onmouseenter="inspectStackedSegment('Arizona (Upper Basin Share)', '0.05 MAF/yr (69 cfs)', '50,000 AF Statutory Upper Allocation', 'Arizona statutory Upper Basin allocation under the 1948 Compact (primarily for Navajo Generating Station and Page, AZ).', 'Paper Allocation')"
+                   onmouseleave="clearStackedInspect()">
+              </div>
+
+              <!-- Lower Basin Statutory Apportionments (Total: 11.60 MAF = 58.0%) -->
+              <!-- 6. California: 4.40 MAF = 22.00% -->
+              <div class="bar-segment h-full bg-[#c2410c] border-r border-orange-800/30 flex items-center justify-center text-white text-[10.5px] font-bold px-1 overflow-hidden"
+                   style="width: 22.00%;"
+                   onmouseenter="inspectStackedSegment('California (1928 BCPA / 1964 Decree)', '4.40 MAF/yr (6,078 cfs)', 'Largest Lower Basin Consumer', 'Imperial Irrigation District (2.6-3.1 MAF), Coachella Valley, Palo Verde Valley, and MWD Colorado River Aqueduct (CRA) to 19M coastal Californians.', 'Paper Allocation')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">California: 4.40 MAF</span>
+              </div>
+
+              <!-- 7. Arizona Lower Mainstem: 2.80 MAF = 14.00% -->
+              <div class="bar-segment h-full bg-[#ea580c] border-r border-orange-700/30 flex items-center justify-center text-white text-[10px] font-bold px-1 overflow-hidden"
+                   style="width: 14.00%;"
+                   onmouseenter="inspectStackedSegment('Arizona (Lower Basin Mainstem)', '2.80 MAF/yr (3,868 cfs)', 'Junior Mainstem Apportionment', 'Central Arizona Project (CAP 1.5 MAF, junior priority) and senior on-river agricultural rights (Yuma, Wellton-Mohawk, CRIT).', 'Paper Allocation')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">Arizona: 2.80</span>
+              </div>
+
+              <!-- 8. Nevada: 0.30 MAF = 1.50% -->
+              <div class="bar-segment h-full bg-[#fb923c] border-r border-orange-500/30 flex items-center justify-center text-slate-900 text-[8.5px] font-bold px-0.5 overflow-hidden"
+                   style="width: 1.50%;"
+                   onmouseenter="inspectStackedSegment('Nevada', '0.30 MAF/yr (414 cfs)', 'Southern Nevada Water Authority', 'Las Vegas municipal drinking water drawn directly from Lake Mead intake straws.', 'Paper Allocation')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">NV</span>
+              </div>
+
+              <!-- 9. Compact Art. III(b) Right: 1.00 MAF = 5.00% -->
+              <div class="bar-segment h-full bg-[#fdba74] border-r border-orange-400/30 flex items-center justify-center text-slate-900 text-[9px] font-bold px-0.5 overflow-hidden"
+                   style="width: 5.00%;"
+                   onmouseenter="inspectStackedSegment('1922 Compact Article III(b)', '1.00 MAF/yr (1,381 cfs)', 'Lower Basin Apportionment Expansion', 'Allows Lower Basin to increase its consumptive use by 1.0 MAF annually beyond the base 7.5 MAF.', 'Paper Allocation')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">Art. III(b): 1.0</span>
+              </div>
+
+              <!-- 10. 1944 Mexican Water Treaty: 1.50 MAF = 7.50% -->
+              <div class="bar-segment h-full bg-[#7c3aed] border-r border-purple-700/30 flex items-center justify-center text-white text-[10px] font-bold px-1 overflow-hidden"
+                   style="width: 7.50%;"
+                   onmouseenter="inspectStackedSegment('1944 Mexican Water Treaty', '1.50 MAF/yr (2,072 cfs)', 'International Treaty Obligation', 'Guaranteed annual delivery to Mexico at Morelos Dam for Mexicali Valley agriculture and Baja California municipalities.', 'Treaty Obligation')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">Mexico: 1.50</span>
+              </div>
+
+              <!-- 11. Reservoir Evaporation & Transit Losses: 1.60 MAF = 8.00% -->
+              <div class="bar-segment h-full bg-[#64748b] border-r-2 border-red-600 flex items-center justify-center text-white text-[9.5px] font-bold px-1 overflow-hidden"
+                   style="width: 8.00%;"
+                   onmouseenter="inspectStackedSegment('Reservoir Evaporation & Transit Losses', '1.60 MAF/yr (2,210 cfs)', 'Physical Evaporation (Omitted from 1922 Compact)', 'Lake Powell (0.38 MAF), Lake Mead (0.65 MAF), and lower channel transit/riparian seepage (0.55 MAF). The 1922 Compact never deducted evaporation, creating an immediate structural deficit.', 'System Depletion')"
+                   onmouseleave="clearStackedInspect()">
+                <span class="truncate">Evap/Loss: 1.60</span>
+              </div>
+
+              <!-- Scale Buffer to 20 MAF (19.10 to 20.00 MAF = 4.5%) -->
+              <div class="h-full bg-slate-100 flex items-center justify-center text-slate-400 text-[9px] font-medium italic"
+                   style="width: 4.5%;">
+              </div>
+            </div>
+
+            <!-- STRUCTURAL DEFICIT OVERHANG BRACKET (Positioned immediately below Bar 2) -->
+            <!-- Spans from 15.20 MAF (76.0%) to 19.10 MAF (95.5%) = 19.5% width -->
+            <div class="relative w-full h-6 mt-1 select-none pointer-events-none">
+              <div class="absolute left-[76.0%] top-0 h-5 border-l-2 border-b-2 border-r-2 border-red-600 deficit-stripe rounded-b flex items-center justify-center z-10"
+                   style="width: 19.5%;">
+                <span class="text-[9px] font-black text-red-700 bg-white/95 px-1.5 py-0.2 rounded border border-red-300 shadow-2xs whitespace-nowrap">
+                  ⚠ +3.90 MAF Structural Deficit (+6.60 MAF Modern Drought)
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Segment Telemetry Strip (Edward Tufte Restraint) -->
+        <div id="stacked-telemetry" class="mt-2 p-2 rounded-lg bg-slate-50 border border-slate-200 text-xs flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <span id="st-badge" class="px-2 py-0.5 rounded bg-sky-100 text-sky-800 font-extrabold text-[10px] uppercase">Hover any segment</span>
+            <span id="st-title" class="font-bold text-slate-900">Inspect Basin Runoff Origins vs. Statutory Claims</span>
+          </div>
+          <div class="flex items-center gap-4 text-slate-600">
+            <div><span class="text-slate-400">Volume:</span> <strong id="st-vol" class="text-slate-900 tabular-numbers">--</strong></div>
+            <div><span class="text-slate-400">Basin Share:</span> <strong id="st-share" class="text-slate-900 tabular-numbers">--</strong></div>
+          </div>
+          <div id="st-desc" class="w-full text-slate-600 text-[11.5px] mt-0.5 pt-1 border-t border-slate-200">
+            Move mouse across either bar to evaluate exact MAF volumes, continuous rate conversion (1 MAF/yr ≈ 1,381 cfs), and legal authority.
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Data Summary Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 mt-4">
-      <!-- 1. Supply Card -->
-      <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+    <!-- ================================================================= -->
+    <!-- VIEW 2: LONGITUDINAL ELEVATION PROFILE (1,400+ MILES)              -->
+    <!-- ================================================================= -->
+    <div id="view-elevation" class="hidden space-y-3">
+      <!-- Profile Controls & Mode Toggles -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 p-3 bg-white rounded-xl border border-slate-300 shadow-sm">
         <div>
-          <div class="text-[11px] font-bold text-sky-600 uppercase tracking-wider">Natural Basin Runoff (Supply)</div>
-          <div class="text-2xl font-black text-slate-900 mt-1">~12.5 – 14.8 <span class="text-sm font-semibold text-slate-500">MAF/yr</span></div>
-          <div class="text-[11.5px] text-slate-600 mt-2 space-y-1">
-            <div>• <strong class="text-slate-800">14.8 MAF:</strong> 20th-century historical avg (1906–2020)</div>
-            <div>• <strong class="text-slate-800">12.5 MAF:</strong> Post-2000 modern flow average (2000–2024)</div>
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded bg-sky-50 text-sky-800 border border-sky-200">Longitudinal Thalweg Profile</span>
+            <span class="text-xs text-slate-500 tabular-numbers">1,400+ River Miles &bull; 10,184 ft Fall Line</span>
           </div>
+          <p class="text-xs text-slate-600 mt-0.5">
+            Hypsometric descent from Continental Divide headwaters to Gulf of California sea level. Displays reservoirs as horizontal pool bathtubs, vertical dam hydraulic head drops, 2.5D tributary feeder axes, and USGS streamgaging diagnostics.
+          </p>
         </div>
-        <div class="text-[10px] text-slate-400 mt-2.5 pt-2 border-t border-slate-100 italic">
-          Climate aridification has reduced annual runoff yield by ~15–20%.
+
+        <!-- Interactive Mode Toggles -->
+        <div class="flex items-center gap-2">
+          <div class="flex items-center rounded-lg border border-slate-300 bg-slate-100 p-0.5 text-xs">
+            <button id="btn-view-2d" onclick="switchElevationView('2d')" class="px-3 py-1.5 rounded-md font-semibold transition text-sky-700 bg-white shadow-sm border border-slate-200">
+              2D Orthographic
+            </button>
+            <button id="btn-view-25d" onclick="switchElevationView('25d')" class="px-3 py-1.5 rounded-md font-medium transition text-slate-600 hover:text-slate-900">
+              2.5D Inflow Projection
+            </button>
+          </div>
+          <button id="btn-toggle-gaps" onclick="toggleElevationGaps()" class="px-3 py-1.5 rounded-lg border border-amber-300 bg-amber-50 text-amber-900 text-xs font-semibold hover:bg-amber-100 transition flex items-center gap-1.5 shadow-sm">
+            <span class="w-2 h-2 rounded-full bg-amber-600"></span>
+            Toggle Question Marks (?)
+          </button>
         </div>
       </div>
 
-      <!-- 2. Compact Delivery Card -->
-      <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm hover:shadow-md transition flex flex-col justify-between">
-        <div>
-          <div class="text-[11px] font-bold text-sky-600 uppercase tracking-wider">Lee's Ferry Downstream Release</div>
-          <div class="text-2xl font-black text-sky-700 mt-1">8.23 <span class="text-sm font-semibold text-sky-600">MAF/yr</span> <span class="text-xs font-medium text-slate-400">(7.0–9.0)</span></div>
-          <div class="text-[11.5px] text-slate-600 mt-2 space-y-1">
-            <div>• <strong class="text-slate-800">7.50 MAF:</strong> 1922 Compact base (75 MAF / 10-yr)</div>
-            <div>• <strong class="text-slate-800">+0.75 MAF:</strong> Upper Basin 50% share of Mexico Treaty</div>
-            <div>• <strong class="text-sky-700">= 8.25 MAF:</strong> Statutory target (8.23 under 2007 Rules)</div>
+      <!-- Main Profile SVG Canvas -->
+      <div class="bg-white border border-slate-300 rounded-xl p-4 shadow-sm overflow-x-auto">
+        <svg id="profile-svg" viewBox="0 0 1200 620" class="w-full h-auto min-w-[900px] select-none block">
+          <defs>
+            <linearGradient id="sky-grid-grad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#0284c7" stop-opacity="0.08"/>
+              <stop offset="100%" stop-color="#0284c7" stop-opacity="0.0"/>
+            </linearGradient>
+            <linearGradient id="res-water-grad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#bae6fd" stop-opacity="0.85"/>
+              <stop offset="100%" stop-color="#7dd3fc" stop-opacity="0.55"/>
+            </linearGradient>
+            <pattern id="diagonal-stripe" width="8" height="8" patternUnits="userSpaceOnUse">
+              <path d="M-2,2 l4,-4 M0,8 l8,-8 M6,10 l4,-4" stroke="#f59e0b" stroke-width="1.2" stroke-opacity="0.4" />
+            </pattern>
+          </defs>
+
+          <!-- Axes Gridlines & Labels -->
+          <g id="grid-group">
+            <!-- 10,000 ft -->
+            <line x1="80" y1="60" x2="1140" y2="60" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>
+            <text x="70" y="64" text-anchor="end" class="text-[11px] fill-slate-500 tabular-numbers">10,000 ft</text>
+
+            <!-- 8,000 ft -->
+            <line x1="80" y1="156" x2="1140" y2="156" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>
+            <text x="70" y="160" text-anchor="end" class="text-[11px] fill-slate-500 tabular-numbers">8,000 ft</text>
+
+            <!-- 6,000 ft -->
+            <line x1="80" y1="252" x2="1140" y2="252" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>
+            <text x="70" y="256" text-anchor="end" class="text-[11px] fill-slate-500 tabular-numbers">6,000 ft</text>
+
+            <!-- 4,000 ft -->
+            <line x1="80" y1="348" x2="1140" y2="348" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>
+            <text x="70" y="352" text-anchor="end" class="text-[11px] fill-slate-500 tabular-numbers">4,000 ft</text>
+
+            <!-- 2,000 ft -->
+            <line x1="80" y1="444" x2="1140" y2="444" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>
+            <text x="70" y="448" text-anchor="end" class="text-[11px] fill-slate-500 tabular-numbers">2,000 ft</text>
+
+            <!-- 0 ft (Sea Level) -->
+            <line x1="80" y1="540" x2="1140" y2="540" stroke="#94a3b8" stroke-width="1.5"/>
+            <text x="70" y="544" text-anchor="end" class="text-[11px] fill-slate-700 font-bold tabular-numbers">0 ft</text>
+
+            <!-- X Distance Axis (River Miles 0 to 1,400) -->
+            <line x1="80" y1="540" x2="80" y2="546" stroke="#94a3b8" stroke-width="1.5"/>
+            <text x="80" y="562" text-anchor="middle" class="text-[11px] fill-slate-600 tabular-numbers font-medium">0 mi</text>
+            <text x="80" y="576" text-anchor="middle" class="text-[9px] fill-slate-700 font-bold">SOURCE</text>
+
+            <line x1="230" y1="540" x2="230" y2="546" stroke="#cbd5e1" stroke-width="1"/>
+            <text x="230" y="562" text-anchor="middle" class="text-[11px] fill-slate-500 tabular-numbers">200 mi</text>
+            <text x="230" y="576" text-anchor="middle" class="text-[9px] fill-slate-500">Grand Jct</text>
+
+            <line x1="380" y1="540" x2="380" y2="546" stroke="#cbd5e1" stroke-width="1"/>
+            <text x="380" y="562" text-anchor="middle" class="text-[11px] fill-slate-500 tabular-numbers">400 mi</text>
+            <text x="380" y="576" text-anchor="middle" class="text-[9px] fill-slate-500">Green Confluence</text>
+
+            <line x1="530" y1="540" x2="530" y2="546" stroke="#cbd5e1" stroke-width="1"/>
+            <text x="530" y="562" text-anchor="middle" class="text-[11px] fill-slate-500 tabular-numbers">600 mi</text>
+            <text x="530" y="576" text-anchor="middle" class="text-[9px] fill-sky-700 font-bold">Lees Ferry</text>
+
+            <line x1="680" y1="540" x2="680" y2="546" stroke="#cbd5e1" stroke-width="1"/>
+            <text x="680" y="562" text-anchor="middle" class="text-[11px] fill-slate-500 tabular-numbers">800 mi</text>
+            <text x="680" y="576" text-anchor="middle" class="text-[9px] fill-slate-500">Grand Canyon</text>
+
+            <line x1="830" y1="540" x2="830" y2="546" stroke="#cbd5e1" stroke-width="1"/>
+            <text x="830" y="562" text-anchor="middle" class="text-[11px] fill-slate-500 tabular-numbers">1,000 mi</text>
+            <text x="830" y="576" text-anchor="middle" class="text-[9px] fill-slate-700 font-bold">Hoover Dam</text>
+
+            <line x1="980" y1="540" x2="980" y2="546" stroke="#cbd5e1" stroke-width="1"/>
+            <text x="980" y="562" text-anchor="middle" class="text-[11px] fill-slate-500 tabular-numbers">1,200 mi</text>
+            <text x="980" y="576" text-anchor="middle" class="text-[9px] fill-slate-500">Imperial Dam</text>
+
+            <line x1="1130" y1="540" x2="1130" y2="546" stroke="#94a3b8" stroke-width="1.5"/>
+            <text x="1130" y="562" text-anchor="middle" class="text-[11px] fill-slate-600 tabular-numbers font-medium">1,400 mi</text>
+            <text x="1130" y="576" text-anchor="middle" class="text-[9px] fill-slate-700 font-bold">DELTA</text>
+          </g>
+
+          <!-- QUESTION MARK UN-GAGED STRETCH DIAGNOSTICS -->
+          <g id="gaps-group" class="transition-opacity duration-300">
+            <!-- Gap 1: Lake Powell Slackwater Pool -->
+            <rect x="402" y="50" width="100" height="490" fill="url(#diagonal-stripe)" class="gap-zone" opacity="0.3"
+              onmouseenter="showGapInfo('Lake Powell Slackwater Reservoir (105 mi)', 'Mile 430 to 535', 'Slackwater Impoundment Pool', 'Zero measurable channel velocity (v ≈ 0.01 ft/s). Open-channel streamflow gaging physics break down in deep slackwater pools. Inflow is tracked at Cisco + Green River; storage volume is calculated via USBR surface elevation.')"
+              onmouseleave="hideGapInfo()"/>
+            <rect x="440" y="82" width="24" height="24" rx="4" fill="#ffffff" stroke="#f59e0b" stroke-width="1.2" class="pointer-events-none shadow-sm"/>
+            <text x="452" y="99" text-anchor="middle" class="fill-amber-700 font-bold text-sm select-none pointer-events-none">?</text>
+            <text x="452" y="118" text-anchor="middle" class="fill-amber-800 text-[9px] font-semibold select-none pointer-events-none">105-mi Pool</text>
+
+            <!-- Gap 2: Grand Canyon Deep Gorge Gap -->
+            <rect x="560" y="50" width="102" height="490" fill="url(#diagonal-stripe)" class="gap-zone" opacity="0.3"
+              onmouseenter="showGapInfo('Grand Canyon Granite Gorges (137-Mile Wave-Lag Gap)', 'Mile 639 to 776 (Phantom Ranch to Diamond Creek)', 'Roadless Wilderness Canyon', 'Sheer 1,000-ft cliffs with zero road access or power. USGS operates only at Phantom Ranch (Mile 88) and Diamond Creek (Mile 225). Flow transit time between these gages is 18 to 24 hours.')"
+              onmouseleave="hideGapInfo()"/>
+            <rect x="599" y="82" width="24" height="24" rx="4" fill="#ffffff" stroke="#f59e0b" stroke-width="1.2" class="pointer-events-none shadow-sm"/>
+            <text x="611" y="99" text-anchor="middle" class="fill-amber-700 font-bold text-sm select-none pointer-events-none">?</text>
+            <text x="611" y="118" text-anchor="middle" class="fill-amber-800 text-[9px] font-semibold select-none pointer-events-none">137-mi Canyon</text>
+
+            <!-- Gap 3: Lake Mead Slackwater Pool -->
+            <rect x="670" y="50" width="65" height="490" fill="url(#diagonal-stripe)" class="gap-zone" opacity="0.3"
+              onmouseenter="showGapInfo('Lake Mead Slackwater Reservoir (85 mi)', 'Mile 780 to 865 (Grand Wash to Hoover Dam)', 'Slackwater Impoundment Pool', 'Deep lake pool impounded behind Hoover Dam. Gaged by USGS Grand Wash Cliffs at headwaters; storage monitored via USBR Hoover Dam pool elevation.')"
+              onmouseleave="hideGapInfo()"/>
+            <rect x="690" y="82" width="24" height="24" rx="4" fill="#ffffff" stroke="#f59e0b" stroke-width="1.2" class="pointer-events-none shadow-sm"/>
+            <text x="702" y="99" text-anchor="middle" class="fill-amber-700 font-bold text-sm select-none pointer-events-none">?</text>
+            <text x="702" y="118" text-anchor="middle" class="fill-amber-800 text-[9px] font-semibold select-none pointer-events-none">85-mi Pool</text>
+          </g>
+
+          <!-- 2.5D ANGLED TRIBUTARY FEEDER VECTORS -->
+          <g id="tribs-25d-group" class="transition-opacity duration-300 opacity-20">
+            <!-- 1. Green River -->
+            <path d="M 230 40 Q 280 200 342 353" fill="none" stroke="var(--trib-color)" stroke-width="3.0" stroke-linecap="round" opacity="0.9" stroke-dasharray="6,3"/>
+            <text x="226" y="34" class="text-[10px] font-bold fill-teal-800">Green River (Z-Axis Inflow: 730 mi)</text>
+            <text x="226" y="46" class="text-[9px] fill-slate-500">Wind River Range &bull; 10,500 ft</text>
+
+            <circle cx="280" cy="200" r="4.5" fill="#ffffff" stroke="var(--trib-color)" stroke-width="2.0" class="profile-node"
+              onmouseenter="showElevationGageInfo('USGS #09315000 Green River at Green River, UT', 'Green River Trib (Mile 118 above Confluence)', '4,080 ft', '3,880 cfs', 'None (Free-flowing)', 'Major Inflow Control', 'Dominant Upper Basin tributary draining WY, UT, and CO. Provides ~33% of total Colorado River water.')"
+              onmouseleave="hideGapInfo()"/>
+
+            <!-- 2. Gunnison River -->
+            <path d="M 160 84 Q 190 200 226 320" fill="none" stroke="var(--trib-color)" stroke-width="2.2" stroke-linecap="round" opacity="0.85" stroke-dasharray="5,3"/>
+            <text x="135" y="76" class="text-[9px] font-bold fill-teal-800">Gunnison River</text>
+            <text x="135" y="87" class="text-[8px] fill-slate-500">9,500 ft &bull; Blue Mesa</text>
+
+            <!-- 3. San Juan River -->
+            <path d="M 390 60 Q 420 220 450 370" fill="none" stroke="var(--trib-color)" stroke-width="2.4" stroke-linecap="round" opacity="0.85" stroke-dasharray="5,3"/>
+            <text x="375" y="52" class="text-[9px] font-bold fill-teal-800">San Juan River</text>
+            <text x="375" y="63" class="text-[8px] fill-slate-500">10,000 ft &bull; Navajo Dam</text>
+
+            <!-- 4. Little Colorado River -->
+            <path d="M 480 132 Q 510 320 540 409" fill="none" stroke="var(--trib-color)" stroke-width="2.0" stroke-linecap="round" opacity="0.8" stroke-dasharray="4,3"/>
+            <text x="460" y="124" class="text-[9px] font-bold fill-teal-800">Little Colorado</text>
+
+            <!-- 5. Virgin River -->
+            <path d="M 640 156 Q 665 350 690 490" fill="none" stroke="var(--trib-color)" stroke-width="2.0" stroke-linecap="round" opacity="0.8" stroke-dasharray="4,3"/>
+            <text x="625" y="148" class="text-[9px] font-bold fill-teal-800">Virgin River</text>
+
+            <!-- 6. Gila River -->
+            <path d="M 940 204 Q 970 420 995 533" fill="none" stroke="var(--trib-color)" stroke-width="2.0" stroke-linecap="round" opacity="0.8" stroke-dasharray="4,3"/>
+            <text x="925" y="196" class="text-[9px] font-bold fill-teal-800">Gila River (+Salt/Verde)</text>
+          </g>
+
+          <!-- MAIN COLORADO RIVER PROFILE VECTOR -->
+          <g id="mainstem-river-group">
+            <path d="M 80 52 Q 95 142 111 142 L 135 165 L 180 187 L 226 320 L 271 343 L 342 353 L 372 370 L 481 370 L 481 389 L 493 391 L 540 409 L 560 424 L 662 476 L 695 490 L 759 490 L 759 509 L 809 515 L 809 522 L 875 522 L 875 526 L 976 532 L 998 535 L 1130 540 L 1130 540 L 80 540 Z" fill="url(#sky-grid-grad)"/>
+
+            <!-- Lake Granby -->
+            <rect x="91" y="138" width="20" height="7" rx="2" fill="var(--res-pool)" stroke="var(--res-stroke)" stroke-width="1.2"
+              class="cursor-pointer"
+              onmouseenter="showElevationGageInfo('Lake Granby (C-BT Storage Pool)', 'Mile 20.0', '8,280 ft (Full Pool)', '539,800 AF Capacity', 'Granby Dam Outlet', 'C-BT Headwaters Storage', 'Primary storage reservoir for Colorado-Big Thompson trans-mountain diversion project under the Continental Divide.')"
+              onmouseleave="hideGapInfo()"/>
+            <text x="101" y="132" text-anchor="middle" class="text-[8.5px] fill-sky-800 font-bold pointer-events-none">Granby</text>
+
+            <!-- Lake Powell Pool -->
+            <rect x="372" y="366" width="109" height="8" rx="2" fill="url(#res-water-grad)" stroke="var(--res-stroke)" stroke-width="1.5"
+              class="cursor-pointer"
+              onmouseenter="showElevationGageInfo('Lake Powell Reservoir Pool', 'Mile 390.0 to 535.0 (145 mi)', '3,540 ft (Current Pool)', 'Active Storage: ~7.6M AF', '390 ft Head Drop at Glen Canyon Dam', 'Upper Basin Master Storage Buffer', 'Stores up to 24.3 MAF when full. Buffer protecting Upper Basin compact compliance during multi-year droughts.')"
+              onmouseleave="hideGapInfo()"/>
+            <line x1="481" y1="366" x2="481" y2="390" stroke="var(--dam-color)" stroke-width="3" stroke-linecap="round"/>
+            <text x="426" y="360" text-anchor="middle" class="text-[10px] fill-sky-900 font-bold pointer-events-none">Lake Powell (Pool Elev: 3,540 ft &bull; 145 mi)</text>
+
+            <!-- Lake Mead Pool -->
+            <rect x="695" y="486" width="64" height="8" rx="2" fill="url(#res-water-grad)" stroke="var(--res-stroke)" stroke-width="1.5"
+              class="cursor-pointer"
+              onmouseenter="showElevationGageInfo('Lake Mead Reservoir Pool', 'Mile 780.0 to 865.0 (85 mi)', '1,065 ft (Current Pool)', 'Active Storage: ~8.8M AF', '395 ft Head Drop at Hoover Dam', 'Lower Basin Flow Master Control', 'Largest reservoir by volume in the US (26.1M AF capacity). Governs water releases to NV, AZ, CA, and Mexico.')"
+              onmouseleave="hideGapInfo()"/>
+            <line x1="759" y1="486" x2="759" y2="509" stroke="var(--dam-color)" stroke-width="3.5" stroke-linecap="round"/>
+            <text x="727" y="480" text-anchor="middle" class="text-[10px] fill-sky-900 font-bold pointer-events-none">Lake Mead (1,065 ft &bull; 85 mi)</text>
+
+            <!-- Lake Mohave -->
+            <rect x="760" y="512" width="49" height="6" rx="1.5" fill="var(--res-pool)" stroke="var(--res-stroke)" stroke-width="1.2"
+              class="cursor-pointer"
+              onmouseenter="showElevationGageInfo('Lake Mohave (Davis Dam Pool)', 'Mile 865.0 to 932.0 (67 mi)', '647 ft (Full Pool)', '1.81M AF Capacity', '135 ft Head Drop at Davis Dam', 'Downstream Reregulation', 'Reregulates hydro peaking releases from Hoover Dam to provide uniform flow downstream to Parker Dam.')"
+              onmouseleave="hideGapInfo()"/>
+            <line x1="809" y1="512" x2="809" y2="522" stroke="var(--dam-color)" stroke-width="2.5" stroke-linecap="round"/>
+            <text x="785" y="506" text-anchor="middle" class="text-[8.5px] fill-sky-800 font-bold pointer-events-none">Mohave</text>
+
+            <!-- Lake Havasu -->
+            <rect x="810" y="519" width="65" height="6" rx="1.5" fill="var(--res-pool)" stroke="var(--res-stroke)" stroke-width="1.2"
+              class="cursor-pointer"
+              onmouseenter="showElevationGageInfo('Lake Havasu (Parker Dam Pool)', 'Mile 932.0 to 977.0 (45 mi)', '450 ft (Full Pool)', '619,400 AF Capacity', '72 ft Head Drop at Parker Dam', 'Major Pumping Forebay', 'Pumping forebay for the Colorado River Aqueduct (CRA -> SoCal) and Central Arizona Project (CAP -> Phoenix/Tucson).')"
+              onmouseleave="hideGapInfo()"/>
+            <line x1="875" y1="519" x2="875" y2="526" stroke="var(--dam-color)" stroke-width="2.5" stroke-linecap="round"/>
+            <text x="842" y="513" text-anchor="middle" class="text-[8.5px] fill-sky-800 font-bold pointer-events-none">Havasu</text>
+
+            <!-- Imperial Dam Sluiceway -->
+            <line x1="976" y1="530" x2="976" y2="534" stroke="var(--dam-color)" stroke-width="2" stroke-linecap="round"/>
+            <text x="976" y="523" text-anchor="middle" class="text-[8px] fill-slate-700 font-bold pointer-events-none">Imperial</text>
+
+            <!-- Morelos Dam -->
+            <line x1="998" y1="533" x2="998" y2="536" stroke="var(--dam-color)" stroke-width="2" stroke-linecap="round"/>
+            <text x="1005" y="526" text-anchor="start" class="text-[8px] fill-slate-700 font-bold pointer-events-none">Morelos</text>
+
+            <!-- Main Thalweg Line -->
+            <path d="M 80 52 
+                     Q 95 142 111 142 
+                     L 135 165 
+                     L 180 187 
+                     L 226 320 
+                     L 271 343 
+                     L 342 353 
+                     L 372 370 
+                     L 481 370 
+                     L 481 389 
+                     L 493 391 
+                     L 540 409 
+                     L 560 424 
+                     L 662 476 
+                     L 695 490 
+                     L 759 490 
+                     L 759 509 
+                     L 809 515 
+                     L 809 522 
+                     L 875 522 
+                     L 875 526 
+                     L 976 532 
+                     L 998 535 
+                     L 1130 540" 
+                  fill="none" stroke="#0284c7" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+            <!-- Gaging Stations -->
+            <!-- Gage 1: Source / Grand Lake (Mile 0) -->
+            <circle cx="80" cy="52" r="4.5" fill="#ffffff" stroke="#0284c7" stroke-width="1.8" class="profile-node"
+              onmouseenter="showElevationGageInfo('USGS #09010500 Colorado River below Baker Gulch, CO', 'Mile 8.5 (Continental Divide Headwaters)', '8,750 ft', '18 cfs', 'None (Alpine Snowmelt)', 'Alpine Source Baseline', 'Alpine origin near La Poudre Pass. Tracks natural headwater runoff above all trans-basin diversion tunnels.')"
+              onmouseleave="hideGapInfo()"/>
+
+            <!-- Gage 2: Dotsero (Mile 135) -->
+            <circle cx="180" cy="187" r="4.5" fill="#ffffff" stroke="#0284c7" stroke-width="1.8" class="profile-node"
+              onmouseenter="showElevationGageInfo('USGS #09070500 Colorado River near Dotsero, CO', 'Mile 134.8', '6,130 ft', '1,240 cfs', 'Glenwood Canyon Drop', 'Mainstem Mountain Reach', 'Located above Glenwood Springs and Roaring Fork confluence. Reflects upstream trans-mountain tunnel exports to Denver.')"
+              onmouseleave="hideGapInfo()"/>
+
+            <!-- Gage 3: Cameo / Grand Valley (Mile 190) -->
+            <circle cx="226" cy="320" r="4.5" fill="#ffffff" stroke="#0284c7" stroke-width="1.8" class="profile-node"
+              onmouseenter="showElevationGageInfo('USGS #09095500 Colorado River near Cameo, CO', 'Mile 190.2', '4,790 ft', '2,150 cfs', 'Grand Valley Diversion Roller Dam', 'Grand Valley Agricultural Control', 'Critical regulatory gage for Grand Valley irrigation call. Determines whether senior water rights force junior upstream storage curtailments.')"
+              onmouseleave="hideGapInfo()"/>
+
+            <!-- Gage 4: Cisco (Mile 285) -->
+            <circle cx="271" cy="343" r="4.5" fill="#ffffff" stroke="#0284c7" stroke-width="1.8" class="profile-node"
+              onmouseenter="showElevationGageInfo('USGS #09180500 Colorado River near Cisco, UT', 'Mile 285.4 (CO-UT State Line)', '4,090 ft', '3,920 cfs', 'None (Free-flowing Canyons)', 'Upper Colorado Master Inflow', 'Master accounting station for Colorado mainstem inflow before Green River junction. Drains 24,100 sq mi of Colorado Rockies.')"
+              onmouseleave="hideGapInfo()"/>
+
+            <!-- Confluence Node: Green + Colorado (Mile 350) -->
+            <circle cx="342" cy="353" r="5.5" fill="#0d9488" stroke="#ffffff" stroke-width="1.8" class="profile-node"
+              onmouseenter="showElevationGageInfo('Cataract Canyon Confluence (Green & Colorado Rivers)', 'Mile 350.0 (Canyonlands National Park)', '3,880 ft', 'Combined: ~7,800 cfs', 'Cataract Canyon Rapids (Drops 400 ft in 14 mi)', 'Master Basin Confluence', 'Topological junction of the Green and Colorado rivers. The combined river doubles in discharge before plunging into Lake Powell.')"
+              onmouseleave="hideGapInfo()"/>
+
+            <!-- Gage 5: Lees Ferry (Mile 551) -->
+            <circle cx="503" cy="393" r="6.0" fill="#0284c7" stroke="#ffffff" stroke-width="2.0" class="profile-node"
+              onmouseenter="showElevationGageInfo('USGS #09380000 at Lees Ferry, AZ', 'Mile 551.0 (Mile 0.0 of Compact)', '3,110 ft', '6,680 cfs', 'Tailwater Control', 'Sentinel Legal Divide', '1922 Colorado River Compact legal division point between Upper and Lower Basins. Mandates 75 MAF rolling 10-year delivery.')"
+              onmouseleave="hideGapInfo()"/>
+
+            <!-- Gage 6: Grand Canyon / Phantom Ranch (Mile 639) -->
+            <circle cx="540" cy="409" r="4.5" fill="#ffffff" stroke="#0284c7" stroke-width="1.8" class="profile-node"
+              onmouseenter="showElevationGageInfo('USGS #09402500 near Grand Canyon, AZ (Phantom Ranch)', 'Mile 639.0 (Mile 88 below Lees Ferry)', '2,420 ft', '7,150 cfs', 'Granite Gorge Rapids', 'Mid-Canyon Wilderness Sentinel', 'Only mid-canyon telemetry station accessible by foot/mule. Gages sediment pulses and Little Colorado River flash flood inflows.')"
+              onmouseleave="hideGapInfo()"/>
+
+            <!-- Gage 7: Diamond Creek (Mile 776) -->
+            <circle cx="662" cy="476" r="4.5" fill="#ffffff" stroke="#0284c7" stroke-width="1.8" class="profile-node"
+              onmouseenter="showElevationGageInfo('USGS #09404200 above Diamond Creek, AZ', 'Mile 776.0 (Mile 225 below Lees Ferry)', '1,335 ft', '8,920 cfs', 'Lake Mead Delta Inflow', 'Lower Grand Canyon Compliance', 'End of 137-mile wilderness canyon stretch. Measures canyon wave travel lag and Lake Mead inflow.')"
+              onmouseleave="hideGapInfo()"/>
+
+            <!-- Gage 8: Hoover Dam (Mile 905) -->
+            <circle cx="759" cy="490" r="5.0" fill="#334155" stroke="#ffffff" stroke-width="1.5" class="profile-node"
+              onmouseenter="showElevationGageInfo('Hoover Dam (USBR Hydroelectric Operations)', 'Mile 905.0', '1,220 ft (Crest) / 1,040 ft (Pool)', '7,502 cfs Release', '395 ft Active Hydraulic Head Drop', 'Lower Basin Flow Master Control', 'Controls all water deliveries to CA, AZ, NV, and Mexico. Releases water into Lake Mohave based on downstream water orders.')"
+              onmouseleave="hideGapInfo()"/>
+
+            <!-- Gage 9: Below Imperial Dam (Mile 1,195) -->
+            <circle cx="976" cy="532" r="4.5" fill="#ffffff" stroke="#0284c7" stroke-width="1.8" class="profile-node"
+              onmouseenter="showElevationGageInfo('USGS #09429500 below Imperial Dam, AZ-CA', 'Mile 1,195.0', '160 ft', '186 cfs', 'All-American Canal Diverts ~3,600+ cfs', 'Agricultural Diversion Control', 'Residual channel flow after ~80% of Lower Basin water is diverted into the All-American Canal for Imperial Valley and Gila Project.')"
+              onmouseleave="hideGapInfo()"/>
+
+            <!-- Gage 10: Gulf of California / Delta (Mile 1,400) -->
+            <circle cx="1130" cy="540" r="4.5" fill="#0284c7" stroke="#ffffff" stroke-width="1.8" class="profile-node"
+              onmouseenter="showElevationGageInfo('Colorado River Delta & Sea Level', 'Mile 1,400.0', '0 ft (Sea Level)', '0 cfs (Dry Sands)', 'Historical Delta Estuary', 'Terminal Ocean Sink', 'Historically discharged ~15 MAF/yr into Gulf of California. Now largely desiccated sandflats except during pulse flows.')"
+              onmouseleave="hideGapInfo()"/>
+          </g>
+        </svg>
+      </div>
+
+      <!-- Interactive Feature Inspection Strip -->
+      <div id="readout-strip" class="p-3.5 rounded-xl border border-slate-300 bg-white shadow-sm text-slate-800 transition-all">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-slate-200">
+          <div class="flex items-center gap-2">
+            <span id="readout-type" class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-sky-100 text-sky-800 border border-sky-200">Sentinel Legal Divide</span>
+            <span id="readout-title" class="text-sm md:text-base font-bold text-slate-900">USGS #09380000 at Lees Ferry, AZ</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-slate-500 font-medium">Distance from Headwaters:</span>
+            <span id="readout-mile" class="text-xs font-bold tabular-numbers text-slate-800 px-2 py-0.5 bg-slate-50 rounded border border-slate-200">Mile 551.0</span>
           </div>
         </div>
-        <div class="text-[10px] text-slate-400 mt-2.5 pt-2 border-t border-slate-100 italic">
-          Adjusts between 7.0 &amp; 9.0 MAF based on Powell-Mead storage tiers.
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mt-2.5 text-xs">
+          <div class="p-2 rounded-lg bg-slate-50 border border-slate-200">
+            <div class="text-[9.5px] text-slate-500 uppercase font-bold tracking-wide">Surface Elevation</div>
+            <div id="readout-elev" class="font-bold text-sky-800 text-sm tabular-numbers mt-0.5">3,110 ft</div>
+          </div>
+          <div class="p-2 rounded-lg bg-slate-50 border border-slate-200">
+            <div class="text-[9.5px] text-slate-500 uppercase font-bold tracking-wide">Live Flow / Release</div>
+            <div id="readout-flow" class="font-bold text-slate-900 text-sm tabular-numbers mt-0.5">6,680 cfs</div>
+          </div>
+          <div class="p-2 rounded-lg bg-slate-50 border border-slate-200">
+            <div class="text-[9.5px] text-slate-500 uppercase font-bold tracking-wide">Hydraulic Head / Drop</div>
+            <div id="readout-drop" class="font-bold text-slate-700 text-sm tabular-numbers mt-0.5">Tailwater Control</div>
+          </div>
+          <div class="p-2 rounded-lg bg-slate-50 border border-slate-200">
+            <div class="text-[9.5px] text-slate-500 uppercase font-bold tracking-wide">Gaging Span Status</div>
+            <div id="readout-span" class="font-bold text-slate-700 text-sm tabular-numbers mt-0.5">Sentinel Control</div>
+          </div>
+        </div>
+
+        <div class="mt-2.5 pt-2 border-t border-slate-200 flex flex-col sm:flex-row sm:items-baseline gap-1.5">
+          <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wide flex-shrink-0">Operational Context:</span>
+          <div id="readout-notes" class="text-xs text-slate-700 leading-relaxed">
+            1922 Colorado River Compact legal division point between Upper and Lower Basins. Mandates 75 MAF rolling 10-year delivery.
+          </div>
         </div>
       </div>
 
-      <!-- 3. Total Depletions Card -->
-      <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm hover:shadow-md transition flex flex-col justify-between">
-        <div>
-          <div class="text-[11px] font-bold text-orange-600 uppercase tracking-wider">Total Basin Depletions (Demand)</div>
-          <div class="text-2xl font-black text-orange-700 mt-1">~15.0 – 15.3 <span class="text-sm font-semibold text-orange-600">MAF/yr</span></div>
-          <div class="text-[11.5px] text-slate-600 mt-2 space-y-1">
-            <div>• <strong class="text-slate-800">7.5 MAF:</strong> Lower Basin (AAC 2.9, CAP 1.5, CRA 1.05)</div>
-            <div>• <strong class="text-slate-800">4.5 MAF:</strong> Upper Basin in-basin ag &amp; municipal use</div>
-            <div>• <strong class="text-slate-800">1.5 MAF:</strong> Mexico Treaty delivery at Morelos Dam</div>
-            <div>• <strong class="text-slate-800">1.6 MAF:</strong> Reservoir evaporation &amp; transit depletions</div>
+      <!-- Diagnostic Deep-Dive on Question Mark Zones -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div class="p-3.5 rounded-xl border border-slate-200 bg-white shadow-sm space-y-1.5">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-bold text-amber-800 uppercase tracking-wide">Question Mark #1</span>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-amber-50 text-amber-900 border border-amber-200 font-medium">105-mi Pool</span>
           </div>
+          <h3 class="text-xs font-bold text-slate-900">Lake Powell Slackwater Reservoir</h3>
+          <p class="text-[11px] text-slate-600 leading-relaxed">
+            <strong>Why no gages?</strong> Traditional streamgages require measurable channel velocity. In a 500-ft deep reservoir pool, water becomes still slackwater (under 0.01 ft/s), making open-channel discharge measurement impossible.
+          </p>
+          <p class="text-[10.5px] text-sky-800 font-medium pt-1 border-t border-slate-100">
+            <strong>Solution:</strong> Inflows are measured upstream at Cisco and Green River; reservoir storage is calculated directly from surface water elevation readings at Glen Canyon Dam.
+          </p>
         </div>
-        <div class="text-[10px] text-slate-400 mt-2.5 pt-2 border-t border-slate-100 italic">
-          Total real consumption across all 7 states, Mexico &amp; evaporation.
-        </div>
-      </div>
 
-      <!-- 4. Deficit Card -->
-      <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm hover:shadow-md transition flex flex-col justify-between">
-        <div>
-          <div class="text-[11px] font-bold text-red-600 uppercase tracking-wider">Allocation and Physical Deficits</div>
-          <div class="text-2xl font-black text-red-600 mt-1">~2.5 / ~3.3 <span class="text-sm font-semibold text-red-500">MAF/yr</span></div>
-          <div class="text-[11.5px] text-slate-600 mt-2 space-y-1">
-            <div>• <strong class="text-red-700">~2.5 MAF Storage Overdraft:</strong> 15.0 MAF annual consumption minus 12.5 MAF modern runoff draws down reservoir storage</div>
-            <div>• <strong class="text-red-700">~3.3 MAF Allocation Deficit:</strong> 16.5 MAF paper rights allocated vs ~13.2 MAF long-term natural yield</div>
+        <div class="p-3.5 rounded-xl border border-slate-200 bg-white shadow-sm space-y-1.5">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-bold text-amber-800 uppercase tracking-wide">Question Mark #2</span>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-amber-50 text-amber-900 border border-amber-200 font-medium">137-mi Canyon</span>
           </div>
+          <h3 class="text-xs font-bold text-slate-900">Grand Canyon Granite Gorges</h3>
+          <p class="text-[11px] text-slate-600 leading-relaxed">
+            <strong>Why no gages?</strong> Sheer 1,000-ft vertical cliffs with zero road access, power, or telemetry backhaul. USGS can only service gages where raft logistics permit (Phantom Ranch at Mile 88; Diamond Creek road at Mile 225).
+          </p>
+          <p class="text-[10.5px] text-slate-700 font-medium pt-1 border-t border-slate-100">
+            <strong>Hydrologic Reality:</strong> An 18 to 24-hour wave transit delay occurs between these stations. Flow is governed by Glen Canyon releases; no intermediate gages physically exist.
+          </p>
         </div>
-        <div class="text-[10px] text-slate-400 mt-2.5 pt-2 border-t border-slate-100 italic">
-          Statutory paper allocations exceed the physical hydrologic yield of the basin.
+
+        <div class="p-3.5 rounded-xl border border-slate-200 bg-white shadow-sm space-y-1.5">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-bold text-amber-800 uppercase tracking-wide">Question Mark #3</span>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-amber-50 text-amber-900 border border-amber-200 font-medium">85-mi Pool</span>
+          </div>
+          <h3 class="text-xs font-bold text-slate-900">Lake Mead Slackwater Reservoir</h3>
+          <p class="text-[11px] text-slate-600 leading-relaxed">
+            <strong>Why no gages?</strong> Identical to Lake Powell: an impounded slackwater pool where water is held in dead storage and active capacity behind Hoover Dam.
+          </p>
+          <p class="text-[10.5px] text-teal-800 font-medium pt-1 border-t border-slate-100">
+            <strong>Solution:</strong> USGS operates station #09404208 at Grand Wash Cliffs (the delta entering the lake); Lake Mead storage is governed by USBR Hoover Dam pool telemetry.
+          </p>
         </div>
       </div>
     </div>
   </div>
 
   <script>
+    // Sub-tab switcher between Topological Schematic and Elevation Profile
+    let currentPipelineSubtab = 'schematic';
+
+    function switchPipelineSubtab(tab) {
+      currentPipelineSubtab = tab;
+      const btnSchematic = document.getElementById('subtab-btn-schematic');
+      const btnElevation = document.getElementById('subtab-btn-elevation');
+      const viewSchematic = document.getElementById('view-schematic');
+      const viewElevation = document.getElementById('view-elevation');
+
+      if (tab === 'schematic') {
+        viewSchematic.classList.remove('hidden');
+        viewElevation.classList.add('hidden');
+        btnSchematic.className = 'px-3.5 py-1.5 rounded-md text-xs font-bold transition shadow-sm bg-white text-sky-800 border border-slate-200 flex items-center gap-1.5';
+        btnElevation.className = 'px-3.5 py-1.5 rounded-md text-xs font-semibold transition text-slate-600 hover:text-slate-900 flex items-center gap-1.5';
+      } else {
+        viewSchematic.classList.add('hidden');
+        viewElevation.classList.remove('hidden');
+        btnElevation.className = 'px-3.5 py-1.5 rounded-md text-xs font-bold transition shadow-sm bg-white text-sky-800 border border-slate-200 flex items-center gap-1.5';
+        btnSchematic.className = 'px-3.5 py-1.5 rounded-md text-xs font-semibold transition text-slate-600 hover:text-slate-900 flex items-center gap-1.5';
+      }
+    }
+
+    // Stacked Bar Interactive Segment Telemetry
+    function inspectStackedSegment(title, vol, share, desc, type) {
+      const badge = document.getElementById('st-badge');
+      const t = document.getElementById('st-title');
+      const v = document.getElementById('st-vol');
+      const s = document.getElementById('st-share');
+      const d = document.getElementById('st-desc');
+
+      badge.innerText = type;
+      if (type === 'Physical Inflow') {
+        badge.className = 'px-2 py-0.5 rounded bg-sky-100 text-sky-800 font-extrabold text-[10px] uppercase';
+      } else if (type === 'Paper Allocation') {
+        badge.className = 'px-2 py-0.5 rounded bg-orange-100 text-orange-800 font-extrabold text-[10px] uppercase';
+      } else if (type === 'Treaty Obligation') {
+        badge.className = 'px-2 py-0.5 rounded bg-purple-100 text-purple-800 font-extrabold text-[10px] uppercase';
+      } else {
+        badge.className = 'px-2 py-0.5 rounded bg-slate-200 text-slate-800 font-extrabold text-[10px] uppercase';
+      }
+
+      t.innerText = title;
+      v.innerText = vol;
+      s.innerText = share;
+      d.innerHTML = desc;
+    }
+
+    function clearStackedInspect() {
+      const badge = document.getElementById('st-badge');
+      const t = document.getElementById('st-title');
+      const v = document.getElementById('st-vol');
+      const s = document.getElementById('st-share');
+      const d = document.getElementById('st-desc');
+
+      badge.innerText = 'Macro Accounting';
+      badge.className = 'px-2 py-0.5 rounded bg-slate-200 text-slate-800 font-extrabold text-[10px] uppercase';
+      t.innerText = 'Inspect Basin Runoff Origins vs. Statutory Claims';
+      v.innerText = '--';
+      s.innerText = '--';
+      d.innerText = 'Move mouse across either bar to evaluate exact MAF volumes, continuous rate conversion (1 MAF/yr ≈ 1,381 cfs), and legal authority.';
+    }
+
+    // ==========================================
+    // ELEVATION PROFILE CONTROLS & FUNCTIONS
+    // ==========================================
+    let currentElevView = '2d';
+    let elevGapsVisible = true;
+
+    function switchElevationView(mode) {
+      currentElevView = mode;
+      const tribs = document.getElementById('tribs-25d-group');
+      const btn2d = document.getElementById('btn-view-2d');
+      const btn25d = document.getElementById('btn-view-25d');
+
+      if (mode === '2d') {
+        tribs.style.opacity = '0.2';
+        btn2d.className = 'px-3 py-1.5 rounded-md font-semibold transition text-sky-700 bg-white shadow-sm border border-slate-200';
+        btn25d.className = 'px-3 py-1.5 rounded-md font-medium transition text-slate-600 hover:text-slate-900';
+      } else {
+        tribs.style.opacity = '1.0';
+        btn25d.className = 'px-3 py-1.5 rounded-md font-semibold transition text-teal-800 bg-white shadow-sm border border-slate-200';
+        btn2d.className = 'px-3 py-1.5 rounded-md font-medium transition text-slate-600 hover:text-slate-900';
+      }
+    }
+
+    function toggleElevationGaps() {
+      elevGapsVisible = !elevGapsVisible;
+      const gaps = document.getElementById('gaps-group');
+      gaps.style.opacity = elevGapsVisible ? '1.0' : '0.0';
+      const btn = document.getElementById('btn-toggle-gaps');
+      if (elevGapsVisible) {
+        btn.className = 'px-3 py-1.5 rounded-lg border border-amber-300 bg-amber-50 text-amber-900 text-xs font-semibold hover:bg-amber-100 transition flex items-center gap-1.5 shadow-sm';
+        btn.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-600"></span> Toggle Question Marks (?)';
+      } else {
+        btn.className = 'px-3 py-1.5 rounded-lg border border-slate-300 bg-white text-slate-700 text-xs font-semibold hover:bg-slate-50 transition flex items-center gap-1.5 shadow-sm';
+        btn.innerHTML = '<span class="w-2 h-2 rounded-full bg-slate-400"></span> Show Question Marks (?)';
+      }
+    }
+
+    function showElevationGageInfo(title, mile, elev, flow, drop, type, notes) {
+      document.getElementById('readout-title').innerText = title;
+      document.getElementById('readout-mile').innerText = mile;
+      document.getElementById('readout-elev').innerText = elev;
+      document.getElementById('readout-flow').innerText = flow;
+      document.getElementById('readout-drop').innerText = drop;
+      document.getElementById('readout-type').innerText = type;
+      document.getElementById('readout-notes').innerText = notes;
+    }
+
+    function showGapInfo(title, mile, type, notes) {
+      document.getElementById('readout-title').innerText = title;
+      document.getElementById('readout-mile').innerText = mile;
+      document.getElementById('readout-elev').innerText = 'Un-gaged Reach';
+      document.getElementById('readout-flow').innerText = 'Wave / Storage Pool';
+      document.getElementById('readout-drop').innerText = 'N/A';
+      document.getElementById('readout-type').innerText = type;
+      document.getElementById('readout-notes').innerText = notes;
+    }
+
+    function hideGapInfo() {
+      // Revert to sentinel Lees Ferry
+      showElevationGageInfo(
+        'USGS #09380000 at Lees Ferry, AZ',
+        'Mile 551.0 (Mile 0.0 of Compact)',
+        '3,110 ft',
+        '6,680 cfs',
+        'Tailwater Control',
+        'Sentinel Legal Divide',
+        '1922 Colorado River Compact legal division point between Upper and Lower Basins. Mandates 75 MAF rolling 10-year delivery.'
+      );
+    }
+
+    // ==========================================
+    // SCHEMATIC LIVE TOOLTIPS & DATA FETCHING
+    // ==========================================
     const tooltip = document.getElementById('flow-tooltip');
     let liveMetrics = null;
 
@@ -667,7 +1463,6 @@
       }
     }
 
-    // 1 MAF/yr continuous flow rate in cfs: 1,000,000 AF / 723.97 AF/(cfs·yr) = 1,381.27 cfs
     const CFS_PER_MAF_YR = 1381.27;
 
     function renderComparisonCard(title, badgeLabel, rows, note) {
@@ -813,13 +1608,10 @@
 
     function selectElement(elemId) {
       const svg = document.getElementById('canvas');
-      // If clicking already selected element, toggle off
       if (selectedElementId === elemId) {
         clearSelection();
         return;
       }
-
-      // Clear previous selection
       if (selectedElementId) {
         const prev = document.getElementById(selectedElementId);
         if (prev) prev.classList.remove('selected');
@@ -840,25 +1632,22 @@
         if (prev) prev.classList.remove('selected');
         selectedElementId = null;
       }
-      svg.classList.remove('has-selection');
+      if (svg) svg.classList.remove('has-selection');
     }
 
-    // Clicking anywhere on SVG background clears selection
     document.addEventListener('DOMContentLoaded', () => {
       const svg = document.getElementById('canvas');
       if (svg) {
         svg.addEventListener('click', (e) => {
-          // If click was directly on svg or layers/background, clear
           if (e.target.id === 'canvas' || e.target.tagName === 'svg' || e.target.classList.contains('state-line') || e.target.classList.contains('state-name')) {
             clearSelection();
           }
         });
       }
-      // Also Escape key clears selection
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
           clearSelection();
-          tooltip.classList.remove('visible');
+          if (tooltip) tooltip.classList.remove('visible');
         }
       });
     });
@@ -893,10 +1682,7 @@
       ` : '';
 
       el.addEventListener('mouseenter', (e) => {
-        if (selectedElementId && selectedElementId !== elemId) {
-          // If another element is selected, don't overwrite tooltip unless requested
-          return;
-        }
+        if (selectedElementId && selectedElementId !== elemId) return;
         tooltip.innerHTML = `
           <div class="font-bold text-sky-700 text-sm mb-1">${title}</div>
           <div class="text-xs text-slate-700">${getDetails()}</div>
@@ -911,7 +1697,6 @@
         }
       });
       el.addEventListener('mouseleave', () => {
-        // If this element is currently selected, keep tooltip pinned visible
         if (selectedElementId === elemId) return;
         tooltip.classList.remove('visible');
       });
@@ -919,7 +1704,6 @@
       el.addEventListener('click', (e) => {
         e.stopPropagation();
         selectElement(elemId);
-        // Show tooltip pinned at element
         tooltip.innerHTML = `
           <div class="flex items-center justify-between border-b border-slate-200 pb-1 mb-2">
             <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Selected Feature</span>
@@ -960,8 +1744,8 @@
       attachElement('river-headwaters', 'Colorado River Headwaters (Rocky Mountain NP)', () => `
         <strong>Region:</strong> Rocky Mountain National Park / Continental Divide, CO<br>
         <strong>Upper Basin Headwaters Yield:</strong> ~8.0 MAF/yr natural runoff prior to trans-mountain export<br>
-        <strong>Headwater Source:</strong> High-altitude snowpack, Blue &amp; Fraser River basins (~15.0 MAF/yr is aggregate basin virgin yield)<br>
-        <strong>Accounting:</strong> Feeds Upper Division State apportionments under 1922 &amp; 1948 Compacts` + flowComparisonBox('09070500', 1.50, 'USGS #09070500 Dotsero Flow', 'Dotsero gauge measures upper mainstem runoff before the Roaring Fork confluence. Autumn baseflow is typically 30–60% of annual continuous mean.') + `
+        <strong>Headwater Source:</strong> High-altitude snowpack, Blue &amp; Fraser River basins (~15.0 MAF/yr aggregate virgin yield)<br>
+        <strong>Accounting:</strong> Feeds Upper Division State apportionments under 1922 &amp; 1948 Compacts` + flowComparisonBox('09070500', 1.50, 'USGS #09070500 Dotsero Flow', 'Dotsero gauge measures upper mainstem runoff before Roaring Fork confluence.') + `
       `, {
         label: 'USGS Station #09070500 (Dotsero)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09070500/'
@@ -981,7 +1765,7 @@
         <strong>Headwaters:</strong> Wind River Range (WY) and Uinta Mountains (UT)<br>
         <strong>Annual Runoff:</strong> ~4.90 MAF/yr (Delivers ~40% of total flow into Lake Powell)<br>
         <strong>Major Inflow:</strong> Joined by Yampa River in Dinosaur National Monument<br>
-        <strong>Storage:</strong> Regulated by Flaming Gorge Dam (3.78M AF capacity)` + flowComparisonBox('09315000', 4.90, 'USGS #09315000 Green River Flow', 'Combined Green, Yampa, and White River flow. Autumn baseflow is typically 50–70% of continuous mean; spring peak snowmelt often exceeds 250%.') + `
+        <strong>Storage:</strong> Regulated by Flaming Gorge Dam (3.78M AF capacity)` + flowComparisonBox('09315000', 4.90, 'USGS #09315000 Green River Flow', 'Combined Green, Yampa, and White River flow. Autumn baseflow is typically 50–70% of continuous mean.') + `
       `, {
         label: 'USGS Station #09315000 (Green River, UT)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09315000/'
@@ -990,7 +1774,7 @@
       attachElement('river-yampa', 'Yampa River (Wild Tributary)', () => `
         <strong>Drainage:</strong> Northwest Colorado (Flat Tops &amp; Park Range)<br>
         <strong>Annual Yield:</strong> ~1.30 MAF/yr<br>
-        <strong>Significance:</strong> The largest remaining free-flowing, undammed major tributary in the Colorado River system` + flowComparisonBox('09260050', 1.30, 'USGS #09260050 Deerlodge Park Flow', 'Uncontrolled snowmelt river. May-June peaks routinely reach 10,000–15,000 cfs, while autumn discharge recedes to ~500–800 cfs.') + `
+        <strong>Significance:</strong> The largest remaining free-flowing, undammed major tributary in the Colorado River system` + flowComparisonBox('09260050', 1.30, 'USGS #09260050 Deerlodge Park Flow', 'Uncontrolled snowmelt river. May-June peaks routinely reach 10,000–15,000 cfs.') + `
       `, {
         label: 'USGS Station #09260050 (Deerlodge Park)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09260050/'
@@ -999,7 +1783,7 @@
       attachElement('river-upper-main', 'Colorado River Upper Mainstem', () => `
         <strong>Reach:</strong> Dotsero to Grand Valley and Utah State Line<br>
         <strong>Annual Flow:</strong> ~9.0 MAF/yr (before Green River confluence)<br>
-        <strong>Major Inflows:</strong> Roaring Fork, Eagle, and Gunnison Rivers` + flowComparisonBox('09180500', 9.00, 'USGS #09180500 Cisco Flow', 'Colorado mainstem flow near the Utah border after absorbing Gunnison and Dolores river inflows.') + `
+        <strong>Major Inflows:</strong> Roaring Fork, Eagle, and Gunnison Rivers` + flowComparisonBox('09180500', 9.00, 'USGS #09180500 Cisco Flow', 'Colorado mainstem flow near Utah border after absorbing Gunnison and Dolores river inflows.') + `
       `, {
         label: 'USGS Station #09180500 (Cisco, UT)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09180500/'
@@ -1017,7 +1801,7 @@
       attachElement('river-sanjuan', 'San Juan River Basin', () => `
         <strong>Origin:</strong> San Juan Mountains in Southwest Colorado and Northwest New Mexico<br>
         <strong>Annual Runoff:</strong> ~2.10 - 2.50 MAF/yr (including Animas River)<br>
-        <strong>Regulation:</strong> Navajo Dam (1.70M AF capacity)` + flowComparisonBox('09379500', 2.50, 'USGS #09379500 Bluff Flow', 'San Juan River flow after receiving Animas River runoff, discharging into upper Lake Powell.') + `
+        <strong>Regulation:</strong> Navajo Dam (1.70M AF capacity)` + flowComparisonBox('09379500', 2.50, 'USGS #09379500 Bluff Flow', 'San Juan River flow after receiving Animas River runoff, discharging into Lake Powell.') + `
       `, {
         label: 'USGS Station #09379500 (Bluff, UT)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09379500/'
@@ -1034,8 +1818,7 @@
 
       attachElement('dam-flaminggorge', 'Flaming Gorge Dam & Reservoir', () => `
         <strong>Total Capacity:</strong> 3.75 Million Acre-Feet (Primary drought response buffer reservoir)<br>
-        <strong>Function:</strong> Regulates the upper Green River; utilized under the Drought Response Operations Agreement (DROA) to support Lake Powell<br>
-        <strong>Active Storage:</strong> Key federal storage asset under Upper Colorado River Commission operations` + reservoirStorageBox('flaming_gorge', 'DROA operational reserve supporting Lake Powell. Capacity: 3.75M AF.') + `
+        <strong>Function:</strong> Regulates the upper Green River; utilized under the Drought Response Operations Agreement (DROA) to support Lake Powell` + reservoirStorageBox('flaming_gorge', 'DROA operational reserve supporting Lake Powell. Capacity: 3.75M AF.') + `
       `, {
         label: 'USBR Flaming Gorge Operations Portal',
         url: 'https://www.usbr.gov/uc/water/crsp/cs/fgd.html'
@@ -1043,7 +1826,7 @@
 
       attachElement('dam-bluemesa', 'Blue Mesa Dam & Reservoir (Aspinall Unit)', () => `
         <strong>Total Capacity:</strong> 829,500 Acre-Feet (Largest body of water in Colorado)<br>
-        <strong>Function:</strong> Headwater regulation on the Gunnison River; DROA emergency release source` + reservoirStorageBox('blue_mesa', 'Aspinall Unit master reservoir. Capacity: 829,500 AF.') + `
+        <strong>Function:</strong> Headwater regulation on Gunnison River; DROA emergency release source` + reservoirStorageBox('blue_mesa', 'Aspinall Unit master reservoir. Capacity: 829,500 AF.') + `
       `, {
         label: 'USBR Blue Mesa Dashboard',
         url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/913/dashboard.html'
@@ -1051,7 +1834,7 @@
 
       attachElement('dam-navajo', 'Navajo Dam & Reservoir', () => `
         <strong>Total Capacity:</strong> 1.70 Million Acre-Feet (San Juan River basin)<br>
-        <strong>Function:</strong> Regulates San Juan River and supplies the San Juan-Chama trans-mountain diversion and Navajo Indian Irrigation Project (NIIP)` + reservoirStorageBox('navajo_reservoir', 'San Juan River regulation and DROA support. Capacity: 1.70M AF.') + `
+        <strong>Function:</strong> Regulates San Juan River and supplies San Juan-Chama diversion and Navajo Indian Irrigation Project (NIIP)` + reservoirStorageBox('navajo_reservoir', 'San Juan River regulation and DROA support. Capacity: 1.70M AF.') + `
       `, {
         label: 'USBR Navajo Dam Portal',
         url: 'https://www.usbr.gov/uc/water/crsp/cs/nvd.html'
@@ -1059,9 +1842,9 @@
 
       attachElement('dam-glencanyon', 'Lake Powell & Glen Canyon Dam', () => `
         <strong>Total Capacity:</strong> 24.32 Million Acre-Feet<br>
-        <strong>Function:</strong> Master regulatory storage bank for the Upper Basin states<br>
+        <strong>Function:</strong> Master regulatory storage bank for Upper Basin states<br>
         <strong>Evaporative Loss:</strong> ~0.38 MAF/yr (~380,000 AF) lost to intense desert sunlight<br>
-        <strong>Minimum Power Pool:</strong> Elevation 3,490 ft (threat of losing hydroelectric generation)` + reservoirStorageBox('lake_powell', 'Minimum Power Pool: 3,490 ft (~30 ft buffer). Dead Pool: 3,370 ft. Total Capacity: 24.32M AF.') + `
+        <strong>Minimum Power Pool:</strong> Elevation 3,490 ft (threat of losing hydroelectric generation)` + reservoirStorageBox('lake_powell', 'Minimum Power Pool: 3,490 ft. Dead Pool: 3,370 ft. Total Capacity: 24.32M AF.') + `
       `, {
         label: 'USBR Glen Canyon / Lake Powell Portal',
         url: 'https://www.usbr.gov/uc/water/crsp/cs/gcd.html'
@@ -1070,7 +1853,7 @@
       attachElement('node-leesferry', "Lee's Ferry (1922 Colorado River Compact Point)", () => `
         <strong>Location:</strong> 1 mile downstream of Paria River confluence, Arizona<br>
         <strong>Legal Cornerstone:</strong> Constitutional divider separating Upper Division (CO, UT, WY, NM) from Lower Division (AZ, CA, NV)<br>
-        <strong>Delivery Obligation:</strong> Base 75.0 MAF / 10-yr period (7.50 MAF/yr) + half of Mexico Treaty (0.75 MAF/yr) = <strong>8.25 MAF/yr target</strong> (8.23 MAF normal release under 2007 Guidelines; range 7.0–9.0 MAF).` + flowComparisonBox('09380000', 8.23, 'USGS #09380000 Lees Ferry Release', 'Annual target delivery of 8.23 MAF/yr converts to a continuous average release rate of 11,368 cfs. Actual hourly releases fluctuate with Glen Canyon hydropower generation peaking.') + `
+        <strong>Delivery Obligation:</strong> Base 75.0 MAF / 10-yr period (7.50 MAF/yr) + half of Mexico Treaty (0.75 MAF/yr) = <strong>8.25 MAF/yr target</strong> (8.23 MAF normal release under 2007 Guidelines; range 7.0–9.0 MAF).` + flowComparisonBox('09380000', 8.23, 'USGS #09380000 Lees Ferry Release', 'Annual target delivery of 8.23 MAF/yr converts to a continuous average release rate of 11,368 cfs.') + `
       `, {
         label: 'USGS Station #09380000 (Lees Ferry)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09380000/'
@@ -1097,7 +1880,7 @@
       attachElement('river-virgin', 'Virgin River', () => `
         <strong>Origin:</strong> Southwestern Utah (Zion National Park) to Lake Mead<br>
         <strong>Annual Runoff:</strong> ~0.18 MAF/yr<br>
-        <strong>Lower Basin Inflow:</strong> Flow tributary enters Lake Mead Overton Arm` + flowComparisonBox('09415000', 0.18, 'USGS #09415000 Littlefield Flow', 'Lower Basin tributary flowing through the Virgin River Gorge into Lake Mead.') + `
+        <strong>Lower Basin Inflow:</strong> Flow tributary enters Lake Mead Overton Arm` + flowComparisonBox('09415000', 0.18, 'USGS #09415000 Littlefield Flow', 'Lower Basin tributary flowing through Virgin River Gorge into Lake Mead.') + `
       `, {
         label: 'USGS Station #09415000 (Littlefield, AZ)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09415000/'
@@ -1116,7 +1899,7 @@
       attachElement('dam-parker', 'Parker Dam & Lake Havasu', () => `
         <strong>Reservoir Capacity:</strong> 619,400 Acre-Feet<br>
         <strong>Function:</strong> Primary forebay pumping pool for CRA (Southern California) and CAP (Central Arizona)<br>
-        <strong>Impounds:</strong> Lake Havasu on the Arizona-California border` + reservoirStorageBox('lake_havasu', 'Primary forebay pumping pool for CRA and CAP aqueducts. Capacity: 619,400 AF.') + `
+        <strong>Impounds:</strong> Lake Havasu on Arizona-California border` + reservoirStorageBox('lake_havasu', 'Primary forebay pumping pool for CRA and CAP aqueducts. Capacity: 619,400 AF.') + `
       `, {
         label: 'USBR Lake Havasu Operations (Levels)',
         url: 'https://www.usbr.gov/lc/region/g4000/hourly/levels.html'
@@ -1124,9 +1907,9 @@
 
       attachElement('div-cap', 'Central Arizona Project (CAP)', () => `
         <strong>Intake:</strong> Mark Wilmer Pumping Plant at Lake Havasu / Parker Dam<br>
-        <strong>Aqueduct Length:</strong> 336 miles across the Sonoran Desert to Phoenix, Pinal County, and Tucson<br>
+        <strong>Aqueduct Length:</strong> 336 miles across Sonoran Desert to Phoenix, Pinal County, and Tucson<br>
         <strong>Annual Diversion:</strong> ~1.50 MAF/yr (~1,500 - 2,200 cfs)<br>
-        <strong>Legal Priority:</strong> Junior priority under the 1968 Colorado River Basin Project Act; absorbs mandatory cuts first during shortages` + canalComparisonBox('cap', 1.50, 'USGS #09426650 CAP Intake Rate') + `
+        <strong>Legal Priority:</strong> Junior priority under 1968 Colorado River Basin Project Act; absorbs mandatory cuts first during shortages` + canalComparisonBox('cap', 1.50, 'USGS #09426650 CAP Intake Rate') + `
       `, {
         label: 'USGS Station #09426650 (CAP Intake)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09426650/'
@@ -1154,8 +1937,8 @@
         <strong>Intake:</strong> Imperial Dam (north of Yuma, AZ)<br>
         <strong>Capacity:</strong> 26,155 cfs (largest irrigation canal in the world)<br>
         <strong>Annual Diversion:</strong> ~2.90 - 3.10 MAF/yr<br>
-        <strong>Beneficiaries:</strong> Imperial Irrigation District (IID) &amp; Coachella Valley (~500,000 acres of high-yield winter agriculture)<br>
-        <strong>Seniority:</strong> Senior Present Perfected Rights (Priority 1 &amp; 2)` + canalComparisonBox('aac', 2.90, 'USGS #09527700 AAC Imperial Diversion Rate', 'Gravity diversion at Imperial Dam. Diversion rates peak during winter crop cultivation and drop during canal maintenance.') + `
+        <strong>Beneficiaries:</strong> Imperial Irrigation District (IID) &amp; Coachella Valley (~500,000 acres of winter agriculture)<br>
+        <strong>Seniority:</strong> Senior Present Perfected Rights (Priority 1 &amp; 2)` + canalComparisonBox('aac', 2.90, 'USGS #09527700 AAC Imperial Diversion Rate') + `
       `, {
         label: 'USGS Station #09527700 (All-American Canal)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09527700/'
@@ -1173,7 +1956,7 @@
       attachElement('loss-powell', 'Lake Powell Evaporative Losses', () => `
         <strong>Volume Lost:</strong> ~0.38 MAF/yr (~380,000 Acre-Feet)<br>
         <strong>Mechanism:</strong> Surface evaporation from 160,000+ acres of canyon water under high-altitude desert sunlight<br>
-        <strong>Bank Storage:</strong> Significant additional volume absorbs into porous Navajo Sandstone canyon walls
+        <strong>Bank Storage:</strong> Additional volume absorbs into porous Navajo Sandstone canyon walls
       `, {
         label: 'USBR HydroData Lake Powell Dashboard',
         url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/919/dashboard.html'
@@ -1182,7 +1965,7 @@
       attachElement('loss-mead', 'Lake Mead Evaporative Losses', () => `
         <strong>Volume Lost:</strong> ~0.65 MAF/yr (~650,000 Acre-Feet)<br>
         <strong>Mechanism:</strong> Extreme Mojave Desert solar irradiance and low humidity drive huge surface losses<br>
-        <strong>Scale:</strong> Evaporation from Lake Mead exceeds the entire municipal consumption of the state of Nevada
+        <strong>Scale:</strong> Evaporation from Lake Mead exceeds entire municipal consumption of the state of Nevada
       `, {
         label: 'USBR Lake Mead Operations Dashboard',
         url: 'https://www.usbr.gov/lc/region/g4000/hourly/mead-elv.html'
@@ -1190,7 +1973,7 @@
 
       attachElement('loss-lower', 'Lower Basin Transit & Phreatophyte Loss', () => `
         <strong>Volume Lost:</strong> ~0.55 MAF/yr (~550,000 Acre-Feet)<br>
-        <strong>Causes:</strong> Channel bed seepage, evaporation between Hoover and Morelos Dam, and transpiration by tamarisk/willow along the riverbank
+        <strong>Causes:</strong> Channel bed seepage, evaporation between Hoover and Morelos Dam, and riparian transpiration
       `, {
         label: 'USBR Lower Colorado Operations Accounting',
         url: 'https://www.usbr.gov/lc/region/g4000/hourly/levels.html'
@@ -1199,7 +1982,7 @@
       attachElement('river-delta-dry', 'Colorado River Delta (Historic Channel)', () => `
         <strong>Status:</strong> 100% dewatered in normal years (0 MAF reaches the sea)<br>
         <strong>Ecological History:</strong> Once a 2-million-acre lush estuarine ecosystem described by Aldo Leopold<br>
-        <strong>Modern Restoration:</strong> Minute 319 (2014) and Minute 323 (2017) pulse flows provide occasional environmental pulse waters
+        <strong>Modern Restoration:</strong> Minute 319 (2014) and Minute 323 (2017) pulse flows provide occasional environmental waters
       `, {
         label: 'IBWC / CILA Minute 323 Delta Restoration',
         url: 'https://www.ibwc.gov/'
@@ -1207,7 +1990,7 @@
 
       attachElement('river-lower-spine', 'Lower Basin Mainstem (Hoover to Parker Dam)', () => `
         <strong>Flow Volume:</strong> ~9.00 MAF/yr (Full managed release from Lake Mead)<br>
-        <strong>Conduit Width:</strong> 21px (Mass-conserved flow width, narrower than 24px Grand Canyon inflow after 0.65 MAF evaporative loss)<br>
+        <strong>Conduit Width:</strong> Mass-conserved flow width narrower than Grand Canyon inflow after 0.65 MAF evaporative loss<br>
         <strong>Destination:</strong> Delivers full statutory supply downstream to Parker Dam pumping intakes
       `, {
         label: 'USGS Station #09421500 (Hoover Dam Tailrace)',
@@ -1216,8 +1999,7 @@
 
       attachElement('river-lower-mid', 'Lower Colorado River (Parker Dam to Transit Loss)', () => `
         <strong>Flow Volume:</strong> ~6.45 MAF/yr (Post-CRA &amp; CAP diversions)<br>
-        <strong>Conduit Width:</strong> 16px (Steps down by 5px reflecting 2.55 MAF diverted to CRA &amp; CAP)<br>
-        <strong>Remaining Uses:</strong> Feeds downstream channel transit, Imperial Valley, and Mexican Treaty delivery` + flowComparisonBox('09429100', 6.45, 'USGS #09429100 Below Palo Verde Flow', 'Managed reach below Parker Dam delivering agricultural supplies to Palo Verde and Imperial Valleys.') + `
+        <strong>Remaining Uses:</strong> Feeds downstream channel transit, Imperial Valley, and Mexican Treaty delivery` + flowComparisonBox('09429100', 6.45, 'USGS #09429100 Below Palo Verde Flow', 'Managed reach delivering agricultural supplies.') + `
       `, {
         label: 'USGS Station #09427520 (Below Parker Dam)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09427520/'
@@ -1225,7 +2007,6 @@
 
       attachElement('river-lower-canal', 'Lower Colorado River (Transit Loss to Imperial Dam)', () => `
         <strong>Flow Volume:</strong> ~5.90 MAF/yr (Post-channel depletion)<br>
-        <strong>Conduit Width:</strong> 14.5px (Steps down reflecting 0.55 MAF channel transit and phreatophyte loss)<br>
         <strong>Next Headworks:</strong> Approaches Imperial Dam desilting works
       `, {
         label: 'USGS Station #09429490 (Cibola, AZ)',
@@ -1234,7 +2015,6 @@
 
       attachElement('river-lower-treaty', 'Lower Colorado River (Imperial to Morelos Dam)', () => `
         <strong>Flow Volume:</strong> ~1.50 MAF/yr (Mexican Treaty Water)<br>
-        <strong>Conduit Width:</strong> 8px (Dramatically reduced from 18px after All-American Canal takes 2.90 MAF)<br>
         <strong>Final Destination:</strong> Guaranteed delivery to Mexico at Morelos Dam
       `, {
         label: 'USGS Station #09522000 (Yuma, AZ)',
@@ -1244,8 +2024,8 @@
       attachElement('river-green-upper', 'Green River (Upper Wyoming Reach)', () => `
         <strong>Headwaters:</strong> Wind River Range &amp; Flaming Gorge Reservoir<br>
         <strong>Annual Inflow:</strong> ~3.60 MAF/yr (before Yampa confluence)<br>
-        <strong>Conduit Width:</strong> 14px (Grows to 18px / 4.90 MAF upon receiving Yampa River)
-      ` + flowComparisonBox('09234500', 3.60, 'USGS #09234500 Flaming Gorge Release', 'Releases from Flaming Gorge Dam are regulated under DROA to protect Lake Powell power pool.') + `
+        <strong>Conduit Width:</strong> Expands to 16px / 4.90 MAF upon receiving Yampa River
+      ` + flowComparisonBox('09234500', 3.60, 'USGS #09234500 Flaming Gorge Release', 'Releases from Flaming Gorge Dam are regulated under DROA.') + `
       `, {
         label: 'USGS Station #09217000 (Green River, WY)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09217000/'
@@ -1254,8 +2034,8 @@
       attachElement('river-upper-main-pre', 'Upper Colorado River (Grand Valley Reach)', () => `
         <strong>Reach:</strong> Dotsero to Grand Junction<br>
         <strong>Annual Flow:</strong> ~7.45 MAF/yr (after Front Range trans-mountain diversions)<br>
-        <strong>Conduit Width:</strong> 16px (Grows to 22px / 9.55 MAF upon receiving Gunnison River)
-      ` + flowComparisonBox('09095500', 7.45, 'USGS #09095500 Cameo Flow', 'Mainstem flow in Grand Valley above Grand Valley Project diversions and Gunnison River confluence.') + `
+        <strong>Conduit Width:</strong> Expands to 20px / 9.55 MAF upon receiving Gunnison River
+      ` + flowComparisonBox('09095500', 7.45, 'USGS #09095500 Cameo Flow', 'Mainstem flow in Grand Valley above Grand Valley Project diversions.') + `
       `, {
         label: 'USGS Station #09095500 (Cameo, CO)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09095500/'
@@ -1288,7 +2068,6 @@
       document.body.classList.add('in-iframe');
     }
 
-    // Initialize tooltips & interactive portals
     setupTooltips();
     fetchLiveMetrics();
     setInterval(fetchLiveMetrics, 60000);
