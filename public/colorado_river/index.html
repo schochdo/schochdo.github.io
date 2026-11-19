@@ -309,21 +309,44 @@
           </div>
         </div>
 
-        <!-- Section Navigation Bar (Flush with ZERO gap above buttons) -->
-        <nav id="storyboard-nav" class="px-6 py-2 bg-[#f8fafc] border-t border-[#e2e8f0] flex flex-wrap items-center gap-2 text-xs font-semibold">
-          <button onclick="scrollToAct('act-1')" id="btn-act-1" class="act-btn active px-3 py-1 rounded-[2px] bg-[#0f172a] text-white border border-[#0f172a] transition text-[11px] whitespace-nowrap cursor-pointer">
-            1. The Math Gap (-5.1 MAF)
-          </button>
-          <button onclick="scrollToAct('act-2')" id="btn-act-2" class="act-btn px-3 py-1 rounded-[2px] bg-white text-[#64748b] hover:text-[#0f172a] hover:bg-[#f1f5f9] border border-[#cbd5e1] transition text-[11px] whitespace-nowrap cursor-pointer">
-            2. The Seasonal Engine (Why Reservoirs)
-          </button>
-          <button onclick="scrollToAct('act-3')" id="btn-act-3" class="act-btn px-3 py-1 rounded-[2px] bg-white text-[#64748b] hover:text-[#0f172a] hover:bg-[#f1f5f9] border border-[#cbd5e1] transition text-[11px] whitespace-nowrap cursor-pointer">
-            3. The 90-Yr Drawdown
-          </button>
-          <button onclick="scrollToAct('act-4')" id="btn-act-4" class="act-btn px-3 py-1 rounded-[2px] bg-white text-[#64748b] hover:text-[#0f172a] hover:bg-[#f1f5f9] border border-[#cbd5e1] transition text-[11px] whitespace-nowrap cursor-pointer">
-            4. Who Uses It &amp; Post-2026
-          </button>
-        </nav>
+        <!-- Basin Core Accounting Ticker (Canonical Mathematical Ladder) -->
+        <div id="storyboard-nav" class="px-4 py-1.5 bg-[#f8fafc] border-t border-[#e2e8f0] flex flex-nowrap items-center justify-between gap-3 text-[11px] overflow-hidden">
+          <div class="flex items-center gap-2 sm:gap-3 md:gap-4 tabular-nums whitespace-nowrap">
+            <div class="flex items-center gap-1.5">
+              <span class="text-[10px] uppercase font-bold text-[#64748b] tracking-wider">River Supply:</span>
+              <span class="font-black text-[#0284c7]">12.50 MAF</span>
+              <span class="text-[10px] text-[#64748b] hidden 2xl:inline">(2000–26 Modern Inflow)</span>
+            </div>
+            <div class="text-[#cbd5e1] hidden sm:inline">|</div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-[10px] uppercase font-bold text-[#64748b] tracking-wider">1922 Compact:</span>
+              <span class="font-black text-[#0f172a]">15.00 MAF</span>
+              <span class="text-[10px] text-[#64748b] hidden 2xl:inline">(7.5 Upper + 7.5 Lower)</span>
+            </div>
+            <div class="text-[#cbd5e1] hidden sm:inline">|</div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-[10px] uppercase font-bold text-[#64748b] tracking-wider">Statutory Paper:</span>
+              <span class="font-black text-[#0f172a]">17.50 MAF</span>
+              <span class="text-[10px] text-[#64748b] hidden 2xl:inline">(+1.0 III.b + 1.5 MX)</span>
+            </div>
+            <div class="text-[#cbd5e1] hidden sm:inline">|</div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-[10px] uppercase font-bold text-[#64748b] tracking-wider">Total Pull:</span>
+              <span class="font-black text-[#475569]">19.10 MAF</span>
+              <span class="text-[10px] text-[#64748b] hidden 2xl:inline">(+1.60 Evap/Loss)</span>
+            </div>
+            <div class="text-[#cbd5e1] hidden sm:inline">|</div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-[10px] uppercase font-bold text-[#b2182b] tracking-wider">Overdraft:</span>
+              <span class="font-black text-[#b2182b] bg-[#fee2e2] px-1.5 py-0.5 rounded text-[11px]">-6.60 MAF/yr</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 whitespace-nowrap">
+            <button onclick="openLawModal()" class="px-2 py-0.5 text-[10.5px] font-semibold rounded bg-white hover:bg-[#f1f5f9] text-[#334155] border border-[#cbd5e1] transition cursor-pointer">
+              Law of River ↗
+            </button>
+          </div>
+        </div>
       </header>
 
       <!-- VIEWPORT CONTAINER: Swaps between Tabs smoothly -->
@@ -332,454 +355,291 @@
         <!-- ============================================================== -->
         <!-- TAB 1: OVERVIEW                                                -->
         <!-- ============================================================== -->
-        <div id="section-overview" class="flex-1 overflow-y-auto relative p-4 md:p-6 lg:p-7 max-w-7xl mx-auto space-y-6 w-full scroll-smooth">
+                <div id="section-overview" class="flex-1 overflow-y-auto relative p-3 md:p-5 max-w-7xl mx-auto space-y-4 w-full scroll-smooth">
 
-          <!-- 1. The Central Reality: The Structural Over-Allocation Deficit -->
-          <div id="act-1" class="card-academic bg-white rounded-[3px] border border-[#cbd5e1] p-5 shadow-none space-y-4">
-            <div class="border-b border-[#e2e8f0] pb-3 flex flex-col md:flex-row md:items-center justify-between gap-2">
-              <div>
-                <span class="text-[10px] font-bold text-[#0072B2] uppercase tracking-wider block">Act 1 • The Foundational Dilemma</span>
-                <h2 class="text-base md:text-lg font-black text-[#0f172a] tracking-tight mt-0.5">
-                  The Over-Allocation Gap: Statutory Paper Rights vs. 21st-Century Physical Flow
-                </h2>
-              </div>
-              <div class="flex items-center gap-2">
-                <button onclick="openLawModal()" class="px-2.5 py-1 text-[11px] font-semibold rounded bg-[#f1f5f9] text-[#0f172a] hover:bg-[#e2e8f0] border border-[#cbd5e1] transition cursor-pointer">
-                  Law of the River Framework ↗
-                </button>
-                <button onclick="setTab('sankey')" class="px-2.5 py-1 text-[11px] font-bold rounded bg-[#e0f2fe] text-[#0369a1] hover:bg-[#bae6fd] border border-[#7dd3fc] transition cursor-pointer">
-                  Water Budget Diagram →
-                </button>
-              </div>
-            </div>
+          <!-- 2x2 Grid of High-Density Editorial Dashboard Cards -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
-            <p class="text-xs text-[#334155] leading-relaxed">
-              The fundamental management challenge of the Colorado River Basin is mathematical over-allocation. The <strong>1922 Colorado River Compact</strong> and subsequent statutory agreements divided <strong>17.5 Million Acre-Feet per year (MAF/yr)</strong> of consumptive beneficial use rights based on an anomalously wet pluvial decade (1905–1922). Crucially, the treaties omitted reservoir evaporation and transit seepage (an additional <strong>~1.8 MAF/yr</strong>). Against modern 21st-century physical inflows (<strong>12.4 MAF/yr</strong>, 2000–2026), total baseline commitments exceed physical supply by <strong>~5.1 MAF/yr</strong>. Downstream demands have exceeded inflows for a quarter century, a structural overdraft absorbed by draining Lake Mead and Lake Powell from near-full (56.2 MAF in 1999) to critical storage (~17.7 MAF / 29.5%) today.
-            </p>
-
-            <!-- Comparative Mass-Balance Ledger -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 p-3.5 bg-[#f8fafc] rounded-[3px] border border-[#e2e8f0] text-xs tabular-nums">
+            <!-- CARD 1: THE ALLOCATION GAP -->
+            <div id="act-1" class="card-academic bg-white rounded-[3px] border border-[#cbd5e1] p-4 flex flex-col justify-between shadow-none space-y-3">
               <div>
-                <span class="text-[10px] text-[#64748b] font-sans font-bold uppercase block">Paper Water (Statutory)</span>
-                <span class="text-base font-black text-[#0f172a] tabular-nums block mt-0.5">17.5 MAF/yr</span>
-                <span class="text-[10px] text-[#64748b] font-sans block mt-0.5">7.5 Upper + 7.5 Lower (III.a) + 1.0 Lower (III.b) + 1.5 Mexico</span>
-              </div>
-              <div>
-                <span class="text-[10px] text-[#64748b] font-sans font-bold uppercase block">Uncounted System Losses</span>
-                <span class="text-base font-black text-[#475569] tabular-nums block mt-0.5">~1.8 MAF/yr</span>
-                <span class="text-[10px] text-[#64748b] font-sans block mt-0.5">Reservoir evaporation (Mead/Powell/CRSP) &amp; river transit losses</span>
-              </div>
-              <div>
-                <span class="text-[10px] text-[#0369a1] font-sans font-bold uppercase block">Wet Water (2000–2026 Flow)</span>
-                <span class="text-base font-black text-[#0284c7] tabular-nums block mt-0.5">12.4 MAF/yr</span>
-                <span class="text-[10px] text-[#64748b] font-sans block mt-0.5">21st-century modern natural inflow at Lee's Ferry (USBR)</span>
-              </div>
-              <div>
-                <span class="text-[10px] text-[#b2182b] font-sans font-bold uppercase block">Net Annual Allocation Deficit</span>
-                <span class="text-base font-black text-[#b2182b] tabular-nums block mt-0.5">-5.1 MAF/yr</span>
-                <span class="text-[10px] text-[#64748b] font-sans block mt-0.5">Physical deficit against full paper water entitlements</span>
-              </div>
-            </div>
-
-            <!-- Proportional Visual Comparison Bars -->
-            <div class="space-y-2">
-              <div>
-                <div class="flex justify-between text-[11px] mb-0.5">
-                  <span class="font-semibold text-[#0f172a]">Statutory Legal Apportionment ("Paper Water")</span>
-                  <span class="tabular-nums font-bold text-[#0f172a]">17.5 MAF/yr</span>
+                <div class="border-b border-[#e2e8f0] pb-2 flex items-center justify-between gap-2">
+                  <div>
+                    <span class="text-[9.5px] font-bold text-[#0072B2] uppercase tracking-wider block">1. Mass Balance</span>
+                    <h2 class="text-sm md:text-base font-black text-[#0f172a] tracking-tight">
+                      The Allocation Gap: Statutory Rights vs. River Reality
+                    </h2>
+                  </div>
+                  <button onclick="setTab('sankey')" class="px-2 py-0.5 text-[10.5px] font-semibold rounded bg-[#e0f2fe] text-[#0369a1] hover:bg-[#bae6fd] border border-[#7dd3fc] transition cursor-pointer">
+                    Budget Sankey →
+                  </button>
                 </div>
-                <div class="w-full bg-[#e2e8f0] rounded-[2px] h-4.5 overflow-hidden flex">
-                  <div class="bg-[#334155] h-full flex items-center px-2 text-[10px] text-white tabular-nums font-bold" style="width: 100%;">
-                    17.5 MAF/yr Statutory Allocations (7.5 Upper + 8.5 Lower + 1.5 Mexico)
+
+                <!-- Visual Allocation Ladder Bars -->
+                <div class="space-y-2 mt-3 text-xs tabular-nums">
+                  <!-- Bar 1: Wet Water Inflows -->
+                  <div>
+                    <div class="flex justify-between text-[11px] mb-0.5">
+                      <span class="font-semibold text-[#0369a1]">Modern Natural Inflow (2000–2026 Mean)</span>
+                      <span class="font-black text-[#0284c7]">12.50 MAF/yr</span>
+                    </div>
+                    <div class="w-full bg-[#f1f5f9] border border-[#e2e8f0] rounded-[2px] h-5 overflow-hidden">
+                      <div class="bg-[#0284c7] h-full flex items-center px-2 text-[10px] text-white font-bold" style="width: 65.4%;">
+                        12.50 MAF Physical Runoff
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Bar 2: 1922 Core Compact -->
+                  <div>
+                    <div class="flex justify-between text-[11px] mb-0.5">
+                      <span class="font-semibold text-[#0f172a]">1922 Compact Allocation (Art. III.a)</span>
+                      <span class="font-black text-[#0f172a]">15.00 MAF/yr</span>
+                    </div>
+                    <div class="w-full bg-[#f1f5f9] border border-[#e2e8f0] rounded-[2px] h-5 overflow-hidden">
+                      <div class="bg-[#334155] h-full flex items-center px-2 text-[10px] text-white font-bold" style="width: 78.5%;">
+                        15.00 MAF (7.5 Upper + 7.5 Lower)
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Bar 3: Full Statutory Paper Claims -->
+                  <div>
+                    <div class="flex justify-between text-[11px] mb-0.5">
+                      <span class="font-semibold text-[#0f172a]">Statutory Paper Entitlements (+III.b &amp; Mexico Treaty)</span>
+                      <span class="font-black text-[#0f172a]">17.50 MAF/yr</span>
+                    </div>
+                    <div class="w-full bg-[#f1f5f9] border border-[#e2e8f0] rounded-[2px] h-5 overflow-hidden">
+                      <div class="bg-[#1e293b] h-full flex items-center px-2 text-[10px] text-white font-bold" style="width: 91.6%;">
+                        17.50 MAF (+1.0 Lower III.b + 1.5 Mexico)
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Bar 4: Total Pull With Evaporation -->
+                  <div>
+                    <div class="flex justify-between text-[11px] mb-0.5">
+                      <span class="font-semibold text-[#b2182b]">Total System Pull (Paper Claims + Reservoir Evaporation)</span>
+                      <span class="font-black text-[#b2182b]">19.10 MAF/yr</span>
+                    </div>
+                    <div class="w-full bg-[#f1f5f9] border border-[#e2e8f0] rounded-[2px] h-5 overflow-hidden">
+                      <div class="bg-[#b2182b] h-full flex items-center px-2 text-[10px] text-white font-bold" style="width: 100%;">
+                        19.10 MAF Total Demand (+1.60 MAF Evap/Seepage)
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Callout Strip: Paper Deficit & Physical Overdraft -->
+                <div class="grid grid-cols-2 gap-2 mt-3 pt-2 border-t border-[#e2e8f0] text-xs">
+                  <div class="p-2 rounded bg-[#f8fafc] border border-[#cbd5e1]">
+                    <span class="text-[9.5px] uppercase font-bold text-[#64748b] block">Statutory Paper Deficit</span>
+                    <span class="text-sm font-black text-[#0f172a] tabular-nums block mt-0.5">+5.00 MAF/yr</span>
+                    <span class="text-[10px] text-[#64748b] block">17.50 statutory - 12.50 physical inflow</span>
+                  </div>
+                  <div class="p-2 rounded bg-[#fef2f2] border border-[#fecaca]">
+                    <span class="text-[9.5px] uppercase font-bold text-[#b2182b] block">Physical Overdraft</span>
+                    <span class="text-sm font-black text-[#b2182b] tabular-nums block mt-0.5">+6.60 MAF/yr</span>
+                    <span class="text-[10px] text-[#b2182b] block">19.10 total pull - 12.50 physical inflow</span>
                   </div>
                 </div>
               </div>
+
+              <!-- Single Editorial Takeaway Sentence -->
+              <div class="p-2.5 bg-[#f0f9ff] border-l-2 border-[#0284c7] rounded-r-[2px] text-[11px] text-[#0f172a] font-medium leading-relaxed">
+                Statutory promises exceed physical river flow by 5.00 MAF/yr, expanding to a 6.60 MAF/yr structural overdraft when uncounted reservoir evaporation is included.
+              </div>
+            </div>
+
+            <!-- CARD 2: THE SEASONAL ENGINE -->
+            <div id="act-2" class="card-academic bg-white rounded-[3px] border border-[#cbd5e1] p-4 flex flex-col justify-between shadow-none space-y-3">
               <div>
-                <div class="flex justify-between text-[11px] mb-0.5">
-                  <span class="font-semibold text-[#0369a1]">Modern Natural River Yield ("Wet Water", 2000–2026 Mean)</span>
-                  <span class="tabular-nums font-bold text-[#0284c7]">12.4 MAF/yr</span>
-                </div>
-                <div class="w-full bg-[#e2e8f0] rounded-[2px] h-4.5 overflow-hidden">
-                  <div class="bg-[#0284c7] h-full flex items-center px-2 text-[10px] text-white tabular-nums font-bold" style="width: 70.8%;">
-                    12.4 MAF/yr Physical Flow (70.8% of paper allocations)
+                <div class="border-b border-[#e2e8f0] pb-2 flex items-center justify-between gap-2">
+                  <div>
+                    <span class="text-[9.5px] font-bold text-[#0072B2] uppercase tracking-wider block">2. Seasonal Engine</span>
+                    <h2 class="text-sm md:text-base font-black text-[#0f172a] tracking-tight">
+                      Seasonality vs. Demand: Why Reservoirs Exist
+                    </h2>
+                  </div>
+                  <div class="flex items-center gap-1">
+                    <button onclick="setSeasonalView('regimes')" id="btn-seasonal-regimes" class="px-2 py-0.5 text-[10px] font-bold rounded bg-[#0f172a] text-white border border-[#0f172a] transition cursor-pointer">
+                      5 Regimes
+                    </button>
+                    <button onclick="setSeasonalView('mismatch')" id="btn-seasonal-mismatch" class="px-2 py-0.5 text-[10px] font-medium rounded bg-[#f1f5f9] text-[#64748b] border border-[#cbd5e1] hover:text-[#0f172a] transition cursor-pointer">
+                      Inflow vs Demand
+                    </button>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            <!-- 3 Historical Eras Comparison -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5 pt-2 border-t border-[#e2e8f0] text-xs">
-              <div class="p-2.5 bg-[#f8fafc] rounded-[2px] border border-[#e2e8f0]">
-                <span class="text-[10px] text-[#475569] font-bold uppercase block">1905–1922 Compact Baseline</span>
-                <span class="text-sm font-black text-[#0f172a] tabular-nums mt-0.5 block">17.5 MAF/yr</span>
-                <p class="text-[10.5px] text-[#64748b] mt-1 leading-snug">Negotiators mistook an anomalous pluvial decade for permanent normal runoff.</p>
-              </div>
-              <div class="p-2.5 bg-[#f8fafc] rounded-[2px] border border-[#e2e8f0]">
-                <span class="text-[10px] text-[#0284c7] font-bold uppercase block">1906–2020 Instrumental Mean</span>
-                <span class="text-sm font-black text-[#0284c7] tabular-nums mt-0.5 block">14.8 MAF/yr</span>
-                <p class="text-[10.5px] text-[#64748b] mt-1 leading-snug">115-year historical average natural virgin flow at Lee's Ferry.</p>
-              </div>
-              <div class="p-2.5 bg-[#f8fafc] rounded-[2px] border border-[#e2e8f0]">
-                <span class="text-[10px] text-[#b2182b] font-bold uppercase block">2000–2026 Aridification Era</span>
-                <span class="text-sm font-black text-[#b2182b] tabular-nums mt-0.5 block">12.4 MAF/yr</span>
-                <p class="text-[10.5px] text-[#64748b] mt-1 leading-snug">A 16.2% decline driven by rising temperatures, dry soils, and reduced snowpack.</p>
-              </div>
-            </div>
-
-            <!-- Key Finding Callout -->
-            <div class="p-3 bg-[#f0f9ff] border-l-4 border-[#0284c7] rounded-r-[3px] text-xs">
-              <strong class="text-[#0369a1] uppercase tracking-wider text-[10.5px] block">Key Finding:</strong>
-              <p class="text-[#0f172a] mt-0.5 font-medium leading-relaxed">
-                The entire Colorado River crisis begins with basic arithmetic. We promised 17.5 MAF/yr on paper, but nature delivers only 12.4 MAF/yr. Every year, downstream users consume 5.1 MAF more than the river replenishes.
-              </p>
-            </div>
-
-            <!-- Explicit Data Provenance Footer -->
-            <div class="pt-2 border-t border-[#e2e8f0] flex flex-wrap items-center justify-between text-[10.5px] text-[#64748b] gap-2">
-              <div>
-                <strong class="text-[#334155]">Data Provenance:</strong> 1922 Colorado River Compact (Articles III.a, III.b, III.d), 1944 Mexican Water Treaty (Article 10), and USBR Lower Colorado Natural Flow Record (1906–present).
-              </div>
-              <div class="flex items-center gap-3">
-                <a href="https://www.usbr.gov/lc/region/g4000/NaturalFlow/" target="_blank" rel="noopener noreferrer" class="font-semibold text-[#0072B2] hover:underline" title="Direct link to USBR Natural Flow and Salt Data Database">
-                  USBR Natural Flow Database (1906–Present) ↗
-                </a>
-                <span class="text-[#cbd5e1]">•</span>
-                <button onclick="setTab('pipeline')" class="font-semibold text-[#334155] hover:underline cursor-pointer">
-                  River Flow Schematic →
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- ============================================================== -->
-          <!-- ACT 2: THE SEASONAL ENGINE (WHY RESERVOIRS EXIST)              -->
-          <!-- ============================================================== -->
-          <section id="act-2" class="card-academic bg-white rounded-[3px] border border-[#cbd5e1] p-5 shadow-none space-y-4">
-            <div class="border-b border-[#e2e8f0] pb-3 flex flex-col md:flex-row md:items-center justify-between gap-2">
-              <div>
-                <span class="text-[10px] font-bold text-[#0072B2] uppercase tracking-wider block">Act 2 • The Physical Hydrology</span>
-                <h2 class="text-base md:text-lg font-black text-[#0f172a] tracking-tight mt-0.5">
-                  Precipitation Seasonality vs. Year-Round Need: Why We Built Massive Reservoirs
-                </h2>
-              </div>
-              <div class="flex items-center gap-1.5">
-                <button onclick="setSeasonalView('regimes')" id="btn-seasonal-regimes" class="px-2.5 py-1 text-[10.5px] font-bold rounded bg-[#0f172a] text-white border border-[#0f172a] shadow-xs cursor-pointer transition">
-                  5 River Pulses
-                </button>
-                <button onclick="setSeasonalView('mismatch')" id="btn-seasonal-mismatch" class="px-2.5 py-1 text-[10.5px] font-medium rounded bg-[#f1f5f9] text-[#64748b] border border-[#cbd5e1] hover:text-[#0f172a] cursor-pointer transition">
-                  Why Reservoirs Drain (Inflow vs Demand)
-                </button>
-              </div>
-            </div>
-
-            <div>
-              <h3 id="seasonal-chart-title" class="text-xs font-bold text-[#0f172a]">
-                365-Day River Heartbeats: Staggered Timing of Natural Pulses vs. Canals
-              </h3>
-              <p id="seasonal-chart-subtitle" class="text-[11px] text-[#475569] leading-relaxed mt-0.5">
-                Normalized Day-of-Year hydrographs demonstrating how alpine snowmelt peaks in June and monsoons strike in August, while canals pull flat demand all 12 months.
-              </p>
-            </div>
-
-            <!-- Chart Canvas -->
-            <div class="h-60 w-full relative">
-              <canvas id="chart-seasonal-engine"></canvas>
-            </div>
-
-            <!-- Reference Hydrologic Benchmarks Grid -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 py-2.5 border-y border-[#e2e8f0] text-[10.5px]">
-              <div>
-                <span class="text-[#64748b] block">Spring Peak Runoff (June):</span>
-                <strong class="tabular-nums text-[#0072B2] text-xs">~48,000 cfs</strong>
-                <span class="text-[#64748b] block text-[10px]">Alpine snowpack melt pulse</span>
-              </div>
-              <div>
-                <span class="text-[#64748b] block">Winter Baseflow (January):</span>
-                <strong class="tabular-nums text-[#334155] text-xs">~6,100 cfs</strong>
-                <span class="text-[#64748b] block text-[10px]">Natural seasonal low drain</span>
-              </div>
-              <div>
-                <span class="text-[#64748b] block">Canal &amp; Export Demand:</span>
-                <strong class="tabular-nums text-[#b45309] text-xs">~15,000 cfs</strong>
-                <span class="text-[#64748b] block text-[10px]">Constant year-round societal pull</span>
-              </div>
-              <div>
-                <span class="text-[#64748b] block">Annual Mass Balance:</span>
-                <strong class="tabular-nums text-[#b2182b] text-xs">96d Refill / 269d Drain</strong>
-                <span class="text-[#64748b] block text-[10px]">Reservoirs deplete 9 months/year</span>
-              </div>
-            </div>
-
-            <!-- Key Finding Callout -->
-            <div class="p-3 bg-[#f8fafc] border-l-4 border-[#0f172a] rounded-r-[3px] text-xs">
-              <strong class="text-[#0f172a] uppercase tracking-wider text-[10.5px] block">Key Finding:</strong>
-              <p class="text-[#334155] mt-0.5 font-medium leading-relaxed">
-                Nature delivers 80% of total annual runoff in a concentrated 90-day window (spring snowmelt + summer flash floods). Society needs water every single day. For 3 months in spring, reservoirs refill (+). For the remaining 9 months, reservoirs drain (-). Without massive multi-year storage, civilization in the desert collapses before winter.
-              </p>
-            </div>
-
-            <!-- Provenance Footer -->
-            <div class="pt-2 border-t border-[#e2e8f0] flex flex-wrap items-center justify-between text-[10.5px] text-[#64748b] gap-2">
-              <div><strong class="text-[#334155]">Source:</strong> USGS National Water Information System (NWIS) • 365-day Day-of-Year hydrographs from Cameo, Yampa, San Juan, and All-American Canal.</div>
-              <button onclick="setTab('ml')" class="font-semibold text-[#0072B2] hover:underline cursor-pointer">Explore Upper Basin Tributaries &amp; ML →</button>
-            </div>
-          </section>
-
-          <!-- ============================================================== -->
-          <!-- ACT 3: THE MULTI-DECADE COLLAPSE (BUFFER DEPLETION)            -->
-          <!-- ============================================================== -->
-          <section id="act-3" class="card-academic bg-white rounded-[3px] border border-[#cbd5e1] p-5 shadow-none space-y-4">
-            <div class="border-b border-[#e2e8f0] pb-3 flex flex-col md:flex-row md:items-center justify-between gap-2">
-              <div>
-                <span class="text-[10px] font-bold text-[#0072B2] uppercase tracking-wider block">Act 3 • The Multi-Decade Reckoning</span>
-                <h2 class="text-base md:text-lg font-black text-[#0f172a] tracking-tight mt-0.5">
-                  Buffer Exhaustion: How 25 Years of Deficit Drained 60 Million Acre-Feet
-                </h2>
-              </div>
-              <div class="flex items-center gap-2">
-                <button onclick="setTab('reservoirs')" class="px-2.5 py-1 text-[11px] font-bold rounded bg-[#f1f5f9] text-[#0f172a] hover:bg-[#e2e8f0] border border-[#cbd5e1] transition cursor-pointer">
-                  Detailed Lake Levels &amp; Heatmaps →
-                </button>
-              </div>
-            </div>
-
-            <p class="text-xs text-[#334155] leading-relaxed">
-              To survive natural drought and seasonal mismatches, the United States built ~60 MAF of storage capacity—the largest reservoir system in North America. Lake Mead (Hoover Dam), Lake Powell (Glen Canyon Dam), and Upper CRSP reservoirs (Flaming Gorge, Navajo, Blue Mesa) hold 4 years of average river flow. Total storage peaked at <strong>56.2 MAF (94% full) in 1984</strong>. But for 25 straight years, downstream demands have exceeded physical inflows. Draining storage to cover the 5.1 MAF annual deficit has exhausted the buffer to <strong>~17.7 MAF (29.5%)</strong> today.
-            </p>
-
-            <!-- Reference Benchmarks Grid -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 py-2.5 border-y border-[#e2e8f0] text-[10.5px]">
-              <div>
-                <span class="text-[#64748b] block">Total System Capacity:</span>
-                <strong class="tabular-nums text-[#0f172a] text-xs">~60.0 MAF</strong>
-                <span class="text-[#64748b] block text-[10px]">~4 years of annual river yield</span>
-              </div>
-              <div>
-                <span class="text-[#64748b] block">1984 Historical Peak:</span>
-                <strong class="tabular-nums text-[#0072B2] text-xs">56.2 MAF (93.7%)</strong>
-                <span class="text-[#64748b] block text-[10px]">Spillways overflowed</span>
-              </div>
-              <div>
-                <span class="text-[#64748b] block">Current Storage (2026):</span>
-                <strong class="tabular-nums text-[#b2182b] text-xs">~17.7 MAF (29.5%)</strong>
-                <span class="text-[#64748b] block text-[10px]">70% of active buffer depleted</span>
-              </div>
-              <div>
-                <span class="text-[#64748b] block">Min Power Pool Limit:</span>
-                <strong class="tabular-nums text-[#d97706] text-xs">~6.0 MAF</strong>
-                <span class="text-[#64748b] block text-[10px]">Hydropower generation ceases</span>
-              </div>
-            </div>
-
-            <!-- Chart Canvas: Okabe-Ito Stacked Area Timeline -->
-            <div class="h-60 w-full relative">
-              <canvas id="chart-macro-overview-timeline"></canvas>
-            </div>
-
-            <!-- Critical Elevation Status Indicators -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1 text-xs">
-              <div class="p-3 rounded-[3px] bg-[#f8fafc] border border-[#cbd5e1]">
-                <div class="flex justify-between items-baseline mb-1">
-                  <span class="font-bold text-[#0f172a]">Lake Mead (Hoover Dam)</span>
-                  <span class="font-bold text-[#0072B2] tabular-nums">~1,039 ft <span class="text-[10px] font-normal text-[#64748b]">(33% capacity)</span></span>
-                </div>
-                <div class="w-full bg-[#e2e8f0] rounded-[2px] h-2.5 overflow-hidden">
-                  <div class="bg-[#0072B2] h-full" style="width: 33.3%;"></div>
-                </div>
-                <div class="flex justify-between text-[10px] text-[#64748b] tabular-nums mt-1">
-                  <span>Dead Pool: 895'</span>
-                  <span>Min Power: 950'</span>
-                  <span>Tier 1 Shortage: 1,075'</span>
-                  <span>Full: 1,221'</span>
-                </div>
-              </div>
-              <div class="p-3 rounded-[3px] bg-[#f8fafc] border border-[#cbd5e1]">
-                <div class="flex justify-between items-baseline mb-1">
-                  <span class="font-bold text-[#0f172a]">Lake Powell (Glen Canyon Dam)</span>
-                  <span class="font-bold text-[#E69F00] tabular-nums">~3,572 ft <span class="text-[10px] font-normal text-[#64748b]">(27% capacity)</span></span>
-                </div>
-                <div class="w-full bg-[#e2e8f0] rounded-[2px] h-2.5 overflow-hidden">
-                  <div class="bg-[#E69F00] h-full" style="width: 27.2%;"></div>
-                </div>
-                <div class="flex justify-between text-[10px] text-[#64748b] tabular-nums mt-1">
-                  <span>Dead Pool: 3,370'</span>
-                  <span>Min Power: 3,490'</span>
-                  <span>DCP Buffer: 3,525'</span>
-                  <span>Full: 3,700'</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Key Finding Callout -->
-            <div class="p-3 bg-[#fffbeb] border-l-4 border-[#b45309] rounded-r-[3px] text-xs">
-              <strong class="text-[#b45309] uppercase tracking-wider text-[10.5px] block">Key Finding:</strong>
-              <p class="text-[#0f172a] mt-0.5 font-medium leading-relaxed">
-                Reservoirs cushioned the annual 5.1 MAF deficit for two decades. But you cannot buffer an arithmetic overdraft forever. Draining storage to avoid hard allocation cuts has depleted the system to less than 30% capacity.
-              </p>
-            </div>
-
-            <!-- Provenance Footer -->
-            <div class="pt-2 border-t border-[#e2e8f0] flex flex-wrap items-center justify-between text-[10.5px] text-[#64748b] gap-2">
-              <div><strong class="text-[#334155]">Source:</strong> USBR Lower and Upper Colorado Operations • Continuous monthly elevation records from Hoover and Glen Canyon Dams (1935–Present).</div>
-              <div class="flex items-center gap-2">
-                <a href="https://www.usbr.gov/lc/region/g4000/hourly/mead-elv.html" target="_blank" rel="noopener noreferrer" class="font-semibold text-[#0072B2] hover:underline">Mead Historical Teletype ↗</a>
-                <span class="text-[#cbd5e1]">•</span>
-                <a href="https://www.usbr.gov/uc/water/hydrodata/reservoir_data/919/charts/pool_elevation.html" target="_blank" rel="noopener noreferrer" class="font-semibold text-[#0072B2] hover:underline">Powell HydroData ↗</a>
-              </div>
-            </div>
-          </section>
-
-          <!-- ============================================================== -->
-          <!-- ACT 4: WHERE DOES IT GO? & THE POST-2026 CLIFF                 -->
-          <!-- ============================================================== -->
-          <section id="act-4" class="card-academic bg-white rounded-[3px] border border-[#cbd5e1] p-5 shadow-none space-y-4">
-            <div class="border-b border-[#e2e8f0] pb-3 flex flex-col md:flex-row md:items-center justify-between gap-2">
-              <div>
-                <span class="text-[10px] font-bold text-[#0072B2] uppercase tracking-wider block">Act 4 • Consumptive Use &amp; The Legal Cliff</span>
-                <h2 class="text-base md:text-lg font-black text-[#0f172a] tracking-tight mt-0.5">
-                  Who Consumes the River, and Who Faces Mandatory Cuts Post-2026?
-                </h2>
-              </div>
-              <div class="flex items-center gap-2">
-                <button onclick="setTab('pipeline')" class="px-2.5 py-1 text-[11px] font-bold rounded bg-[#e0f2fe] text-[#0369a1] hover:bg-[#bae6fd] border border-[#7dd3fc] transition cursor-pointer">
-                  River Transit Pipeline →
-                </button>
-              </div>
-            </div>
-
-            <!-- 2-Column Analytical Deck -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-              
-              <!-- Column Left: Sector & State Breakdown -->
-              <div class="space-y-3">
-                <h3 class="text-xs font-bold text-[#0f172a]">Normal Consumptive Depletions by State (MAF/yr)</h3>
-                <p class="text-[11px] text-[#475569] leading-relaxed">
-                  Over <strong>80% of all diverted Colorado River water</strong> is dedicated to agricultural irrigation, predominantly forage crops (alfalfa, grass hay) and winter vegetables in the Imperial, Palo Verde, and Yuma valleys. Municipal drinking water accounts for ~15%.
-                </p>
 
                 <!-- Chart Canvas -->
-                <div class="h-36 w-full relative">
+                <div class="h-44 w-full relative mt-2">
+                  <canvas id="chart-seasonal-engine"></canvas>
+                </div>
+
+                <!-- Reference Hydrologic Benchmarks Grid -->
+                <div class="grid grid-cols-4 gap-1.5 py-2 border-t border-[#e2e8f0] text-[10px] tabular-nums mt-1">
+                  <div>
+                    <span class="text-[#64748b] block text-[9.5px]">Spring Peak (Jun):</span>
+                    <strong class="text-[#0072B2] text-[11px]">~48,000 cfs</strong>
+                  </div>
+                  <div>
+                    <span class="text-[#64748b] block text-[9.5px]">Winter Base (Jan):</span>
+                    <strong class="text-[#334155] text-[11px]">~6,100 cfs</strong>
+                  </div>
+                  <div>
+                    <span class="text-[#64748b] block text-[9.5px]">Canal Demand:</span>
+                    <strong class="text-[#b45309] text-[11px]">~15,000 cfs</strong>
+                  </div>
+                  <div>
+                    <span class="text-[#64748b] block text-[9.5px]">Mass Balance:</span>
+                    <strong class="text-[#b2182b] text-[11px]">96d Refill / 269d Drain</strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Single Editorial Takeaway Sentence -->
+              <div class="p-2.5 bg-[#f8fafc] border-l-2 border-[#0f172a] rounded-r-[2px] text-[11px] text-[#334155] font-medium leading-relaxed">
+                80% of natural runoff rushes downstream during a 90-day spring snowmelt window, requiring massive multi-year storage to sustain flat year-round societal demand.
+              </div>
+            </div>
+
+            <!-- CARD 3: 90-YEAR RESERVOIR BUFFER DEPLETION -->
+            <div id="act-3" class="card-academic bg-white rounded-[3px] border border-[#cbd5e1] p-4 flex flex-col justify-between shadow-none space-y-3">
+              <div>
+                <div class="border-b border-[#e2e8f0] pb-2 flex items-center justify-between gap-2">
+                  <div>
+                    <span class="text-[9.5px] font-bold text-[#0072B2] uppercase tracking-wider block">3. Storage Trajectory</span>
+                    <h2 class="text-sm md:text-base font-black text-[#0f172a] tracking-tight">
+                      90-Year Reservoir Buffer Depletion (1935–2026)
+                    </h2>
+                  </div>
+                  <button onclick="setTab('reservoirs')" class="px-2 py-0.5 text-[10.5px] font-semibold rounded bg-[#f1f5f9] text-[#0f172a] hover:bg-[#e2e8f0] border border-[#cbd5e1] transition cursor-pointer">
+                    Lake Levels →
+                  </button>
+                </div>
+
+                <!-- Chart Canvas -->
+                <div class="h-44 w-full relative mt-2">
+                  <canvas id="chart-macro-overview-timeline"></canvas>
+                </div>
+
+                <!-- Reference Benchmarks Grid -->
+                <div class="grid grid-cols-4 gap-1.5 py-2 border-t border-[#e2e8f0] text-[10px] tabular-nums mt-1">
+                  <div>
+                    <span class="text-[#64748b] block text-[9.5px]">Full Capacity:</span>
+                    <strong class="text-[#0f172a] text-[11px]">~60.0 MAF</strong>
+                  </div>
+                  <div>
+                    <span class="text-[#64748b] block text-[9.5px]">1984 Peak:</span>
+                    <strong class="text-[#0072B2] text-[11px]">56.2 MAF (94%)</strong>
+                  </div>
+                  <div>
+                    <span class="text-[#64748b] block text-[9.5px]">Today (2026):</span>
+                    <strong class="text-[#b2182b] text-[11px]">~17.7 MAF (29.5%)</strong>
+                  </div>
+                  <div>
+                    <span class="text-[#64748b] block text-[9.5px]">Min Power Limit:</span>
+                    <strong class="text-[#d97706] text-[11px]">~6.0 MAF</strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Single Editorial Takeaway Sentence -->
+              <div class="p-2.5 bg-[#fffbeb] border-l-2 border-[#b45309] rounded-r-[2px] text-[11px] text-[#0f172a] font-medium leading-relaxed">
+                Lake Mead and Lake Powell cushioned the arithmetic overdraft for two decades, but 25 years of deficit have depleted system storage from 94% to 29.5% capacity.
+              </div>
+            </div>
+
+            <!-- CARD 4: CONSUMPTIVE USE & THE LEGAL CLIFF -->
+            <div id="act-4" class="card-academic bg-white rounded-[3px] border border-[#cbd5e1] p-4 flex flex-col justify-between shadow-none space-y-3">
+              <div>
+                <div class="border-b border-[#e2e8f0] pb-2 flex items-center justify-between gap-2">
+                  <div>
+                    <span class="text-[9.5px] font-bold text-[#0072B2] uppercase tracking-wider block">4. Depletions &amp; Law</span>
+                    <h2 class="text-sm md:text-base font-black text-[#0f172a] tracking-tight">
+                      Consumptive Use by State &amp; Sector
+                    </h2>
+                  </div>
+                  <button onclick="setTab('pipeline')" class="px-2 py-0.5 text-[10.5px] font-semibold rounded bg-[#e0f2fe] text-[#0369a1] hover:bg-[#bae6fd] border border-[#7dd3fc] transition cursor-pointer">
+                    Pipeline →
+                  </button>
+                </div>
+
+                <!-- Chart Canvas -->
+                <div class="h-44 w-full relative mt-2">
                   <canvas id="chart-state-use"></canvas>
                 </div>
 
-                <!-- Conveyance Infrastructure Breakdown -->
-                <div class="grid grid-cols-3 gap-2 py-2 border-y border-[#e2e8f0] text-[10.5px]">
+                <!-- Reference Sector & Priority Grid -->
+                <div class="grid grid-cols-4 gap-1.5 py-2 border-t border-[#e2e8f0] text-[10px] tabular-nums mt-1">
                   <div>
-                    <span class="text-[#64748b] block">All-American Canal:</span>
-                    <strong class="tabular-nums text-[#0f172a]">11,500 cfs</strong> <span class="text-[#64748b]">(~2.9 MAF)</span>
+                    <span class="text-[#64748b] block text-[9.5px]">Agriculture:</span>
+                    <strong class="text-[#0f172a] text-[11px]">&gt;80% (Alfalfa/Hay)</strong>
                   </div>
                   <div>
-                    <span class="text-[#64748b] block">Central Arizona Project:</span>
-                    <strong class="tabular-nums text-[#0f172a]">3,000 cfs</strong> <span class="text-[#64748b]">(~1.4 MAF)</span>
+                    <span class="text-[#64748b] block text-[9.5px]">Municipal:</span>
+                    <strong class="text-[#0072B2] text-[11px]">~15% (40M People)</strong>
                   </div>
                   <div>
-                    <span class="text-[#64748b] block">Colorado River Aqueduct:</span>
-                    <strong class="tabular-nums text-[#0f172a]">2,600 cfs</strong> <span class="text-[#64748b]">(~1.0 MAF)</span>
+                    <span class="text-[#64748b] block text-[9.5px]">Senior Rights:</span>
+                    <strong class="text-[#009E73] text-[11px]">1901 (CA Priority)</strong>
+                  </div>
+                  <div>
+                    <span class="text-[#64748b] block text-[9.5px]">Junior Priority:</span>
+                    <strong class="text-[#D55E00] text-[11px]">1968 (AZ CAP Cuts)</strong>
                   </div>
                 </div>
               </div>
 
-              <!-- Column Right: The Mining Law Paradox & Downstream Seniority Trap -->
-              <div class="space-y-3">
-                <div class="flex items-center justify-between">
-                  <h3 class="text-xs font-bold text-[#0f172a]">The Mining Law Paradox: "Use It or Lose It" &amp; Downstream Seniority</h3>
-                  <span class="text-[10px] text-[#b2182b] bg-[#fef2f2] px-1.5 py-0.5 rounded border border-[#fecdd3]">Prior Appropriation</span>
-                </div>
-                <p class="text-[11px] text-[#475569] leading-relaxed">
-                  Western water law originated in 19th-century California gold rush mining camps rather than English riparian sharing. This legal architecture created a structural dilemma for modern river management:
-                </p>
-
-                <div class="space-y-2 text-xs">
-                  <div class="p-2.5 rounded-[2px] bg-[#f8fafc] border border-[#e2e8f0]">
-                    <div class="flex justify-between font-bold text-[#0f172a]">
-                      <span>1. Senior Rights Sit at the Bottom of the River</span>
-                      <span class="text-[#059669]">Zero Baseline Cuts</span>
-                    </div>
-                    <p class="text-[10.5px] text-[#64748b] mt-0.5 leading-snug">
-                      The Imperial Irrigation District holds 1901 Present Perfected Rights (2.6+ MAF/yr senior entitlement) predating the 1922 Compact. Because these rights sit at California's southern border, the entire river must bypass all upstream states to fulfill them first.
-                    </p>
-                  </div>
-
-                  <div class="p-2.5 rounded-[2px] bg-[#f8fafc] border border-[#e2e8f0]">
-                    <div class="flex justify-between font-bold text-[#0f172a]">
-                      <span>2. The "Use It or Lose It" Forfeiture Trap</span>
-                      <span class="text-[#d97706]">Statutory Forfeiture</span>
-                    </div>
-                    <p class="text-[10.5px] text-[#64748b] mt-0.5 leading-snug">
-                      Under western water law, unexercised paper allocations risk statutory forfeiture/abandonment. This penalizes conservation and creates a perverse legal incentive to flood-irrigate low-value forage crops (alfalfa) in 115°F desert heat to defend paper entitlements.
-                    </p>
-                  </div>
-
-                  <div class="p-2.5 rounded-[2px] bg-[#f8fafc] border border-[#e2e8f0]">
-                    <div class="flex justify-between font-bold text-[#0f172a]">
-                      <span>3. Upstream Arizona Cities Absorb First Cuts</span>
-                      <span class="text-[#b2182b]">1968 Basin Project Act</span>
-                    </div>
-                    <p class="text-[10.5px] text-[#64748b] mt-0.5 leading-snug">
-                      To secure California's congressional votes for funding the Central Arizona Project (CAP), Arizona agreed that CAP would remain junior to California. When shortage triggers hit Lake Mead, Phoenix and Tucson cities take mandatory cuts before California farms take any.
-                    </p>
-                  </div>
-
-                  <div class="p-2.5 rounded-[2px] bg-[#fff1f2] border border-[#fecdd3]">
-                    <div class="flex justify-between font-bold text-[#991b1b]">
-                      <span>4. The December 2026 Operating Cliff</span>
-                      <span class="tabular-nums">Expires Dec 31, 2026</span>
-                    </div>
-                    <p class="text-[10.5px] text-[#475569] mt-0.5 leading-snug">
-                      The 2007 Interim Guidelines and 2019 DCP expire at the end of 2026. The seven basin states are in federal negotiations to permanently bridge the 2 to 4 MAF/yr deficit before federal courts intervene.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-
-            <!-- Key Finding Callout -->
-            <div class="p-3 bg-[#fef2f2] border-l-4 border-[#b2182b] rounded-r-[3px] text-xs">
-              <strong class="text-[#b2182b] uppercase tracking-wider text-[10.5px] block">Key Finding:</strong>
-              <p class="text-[#0f172a] mt-0.5 font-medium leading-relaxed">
-                Over 80% of diverted water goes to desert agriculture. Because California holds 1901 senior perfected rights backed by "use it or lose it" forfeiture rules, growers are legally disincentivized from conserving, while junior upstream cities in Arizona face mandatory cuts. When operating rules expire in December 2026, the basin must rewrite a century of water law to align legal allocations with physical hydrology.
-              </p>
-            </div>
-
-            <!-- Deep-Dive Action Dock -->
-            <div class="pt-3 border-t border-[#e2e8f0] flex flex-wrap items-center justify-between gap-2 text-xs">
-              <span class="font-bold text-[#0f172a] text-[11px] uppercase tracking-wider">Deep-Dive Data Explored in Specialized Tabs:</span>
-              <div class="flex flex-wrap items-center gap-1.5">
-                <button onclick="setTab('map')" class="px-2 py-0.5 rounded bg-[#f1f5f9] hover:bg-[#e2e8f0] text-[#0f172a] border border-[#cbd5e1] font-semibold text-[10.5px] transition cursor-pointer">
-                  Live River Map ↗
-                </button>
-                <button onclick="setTab('sankey')" class="px-2 py-0.5 rounded bg-[#f1f5f9] hover:bg-[#e2e8f0] text-[#0f172a] border border-[#cbd5e1] font-semibold text-[10.5px] transition cursor-pointer">
-                  Water Budget Sankey ↗
-                </button>
-                <button onclick="setTab('pipeline')" class="px-2 py-0.5 rounded bg-[#f1f5f9] hover:bg-[#e2e8f0] text-[#0f172a] border border-[#cbd5e1] font-semibold text-[10.5px] transition cursor-pointer">
-                  Transit Pipeline ↗
-                </button>
-                <button onclick="setTab('ml')" class="px-2 py-0.5 rounded bg-[#f1f5f9] hover:bg-[#e2e8f0] text-[#0f172a] border border-[#cbd5e1] font-semibold text-[10.5px] transition cursor-pointer">
-                  Tributary Dynamics ↗
-                </button>
-                <button onclick="setTab('reservoirs')" class="px-2 py-0.5 rounded bg-[#f1f5f9] hover:bg-[#e2e8f0] text-[#0f172a] border border-[#cbd5e1] font-semibold text-[10.5px] transition cursor-pointer">
-                  Reservoir Heatmaps ↗
-                </button>
+              <!-- Single Editorial Takeaway Sentence -->
+              <div class="p-2.5 bg-[#f0fdf4] border-l-2 border-[#009E73] rounded-r-[2px] text-[11px] text-[#0f172a] font-medium leading-relaxed">
+                Agriculture consumes over 80% of diverted flow, with 1901 senior rights legally protecting California while junior upstream cities in Arizona absorb first-tier cuts.
               </div>
             </div>
-          </section>
+
+          </div>
+
+          <!-- Deep-Dive Action Dock -->
+          <div class="p-3 bg-white border border-[#cbd5e1] rounded-[3px] flex flex-wrap items-center justify-between gap-3 text-xs">
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-[#0f172a] text-[11px] uppercase tracking-wider">Deep-Dive Analysis:</span>
+              <span class="text-[11px] text-[#64748b]">Explore specialized interactive tools across the basin:</span>
+            </div>
+            <div class="flex flex-wrap items-center gap-1.5">
+              <button onclick="setTab('map')" class="px-2.5 py-1 rounded bg-[#f1f5f9] hover:bg-[#e2e8f0] text-[#0f172a] border border-[#cbd5e1] font-semibold text-[11px] transition cursor-pointer">
+                System Map ↗
+              </button>
+              <button onclick="setTab('sankey')" class="px-2.5 py-1 rounded bg-[#f1f5f9] hover:bg-[#e2e8f0] text-[#0f172a] border border-[#cbd5e1] font-semibold text-[11px] transition cursor-pointer">
+                Water Budget Sankey ↗
+              </button>
+              <button onclick="setTab('pipeline')" class="px-2.5 py-1 rounded bg-[#f1f5f9] hover:bg-[#e2e8f0] text-[#0f172a] border border-[#cbd5e1] font-semibold text-[11px] transition cursor-pointer">
+                Transit Pipeline ↗
+              </button>
+              <button onclick="setTab('ml')" class="px-2.5 py-1 rounded bg-[#f1f5f9] hover:bg-[#e2e8f0] text-[#0f172a] border border-[#cbd5e1] font-semibold text-[11px] transition cursor-pointer">
+                Tributary Dynamics (ML) ↗
+              </button>
+              <button onclick="setTab('reservoirs')" class="px-2.5 py-1 rounded bg-[#f1f5f9] hover:bg-[#e2e8f0] text-[#0f172a] border border-[#cbd5e1] font-semibold text-[11px] transition cursor-pointer">
+                Reservoir Heatmaps ↗
+              </button>
+              <button onclick="openLawModal()" class="px-2.5 py-1 rounded bg-[#e0f2fe] hover:bg-[#bae6fd] text-[#0369a1] border border-[#7dd3fc] font-bold text-[11px] transition cursor-pointer">
+                Law Framework ↗
+              </button>
+            </div>
+          </div>
 
           <!-- Editorial Footer: Reproducible Notebooks & Open Science Provenance -->
-          <footer class="mt-8 pt-5 pb-6 border-t border-[#cbd5e1] flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-[11px] text-[#64748b]">
+          <footer class="pt-2 pb-4 border-t border-[#cbd5e1] flex flex-col md:flex-row items-start md:items-center justify-between gap-3 text-[11px] text-[#64748b]">
             <div>
-              <div class="font-bold text-[#0f172a]">Colorado River Basin Research &amp; Open Science Documentation</div>
-              <div class="text-[10px] text-[#64748b] mt-0.5">Colorado Mountain College • DAT1001 • Streamflow &amp; Reservoir Records from USGS NWIS, USBR HydroData &amp; USDA SNOTEL</div>
+              <span class="font-bold text-[#0f172a]">Colorado River Basin Research &amp; Open Science Documentation</span>
+              <span class="text-[10px] text-[#64748b] ml-2">USGS NWIS, USBR HydroData &amp; USDA SNOTEL Ingestion</span>
             </div>
-            <div class="flex flex-wrap items-center gap-2.5 text-[11px]">
+            <div class="flex flex-wrap items-center gap-2 text-[11px]">
               <span class="font-semibold text-[#334155]">Reproducible Notebooks:</span>
-              <a href="https://github.com/schochdo/CO_River/blob/main/notebooks/01_build_river_network.ipynb" target="_blank" rel="noopener noreferrer" class="font-mono text-[#0072B2] hover:underline" title="View 01_build_river_network.ipynb on GitHub">01_build_river_network.ipynb ↗</a>
+              <a href="https://github.com/schochdo/CO_River/blob/main/notebooks/01_build_river_network.ipynb" target="_blank" rel="noopener noreferrer" class="font-mono text-[#0072B2] hover:underline" title="View 01_build_river_network.ipynb on GitHub">01_river_network.ipynb ↗</a>
               <span class="text-[#cbd5e1]">•</span>
-              <a href="https://github.com/schochdo/CO_River/blob/main/notebooks/02_analyze_flow_and_export.ipynb" target="_blank" rel="noopener noreferrer" class="font-mono text-[#0072B2] hover:underline" title="View 02_analyze_flow_and_export.ipynb on GitHub">02_analyze_flow_and_export.ipynb ↗</a>
+              <a href="https://github.com/schochdo/CO_River/blob/main/notebooks/02_analyze_flow_and_export.ipynb" target="_blank" rel="noopener noreferrer" class="font-mono text-[#0072B2] hover:underline" title="View 02_analyze_flow_and_export.ipynb on GitHub">02_flow_export.ipynb ↗</a>
               <span class="text-[#cbd5e1]">•</span>
-              <a href="https://github.com/schochdo/CO_River/blob/main/notebooks/03_tributary_ml_analysis.ipynb" target="_blank" rel="noopener noreferrer" class="font-mono text-[#0072B2] hover:underline" title="View 03_tributary_ml_analysis.ipynb on GitHub">03_tributary_ml_analysis.ipynb ↗</a>
-              <span class="text-[#cbd5e1]">•</span>
-              <button onclick="openApiModal()" class="font-bold text-[#0f172a] hover:underline cursor-pointer">All Sources &amp; Notebooks</button>
+              <a href="https://github.com/schochdo/CO_River/blob/main/notebooks/03_tributary_ml_analysis.ipynb" target="_blank" rel="noopener noreferrer" class="font-mono text-[#0072B2] hover:underline" title="View 03_tributary_ml_analysis.ipynb on GitHub">03_ml_analysis.ipynb ↗</a>
             </div>
           </footer>
 
@@ -1114,12 +974,12 @@
           </div>
           <p class="text-xs text-slate-500 mb-3">Negotiators assumed the river produced over 17 MAF per year, creating an immediate gap between legal promises and physical supply.</p>
           <p>
-            Delegates from the seven basin states and Herbert Hoover signed the 1922 Colorado River Compact in Santa Fe, New Mexico, splitting the watershed at Lees Ferry, Arizona. The compact apportioned 7.5 million acre-feet (MAF) per year to the Upper Basin and 7.5 MAF per year to the Lower Basin in perpetuity. In 1944, the Mexican Water Treaty committed another 1.5 MAF per year at Morelos Dam, bringing statutory paper water promises to 16.5 MAF per year without setting aside water for reservoir evaporation.
+            Delegates from the seven basin states and Herbert Hoover signed the 1922 Colorado River Compact in Santa Fe, New Mexico, splitting the watershed at Lees Ferry, Arizona. The compact apportioned 7.5 million acre-feet (MAF) per year to the Upper Basin and 7.5 MAF per year to the Lower Basin in perpetuity (Art. III.a), plus authorized an additional 1.0 MAF of Lower Basin consumptive use (Art. III.b). In 1944, the Mexican Water Treaty committed another 1.5 MAF per year at Morelos Dam (Art. 10), bringing statutory paper water apportionments to 17.5 MAF per year—without setting aside water for reservoir evaporation and transit losses (~1.60 MAF/yr, totaling 19.10 MAF/yr).
           </p>
           <div class="my-4 p-4 bg-[#f5f5f4] border-l-[3px] border-l-[#334155] rounded-none">
             <div class="font-bold text-xs text-[#0f172a] mb-1">Baseline Hydrology: Paper Allocations vs. Physical Wet Water</div>
             <p class="text-xs leading-relaxed text-slate-700 m-0">
-              Negotiators based their allocations on gage records from the unusually wet period between 1905 and 1922, estimating average annual river runoff above 17 MAF. Early USGS field warnings from hydrologist E.C. LaRue showed that long-term flows were significantly lower, but commissioners prioritized state unanimity over hydrology. A century of USGS records and tree-ring data show that natural inflow averages closer to 12.5 to 13.2 MAF per year. Because reservoir evaporation and transit losses consume another 1.5 to 1.8 MAF per year, statutory paper allocations exceed physical wet water by roughly 4 to 5 MAF annually.
+              Negotiators based their allocations on gage records from the unusually wet period between 1905 and 1922, estimating average annual river runoff above 17 MAF. Early USGS field warnings from hydrologist E.C. LaRue showed that long-term flows were significantly lower, but commissioners prioritized state unanimity over hydrology. A century of USGS records and tree-ring data show that natural inflow averages closer to 12.50 MAF per year (2000–2026). Because reservoir evaporation and transit losses consume another ~1.60 MAF per year, total basin demand reaches 19.10 MAF/yr, creating a 6.60 MAF/yr structural overdraft against physical inflows.
             </p>
           </div>
           <!-- Stats Grid -->
@@ -2626,7 +2486,7 @@ for ts in data["value"]["timeSeries"]:
               y: {
                 min: 0,
                 max: 5,
-                ticks: { font: { size: 9 }, stepSize: 1, callback: v => v + 'M' },
+                ticks: { font: { size: 9 }, stepSize: 1, callback: v => v + ' MAF' },
                 grid: { color: '#e2e8f0' }
               }
             }
