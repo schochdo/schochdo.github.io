@@ -273,19 +273,6 @@
         <span>GitHub Repository ↗</span>
       </a>
     </div>
-
-    <!-- View / Display Mode (Separate Section) -->
-    <div class="pt-2.5 mt-2 border-t border-[#e2e8f0]">
-      <button onclick="toggleFullScreen()" id="btn-fullscreen" class="sidebar-link w-full" title="Toggle Fullscreen" aria-label="Toggle Fullscreen">
-        <svg id="icon-enter-fullscreen" class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
-        </svg>
-        <svg id="icon-exit-fullscreen" class="w-4 h-4 hidden flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 10h6V4 M10 10L3 3 M20 10h-6V4 M14 10L21 3 M4 14h6v6 M10 14L3 21 M20 14h-6v6 M14 14L21 21"/>
-        </svg>
-        <span>Toggle Fullscreen</span>
-      </button>
-    </div>
   </aside>
 
   <!-- Main Content Area (Full Bleed Viewport) -->
@@ -1783,39 +1770,6 @@ for ts in data["value"]["timeSeries"]:
       document.getElementById('law-modal').classList.add('hidden');
       document.getElementById('api-modal').classList.add('hidden');
     }
-
-    // Fullscreen Toggle
-    function toggleFullScreen() {
-      const enterIcon = document.getElementById('icon-enter-fullscreen');
-      const exitIcon = document.getElementById('icon-exit-fullscreen');
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().then(() => {
-          if (enterIcon) enterIcon.classList.add('hidden');
-          if (exitIcon) exitIcon.classList.remove('hidden');
-        }).catch(err => {
-          console.warn('Fullscreen request denied:', err);
-        });
-      } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen().then(() => {
-            if (enterIcon) enterIcon.classList.remove('hidden');
-            if (exitIcon) exitIcon.classList.add('hidden');
-          });
-        }
-      }
-    }
-
-    document.addEventListener('fullscreenchange', () => {
-      const enterIcon = document.getElementById('icon-enter-fullscreen');
-      const exitIcon = document.getElementById('icon-exit-fullscreen');
-      if (document.fullscreenElement) {
-        if (enterIcon) enterIcon.classList.add('hidden');
-        if (exitIcon) exitIcon.classList.remove('hidden');
-      } else {
-        if (enterIcon) enterIcon.classList.remove('hidden');
-        if (exitIcon) exitIcon.classList.add('hidden');
-      }
-    });
 
     // Active Reservoir Record ('mead' or 'powell') and view mode ('envelope' or 'heatmap')
     let currentReservoirRecord = 'mead';

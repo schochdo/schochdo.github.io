@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-11-19T11:51:24.197174",
+  "fetched_at": "2026-11-19T11:55:18.073812",
   "dam_releases": {
     "hoover_dam": {
       "id": "USBR_HOOVER",
@@ -58,7 +58,7 @@
       "provider": "USGS",
       "flow_cfs": 20.3,
       "timestamp": "2026-11-19T11:15:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 40.00689167,
       "lon": -105.8482722
@@ -70,7 +70,7 @@
       "provider": "USGS",
       "flow_cfs": 90.9,
       "timestamp": "2026-11-19T10:45:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 40.108319,
       "lon": -106.0041847
@@ -118,7 +118,7 @@
       "provider": "USGS",
       "flow_cfs": 63.0,
       "timestamp": "2026-11-19T11:15:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 39.625556,
       "lon": -106.065833
@@ -142,7 +142,7 @@
       "provider": "USGS",
       "flow_cfs": 190.0,
       "timestamp": "2026-11-19T11:15:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 40.036667,
       "lon": -106.439444
@@ -154,7 +154,7 @@
       "provider": "USGS",
       "flow_cfs": 126.0,
       "timestamp": "2026-11-19T11:15:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 39.64942954,
       "lon": -106.9536554
@@ -178,7 +178,7 @@
       "provider": "USGS",
       "flow_cfs": 39.3,
       "timestamp": "2026-11-19T11:15:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 39.36554075,
       "lon": -106.8255948
@@ -190,7 +190,7 @@
       "provider": "USGS",
       "flow_cfs": 475.0,
       "timestamp": "2026-11-19T10:45:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 39.54666667,
       "lon": -107.33083333
@@ -202,7 +202,7 @@
       "provider": "USGS",
       "flow_cfs": 1010.0,
       "timestamp": "2026-11-19T11:15:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 39.5549819,
       "lon": -107.337554
@@ -226,7 +226,7 @@
       "provider": "USGS",
       "flow_cfs": 284.0,
       "timestamp": "2026-11-19T11:15:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 38.54193567,
       "lon": -106.9497661
@@ -250,7 +250,7 @@
       "provider": "USGS",
       "flow_cfs": 486.0,
       "timestamp": "2026-11-19T11:15:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 38.74194444,
       "lon": -108.08041667
@@ -274,7 +274,7 @@
       "provider": "USGS",
       "flow_cfs": 2580.0,
       "timestamp": "2026-11-19T10:45:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 39.132742,
       "lon": -109.027075
@@ -286,7 +286,7 @@
       "provider": "USGS",
       "flow_cfs": 493.0,
       "timestamp": "2026-11-19T10:45:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 37.47249579,
       "lon": -108.49760047
@@ -298,7 +298,7 @@
       "provider": "USGS",
       "flow_cfs": 318.0,
       "timestamp": "2026-11-19T11:15:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 38.3102675,
       "lon": -108.8853805
@@ -308,9 +308,9 @@
       "name": "Dolores River near Cisco, UT",
       "type": "streamflow",
       "provider": "USGS",
-      "flow_cfs": 587.0,
-      "timestamp": "2026-11-19T11:30:00.000-07:00",
-      "age_hours": 0.4,
+      "flow_cfs": 581.0,
+      "timestamp": "2026-11-19T11:45:00.000-07:00",
+      "age_hours": 0.2,
       "data_status": "live",
       "lat": 38.79720805,
       "lon": -109.1951142
@@ -334,7 +334,7 @@
       "provider": "USGS",
       "flow_cfs": 274.0,
       "timestamp": "2026-11-19T10:45:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 43.0190833,
       "lon": -110.1188611
@@ -394,7 +394,7 @@
       "provider": "USGS",
       "flow_cfs": 239.0,
       "timestamp": "2026-11-19T11:15:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 40.50273085,
       "lon": -108.0334482
@@ -406,7 +406,7 @@
       "provider": "USGS",
       "flow_cfs": 126.0,
       "timestamp": "2026-11-19T11:15:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 40.54901667,
       "lon": -108.42432222
@@ -418,7 +418,7 @@
       "provider": "USGS",
       "flow_cfs": 389.0,
       "timestamp": "2026-11-19T11:15:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 40.45161747,
       "lon": -108.52512937
@@ -478,7 +478,7 @@
       "provider": "USGS",
       "flow_cfs": 299.0,
       "timestamp": "2026-11-19T10:45:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 39.97885629,
       "lon": -109.1787269
@@ -512,9 +512,9 @@
       "name": "San Rafael River near Green River, UT",
       "type": "streamflow",
       "provider": "USGS",
-      "flow_cfs": 337.0,
-      "timestamp": "2026-11-19T11:30:00.000-07:00",
-      "age_hours": 0.4,
+      "flow_cfs": 332.0,
+      "timestamp": "2026-11-19T11:45:00.000-07:00",
+      "age_hours": 0.2,
       "data_status": "live",
       "lat": 38.8583081,
       "lon": -110.3701469
@@ -538,7 +538,7 @@
       "provider": "USGS",
       "flow_cfs": 7.04,
       "timestamp": "2026-11-19T11:25:00.000-07:00",
-      "age_hours": 0.4,
+      "age_hours": 0.5,
       "data_status": "live",
       "lat": 37.77804389,
       "lon": -111.5746181
@@ -562,7 +562,7 @@
       "provider": "USGS",
       "flow_cfs": 392.0,
       "timestamp": "2026-11-19T11:15:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 36.80188889,
       "lon": -107.6986389
@@ -646,7 +646,7 @@
       "provider": "USGS",
       "flow_cfs": 14.8,
       "timestamp": "2026-11-19T10:15:00.000-07:00",
-      "age_hours": 1.6,
+      "age_hours": 1.7,
       "data_status": "live",
       "lat": 34.31502222,
       "lon": -109.36233056
@@ -658,7 +658,7 @@
       "provider": "USGS",
       "flow_cfs": 81.5,
       "timestamp": "2026-11-19T10:45:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 35.9263819,
       "lon": -111.5673682
@@ -670,7 +670,7 @@
       "provider": "USGS",
       "flow_cfs": 8770.0,
       "timestamp": "2026-11-19T11:15:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 36.10137176,
       "lon": -112.0862795
@@ -694,7 +694,7 @@
       "provider": "USGS",
       "flow_cfs": 69.0,
       "timestamp": "2026-11-19T11:15:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 36.30581618,
       "lon": -112.761305
@@ -742,7 +742,7 @@
       "provider": "USGS",
       "flow_cfs": 44.0,
       "timestamp": "2026-11-19T10:40:00.000-08:00",
-      "age_hours": 0.2,
+      "age_hours": 0.3,
       "data_status": "live",
       "lat": 36.64302844,
       "lon": -114.5397075
@@ -776,9 +776,9 @@
       "name": "Colorado River below Imperial Dam, AZ-CA",
       "type": "streamflow",
       "provider": "USGS",
-      "flow_cfs": 232.0,
-      "timestamp": "2026-11-19T09:45:00.000-07:00",
-      "age_hours": 2.1,
+      "flow_cfs": 221.0,
+      "timestamp": "2026-11-19T11:45:00.000-07:00",
+      "age_hours": 0.2,
       "data_status": "live",
       "lat": 32.86758333,
       "lon": -114.472111
@@ -1074,10 +1074,10 @@
       "type": "diversion_canal",
       "destination": "Phoenix & Tucson / Central Arizona",
       "provider": "USGS",
-      "flow_cfs": 1020.0,
+      "flow_cfs": null,
       "timestamp": "2026-10-31T00:00:00.000",
       "age_hours": 467.9,
-      "data_status": "delayed",
+      "data_status": "offline",
       "lat": 34.28890386,
       "lon": -114.1110573
     },
@@ -1086,11 +1086,11 @@
       "name": "Canal Alimentador Central (Central Feeder Canal)",
       "type": "diversion_canal",
       "destination": "Mexicali Valley Agriculture & Municipal Users (District 014)",
-      "provider": "USGS / CILA",
-      "flow_cfs": 1830.0,
+      "provider": "USGS",
+      "flow_cfs": null,
       "timestamp": "2026-10-31T00:00:00.000",
       "age_hours": 467.9,
-      "data_status": "delayed",
+      "data_status": "offline",
       "lat": 32.7056,
       "lon": -114.7292
     },
@@ -1140,7 +1140,7 @@
       "capacity_pct": 26.6,
       "role": "Upper Basin Bank & Compact Delivery to Lower Basin",
       "timestamp": "2026-11-19T10:45:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 36.9367,
       "lon": -111.4839
@@ -1171,12 +1171,12 @@
       "category": "system",
       "provider": "USBR / USGS",
       "elevation_ft": 639.8,
-      "storage_af": 1606000.0,
+      "storage_af": 1604000.0,
       "capacity_af": 1810000.0,
-      "capacity_pct": 88.7,
+      "capacity_pct": 88.6,
       "role": "Downstream Regulation & Mexican Treaty Deliveries",
-      "timestamp": "2026-11-19T10:45:00.000-07:00",
-      "age_hours": 1.1,
+      "timestamp": "2026-11-19T11:45:00.000-07:00",
+      "age_hours": 0.2,
       "data_status": "live",
       "lat": 35.1989,
       "lon": -114.5683
@@ -1321,7 +1321,7 @@
     }
   ],
   "validation": {
-    "timestamp": "2026-11-19T11:51:24.180669",
+    "timestamp": "2026-11-19T11:55:18.053504",
     "overall_status": "VALID",
     "stale_stations": [
       {
@@ -1335,14 +1335,14 @@
         "id": "09426650",
         "name": "Central Arizona Project (CAP Aqueduct)",
         "age_hours": 467.9,
-        "status": "delayed",
+        "status": "offline",
         "timestamp": "2026-10-31T00:00:00.000"
       },
       {
         "id": "09522000",
         "name": "Canal Alimentador Central (Central Feeder Canal)",
         "age_hours": 467.9,
-        "status": "delayed",
+        "status": "offline",
         "timestamp": "2026-10-31T00:00:00.000"
       }
     ],
@@ -1377,7 +1377,7 @@
         "hist_ratio": 0.909,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-19T10:45:00.000-07:00",
-        "age_hours": 1.1,
+        "age_hours": 1.2,
         "data_status": "live",
         "delta_cfs": 82.23,
         "delta_pct": 948.4429065743946,
@@ -1392,7 +1392,7 @@
         "hist_ratio": 0.909,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-19T10:45:00.000-07:00",
-        "age_hours": 1.1,
+        "age_hours": 1.2,
         "data_status": "live",
         "delta_cfs": 0.0,
         "delta_pct": 0.0,
@@ -1407,7 +1407,7 @@
         "hist_ratio": 0.3225806451612903,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-19T11:15:00.000-07:00",
-        "age_hours": 0.6,
+        "age_hours": 0.7,
         "data_status": "live",
         "delta_cfs": 99.1,
         "delta_pct": 109.020902090209,
@@ -1452,7 +1452,7 @@
         "hist_ratio": 0.688,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-19T10:45:00.000-07:00",
-        "age_hours": 1.1,
+        "age_hours": 1.2,
         "data_status": "live",
         "delta_cfs": 1290.0,
         "delta_pct": 100.0,
@@ -1512,7 +1512,7 @@
         "hist_ratio": 0.8683168316831683,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-19T11:15:00.000-07:00",
-        "age_hours": 0.6,
+        "age_hours": 0.7,
         "data_status": "live",
         "delta_cfs": 3770.0,
         "delta_pct": 75.4,
@@ -1527,7 +1527,7 @@
         "hist_ratio": 0.8683168316831683,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-19T11:15:00.000-07:00",
-        "age_hours": 0.6,
+        "age_hours": 0.7,
         "data_status": "live",
         "delta_cfs": 0.0,
         "delta_pct": 0.0,
@@ -1612,27 +1612,27 @@
         "reach": "lower_basin_imperial_tailrace",
         "name": "Colorado River below Imperial Dam",
         "gauge_id": "09429500",
-        "flow_cfs": 232.0,
+        "flow_cfs": 221.0,
         "median_50yr_cfs": 427.0,
-        "hist_ratio": 0.5433255269320844,
+        "hist_ratio": 0.5175644028103045,
         "hist_status": "NORMAL",
-        "timestamp": "2026-11-19T09:45:00.000-07:00",
-        "age_hours": 2.1,
+        "timestamp": "2026-11-19T11:45:00.000-07:00",
+        "age_hours": 0.2,
         "data_status": "live",
-        "delta_cfs": -6838.0,
-        "delta_pct": -96.71852899575671,
+        "delta_cfs": -6849.0,
+        "delta_pct": -96.87411598302688,
         "mass_balance": "VERIFIED_DAM_IMPOUNDMENT (Imperial Dam)"
       },
       {
         "reach": "lower_basin_taper",
         "name": "Colorado River below Imperial to Mexico",
         "gauge_id": "09429500",
-        "flow_cfs": 232.0,
+        "flow_cfs": 221.0,
         "median_50yr_cfs": 427.0,
-        "hist_ratio": 0.5433255269320844,
+        "hist_ratio": 0.5175644028103045,
         "hist_status": "NORMAL",
-        "timestamp": "2026-11-19T09:45:00.000-07:00",
-        "age_hours": 2.1,
+        "timestamp": "2026-11-19T11:45:00.000-07:00",
+        "age_hours": 0.2,
         "data_status": "live",
         "delta_cfs": 0.0,
         "delta_pct": 0.0,
@@ -1656,22 +1656,22 @@
         "source": "USBR Lower Colorado Hourly Operations",
         "release_cfs": 1851.0,
         "upstream_davis_cfs": 4707.0,
-        "havasu_diversions_cfs": 1020.0,
-        "net_havasu_inflow_cfs": 3687.0,
+        "havasu_diversions_cfs": 0.0,
+        "net_havasu_inflow_cfs": 4707.0,
         "validation": "PASS"
       },
       "imperial_dam": {
         "upstream_paloverde_09429100_cfs": 7070.0,
         "aac_diversion_09527700_cfs": 2030.0,
-        "tailrace_09429500_cfs": 232.0,
+        "tailrace_09429500_cfs": 221.0,
         "continuity_check": "PASS"
       },
       "morelos_dam": {
         "intake_canal": "Canal Alimentador Central",
         "usgs_station": "09522000 (Colorado River at NIB above Morelos Dam)",
-        "treaty_delivery_cfs": 1830.0,
-        "data_status": "delayed",
-        "validation": "PASS"
+        "treaty_delivery_cfs": null,
+        "data_status": "offline",
+        "validation": "DELAYED"
       }
     },
     "anomalies": []
