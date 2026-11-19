@@ -683,7 +683,7 @@
     // ================================================================
     // CARD 2: TRAVEL TIME TO LAKE POWELL (ARRIVAL CURVES)
     // ================================================================
-    // Custom plugin for Card 2: Direct labels for 3-4 main rivers
+    // Custom plugin for Card 2: Direct labels for 3-4 main rivers with solid protective pill badges
     const card2RiverLabelsPlugin = {
       id: 'card2RiverLabelsPlugin',
       afterDatasetsDraw(chart) {
@@ -693,14 +693,14 @@
         const yScale = chart.scales.y;
 
         const mainRivers = [
-          { id: 'san_juan_bluff', label: 'San Juan 1.5d', xVal: 1.5, yVal: 0.42, xOffset: 0, yOffset: -10 },
-          { id: 'cisco', label: 'Cisco 3.5d', xVal: 3.5, yVal: 0.78, xOffset: -6, yOffset: -11 },
-          { id: 'green_river', label: 'Green 4.5d', xVal: 5.0, yVal: 0.81, xOffset: 6, yOffset: -11 },
-          { id: 'yampa', label: 'Yampa 8d', xVal: 8.0, yVal: 0.66, xOffset: 0, yOffset: -10 }
+          { id: 'san_juan_bluff', label: 'San Juan 1.5d', xVal: 2.0, yVal: 0.42, xOffset: 12, yOffset: -14 },
+          { id: 'cisco', label: 'Cisco 3.5d', xVal: 3.5, yVal: 0.78, xOffset: -12, yOffset: -13 },
+          { id: 'green_river', label: 'Green 4.5d', xVal: 5.0, yVal: 0.81, xOffset: 12, yOffset: -13 },
+          { id: 'yampa', label: 'Yampa 8d', xVal: 8.0, yVal: 0.66, xOffset: 0, yOffset: -13 }
         ];
 
         ctx.save();
-        ctx.font = 'bold 9.5px "Inter", -apple-system, sans-serif';
+        ctx.font = 'bold 9px "Inter", -apple-system, sans-serif';
 
         mainRivers.forEach(item => {
           const ds = chart.data.datasets.find(d => d.riverId === item.id);
@@ -716,23 +716,43 @@
             const px = xPos + item.xOffset;
             const py = yPos + item.yOffset;
 
-            // White halo to prevent arrival curves slicing through text letters
-            ctx.save();
-            ctx.strokeStyle = '#ffffff';
-            ctx.lineWidth = 3.5;
-            ctx.lineJoin = 'round';
-            ctx.strokeText(item.label, px, py);
-            ctx.restore();
+            // Draw solid protective white badge pill to completely block background curves
+            ctx.font = 'bold 9px "Inter", -apple-system, sans-serif';
+            const textWidth = ctx.measureText(item.label).width;
+            const pillW = textWidth + 10;
+            const pillH = 15;
+            const pillX = px - pillW / 2;
+            const pillY = py - pillH / 2;
 
-            // Draw clean unboxed text
+            ctx.save();
+            ctx.fillStyle = '#ffffff';
+            ctx.shadowColor = 'rgba(15, 23, 42, 0.12)';
+            ctx.shadowBlur = 4;
+            ctx.shadowOffsetY = 1;
+            ctx.beginPath();
+            if (ctx.roundRect) {
+              ctx.roundRect(pillX, pillY, pillW, pillH, 3);
+            } else {
+              ctx.rect(pillX, pillY, pillW, pillH);
+            }
+            ctx.fill();
+
+            // Border matching river series color
+            ctx.shadowColor = 'transparent';
+            ctx.strokeStyle = isDimmed ? '#cbd5e1' : ds.borderColor;
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+
+            // Label text
             ctx.fillStyle = isDimmed ? '#94a3b8' : ds.borderColor;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText(item.label, px, py);
+            ctx.restore();
           }
         });
 
-        // If another river is selected, label it too
+        // If another river is selected, label it too with a protective badge pill
         if (selectedRiverId && !mainRivers.some(m => m.id === selectedRiverId)) {
           const selRiver = RIVERS.find(r => r.id === selectedRiverId);
           if (selRiver) {
@@ -742,16 +762,35 @@
             const yPos = yScale.getPixelForValue(peakY);
             if (xPos >= chartArea.left && xPos <= chartArea.right) {
               const label = `${selRiver.name.split(' ')[0]} ${selRiver.travelDays}d`;
+              ctx.font = 'bold 9px "Inter", -apple-system, sans-serif';
+              const textWidth = ctx.measureText(label).width;
+              const pillW = textWidth + 10;
+              const pillH = 15;
+              const pillX = xPos - pillW / 2;
+              const pillY = yPos - 14 - pillH / 2;
+
               ctx.save();
-              ctx.strokeStyle = '#ffffff';
-              ctx.lineWidth = 3.5;
-              ctx.lineJoin = 'round';
-              ctx.strokeText(label, xPos, yPos - 12);
-              ctx.restore();
-              ctx.fillStyle = '#0f172a';
+              ctx.fillStyle = '#ffffff';
+              ctx.shadowColor = 'rgba(15, 23, 42, 0.12)';
+              ctx.shadowBlur = 4;
+              ctx.shadowOffsetY = 1;
+              ctx.beginPath();
+              if (ctx.roundRect) {
+                ctx.roundRect(pillX, pillY, pillW, pillH, 3);
+              } else {
+                ctx.rect(pillX, pillY, pillW, pillH);
+              }
+              ctx.fill();
+              ctx.shadowColor = 'transparent';
+              ctx.strokeStyle = selRiver.color;
+              ctx.lineWidth = 1.2;
+              ctx.stroke();
+
+              ctx.fillStyle = selRiver.color;
               ctx.textAlign = 'center';
               ctx.textBaseline = 'middle';
-              ctx.fillText(label, xPos, yPos - 12);
+              ctx.fillText(label, xPos, yPos - 14);
+              ctx.restore();
             }
           }
         }
