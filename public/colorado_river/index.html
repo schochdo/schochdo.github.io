@@ -218,13 +218,13 @@
         <div class="sidebar-category-header pt-3">
           <span>Annual Budget</span>
         </div>
-        <button onclick="setTab('pipeline')" id="tab-btn-pipeline" class="sidebar-link" title="River Flow Schematic">
+        <button onclick="setTab('pipeline')" id="tab-btn-pipeline" class="sidebar-link" title="Topological River Reach & Conveyance Network">
           <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
           </svg>
-          <span>River Flow Schematic</span>
+          <span>River Flow Network</span>
         </button>
-        <button onclick="setTab('sankey')" id="tab-btn-sankey" class="sidebar-link" title="Annual Water Budget Diagram">
+        <button onclick="setTab('sankey')" id="tab-btn-sankey" class="sidebar-link" title="Annual Water Budget: Inflows to Consumptive Depletions">
           <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
           </svg>
@@ -668,10 +668,10 @@
             <!-- Visualization Mode Selector -->
             <div class="flex items-center gap-2 bg-stone-100 p-1 rounded-lg border border-stone-300">
               <button onclick="setReservoirView('envelope')" id="btn-view-envelope" class="px-3 py-1 text-xs font-bold rounded bg-white text-stone-900 shadow-sm border border-stone-300">
-                Seasonal Envelope (Clean)
+                Seasonal Elevation Envelope
               </button>
               <button onclick="setReservoirView('heatmap')" id="btn-view-heatmap" class="px-3 py-1 text-xs font-medium rounded text-stone-600 hover:text-stone-900">
-                Monthly Heatmap (All 12 Months)
+                12-Month Water Level Matrix
               </button>
             </div>
           </div>

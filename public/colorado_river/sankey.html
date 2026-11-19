@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Colorado River Basin: Unified Annual Water Budget & Structural Deficit</title>
+  <title>Colorado River Basin: Annual Water Budget (Inflows to Consumptive Depletions)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -206,15 +206,11 @@
       <div class="flex items-center gap-1.5 p-1 bg-stone-200/90 rounded-lg border border-stone-300">
         <button id="subtab-btn-sankey" onclick="switchBudgetSubtab('sankey')" class="px-3.5 py-1.5 rounded-md text-xs font-bold transition shadow-xs bg-white text-sky-900 border border-stone-200 flex items-center gap-1.5 cursor-pointer">
           <span>⇋</span>
-          <span>Unified Sankey Diagram</span>
+          <span>Inflows to Consumptive Depletions</span>
         </button>
         <button id="subtab-btn-stacked" onclick="switchBudgetSubtab('stacked')" class="px-3.5 py-1.5 rounded-md text-xs font-semibold transition text-stone-600 hover:text-stone-900 flex items-center gap-1.5 cursor-pointer">
           <span>⫸</span>
-          <span>Physical Runoff vs. Paper Allocations</span>
-        </button>
-        <button id="subtab-btn-both" onclick="switchBudgetSubtab('both')" class="px-3.5 py-1.5 rounded-md text-xs font-semibold transition text-stone-600 hover:text-stone-900 flex items-center gap-1.5 cursor-pointer">
-          <span>☰</span>
-          <span>View Both (Continuous Scroll)</span>
+          <span>Physical Runoff vs. Statutory Paper Claims</span>
         </button>
       </div>
 
@@ -620,7 +616,7 @@
       <!-- Return Button -->
       <div class="flex justify-end pt-1">
         <button onclick="switchBudgetSubtab('sankey')" class="text-xs font-semibold text-sky-700 hover:underline flex items-center gap-1 cursor-pointer">
-          <span>← Back to Unified Sankey Flow Diagram</span>
+          <span>← Back to Inflows &amp; Consumptive Depletions</span>
         </button>
       </div>
     </div>
@@ -1212,7 +1208,6 @@
     function switchBudgetSubtab(mode) {
       const btnSankey = document.getElementById('subtab-btn-sankey');
       const btnStacked = document.getElementById('subtab-btn-stacked');
-      const btnBoth = document.getElementById('subtab-btn-both');
       const sankeySec = document.getElementById('view-sankey-section');
       const stackedSec = document.getElementById('view-stacked-section');
 
@@ -1223,18 +1218,13 @@
 
       if (btnSankey) btnSankey.className = (mode === 'sankey') ? activeClass : inactiveClass;
       if (btnStacked) btnStacked.className = (mode === 'stacked') ? activeClass : inactiveClass;
-      if (btnBoth) btnBoth.className = (mode === 'both') ? activeClass : inactiveClass;
 
-      if (mode === 'sankey') {
-        sankeySec.style.display = 'block';
-        stackedSec.style.display = 'none';
-        renderSankey();
-      } else if (mode === 'stacked') {
+      if (mode === 'stacked') {
         sankeySec.style.display = 'none';
         stackedSec.style.display = 'block';
-      } else if (mode === 'both') {
+      } else {
         sankeySec.style.display = 'block';
-        stackedSec.style.display = 'block';
+        stackedSec.style.display = 'none';
         renderSankey();
       }
     }
@@ -1251,8 +1241,6 @@
       const view = params.get('view');
       if (view === 'stacked') {
         switchBudgetSubtab('stacked');
-      } else if (view === 'both') {
-        switchBudgetSubtab('both');
       } else {
         switchBudgetSubtab('sankey');
       }

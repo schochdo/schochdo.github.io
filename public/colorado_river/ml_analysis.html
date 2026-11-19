@@ -249,8 +249,8 @@
 
     <!-- Right: Shared Selection Status Pill -->
     <div class="flex items-center shrink-0 min-w-0">
-      <div id="status-pill" class="text-[11px] font-medium text-slate-700 bg-slate-100 border border-slate-200 rounded-full px-3 py-0.5 truncate max-w-[440px]" title="Click any river bubble or curve below to highlight">
-        Click any river bubble or curve below to highlight
+      <div id="status-pill" class="text-[11px] font-medium text-slate-700 bg-slate-100 border border-slate-200 rounded-full px-3 py-0.5 truncate max-w-[440px]" title="Click any tributary or flow curve below to inspect">
+        Click any tributary or flow curve below to inspect
       </div>
     </div>
   </header>
@@ -260,14 +260,14 @@
   <!-- ============================================================== -->
   <main class="dashboard-grid">
 
-    <!-- CARD 1: RIVER BEHAVIOR & SIZE (GAPMINDER BUBBLE CHART) -->
+    <!-- CARD 1: RIVER BEHAVIOR & SIZE -->
     <section class="dashboard-card">
       <div class="card-header-row">
         <h2 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
           <span class="w-2 h-2 rounded-full bg-[#0072B2]"></span>
           River Behavior &amp; Annual Water Volume
         </h2>
-        <span class="text-[10px] text-slate-500 font-medium">Bubble Size = % of Powell Inflow</span>
+        <span class="text-[10px] text-slate-500 font-medium">Relative Volume = % of Powell Inflow</span>
       </div>
       <p class="text-[11px] text-slate-600 mb-1.5 leading-snug shrink-0">
         Using the Richards–Baker Flashiness Index (how sharply daily flow jumps up and down), steady dam- and snowmelt-fed rivers on the left fill Lake Powell, while flashy desert rivers on the right spike briefly during storms with little total volume.
@@ -1213,7 +1213,7 @@
 
       if (!riverId) {
         if (selectedRegime === 'all') {
-          pill.textContent = 'Click any river bubble or curve below to highlight';
+          pill.textContent = 'Click any tributary or flow curve below to inspect';
           pill.className = 'text-[11px] font-medium text-slate-700 bg-slate-100 border border-slate-200 rounded-full px-3 py-0.5 truncate max-w-[440px]';
         } else {
           updateRegimePillText();
@@ -1263,7 +1263,7 @@
     function updateRegimePillText() {
       const pill = document.getElementById('status-pill');
       if (selectedRegime === 'all') {
-        pill.textContent = 'Click any river bubble or curve below to highlight';
+        pill.textContent = 'Click any tributary or flow curve below to inspect';
         pill.className = 'text-[11px] font-medium text-slate-700 bg-slate-100 border border-slate-200 rounded-full px-3 py-0.5 truncate max-w-[440px]';
       } else if (selectedRegime === 'snowmelt') {
         pill.textContent = 'Filter: Mountain Snowmelt Rivers — Deliver 37% of inflow in a concentrated 60-day spring surge';
