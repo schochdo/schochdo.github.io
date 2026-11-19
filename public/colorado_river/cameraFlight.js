@@ -115,8 +115,15 @@
     if (typeof document === 'undefined') return false;
     var el = document.activeElement;
     if (!el) return false;
-    var tag = el.tagName;
-    return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el.isContentEditable;
+    var tag = (el.tagName || '').toUpperCase();
+    if (tag === 'TEXTAREA' || tag === 'SELECT' || el.isContentEditable) return true;
+    if (tag === 'INPUT') {
+      var type = (el.type || 'text').toLowerCase();
+      // Only text-entry fields capture keyboard typing; checkboxes, radios, sliders, buttons do not
+      return type === 'text' || type === 'search' || type === 'email' ||
+             type === 'password' || type === 'number' || type === 'tel' || type === 'url';
+    }
+    return false;
   }
 
   /**
@@ -205,47 +212,27 @@
    * SECTION 1.2: SAFE NAVIGATION WRAPPERS
    * safeFlyTo & safeEaseTo with coordinate validation, ground clamping,
    * FSM state tracking, and progressive pitch ceiling enforcement.
+   *
+   * ANTI-BOUNCE DIRECTIVE: Parabolic "flight curves" (swooping zoom out then zoom in)
+   * are completely eliminated. Both safeFlyTo and safeEaseTo route through direct linear
+   * easeTo (or instant jumpTo), preventing disorienting camera bounce anywhere on the platform.
    */
   function safeFlyTo(mapInstance, options) {
     if (!mapInstance) return;
     options = options ? Object.assign({}, options) : {};
-
-    if (options.center && !validateCenterCoords(options.center)) {
-      console.warn('[safeFlyTo] Aborting: target coordinates are invalid or non-finite:', options.center);
-      return mapInstance;
-    }
-
-    CameraStateMachine.cancelProgrammaticFlight(mapInstance);
-
-    var targetZoom = options.zoom !== undefined ? options.zoom : mapInstance.getZoom();
-    var maxPitch = getMaxAllowedPitch(targetZoom);
-    if (options.pitch !== undefined && options.pitch > maxPitch) {
-      options.pitch = maxPitch;
-    }
-
-    if (typeof mapInstance.setCenterClampedToGround === 'function') {
-      try { mapInstance.setCenterClampedToGround(true); } catch (_) {}
-    }
-
-    CameraStateMachine.setMode('flyto');
-    var onEnd = function () {
-      if (CameraStateMachine.getMode() === 'flyto') {
-        CameraStateMachine.setMode('idle');
-      }
-      if (mapInstance && typeof mapInstance.getPitch === 'function' && mapInstance.getPitch() > 5 && mapInstance.getTerrain && mapInstance.getTerrain()) {
-        mapInstance._elevationFreeze = true;
-        enforceTerrainClearance(mapInstance);
-      }
-    };
-    mapInstance.once('moveend', onEnd);
-
-    var rawFly = mapInstance._rawFlyTo || mapInstance.flyTo;
-    return rawFly.call(mapInstance, options);
+    return safeEaseTo(mapInstance, options);
   }
 
   function safeEaseTo(mapInstance, options) {
     if (!mapInstance) return;
     options = options ? Object.assign({}, options) : {};
+
+    // Instant / zero duration: jump directly without animation
+    if (options.duration === 0 || options.instant) {
+      CameraStateMachine.cancelProgrammaticFlight(mapInstance);
+      var rawJump = mapInstance._rawJumpTo || mapInstance.jumpTo;
+      return rawJump.call(mapInstance, options);
+    }
 
     // Do not interfere with MapLibre's internal inertial kinetic panning deceleration
     var isInternalInertia = options.noMoveStart || (mapInstance.isDragging && mapInstance.isDragging());
@@ -432,6 +419,7 @@
     if (!map._cameraFlightPatched) {
       map._rawFlyTo = map.flyTo;
       map._rawEaseTo = map.easeTo;
+      map._rawJumpTo = map.jumpTo;
       map.flyTo = function (opts) {
         return safeFlyTo(map, opts);
       };
@@ -716,6 +704,7 @@
     }
 
     function onPanStart() {
+      if (CameraStateMachine.getMode() === 'flight') return;
       if (map.getPitch() > 5 && map.getTerrain && map.getTerrain()) {
         map._elevationFreeze = true;
         enforceTerrainClearance(map);
@@ -764,7 +753,6 @@
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
     window.addEventListener('blur', stopFlightOnBlur);
-    window.addEventListener('focus', stopFlightOnBlur);
     document.addEventListener('visibilitychange', stopFlightOnBlur);
 
     map.on('movestart', onPanStart);

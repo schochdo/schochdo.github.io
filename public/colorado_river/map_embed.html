@@ -842,6 +842,11 @@
   <script>
     // URL parameter support for direct testing & deep-linking
     window.addEventListener('load', () => {
+      window.focus();
+      if (window.map && window.map.getCanvas) {
+        const c = window.map.getCanvas();
+        if (c && typeof c.focus === 'function') c.focus();
+      }
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get('replay') === '1' || urlParams.get('replay') === 'true') {
         setTimeout(() => { if (window.FlowReplayEngine) window.FlowReplayEngine.open(); }, 600);

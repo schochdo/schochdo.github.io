@@ -478,7 +478,11 @@ function initMap() {
       container: 'map',
       style: initialStyle,
       bounds: [[-116.65, 31.15], [-105.45, 43.65]],
-      fitBoundsOptions: { padding: { top: 45, bottom: 45, left: 45, right: 45 } },
+      fitBoundsOptions: {
+        padding: { top: 45, bottom: 45, left: 45, right: 45 },
+        duration: 0,
+        animate: false
+      },
       pitch: 0,
       bearing: 0,
       maxPitch: 85,
@@ -503,11 +507,58 @@ function initMap() {
       offset: 14
     });
 
+    const canvas = map.getCanvas ? map.getCanvas() : null;
+    if (canvas) {
+      canvas.setAttribute('tabindex', '0');
+      canvas.style.outline = 'none';
+    }
+
     if (map.getContainer()) {
+      map.getContainer().setAttribute('tabindex', '0');
       map.getContainer().addEventListener('mouseleave', () => {
         hideHoverTooltip();
       });
+      map.getContainer().addEventListener('mouseenter', () => {
+        window.focus();
+        if (map && map.getCanvas) {
+          const c = map.getCanvas();
+          if (c && typeof c.focus === 'function') c.focus();
+        }
+      });
     }
+
+    // 60 FPS 3D Game-Engine Keyboard Flight Controller - activated immediately on map creation
+    if (typeof initKeyboardFlight === 'function') {
+      window.keyboardFlightCleanup = initKeyboardFlight(map, {
+        onPitchChange: (p) => {
+          if (p > 5 && !map.getTerrain()) {
+            map.setTerrain({ source: 'terrain-dem', exaggeration: 1.5 });
+            map._elevationFreeze = true;
+          } else if (p === 0 && map.getTerrain()) {
+            map.setTerrain(null);
+            map._elevationFreeze = false;
+            if (map.transform) map.transform.elevation = 0;
+          }
+          if (typeof window.updateTrackball === 'function') window.updateTrackball();
+        },
+        onBearingChange: () => {
+          if (typeof window.updateTrackball === 'function') window.updateTrackball();
+        }
+      });
+    }
+
+    // Google Earth Style Trackball Navigation - initialized immediately
+    if (typeof initTrackballNavigation === 'function') {
+      initTrackballNavigation();
+    }
+
+    window.addEventListener('load', () => {
+      window.focus();
+      if (map && map.getCanvas) {
+        const c = map.getCanvas();
+        if (c && typeof c.focus === 'function') c.focus();
+      }
+    });
 
     map.on('click', (e) => {
       if (e.originalEvent && e.originalEvent._handled) return;
@@ -528,29 +579,8 @@ function initMap() {
       }
 
       loadData();
-      initTrackballNavigation();
       initTableResizer();
       initLayersHoverBehavior();
-
-      // 60 FPS 3D Game-Engine Keyboard Flight Controller
-      if (typeof initKeyboardFlight === 'function') {
-        window.keyboardFlightCleanup = initKeyboardFlight(map, {
-          onPitchChange: (p) => {
-            if (p > 5 && !map.getTerrain()) {
-              map.setTerrain({ source: 'terrain-dem', exaggeration: 1.5 });
-              map._elevationFreeze = true;
-            } else if (p === 0 && map.getTerrain()) {
-              map.setTerrain(null);
-              map._elevationFreeze = false;
-              if (map.transform) map.transform.elevation = 0;
-            }
-            if (typeof window.updateTrackball === 'function') window.updateTrackball();
-          },
-          onBearingChange: () => {
-            if (typeof window.updateTrackball === 'function') window.updateTrackball();
-          }
-        });
-      }
       if (window.location.search.includes('expand_table=1')) {
         toggleTableCollapse();
       }
@@ -577,7 +607,7 @@ function initMap() {
       }
       map.jumpTo({ pitch: 42, bearing: -8 });
       updatePerspectiveUI();
-      zoomToPreset('basin');
+      zoomToPreset('basin', true);
     }
     if (window.location.search.includes('open_menu=1')) {
       toggleMapMenu();
@@ -5932,7 +5962,9 @@ const BASIN_BOUNDS = [
 ];
 
 // Preset Zoom Navigation with mode-sensitive pitch
-function zoomToPreset(preset) {
+// Per user directive: No parabolic zoom-bounce flight curves anywhere.
+// instant=true performs jumpTo with zero duration. instant=false uses direct linear easeTo.
+function zoomToPreset(preset, instant = false) {
   document.querySelectorAll(".map-preset-btn, .preset-item-btn, .nav-btn").forEach(btn => {
     if (btn.dataset?.preset === preset || btn.getAttribute("onclick")?.includes(`'${preset}'`)) {
       btn.classList.add("active");
@@ -5940,6 +5972,9 @@ function zoomToPreset(preset) {
       btn.classList.remove("active");
     }
   });
+
+  const navMethod = instant ? (opts) => map.jumpTo(opts) : (opts) => safeEaseTo(map, opts);
+  const dur = instant ? 0 : 750;
 
   if (isTilted) {
     // 3D Oblique Perspectives
@@ -5949,23 +5984,23 @@ function zoomToPreset(preset) {
           padding: { top: 135, bottom: 45, left: 45, right: 45 },
           bearing: -8
         });
-        safeFlyTo(map, {
+        navMethod({
           center: [cam.center.lng, cam.center.lat + 0.35],
           zoom: cam.zoom,
           pitch: map.getPitch() > 10 ? map.getPitch() : 38,
           bearing: -8,
-          duration: 1200
+          duration: dur
         });
         break;
       }
       case "divide":
-        safeFlyTo(map, { center: [-105.9, 39.85], zoom: 9.8, pitch: 56, bearing: -30, duration: 1500 });
+        navMethod({ center: [-105.9, 39.85], zoom: 9.8, pitch: 56, bearing: -30, duration: dur });
         break;
       case "lees_ferry":
-        safeFlyTo(map, { center: [-111.59, 36.86], zoom: 11.2, pitch: 54, bearing: 40, duration: 1500 });
+        navMethod({ center: [-111.59, 36.86], zoom: 11.2, pitch: 54, bearing: 40, duration: dur });
         break;
       case "reservoirs":
-        safeFlyTo(map, { center: [-113.2, 36.6], zoom: 7.5, pitch: 50, bearing: -15, duration: 1500 });
+        navMethod({ center: [-113.2, 36.6], zoom: 7.5, pitch: 50, bearing: -15, duration: dur });
         break;
     }
   } else {
@@ -5976,23 +6011,23 @@ function zoomToPreset(preset) {
           padding: { top: 45, bottom: 45, left: 45, right: 45 },
           bearing: 0
         });
-        safeFlyTo(map, {
+        navMethod({
           center: cam.center,
           zoom: cam.zoom,
           pitch: 0,
           bearing: 0,
-          duration: 1200
+          duration: dur
         });
         break;
       }
       case "divide":
-        safeFlyTo(map, { center: [-105.95, 39.85], zoom: 9.8, pitch: 0, bearing: 0, duration: 1500 });
+        navMethod({ center: [-105.95, 39.85], zoom: 9.8, pitch: 0, bearing: 0, duration: dur });
         break;
       case "lees_ferry":
-        safeFlyTo(map, { center: [-111.59, 36.86], zoom: 11.2, pitch: 0, bearing: 0, duration: 1500 });
+        navMethod({ center: [-111.59, 36.86], zoom: 11.2, pitch: 0, bearing: 0, duration: dur });
         break;
       case "reservoirs":
-        safeFlyTo(map, { center: [-113.2, 36.6], zoom: 7.5, pitch: 0, bearing: 0, duration: 1500 });
+        navMethod({ center: [-113.2, 36.6], zoom: 7.5, pitch: 0, bearing: 0, duration: dur });
         break;
     }
   }

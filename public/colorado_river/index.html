@@ -1812,15 +1812,18 @@ for ts in data["value"]["timeSeries"]:
         topHeader.classList.add('hidden'); // Allow full-bleed map
         document.getElementById('section-map').classList.remove('hidden');
         const iframe = document.getElementById('iframe-map');
-        if (iframe && iframe.contentWindow) {
+        if (iframe) {
+          iframe.focus();
+          try { if (iframe.contentWindow) iframe.contentWindow.focus(); } catch (_) {}
+
           const syncMap = () => {
             try {
-              if (iframe.contentWindow.map && typeof iframe.contentWindow.map.resize === 'function') {
+              if (iframe.contentWindow && iframe.contentWindow.map && typeof iframe.contentWindow.map.resize === 'function') {
                 iframe.contentWindow.map.resize();
-                // If map was initialized with 0x0 hidden container dimensions or zoomed out to world view, restore authoritative basin bounds
+                // If map was initialized with 0x0 hidden container dimensions or zoomed out to world view, restore authoritative basin bounds INSTANTLY with jumpTo (NO bounce)
                 const currentZ = iframe.contentWindow.map.getZoom();
                 if ((currentZ < 4.2 || currentZ === undefined) && typeof iframe.contentWindow.zoomToPreset === 'function') {
-                  iframe.contentWindow.zoomToPreset('basin');
+                  iframe.contentWindow.zoomToPreset('basin', true);
                 }
               }
             } catch (_) {}
@@ -1894,6 +1897,75 @@ for ts in data["value"]["timeSeries"]:
         focusMapStation(event.data.stationId);
       } else if (event.data && event.data.type === 'setTab') {
         setTab(event.data.tabId);
+      }
+    });
+
+    // Seamless focus & keyboard forwarding for embedded map:
+    // User does NOT have to click the map first for controls to work.
+    const sectionMap = document.getElementById('section-map');
+    if (sectionMap) {
+      sectionMap.addEventListener('mouseenter', () => {
+        const iframe = document.getElementById('iframe-map');
+        if (iframe) {
+          iframe.focus();
+          try { if (iframe.contentWindow) iframe.contentWindow.focus(); } catch (_) {}
+        }
+      });
+      sectionMap.addEventListener('mousemove', () => {
+        const iframe = document.getElementById('iframe-map');
+        if (iframe && document.activeElement !== iframe) {
+          iframe.focus();
+          try { if (iframe.contentWindow) iframe.contentWindow.focus(); } catch (_) {}
+        }
+      }, { passive: true });
+    }
+
+    // Forward navigation keys directly to map iframe when on System Map tab
+    window.addEventListener('keydown', (e) => {
+      if (currentTab !== 'map') return;
+      const tag = document.activeElement ? (document.activeElement.tagName || '').toUpperCase() : '';
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const iframe = document.getElementById('iframe-map');
+      if (iframe && iframe.contentWindow) {
+        if (document.activeElement !== iframe) {
+          iframe.focus();
+          try { iframe.contentWindow.focus(); } catch (_) {}
+        }
+        try {
+          iframe.contentWindow.dispatchEvent(new KeyboardEvent(e.type, {
+            key: e.key,
+            code: e.code,
+            keyCode: e.keyCode,
+            which: e.which,
+            shiftKey: e.shiftKey,
+            altKey: e.altKey,
+            ctrlKey: e.ctrlKey,
+            metaKey: e.metaKey,
+            bubbles: true,
+            cancelable: true
+          }));
+        } catch (_) {}
+      }
+    });
+    window.addEventListener('keyup', (e) => {
+      if (currentTab !== 'map') return;
+      const iframe = document.getElementById('iframe-map');
+      if (iframe && iframe.contentWindow) {
+        try {
+          iframe.contentWindow.dispatchEvent(new KeyboardEvent(e.type, {
+            key: e.key,
+            code: e.code,
+            keyCode: e.keyCode,
+            which: e.which,
+            shiftKey: e.shiftKey,
+            altKey: e.altKey,
+            ctrlKey: e.ctrlKey,
+            metaKey: e.metaKey,
+            bubbles: true,
+            cancelable: true
+          }));
+        } catch (_) {}
       }
     });
 
