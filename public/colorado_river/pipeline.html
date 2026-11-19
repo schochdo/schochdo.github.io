@@ -410,7 +410,7 @@
           <g id="rivers-layer">
             <!-- Upper Green River (Headwaters to Yampa Confluence - 3.60 MAF) -->
             <path id="river-green-upper" class="river-path" d="M 580,36 L 580,182" stroke="#0284c7" stroke-width="12.4" />
-            <g transform="translate(295, 34)">
+            <g id="card-green-river" transform="translate(295, 34)">
               <rect x="0" y="0" width="260" height="52" rx="6" fill="#ffffff" fill-opacity="0.95" stroke="#0284c7" stroke-width="1.5" filter="drop-shadow(0 2px 6px rgba(2,132,199,0.12))"/>
               <text x="12" y="18" fill="#0c4a6e" font-size="13" font-weight="900">Green River (4.90 MAF)</text>
               <text x="12" y="32" fill="#0f172a" font-size="10.5" font-weight="800">Wind River Range &bull; Flaming Gorge</text>
@@ -429,9 +429,9 @@
 
             <!-- Colorado River Headwaters (Rocky Mountain NP -> Continental Divide - 4.00 MAF) -->
             <path id="river-headwaters" class="river-path" d="M 1000,36 L 1000,150" stroke="#0284c7" stroke-width="13.0" />
-            <g transform="translate(1015, 34)">
-              <rect x="0" y="0" width="250" height="52" rx="6" fill="#ffffff" fill-opacity="0.95" stroke="#0284c7" stroke-width="1.5" filter="drop-shadow(0 2px 6px rgba(2,132,199,0.12))"/>
-              <text x="12" y="18" fill="#0c4a6e" font-size="13" font-weight="900">Colorado River Headwaters (4.00 MAF)</text>
+            <g id="card-headwaters" transform="translate(1015, 34)">
+              <rect x="0" y="0" width="235" height="52" rx="6" fill="#ffffff" fill-opacity="0.96" stroke="#0284c7" stroke-width="1.5" filter="drop-shadow(0 2px 6px rgba(2,132,199,0.12))"/>
+              <text x="12" y="18" fill="#0c4a6e" font-size="12" font-weight="900">Colorado River Headwaters (4.00 MAF)</text>
               <text x="12" y="32" fill="#0f172a" font-size="10.5" font-weight="800">Rocky Mountain NP &bull; Continental Divide</text>
               <text x="12" y="45" fill="#475569" font-size="9.5" font-weight="600">4.00 MAF Alpine Snowmelt Origin</text>
             </g>
@@ -680,7 +680,7 @@
           </defs>
 
           <!-- Axes Gridlines & Elevation Labels (Up to 14,000 ft Alpine Crests) -->
-          <g id="grid-group">
+          <g id="layer-grid-and-axes">
             <!-- 14,000 ft (Wind River Range & Colorado Rockies Continental Crest) -->
             <line x1="80" y1="58" x2="1140" y2="58" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="4,4"/>
             <text x="70" y="62" text-anchor="end" class="text-[11px] fill-slate-700 font-bold tabular-numbers">14,000 ft</text>
@@ -747,213 +747,135 @@
             <text x="1130" y="626" text-anchor="middle" class="text-[9.5px] fill-slate-900 font-black">DELTA</text>
           </g>
 
-          <!-- VERTICAL TRIBUTARY INFLOW VECTORS (Dropping Straight Down Into Confluence) -->
-          <g id="tribs-vertical-group" class="opacity-100">
-            <!-- 1. Green River (4.90 MAF -> w = 7.3px, Drops straight down along x=342 from 13,800 ft to Cataract Confluence 3,880 ft) -->
+          <!-- ============================================================ -->
+          <!-- TIER 2: HYPSOMETRIC TERRAIN FILL                             -->
+          <!-- ============================================================ -->
+          <g id="layer-terrain-fills">
+            <path d="M 80 203 Q 95 275 111 275 L 145 315 L 180 357 L 226 408 L 271 435 L 342 443 L 372 455 L 481 455 L 481 470 L 503 472 L 540 498 L 662 539 L 695 550 L 759 550 L 759 565 L 809 565 L 809 571 L 875 573 L 875 576 L 976 584 L 998 586 L 1130 590 L 1130 590 L 80 590 Z" fill="url(#sky-grid-grad)"/>
+          </g>
+
+          <!-- ============================================================ -->
+          <!-- TIER 3: FLOW VECTORS (MAINSTEM & TRIBUTARY REACHES)          -->
+          <!-- ============================================================ -->
+          <g id="layer-flow-vectors">
+            <!-- Vertical Tributary Inflow Vectors -->
+            <!-- 1. Green River (4.90 MAF -> w = 7.3px, x=342) -->
             <line x1="342" y1="64" x2="342" y2="443" stroke="var(--trib-color)" stroke-width="7.3" stroke-linecap="round" opacity="0.95" stroke-dasharray="6,3"/>
+
+            <!-- 2. Gunnison River (2.10 MAF -> w = 5.4px, x=226) -->
+            <line x1="226" y1="134" x2="226" y2="408" stroke="var(--trib-color)" stroke-width="5.4" stroke-linecap="round" opacity="0.95" stroke-dasharray="5,3"/>
+
+            <!-- 3. San Juan River (2.50 MAF -> w = 5.8px, x=450) -->
+            <line x1="450" y1="153" x2="450" y2="455" stroke="var(--trib-color)" stroke-width="5.8" stroke-linecap="round" opacity="0.95" stroke-dasharray="5,3"/>
+
+            <!-- 4. Little Colorado River (0.25 MAF -> w = 2.7px, x=540) -->
+            <line x1="540" y1="229" x2="540" y2="498" stroke="var(--trib-color)" stroke-width="2.7" stroke-linecap="round" opacity="0.9" stroke-dasharray="4,3"/>
+
+            <!-- 5. Virgin River (0.18 MAF -> w = 2.5px, x=690) -->
+            <line x1="690" y1="248" x2="690" y2="550" stroke="var(--trib-color)" stroke-width="2.5" stroke-linecap="round" opacity="0.9" stroke-dasharray="4,3"/>
+
+            <!-- 6. Gila River (0.87 MAF -> w = 3.9px, x=995) -->
+            <line x1="995" y1="286" x2="995" y2="586" stroke="var(--trib-color)" stroke-width="3.9" stroke-linecap="round" opacity="0.9" stroke-dasharray="4,3"/>
+
+            <!-- Mainstem Reach Vectors (Proportional to MAF) -->
+            <!-- Reach 1: Headwaters to Grand Junction (4.00 MAF -> w = 6.8px) -->
+            <path d="M 80 203 Q 95 275 111 275 L 145 315 L 180 357 L 226 408" fill="none" stroke="#0284c7" stroke-width="6.8" stroke-linecap="round" stroke-linejoin="round"/>
             
+            <!-- Reach 2: Grand Junction to Green River Confluence (5.60 MAF -> w = 7.7px) -->
+            <path d="M 226 408 L 271 435 L 342 443" fill="none" stroke="#0284c7" stroke-width="7.7" stroke-linecap="round" stroke-linejoin="round"/>
+            
+            <!-- Reach 3: Cataract Canyon into Lake Powell Pool (14.80 MAF -> w = 10.5px) -->
+            <path d="M 342 443 L 372 455 L 481 455" fill="none" stroke="#0284c7" stroke-width="10.5" stroke-linecap="round" stroke-linejoin="round"/>
+            
+            <!-- Reach 4: Lees Ferry through Grand Canyon to Lake Mead (8.23 MAF Compact Release -> w = 8.7px) -->
+            <path d="M 481 470 L 503 472 L 540 498 L 662 539 L 695 550" fill="none" stroke="#0284c7" stroke-width="8.7" stroke-linecap="round" stroke-linejoin="round"/>
+            
+            <!-- Reach 5: Lake Mead Pool to Hoover Dam (9.00 MAF -> w = 9.0px) -->
+            <path d="M 695 550 L 759 550" fill="none" stroke="#0284c7" stroke-width="9.0" stroke-linecap="round" stroke-linejoin="round"/>
+            
+            <!-- Reach 6: Hoover Dam to Parker Dam / Lake Havasu (9.00 MAF -> w = 9.0px) -->
+            <path d="M 759 565 L 809 565 L 809 571 L 875 573" fill="none" stroke="#0284c7" stroke-width="9.0" stroke-linecap="round" stroke-linejoin="round"/>
+            
+            <!-- Reach 7: Parker Dam to Imperial Dam (6.45 MAF post-CRA/CAP -> w = 8.0px) -->
+            <path d="M 875 576 L 976 584" fill="none" stroke="#0284c7" stroke-width="8.0" stroke-linecap="round" stroke-linejoin="round"/>
+            
+            <!-- Reach 8: Imperial Dam to Morelos Dam (2.50 MAF post-AAC -> w = 5.8px) -->
+            <path d="M 976 584 L 998 586" fill="none" stroke="#0284c7" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round"/>
+            
+            <!-- Reach 9: Morelos Dam to Delta Terminus (0 MAF dewatered -> w = 1.8px dashed) -->
+            <path d="M 998 586 L 1130 590" fill="none" stroke="#94a3b8" stroke-width="1.8" stroke-dasharray="4,4" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+
+          <!-- ============================================================ -->
+          <!-- TIER 4: RESERVOIR POOLS, DAM CRESTS & GAGING NODES          -->
+          <!-- ============================================================ -->
+          <g id="layer-facilities-and-nodes">
+            <!-- Lake Granby Pool Bathtub & Granby Dam -->
+            <rect x="91" y="271" width="22" height="8" rx="2" fill="url(#res-water-grad)" stroke="var(--res-stroke)" stroke-width="1.2"
+              class="cursor-pointer"
+              onmouseenter="showElevationGageInfo('Lake Granby (C-BT Storage Pool)', 'Mile 20.0', '8,280 ft (Full Pool)', '539,800 AF Capacity', 'Granby Dam Outlet', 'C-BT Headwaters Storage', 'Primary storage reservoir for Colorado-Big Thompson trans-mountain diversion project under the Continental Divide.')"
+              onmouseleave="hideGapInfo()"/>
+            <line x1="113" y1="270" x2="113" y2="280" stroke="var(--dam-color)" stroke-width="2.5" stroke-linecap="round"/>
+
             <!-- Flaming Gorge Dam & Pool on Green River (Elev 6,040 ft) -->
             <rect x="333" y="356" width="18" height="8" rx="2" fill="var(--res-pool)" stroke="var(--res-stroke)" stroke-width="1.2"
               class="cursor-pointer"
               onmouseenter="showElevationGageInfo('Flaming Gorge Dam & Reservoir (Green River)', 'Mile 290 above Confluence', '6,040 ft (Full Pool)', '3.78M AF Capacity', '450 ft Dam Height', 'DROA Drought Buffer', 'Primary drought response reserve supporting Lake Powell under the Drought Response Operations Agreement.')"
               onmouseleave="hideGapInfo()"/>
-            <text x="325" y="363" text-anchor="end" class="text-[9px] fill-slate-900 font-bold pointer-events-none">Flaming Gorge</text>
-
+            <line x1="342" y1="355" x2="342" y2="365" stroke="var(--dam-color)" stroke-width="2.5" stroke-linecap="round"/>
             <circle cx="342" cy="360" r="5" fill="#ffffff" stroke="var(--trib-color)" stroke-width="2.2" class="profile-node"
               onmouseenter="showElevationGageInfo('USGS #09315000 Green River at Green River, UT', 'Green River Trib (Mile 118 above Confluence)', '4,080 ft', '3,880 cfs', 'None (Free-flowing)', 'Major Inflow Control', 'Dominant Upper Basin tributary draining WY, UT, and CO. Provides ~33% of total Colorado River water.')"
               onmouseleave="hideGapInfo()"/>
 
-            <!-- Green River Prominent Card Badge (Wind River Range Headwaters) -->
-            <g transform="translate(225, 18)" class="cursor-pointer"
-               onmouseenter="showElevationGageInfo('Green River Headwaters & Wind River Range', '730 River Miles to Confluence', '13,800 ft (Alpine Crest)', '4.90 MAF/yr Mean Runoff', 'Alpine Fall Line to Canyonlands', 'Largest Colorado River Tributary', 'Originates in Wyoming Wind River Range glacial cirques and Uinta Mountains, Utah. Regulated at Flaming Gorge Dam.')"
-               onmouseleave="hideGapInfo()">
-              <rect x="0" y="0" width="234" height="40" rx="6" fill="#ffffff" fill-opacity="0.96" stroke="#0d9488" stroke-width="1.5" filter="drop-shadow(0 2px 8px rgba(13,148,136,0.14))"/>
-              <text x="117" y="16" text-anchor="middle" class="text-[12px] font-black fill-teal-950">Green River Basin (4.90 MAF &bull; 730 mi)</text>
-              <text x="117" y="31" text-anchor="middle" class="text-[10px] font-extrabold fill-slate-900">Wind River Range Headwaters &bull; 13,800 ft</text>
-            </g>
-
-            <!-- 2. Gunnison River (2.10 MAF -> w = 5.4px, Drops straight down along x=226 from 12,000 ft to Grand Jct 4,790 ft) -->
-            <line x1="226" y1="134" x2="226" y2="408" stroke="var(--trib-color)" stroke-width="5.4" stroke-linecap="round" opacity="0.95" stroke-dasharray="5,3"/>
-            
             <!-- Blue Mesa Dam on Gunnison River (Elev 7,519 ft) -->
             <rect x="218" y="300" width="16" height="8" rx="2" fill="var(--res-pool)" stroke="var(--res-stroke)" stroke-width="1.2"
               class="cursor-pointer"
               onmouseenter="showElevationGageInfo('Blue Mesa Dam & Reservoir (Gunnison River)', 'Mile 60 above Grand Junction', '7,519 ft (Full Pool)', '829,500 AF Capacity', 'Wayne N. Aspinall Unit', 'Upper Basin DROA Storage', 'Largest water body in Colorado. Regulates Gunnison River before it carves through Black Canyon.')"
               onmouseleave="hideGapInfo()"/>
-            <text x="210" y="307" text-anchor="end" class="text-[8.5px] fill-slate-900 font-bold pointer-events-none">Blue Mesa</text>
+            <line x1="226" y1="299" x2="226" y2="309" stroke="var(--dam-color)" stroke-width="2.5" stroke-linecap="round"/>
 
-            <g transform="translate(116, 90)" class="cursor-pointer"
-               onmouseenter="showElevationGageInfo('Gunnison River Basin (Elk Mountains)', 'Mile 190 at Grand Junction', '12,000 ft Crest', '2.10 MAF/yr Mean Runoff', 'Black Canyon Gorge', 'Second-Largest Inflow', 'Carves the sheer Black Canyon of the Gunnison. Joins mainstem Colorado at Grand Junction.')"
-               onmouseleave="hideGapInfo()">
-              <rect x="0" y="0" width="220" height="38" rx="5" fill="#ffffff" fill-opacity="0.96" stroke="#0d9488" stroke-width="1.4" filter="drop-shadow(0 2px 6px rgba(13,148,136,0.12))"/>
-              <text x="110" y="16" text-anchor="middle" class="text-[11.5px] font-black fill-teal-950">Gunnison River (2.10 MAF)</text>
-              <text x="110" y="30" text-anchor="middle" class="text-[10px] font-extrabold fill-slate-900">Elk Mtns &bull; Blue Mesa &bull; 12,000 ft</text>
-            </g>
-
-            <!-- 3. San Juan River (2.50 MAF -> w = 5.8px, Drops straight down along x=450 from 11,500 ft to Lake Powell 3,540 ft) -->
-            <line x1="450" y1="153" x2="450" y2="455" stroke="var(--trib-color)" stroke-width="5.8" stroke-linecap="round" opacity="0.95" stroke-dasharray="5,3"/>
-            
             <!-- Navajo Dam on San Juan River (Elev 6,085 ft) -->
             <rect x="442" y="355" width="16" height="8" rx="2" fill="var(--res-pool)" stroke="var(--res-stroke)" stroke-width="1.2"
               class="cursor-pointer"
               onmouseenter="showElevationGageInfo('Navajo Dam & Reservoir (San Juan River)', 'Mile 120 above Powell', '6,085 ft (Full Pool)', '1.70M AF Capacity', 'San Juan-Chama Forebay', 'Four Corners Master Reserve', 'Impounds Navajo Lake in New Mexico. Supplies San Juan-Chama diversion and Navajo Indian Irrigation Project.')"
               onmouseleave="hideGapInfo()"/>
-            <text x="434" y="362" text-anchor="end" class="text-[8.5px] fill-slate-900 font-bold pointer-events-none">Navajo Dam</text>
+            <line x1="450" y1="354" x2="450" y2="364" stroke="var(--dam-color)" stroke-width="2.5" stroke-linecap="round"/>
 
-            <g transform="translate(365, 110)" class="cursor-pointer"
-               onmouseenter="showElevationGageInfo('San Juan River Basin (San Juan Mountains)', 'Enters Lake Powell at Mile 480', '11,500 ft Alpine Crest', '2.50 MAF/yr Mean Runoff', 'Four Corners Canyon Country', 'Third-Largest Inflow', 'Drains the snowy San Juan range in southwest Colorado and northern New Mexico. Joined by Animas River.')"
-               onmouseleave="hideGapInfo()">
-              <rect x="0" y="0" width="170" height="38" rx="5" fill="#ffffff" fill-opacity="0.96" stroke="#0d9488" stroke-width="1.4" filter="drop-shadow(0 2px 6px rgba(13,148,136,0.12))"/>
-              <text x="85" y="16" text-anchor="middle" class="text-[11px] font-black fill-teal-950">San Juan River (2.50 MAF)</text>
-              <text x="85" y="30" text-anchor="middle" class="text-[9.5px] font-extrabold fill-slate-900">San Juan Mtns &bull; 11,500 ft</text>
-            </g>
-
-            <!-- 4. Little Colorado River (0.25 MAF -> w = 2.7px, Drops straight down along x=540 from 9,500 ft to Grand Canyon 2,420 ft) -->
-            <line x1="540" y1="229" x2="540" y2="498" stroke="var(--trib-color)" stroke-width="2.7" stroke-linecap="round" opacity="0.9" stroke-dasharray="4,3"/>
-            <g transform="translate(455, 190)" class="cursor-pointer"
-               onmouseenter="showElevationGageInfo('Little Colorado River', 'Enters Grand Canyon at Mile 615', '9,500 ft Headwaters', '0.25 MAF/yr Flash Runoff', 'Grand Canyon Confluence', 'Ephemeral Sediment Carrier', 'Sacred turquoise waters of the Hopi and Navajo. Subject to intense desert flash flooding that pulses sediment into Grand Canyon.')"
-               onmouseleave="hideGapInfo()">
-              <rect x="0" y="0" width="170" height="34" rx="4" fill="#ffffff" fill-opacity="0.96" stroke="#0d9488" stroke-width="1.2" filter="drop-shadow(0 2px 4px rgba(13,148,136,0.1))"/>
-              <text x="85" y="14" text-anchor="middle" class="text-[10px] font-black fill-teal-950">Little Colorado (0.25 MAF)</text>
-              <text x="85" y="27" text-anchor="middle" class="text-[9px] font-extrabold fill-slate-800">White Mtns, AZ &bull; 9,500 ft</text>
-            </g>
-
-            <!-- 5. Virgin River (0.18 MAF -> w = 2.5px, Drops straight down along x=690 from 9,000 ft to Lake Mead 1,065 ft) -->
-            <line x1="690" y1="248" x2="690" y2="550" stroke="var(--trib-color)" stroke-width="2.5" stroke-linecap="round" opacity="0.9" stroke-dasharray="4,3"/>
-            <g transform="translate(615, 210)" class="cursor-pointer"
-               onmouseenter="showElevationGageInfo('Virgin River (Zion National Park)', 'Enters Lake Mead at Overton Arm', '9,000 ft Headwaters', '0.18 MAF/yr Runoff', 'Zion Canyon Carver', 'Lower Basin Tributary', 'Carves Zion National Park, flowing southwest across Utah, Arizona strip, and Nevada into Lake Mead Overton Arm.')"
-               onmouseleave="hideGapInfo()">
-              <rect x="0" y="0" width="150" height="34" rx="4" fill="#ffffff" fill-opacity="0.96" stroke="#0d9488" stroke-width="1.2" filter="drop-shadow(0 2px 4px rgba(13,148,136,0.1))"/>
-              <text x="75" y="14" text-anchor="middle" class="text-[10px] font-black fill-teal-950">Virgin River (0.18 MAF)</text>
-              <text x="75" y="27" text-anchor="middle" class="text-[9px] font-extrabold fill-slate-800">Zion Headwaters &bull; 9,000 ft</text>
-            </g>
-
-            <!-- 6. Gila River (0.87 MAF -> w = 3.9px, Drops straight down along x=995 from 8,000 ft to Morelos Dam 115 ft) -->
-            <line x1="995" y1="286" x2="995" y2="586" stroke="var(--trib-color)" stroke-width="3.9" stroke-linecap="round" opacity="0.9" stroke-dasharray="4,3"/>
-            <g transform="translate(925, 248)" class="cursor-pointer"
-               onmouseenter="showElevationGageInfo('Gila River Basin (AZ / NM)', 'Confluence near Yuma, AZ (Mile 1,220)', '8,000 ft Headwaters', '0.87 MAF/yr Historical Flow', 'Heavily Depleted Reach', 'Lower Basin Tributary', 'Historically the largest Lower Basin tributary draining central/southern Arizona and New Mexico. Today largely dewatered by agricultural diversions.')"
-               onmouseleave="hideGapInfo()">
-              <rect x="0" y="0" width="140" height="34" rx="4" fill="#ffffff" fill-opacity="0.96" stroke="#0d9488" stroke-width="1.2" filter="drop-shadow(0 2px 4px rgba(13,148,136,0.1))"/>
-              <text x="70" y="14" text-anchor="middle" class="text-[10px] font-black fill-teal-950">Gila River (0.87 MAF)</text>
-              <text x="70" y="27" text-anchor="middle" class="text-[9px] font-extrabold fill-slate-800">New Mexico / AZ &bull; 8,000 ft</text>
-            </g>
-          </g>
-
-          <!-- Flow Width Scale Legend (Logarithmic MAF/yr Proportions) -->
-          <g id="flow-width-legend" transform="translate(860, 48)">
-            <rect x="0" y="0" width="280" height="136" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2" filter="drop-shadow(0 3px 10px rgba(15, 23, 42, 0.08))"/>
-            <text x="14" y="20" fill="#0f172a" font-size="11" font-weight="900" letter-spacing="0.04em">FLOW WIDTH PROPORTIONS (MAF/YR)</text>
-            <text x="14" y="33" fill="#64748b" font-size="8" font-weight="600">Logarithmic Scaling: w = 2.0 + 3.0 &times; ln(1 + MAF)</text>
-            
-            <!-- Sample 1: Minor Tributary (0.18 - 0.87 MAF) -->
-            <line x1="16" y1="51" x2="56" y2="51" stroke="#0d9488" stroke-width="2.6" stroke-linecap="round"/>
-            <text x="66" y="54" fill="#1e293b" font-size="9.5" font-weight="600">Minor Tribs (0.18–0.87 MAF): 2.5–3.9px</text>
-            
-            <!-- Sample 2: Major Tributary (2.10 - 4.90 MAF) -->
-            <line x1="16" y1="74" x2="56" y2="74" stroke="#0d9488" stroke-width="6.0" stroke-linecap="round"/>
-            <text x="66" y="77" fill="#1e293b" font-size="9.5" font-weight="600">Major Tribs (2.1–4.9 MAF): 5.4–7.3px</text>
-            
-            <!-- Sample 3: Mainstem Flow (8.23 - 14.80 MAF) -->
-            <line x1="16" y1="99" x2="56" y2="99" stroke="#0284c7" stroke-width="9.5" stroke-linecap="round"/>
-            <text x="66" y="102" fill="#1e293b" font-size="9.5" font-weight="600">Mainstem Reaches (8.2–14.8 MAF): 8.7–10.5px</text>
-            
-            <!-- Sample 4: Dry Channel (0 MAF) -->
-            <line x1="16" y1="121" x2="56" y2="121" stroke="#94a3b8" stroke-width="1.8" stroke-dasharray="4,4"/>
-            <text x="66" y="124" fill="#64748b" font-size="9" font-weight="500">Post-Morelos Dry Delta: 0 MAF (Dewatered)</text>
-          </g>
-
-          <!-- MAIN COLORADO RIVER PROFILE VECTOR (Proportional to Reach MAF) -->
-          <g id="mainstem-river-group">
-            <!-- Mountain Slope Gradient Shading -->
-            <path d="M 80 203 Q 95 275 111 275 L 145 315 L 180 357 L 226 408 L 271 435 L 342 443 L 372 455 L 481 455 L 481 470 L 503 472 L 540 498 L 662 539 L 695 550 L 759 550 L 759 565 L 809 565 L 809 571 L 875 573 L 875 576 L 976 584 L 998 586 L 1130 590 L 1130 590 L 80 590 Z" fill="url(#sky-grid-grad)"/>
-
-            <!-- Lake Granby -->
-            <rect x="91" y="271" width="20" height="8" rx="2" fill="var(--res-pool)" stroke="var(--res-stroke)" stroke-width="1.2"
-              class="cursor-pointer"
-              onmouseenter="showElevationGageInfo('Lake Granby (C-BT Storage Pool)', 'Mile 20.0', '8,280 ft (Full Pool)', '539,800 AF Capacity', 'Granby Dam Outlet', 'C-BT Headwaters Storage', 'Primary storage reservoir for Colorado-Big Thompson trans-mountain diversion project under the Continental Divide.')"
-              onmouseleave="hideGapInfo()"/>
-            <g transform="translate(56, 246)" class="pointer-events-none">
-              <rect x="0" y="0" width="90" height="20" rx="3" fill="#ffffff" fill-opacity="0.94" stroke="#0284c7" stroke-width="1.2"/>
-              <text x="45" y="14" text-anchor="middle" class="text-[9.5px] fill-[#0c4a6e] font-black">Lake Granby (8,280')</text>
-            </g>
-
-            <!-- Lake Powell Pool & Prominent Label Badge -->
+            <!-- Lake Powell Pool Bathtub & Glen Canyon Dam -->
             <rect x="372" y="451" width="109" height="8" rx="2" fill="url(#res-water-grad)" stroke="var(--res-stroke)" stroke-width="1.5"
               class="cursor-pointer"
               onmouseenter="showElevationGageInfo('Lake Powell Reservoir Pool', 'Mile 390.0 to 535.0 (145 mi)', '3,540 ft (Current Pool)', 'Active Storage: ~7.6M AF', '390 ft Head Drop at Glen Canyon Dam', 'Upper Basin Master Storage Buffer', 'Stores up to 24.3 MAF when full. Buffer protecting Upper Basin compact compliance during multi-year droughts.')"
               onmouseleave="hideGapInfo()"/>
             <line x1="481" y1="449" x2="481" y2="470" stroke="var(--dam-color)" stroke-width="3.5" stroke-linecap="round"/>
-            <g transform="translate(325, 415)" class="pointer-events-none">
-              <rect x="0" y="0" width="205" height="26" rx="5" fill="#ffffff" fill-opacity="0.96" stroke="#0284c7" stroke-width="1.5" filter="drop-shadow(0 2px 6px rgba(2,132,199,0.14))"/>
-              <text x="102" y="17" text-anchor="middle" class="text-[11.5px] fill-[#0c4a6e] font-black tracking-tight">Lake Powell (Pool: 3,540 ft &bull; 145 mi)</text>
-            </g>
-            <text x="488" y="465" class="text-[9px] fill-slate-900 font-bold pointer-events-none">Glen Canyon Dam</text>
 
-            <!-- Lake Mead Pool & Prominent Label Badge -->
+            <!-- Lake Mead Pool Bathtub & Hoover Dam -->
             <rect x="695" y="546" width="64" height="8" rx="2" fill="url(#res-water-grad)" stroke="var(--res-stroke)" stroke-width="1.5"
               class="cursor-pointer"
               onmouseenter="showElevationGageInfo('Lake Mead Reservoir Pool', 'Mile 780.0 to 865.0 (85 mi)', '1,065 ft (Current Pool)', 'Active Storage: ~8.8M AF', '395 ft Head Drop at Hoover Dam', 'Lower Basin Flow Master Control', 'Largest reservoir by volume in the US (26.1M AF capacity). Governs water releases to NV, AZ, CA, and Mexico.')"
               onmouseleave="hideGapInfo()"/>
             <line x1="759" y1="544" x2="759" y2="565" stroke="var(--dam-color)" stroke-width="3.5" stroke-linecap="round"/>
-            <g transform="translate(635, 510)" class="pointer-events-none">
-              <rect x="0" y="0" width="185" height="26" rx="5" fill="#ffffff" fill-opacity="0.96" stroke="#0284c7" stroke-width="1.5" filter="drop-shadow(0 2px 6px rgba(2,132,199,0.14))"/>
-              <text x="92" y="17" text-anchor="middle" class="text-[11.5px] fill-[#0c4a6e] font-black tracking-tight">Lake Mead (Pool: 1,065 ft &bull; 85 mi)</text>
-            </g>
-            <text x="766" y="560" class="text-[9px] fill-slate-900 font-bold pointer-events-none">Hoover Dam</text>
 
-            <!-- Lake Mohave -->
+            <!-- Lake Mohave & Davis Dam -->
             <rect x="760" y="561" width="49" height="6" rx="1.5" fill="var(--res-pool)" stroke="var(--res-stroke)" stroke-width="1.2"
               class="cursor-pointer"
               onmouseenter="showElevationGageInfo('Lake Mohave (Davis Dam Pool)', 'Mile 865.0 to 932.0 (67 mi)', '647 ft (Full Pool)', '1.81M AF Capacity', '135 ft Head Drop at Davis Dam', 'Downstream Reregulation', 'Reregulates hydro peaking releases from Hoover Dam to provide uniform flow downstream to Parker Dam.')"
               onmouseleave="hideGapInfo()"/>
             <line x1="809" y1="561" x2="809" y2="571" stroke="var(--dam-color)" stroke-width="2.5" stroke-linecap="round"/>
-            <text x="785" y="555" text-anchor="middle" class="text-[8.5px] fill-sky-900 font-bold pointer-events-none">Mohave</text>
 
-            <!-- Lake Havasu -->
+            <!-- Lake Havasu & Parker Dam -->
             <rect x="810" y="568" width="65" height="6" rx="1.5" fill="var(--res-pool)" stroke="var(--res-stroke)" stroke-width="1.2"
               class="cursor-pointer"
               onmouseenter="showElevationGageInfo('Lake Havasu (Parker Dam Pool)', 'Mile 932.0 to 977.0 (45 mi)', '450 ft (Full Pool)', '619,400 AF Capacity', '72 ft Head Drop at Parker Dam', 'Major Pumping Forebay', 'Pumping forebay for the Colorado River Aqueduct (CRA -> SoCal) and Central Arizona Project (CAP -> Phoenix/Tucson).')"
               onmouseleave="hideGapInfo()"/>
             <line x1="875" y1="568" x2="875" y2="576" stroke="var(--dam-color)" stroke-width="2.5" stroke-linecap="round"/>
-            <text x="842" y="562" text-anchor="middle" class="text-[8.5px] fill-sky-900 font-bold pointer-events-none">Havasu</text>
 
             <!-- Imperial Dam Sluiceway -->
             <line x1="976" y1="580" x2="976" y2="585" stroke="var(--dam-color)" stroke-width="2" stroke-linecap="round"/>
-            <text x="976" y="575" text-anchor="middle" class="text-[8.5px] fill-slate-900 font-bold pointer-events-none">Imperial</text>
 
             <!-- Morelos Dam -->
             <line x1="998" y1="582" x2="998" y2="587" stroke="var(--dam-color)" stroke-width="2" stroke-linecap="round"/>
-            <text x="1005" y="580" text-anchor="start" class="text-[8.5px] fill-slate-900 font-bold pointer-events-none">Morelos</text>
 
-            <!-- Main Thalweg Line Segments with Proportional Flow Widths -->
-            <!-- 1. Headwaters to Grand Junction (4.00 MAF -> w = 6.8px) -->
-            <path d="M 80 203 Q 95 275 111 275 L 145 315 L 180 357 L 226 408" fill="none" stroke="#0284c7" stroke-width="6.8" stroke-linecap="round" stroke-linejoin="round"/>
-            
-            <!-- 2. Grand Junction to Green River Confluence (5.60 MAF -> w = 7.7px) -->
-            <path d="M 226 408 L 271 435 L 342 443" fill="none" stroke="#0284c7" stroke-width="7.7" stroke-linecap="round" stroke-linejoin="round"/>
-            
-            <!-- 3. Cataract Canyon into Lake Powell Pool (14.80 MAF -> w = 10.5px) -->
-            <path d="M 342 443 L 372 455 L 481 455" fill="none" stroke="#0284c7" stroke-width="10.5" stroke-linecap="round" stroke-linejoin="round"/>
-            
-            <!-- 4. Lees Ferry through Grand Canyon to Lake Mead (8.23 MAF Compact Release -> w = 8.7px) -->
-            <path d="M 481 470 L 503 472 L 540 498 L 662 539 L 695 550" fill="none" stroke="#0284c7" stroke-width="8.7" stroke-linecap="round" stroke-linejoin="round"/>
-            
-            <!-- 5. Lake Mead Pool to Hoover Dam (9.00 MAF -> w = 9.0px) -->
-            <path d="M 695 550 L 759 550" fill="none" stroke="#0284c7" stroke-width="9.0" stroke-linecap="round" stroke-linejoin="round"/>
-            
-            <!-- 6. Hoover Dam to Parker Dam / Lake Havasu (9.00 MAF -> w = 9.0px) -->
-            <path d="M 759 565 L 809 565 L 809 571 L 875 573" fill="none" stroke="#0284c7" stroke-width="9.0" stroke-linecap="round" stroke-linejoin="round"/>
-            
-            <!-- 7. Parker Dam to Imperial Dam (6.45 MAF post-CRA/CAP -> w = 8.0px) -->
-            <path d="M 875 576 L 976 584" fill="none" stroke="#0284c7" stroke-width="8.0" stroke-linecap="round" stroke-linejoin="round"/>
-            
-            <!-- 8. Imperial Dam to Morelos Dam (2.50 MAF post-AAC -> w = 5.8px) -->
-            <path d="M 976 584 L 998 586" fill="none" stroke="#0284c7" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round"/>
-            
-            <!-- 9. Morelos Dam to Delta Terminus (0 MAF dewatered -> w = 1.8px dashed) -->
-            <path d="M 998 586 L 1130 590" fill="none" stroke="#94a3b8" stroke-width="1.8" stroke-dasharray="4,4" stroke-linecap="round" stroke-linejoin="round"/>
-
-            <!-- Gaging Stations -->
+            <!-- USGS Sentinel Streamgaging Stations -->
             <!-- Gage 1: Source / Grand Lake (Mile 0) -->
             <circle cx="80" cy="203" r="5.0" fill="#ffffff" stroke="#0284c7" stroke-width="2.0" class="profile-node"
               onmouseenter="showElevationGageInfo('USGS #09010500 Colorado River below Baker Gulch, CO', 'Mile 8.5 (Continental Divide Headwaters)', '8,750 ft', '18 cfs', 'None (Alpine Snowmelt)', 'Alpine Source Baseline', 'Alpine origin near La Poudre Pass. Tracks natural headwater runoff above all trans-basin diversion tunnels.')"
@@ -1008,6 +930,140 @@
             <circle cx="1130" cy="590" r="5.0" fill="#0284c7" stroke="#ffffff" stroke-width="2.0" class="profile-node"
               onmouseenter="showElevationGageInfo('Colorado River Delta & Sea Level', 'Mile 1,400.0', '0 ft (Sea Level)', '0 cfs (Dry Sands)', 'Historical Delta Estuary', 'Terminal Ocean Sink', 'Historically discharged ~15 MAF/yr into Gulf of California. Now largely desiccated sandflats except during pulse flows.')"
               onmouseleave="hideGapInfo()"/>
+          </g>
+
+          <!-- ============================================================ -->
+          <!-- TIER 5: FOREGROUND LABELS, BADGES & CALLOUTS (ON TOP OF ALL) -->
+          <!-- ============================================================ -->
+          <g id="layer-labels-and-callouts">
+            <!-- 1. Lake Granby Callout Badge (Safely offset to right of slope with leader line to dam crest) -->
+            <g id="badge-lake-granby" class="cursor-pointer"
+               onmouseenter="showElevationGageInfo('Lake Granby (C-BT Storage Pool)', 'Mile 20.0', '8,280 ft (Full Pool)', '539,800 AF Capacity', 'Granby Dam Outlet', 'C-BT Headwaters Storage', 'Primary storage reservoir for Colorado-Big Thompson trans-mountain diversion project under the Continental Divide.')"
+               onmouseleave="hideGapInfo()">
+              <!-- Leader line pointing from card directly to dam crest -->
+              <line x1="122" y1="256" x2="113" y2="271" stroke="#0284c7" stroke-width="1.2" stroke-linecap="round"/>
+              <circle cx="113" cy="271" r="2" fill="#0284c7"/>
+              <rect x="122" y="234" width="116" height="22" rx="4" fill="#ffffff" fill-opacity="0.97" stroke="#0284c7" stroke-width="1.3" filter="drop-shadow(0 2px 5px rgba(2,132,199,0.15))"/>
+              <text x="180" y="249" text-anchor="middle" class="text-[9.5px] fill-[#0c4a6e] font-black">Lake Granby (8,280')</text>
+            </g>
+
+            <!-- 2. Blue Mesa Label Badge (Safely carded to the left of Gunnison vertical line) -->
+            <g id="badge-blue-mesa" class="cursor-pointer"
+               onmouseenter="showElevationGageInfo('Blue Mesa Dam & Reservoir (Gunnison River)', 'Mile 60 above Grand Junction', '7,519 ft (Full Pool)', '829,500 AF Capacity', 'Wayne N. Aspinall Unit', 'Upper Basin DROA Storage', 'Largest water body in Colorado. Regulates Gunnison River before it carves through Black Canyon.')"
+               onmouseleave="hideGapInfo()">
+              <rect x="152" y="295" width="60" height="18" rx="3.5" fill="#ffffff" fill-opacity="0.97" stroke="var(--res-stroke)" stroke-width="1.2" filter="drop-shadow(0 1px 4px rgba(15,23,42,0.09))"/>
+              <text x="182" y="308" text-anchor="middle" class="text-[9px] fill-slate-900 font-bold">Blue Mesa</text>
+            </g>
+
+            <!-- 3. Flaming Gorge Label Badge (Safely carded to the left of Green River vertical line) -->
+            <g id="badge-flaming-gorge" class="cursor-pointer"
+               onmouseenter="showElevationGageInfo('Flaming Gorge Dam & Reservoir (Green River)', 'Mile 290 above Confluence', '6,040 ft (Full Pool)', '3.78M AF Capacity', '450 ft Dam Height', 'DROA Drought Buffer', 'Primary drought response reserve supporting Lake Powell under the Drought Response Operations Agreement.')"
+               onmouseleave="hideGapInfo()">
+              <rect x="246" y="349" width="80" height="18" rx="3.5" fill="#ffffff" fill-opacity="0.97" stroke="var(--res-stroke)" stroke-width="1.2" filter="drop-shadow(0 1px 4px rgba(15,23,42,0.09))"/>
+              <text x="286" y="362" text-anchor="middle" class="text-[9px] fill-slate-900 font-bold">Flaming Gorge</text>
+            </g>
+
+            <!-- 4. Navajo Dam Label Badge (Safely carded to the left of San Juan vertical line) -->
+            <g id="badge-navajo-dam" class="cursor-pointer"
+               onmouseenter="showElevationGageInfo('Navajo Dam & Reservoir (San Juan River)', 'Mile 120 above Powell', '6,085 ft (Full Pool)', '1.70M AF Capacity', 'San Juan-Chama Forebay', 'Four Corners Master Reserve', 'Impounds Navajo Lake in New Mexico. Supplies San Juan-Chama diversion and Navajo Indian Irrigation Project.')"
+               onmouseleave="hideGapInfo()">
+              <rect x="362" y="348" width="74" height="18" rx="3.5" fill="#ffffff" fill-opacity="0.97" stroke="var(--res-stroke)" stroke-width="1.2" filter="drop-shadow(0 1px 4px rgba(15,23,42,0.09))"/>
+              <text x="399" y="361" text-anchor="middle" class="text-[9px] fill-slate-900 font-bold">Navajo Dam</text>
+            </g>
+
+            <!-- 5. Major Basin Headwaters Cards (Top of Vertical Feeder Axes) -->
+            <!-- Green River Basin Card -->
+            <g transform="translate(225, 18)" class="cursor-pointer"
+               onmouseenter="showElevationGageInfo('Green River Headwaters & Wind River Range', '730 River Miles to Confluence', '13,800 ft (Alpine Crest)', '4.90 MAF/yr Mean Runoff', 'Alpine Fall Line to Canyonlands', 'Largest Colorado River Tributary', 'Originates in Wyoming Wind River Range glacial cirques and Uinta Mountains, Utah. Regulated at Flaming Gorge Dam.')"
+               onmouseleave="hideGapInfo()">
+              <rect x="0" y="0" width="234" height="40" rx="6" fill="#ffffff" fill-opacity="0.97" stroke="#0d9488" stroke-width="1.5" filter="drop-shadow(0 2px 8px rgba(13,148,136,0.14))"/>
+              <text x="117" y="16" text-anchor="middle" class="text-[12px] font-black fill-teal-950">Green River Basin (4.90 MAF &bull; 730 mi)</text>
+              <text x="117" y="31" text-anchor="middle" class="text-[10px] font-extrabold fill-slate-900">Wind River Range Headwaters &bull; 13,800 ft</text>
+            </g>
+
+            <!-- Gunnison River Basin Card -->
+            <g transform="translate(116, 90)" class="cursor-pointer"
+               onmouseenter="showElevationGageInfo('Gunnison River Basin (Elk Mountains)', 'Mile 190 at Grand Junction', '12,000 ft Crest', '2.10 MAF/yr Mean Runoff', 'Black Canyon Gorge', 'Second-Largest Inflow', 'Carves the sheer Black Canyon of the Gunnison. Joins mainstem Colorado at Grand Junction.')"
+               onmouseleave="hideGapInfo()">
+              <rect x="0" y="0" width="220" height="38" rx="5" fill="#ffffff" fill-opacity="0.97" stroke="#0d9488" stroke-width="1.4" filter="drop-shadow(0 2px 6px rgba(13,148,136,0.12))"/>
+              <text x="110" y="16" text-anchor="middle" class="text-[11.5px] font-black fill-teal-950">Gunnison River (2.10 MAF)</text>
+              <text x="110" y="30" text-anchor="middle" class="text-[10px] font-extrabold fill-slate-900">Elk Mtns &bull; Blue Mesa &bull; 12,000 ft</text>
+            </g>
+
+            <!-- San Juan River Basin Card -->
+            <g transform="translate(365, 110)" class="cursor-pointer"
+               onmouseenter="showElevationGageInfo('San Juan River Basin (San Juan Mountains)', 'Enters Lake Powell at Mile 480', '11,500 ft Alpine Crest', '2.50 MAF/yr Mean Runoff', 'Four Corners Canyon Country', 'Third-Largest Inflow', 'Drains the snowy San Juan range in southwest Colorado and northern New Mexico. Joined by Animas River.')"
+               onmouseleave="hideGapInfo()">
+              <rect x="0" y="0" width="170" height="38" rx="5" fill="#ffffff" fill-opacity="0.97" stroke="#0d9488" stroke-width="1.4" filter="drop-shadow(0 2px 6px rgba(13,148,136,0.12))"/>
+              <text x="85" y="16" text-anchor="middle" class="text-[11px] font-black fill-teal-950">San Juan River (2.50 MAF)</text>
+              <text x="85" y="30" text-anchor="middle" class="text-[9.5px] font-extrabold fill-slate-900">San Juan Mtns &bull; 11,500 ft</text>
+            </g>
+
+            <!-- Little Colorado River Card -->
+            <g transform="translate(455, 190)" class="cursor-pointer"
+               onmouseenter="showElevationGageInfo('Little Colorado River', 'Enters Grand Canyon at Mile 615', '9,500 ft Headwaters', '0.25 MAF/yr Flash Runoff', 'Grand Canyon Confluence', 'Ephemeral Sediment Carrier', 'Sacred turquoise waters of the Hopi and Navajo. Subject to intense desert flash flooding that pulses sediment into Grand Canyon.')"
+               onmouseleave="hideGapInfo()">
+              <rect x="0" y="0" width="170" height="34" rx="4" fill="#ffffff" fill-opacity="0.97" stroke="#0d9488" stroke-width="1.2" filter="drop-shadow(0 2px 4px rgba(13,148,136,0.1))"/>
+              <text x="85" y="14" text-anchor="middle" class="text-[10px] font-black fill-teal-950">Little Colorado (0.25 MAF)</text>
+              <text x="85" y="27" text-anchor="middle" class="text-[9px] font-extrabold fill-slate-800">White Mtns, AZ &bull; 9,500 ft</text>
+            </g>
+
+            <!-- Virgin River Card -->
+            <g transform="translate(615, 210)" class="cursor-pointer"
+               onmouseenter="showElevationGageInfo('Virgin River (Zion National Park)', 'Enters Lake Mead at Overton Arm', '9,000 ft Headwaters', '0.18 MAF/yr Runoff', 'Zion Canyon Carver', 'Lower Basin Tributary', 'Carves Zion National Park, flowing southwest across Utah, Arizona strip, and Nevada into Lake Mead Overton Arm.')"
+               onmouseleave="hideGapInfo()">
+              <rect x="0" y="0" width="150" height="34" rx="4" fill="#ffffff" fill-opacity="0.97" stroke="#0d9488" stroke-width="1.2" filter="drop-shadow(0 2px 4px rgba(13,148,136,0.1))"/>
+              <text x="75" y="14" text-anchor="middle" class="text-[10px] font-black fill-teal-950">Virgin River (0.18 MAF)</text>
+              <text x="75" y="27" text-anchor="middle" class="text-[9px] font-extrabold fill-slate-800">Zion Headwaters &bull; 9,000 ft</text>
+            </g>
+
+            <!-- Gila River Card -->
+            <g transform="translate(925, 248)" class="cursor-pointer"
+               onmouseenter="showElevationGageInfo('Gila River Basin (AZ / NM)', 'Confluence near Yuma, AZ (Mile 1,220)', '8,000 ft Headwaters', '0.87 MAF/yr Historical Flow', 'Heavily Depleted Reach', 'Lower Basin Tributary', 'Historically the largest Lower Basin tributary draining central/southern Arizona and New Mexico. Today largely dewatered by agricultural diversions.')"
+               onmouseleave="hideGapInfo()">
+              <rect x="0" y="0" width="140" height="34" rx="4" fill="#ffffff" fill-opacity="0.97" stroke="#0d9488" stroke-width="1.2" filter="drop-shadow(0 2px 4px rgba(13,148,136,0.1))"/>
+              <text x="70" y="14" text-anchor="middle" class="text-[10px] font-black fill-teal-950">Gila River (0.87 MAF)</text>
+              <text x="70" y="27" text-anchor="middle" class="text-[9px] font-extrabold fill-slate-800">New Mexico / AZ &bull; 8,000 ft</text>
+            </g>
+
+            <!-- Lake Powell & Glen Canyon Dam Prominent Card Badge -->
+            <g transform="translate(325, 415)" class="pointer-events-none">
+              <rect x="0" y="0" width="205" height="26" rx="5" fill="#ffffff" fill-opacity="0.97" stroke="#0284c7" stroke-width="1.5" filter="drop-shadow(0 2px 6px rgba(2,132,199,0.14))"/>
+              <text x="102" y="17" text-anchor="middle" class="text-[11.5px] fill-[#0c4a6e] font-black tracking-tight">Lake Powell (Pool: 3,540 ft &bull; 145 mi)</text>
+            </g>
+            <text x="488" y="465" class="text-[9px] fill-slate-900 font-bold pointer-events-none">Glen Canyon Dam</text>
+
+            <!-- Lake Mead & Hoover Dam Prominent Card Badge -->
+            <g transform="translate(635, 510)" class="pointer-events-none">
+              <rect x="0" y="0" width="185" height="26" rx="5" fill="#ffffff" fill-opacity="0.97" stroke="#0284c7" stroke-width="1.5" filter="drop-shadow(0 2px 6px rgba(2,132,199,0.14))"/>
+              <text x="92" y="17" text-anchor="middle" class="text-[11.5px] fill-[#0c4a6e] font-black tracking-tight">Lake Mead (Pool: 1,065 ft &bull; 85 mi)</text>
+            </g>
+            <text x="754" y="558" text-anchor="end" class="text-[9px] fill-slate-900 font-bold pointer-events-none">Hoover Dam</text>
+
+            <!-- Lower Basin Minor Dam & Pool Labels with Halos -->
+            <text x="785" y="555" text-anchor="middle" class="text-[8.5px] fill-sky-900 font-bold pointer-events-none">Mohave</text>
+            <text x="842" y="562" text-anchor="middle" class="text-[8.5px] fill-sky-900 font-bold pointer-events-none">Havasu</text>
+            <text x="976" y="575" text-anchor="middle" class="text-[8.5px] fill-slate-900 font-bold pointer-events-none">Imperial</text>
+            <text x="1005" y="580" text-anchor="start" class="text-[8.5px] fill-slate-900 font-bold pointer-events-none">Morelos</text>
+
+            <!-- Flow Width Scale Legend (Logarithmic MAF/yr Proportions) -->
+            <g id="flow-width-legend" transform="translate(860, 48)">
+              <rect x="0" y="0" width="280" height="136" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2" filter="drop-shadow(0 3px 10px rgba(15, 23, 42, 0.08))"/>
+              <text x="14" y="20" fill="#0f172a" font-size="11" font-weight="900" letter-spacing="0.04em">FLOW WIDTH PROPORTIONS (MAF/YR)</text>
+              <text x="14" y="33" fill="#64748b" font-size="8" font-weight="600">Logarithmic Scaling: w = 2.0 + 3.0 &times; ln(1 + MAF)</text>
+              
+              <line x1="16" y1="51" x2="56" y2="51" stroke="#0d9488" stroke-width="2.6" stroke-linecap="round"/>
+              <text x="66" y="54" fill="#1e293b" font-size="9.5" font-weight="600">Minor Tribs (0.18–0.87 MAF): 2.5–3.9px</text>
+              
+              <line x1="16" y1="74" x2="56" y2="74" stroke="#0d9488" stroke-width="6.0" stroke-linecap="round"/>
+              <text x="66" y="77" fill="#1e293b" font-size="9.5" font-weight="600">Major Tribs (2.1–4.9 MAF): 5.4–7.3px</text>
+              
+              <line x1="16" y1="99" x2="56" y2="99" stroke="#0284c7" stroke-width="9.5" stroke-linecap="round"/>
+              <text x="66" y="102" fill="#1e293b" font-size="9.5" font-weight="600">Mainstem Reaches (8.2–14.8 MAF): 8.7–10.5px</text>
+              
+              <line x1="16" y1="121" x2="56" y2="121" stroke="#94a3b8" stroke-width="1.8" stroke-dasharray="4,4"/>
+              <text x="66" y="124" fill="#64748b" font-size="9" font-weight="500">Post-Morelos Dry Delta: 0 MAF (Dewatered)</text>
+            </g>
           </g>
         </svg>
       </div>

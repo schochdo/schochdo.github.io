@@ -295,3 +295,28 @@ button:not(.circle-btn):not(#compass-container button),
   color: #0f172a;
   margin: 16px 0;
 }
+
+/* ==============================================================
+   6. CARTOGRAPHIC & SVG DIAGRAM STANDARDS (Anti-Collision & Tufte Legibility)
+   ============================================================== */
+svg text {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* High-contrast cartographic text halo standard: ensures text is legible over vectors/grid */
+.carto-halo, svg text.halo, svg .node text, svg .state-name {
+  paint-order: stroke fill;
+  stroke: #ffffff;
+  stroke-width: 3.5px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Numeric alignment in SVG charts */
+svg text.tabular-nums, svg .maf-badge, svg .axis-label {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
