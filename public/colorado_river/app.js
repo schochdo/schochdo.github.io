@@ -2048,7 +2048,10 @@ async function loadData(forceLive = false) {
       if (powellContoursRes && powellContoursRes.ok) {
         cachedPowellContours = await powellContoursRes.json();
       }
-      if (normalsRes && normalsRes.ok) cachedNormals = await normalsRes.json();
+      if (normalsRes && normalsRes.ok) {
+        cachedNormals = await normalsRes.json();
+        window.cachedNormals = cachedNormals;
+      }
     }
 
     // 3. Render map layers as soon as MapLibre style is loaded
@@ -2064,7 +2067,7 @@ async function loadData(forceLive = false) {
       updateBadgePlacements();
       ensurePointLayersOnTop();
       if (window.FlowReplayEngine && typeof window.FlowReplayEngine.init === 'function') {
-        window.FlowReplayEngine.init(map, metrics);
+        window.FlowReplayEngine.init(map, metrics, cachedNormals);
       }
     };
 
@@ -2882,7 +2885,11 @@ print("NHD Features found:", len(res.get("features", [])))`;
       source: 'rivers',
       filter: ['all', ['==', ['get', 'category'], 'mainstem'], ['!=', ['get', 'reach_type'], 'submerged_path']],
       paint: {
-        'line-color': '#38bdf8',
+        'line-color': [
+          'case',
+          ['==', ['get', 'reach_type'], 'submerged_path'], 'rgba(0,0,0,0)',
+          ['coalesce', ['get', 'health_color'], '#38bdf8']
+        ],
         'line-width': [
           'interpolate', ['linear'], ['zoom'],
           6, ['+', ['get', 'weight'], 2.0],
@@ -2901,7 +2908,11 @@ print("NHD Features found:", len(res.get("features", [])))`;
       filter: ['all', ['==', ['get', 'category'], 'mainstem'], ['!=', ['get', 'reach_type'], 'submerged_path']],
       layout: { 'line-cap': 'round', 'line-join': 'round' },
       paint: {
-        'line-color': '#0284c7',
+        'line-color': [
+          'case',
+          ['==', ['get', 'reach_type'], 'submerged_path'], '#0369a1',
+          ['coalesce', ['get', 'health_color'], '#0284c7']
+        ],
         'line-width': [
           'interpolate', ['linear'], ['zoom'],
           6, ['get', 'weight'],
@@ -2928,7 +2939,11 @@ print("NHD Features found:", len(res.get("features", [])))`;
       source: 'rivers',
       filter: ['all', ['==', ['get', 'category'], 'major_tributary'], ['!=', ['get', 'reach_type'], 'submerged_path'], ['!=', ['get', 'reach_type'], 'canal']],
       paint: {
-        'line-color': '#38bdf8',
+        'line-color': [
+          'case',
+          ['==', ['get', 'reach_type'], 'submerged_path'], 'rgba(0,0,0,0)',
+          ['coalesce', ['get', 'health_color'], '#38bdf8']
+        ],
         'line-width': [
           'interpolate', ['linear'], ['zoom'],
           6, ['+', ['get', 'weight'], 2.0],
@@ -2946,7 +2961,11 @@ print("NHD Features found:", len(res.get("features", [])))`;
       filter: ['all', ['==', ['get', 'category'], 'major_tributary'], ['!=', ['get', 'reach_type'], 'submerged_path'], ['!=', ['get', 'reach_type'], 'canal']],
       layout: { 'line-cap': 'round', 'line-join': 'round' },
       paint: {
-        'line-color': '#0284c7',
+        'line-color': [
+          'case',
+          ['==', ['get', 'reach_type'], 'submerged_path'], '#0369a1',
+          ['coalesce', ['get', 'health_color'], '#0284c7']
+        ],
         'line-width': [
           'interpolate', ['linear'], ['zoom'],
           6, ['get', 'weight'],
@@ -2992,7 +3011,11 @@ print("NHD Features found:", len(res.get("features", [])))`;
       source: 'rivers',
       filter: ['all', ['==', ['get', 'category'], 'minor_tributary'], ['!=', ['get', 'reach_type'], 'submerged_path']],
       paint: {
-        'line-color': '#38bdf8',
+        'line-color': [
+          'case',
+          ['==', ['get', 'reach_type'], 'submerged_path'], 'rgba(0,0,0,0)',
+          ['coalesce', ['get', 'health_color'], '#38bdf8']
+        ],
         'line-width': [
           'interpolate', ['linear'], ['zoom'],
           6, ['+', ['get', 'weight'], 1.8],
@@ -3010,7 +3033,11 @@ print("NHD Features found:", len(res.get("features", [])))`;
       filter: ['all', ['==', ['get', 'category'], 'minor_tributary'], ['!=', ['get', 'reach_type'], 'submerged_path']],
       layout: { 'line-cap': 'round', 'line-join': 'round' },
       paint: {
-        'line-color': '#0284c7',
+        'line-color': [
+          'case',
+          ['==', ['get', 'reach_type'], 'submerged_path'], '#0369a1',
+          ['coalesce', ['get', 'health_color'], '#0284c7']
+        ],
         'line-width': [
           'interpolate', ['linear'], ['zoom'],
           6, ['get', 'weight'],

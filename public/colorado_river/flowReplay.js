@@ -34,6 +34,8 @@
     accumulatedTime: 0,
     rafId: null,
     isOpen: false,
+    normals: null,
+    wasFlowHealthActiveBeforeReplay: null,
 
     // Baseline caches for clean restoration
     originalGaugesGeoJSON: null,
@@ -50,10 +52,72 @@
       GILA_DOME: '09520500'   // Gila River near Dome, AZ (Lower Basin / Border)
     },
 
-    init(mapInstance, metricsData) {
+    init(mapInstance, metricsData, normalsData) {
       this.map = mapInstance;
       this.metrics = metricsData;
+      this.normals = normalsData || window.cachedNormals || null;
       this._bindUI();
+    },
+
+    async _ensureNormalsLoaded() {
+      if (this.normals && this.normals.sites) return this.normals;
+      if (window.cachedNormals && window.cachedNormals.sites) {
+        this.normals = window.cachedNormals;
+        return this.normals;
+      }
+      try {
+        const resp = await fetch('./data/historical_normals.json');
+        if (resp.ok) {
+          this.normals = await resp.json();
+          window.cachedNormals = this.normals;
+        }
+      } catch (err) {
+        console.warn('[FlowReplayEngine] Could not load historical normals:', err);
+      }
+      return this.normals;
+    },
+
+    _getHistoricalNormal(siteId, dateKey) {
+      if (!this.normals || !this.normals.sites) {
+        if (window.cachedNormals && window.cachedNormals.sites) {
+          this.normals = window.cachedNormals;
+        }
+      }
+      const site = this.normals?.sites?.[siteId];
+      if (!site) return null;
+      return site[dateKey] ?? null;
+    },
+
+    _flowHealthColor(pctOfNormal) {
+      if (typeof window.flowHealthColor === 'function') {
+        return window.flowHealthColor(pctOfNormal);
+      }
+      if (pctOfNormal === null || pctOfNormal === undefined) return '#0284c7';
+      if (pctOfNormal >= 150) return '#1d4ed8'; // abundant — deep water blue
+      if (pctOfNormal >= 90)  return '#0284c7'; // normal — water blue
+      if (pctOfNormal >= 50)  return '#d97706'; // below normal — warm ochre
+      if (pctOfNormal >= 25)  return '#ea580c'; // low — terracotta
+      return '#b2182b';                         // critically low — deep oxblood
+    },
+
+    _flowHealthLabel(pct) {
+      if (typeof window.flowHealthLabel === 'function') {
+        return window.flowHealthLabel(pct);
+      }
+      if (pct === null || pct === undefined) return 'Baseline';
+      if (pct >= 150) return 'Abundant';
+      if (pct >= 90)  return 'Normal';
+      if (pct >= 50)  return 'Below Normal';
+      if (pct >= 25)  return 'Low Flow';
+      return 'Critically Low';
+    },
+
+    _getDateKey(rawIso) {
+      if (!rawIso) return '01-01';
+      const d = new Date(rawIso);
+      const mm = String(d.getUTCMonth() + 1).padStart(2, '0');
+      const dd = String(d.getUTCDate()).padStart(2, '0');
+      return `${mm}-${dd}`;
     },
 
     _bindUI() {
@@ -74,6 +138,19 @@
       bar.classList.remove('hidden');
       if (toggleBtn) toggleBtn.classList.add('active');
       this.isOpen = true;
+
+      // Cache whether flow health was active prior to opening replay
+      const flowHealthToggle = document.getElementById('toggle-flow-health');
+      this.wasFlowHealthActiveBeforeReplay = flowHealthToggle ? flowHealthToggle.checked : true;
+
+      // Ensure Flow Health layer and legend are active during replay
+      if (typeof window.toggleFlowHealthLayer === 'function') {
+        window.toggleFlowHealthLayer(true);
+      }
+      const flowHealthLegend = document.getElementById('flow-health-legend');
+      if (flowHealthLegend) flowHealthLegend.style.display = 'block';
+
+      await this._ensureNormalsLoaded();
 
       const period = targetPeriod || this.activePeriod || '7D';
       await this.switchPeriod(period);
@@ -150,6 +227,15 @@
       if (toggleBtn) toggleBtn.classList.remove('active');
       this.isOpen = false;
       this.restoreLive();
+
+      // Revert flow health toggle state if it was off prior to replay
+      if (this.wasFlowHealthActiveBeforeReplay === false) {
+        if (typeof window.toggleFlowHealthLayer === 'function') {
+          window.toggleFlowHealthLayer(false);
+        }
+        const flowHealthLegend = document.getElementById('flow-health-legend');
+        if (flowHealthLegend) flowHealthLegend.style.display = 'none';
+      }
     },
 
     toggle() {
@@ -381,7 +467,8 @@
     _updateMapLayers(index) {
       if (!this.map || !this.data) return;
       const stations = this.data.stations;
-      const stationStats = this.data.station_stats || {};
+      const rawIso = this.data.timestamps[index];
+      const dateKey = this._getDateKey(rawIso);
 
       // 1. Update Streamflow Gauges GeoJSON
       if (this.cachedGaugesFeatures) {
@@ -390,18 +477,23 @@
           const flowSeries = stations[sid];
           if (flowSeries) {
             const flow = flowSeries[index];
-            const stats = stationStats[sid];
-            const minFlow = stats ? stats.min_cfs : 0;
-            const maxFlow = stats ? stats.max_cfs : 1000;
-            const range = maxFlow - minFlow;
             
             // Dynamic Radius via sqrt(Q) formula
             const radius = flow != null && flow > 0
               ? Math.max(3.5, Math.min(22.0, 3.5 + Math.sqrt(flow) * 0.088))
               : 3.5;
 
-            // Surge detection: if flow is near peak or spiking
-            const isSurge = range > 200 && flow >= (minFlow + range * 0.75);
+            // Historical normal and flow health percentage
+            const norm = this._getHistoricalNormal(sid, dateKey);
+            let pct = null;
+            let healthColor = '#0284c7';
+            let healthLabel = 'Normal';
+
+            if (norm && norm > 0 && flow != null) {
+              pct = Math.round((flow / norm) * 100);
+              healthColor = this._flowHealthColor(pct);
+              healthLabel = this._flowHealthLabel(pct);
+            }
 
             return {
               ...feat,
@@ -410,7 +502,11 @@
                 flow_cfs: flow,
                 circle_radius: Math.round(radius * 10) / 10,
                 casing_radius: Math.round((radius + 1.8) * 10) / 10,
-                circle_color: isSurge ? '#f59e0b' : '#0284c7', // Amber pulse on surge, standard blue on normal
+                circle_color: feat.properties.station_type === 'streamflow' ? healthColor : (feat.properties.circle_color || undefined),
+                health_pct: pct,
+                health_color: healthColor,
+                health_label: healthLabel,
+                hist_normal_cfs: norm,
                 is_replay_active: true
               }
             };
@@ -432,32 +528,71 @@
         const updatedReaches = this.cachedReachesFeatures.map(reach => {
           const gid = reach.properties.gauge_id;
           const flowSeries = gid ? stations[gid] : null;
-          if (flowSeries) {
-            const flow = flowSeries[index];
-            const cat = reach.properties.category || 'mainstem';
-            
-            // Recompute reach weight via sqrt(Q) hydrologic formula
-            let weight = 2.4;
-            if (flow && flow > 0) {
-              if (cat === 'mainstem') {
-                weight = Math.min(13.0, Math.max(4.4, 3.2 + Math.sqrt(flow) * 0.085));
-              } else if (cat === 'major_tributary') {
-                weight = Math.min(8.5, Math.max(3.2, 2.4 + Math.sqrt(flow) * 0.07));
-              } else {
-                weight = Math.min(5.0, Math.max(2.4, 1.8 + Math.sqrt(flow) * 0.055));
-              }
-            }
-
-            return {
-              ...reach,
-              properties: {
-                ...reach.properties,
-                flow_cfs: flow,
-                weight: Math.round(weight * 10) / 10
-              }
-            };
+          let flow = reach.properties.flow_cfs;
+          if (flowSeries && flowSeries[index] !== undefined && flowSeries[index] !== null) {
+            flow = flowSeries[index];
           }
-          return reach;
+
+          const cat = reach.properties.category || 'mainstem';
+          const rType = reach.properties.reach_type;
+          const rName = reach.properties.reach || '';
+
+          // Recompute reach weight via sqrt(Q) hydrologic formula
+          let weight = 2.4;
+          if (flow && flow > 0) {
+            if (cat === 'mainstem') {
+              weight = Math.min(13.0, Math.max(4.4, 3.2 + Math.sqrt(flow) * 0.085));
+            } else if (cat === 'major_tributary') {
+              weight = Math.min(8.5, Math.max(3.2, 2.4 + Math.sqrt(flow) * 0.07));
+            } else {
+              weight = Math.min(5.0, Math.max(2.4, 1.8 + Math.sqrt(flow) * 0.055));
+            }
+          }
+
+          // Recompute health color & percentage dynamically
+          let norm = null;
+          let pct = null;
+          let healthColor = '#0284c7';
+          let healthLabel = 'Baseline';
+
+          if (rType === 'submerged_path' || rName.endsWith('_submerged_path')) {
+            weight = 1.8;
+            healthColor = '#0369a1';
+            healthLabel = 'Submerged Reservoir Thalweg';
+          } else if (rType === 'canal' || rName === 'div_canal_alimentador_central') {
+            healthColor = '#0284c7';
+            healthLabel = '1944 Treaty Delivery';
+          } else if (flow === 0 && (rName.includes('delta') || rName.includes('dry'))) {
+            weight = 2.0;
+            healthColor = '#94a3b8';
+            healthLabel = 'Dry Riverbed';
+          } else {
+            if (gid) {
+              norm = this._getHistoricalNormal(gid, dateKey);
+            }
+            if (norm && norm > 0 && flow != null) {
+              pct = Math.round((flow / norm) * 100);
+              healthColor = this._flowHealthColor(pct);
+              healthLabel = this._flowHealthLabel(pct);
+            } else {
+              healthColor = '#0284c7';
+              healthLabel = 'Normal';
+            }
+          }
+
+          return {
+            ...reach,
+            properties: {
+              ...reach.properties,
+              flow_cfs: flow,
+              weight: Math.round(weight * 10) / 10,
+              health_color: healthColor,
+              health_pct: pct,
+              health_label: healthLabel,
+              hist_normal_cfs: norm,
+              is_replay_active: true
+            }
+          };
         });
 
         const riverSource = this.map.getSource('rivers');
