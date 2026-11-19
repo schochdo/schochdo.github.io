@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Colorado River Basin: Telemetry & Station Registry</title>
+  <title>Colorado River Basin: Gage & Facility Registry</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -69,7 +69,7 @@
         <div id="divider-workspace" class="h-4 w-px bg-slate-300"></div>
         <div>
           <h1 class="text-sm sm:text-base font-bold text-slate-900 leading-tight">
-            Hydrologic Telemetry Station Registry
+            Hydrologic Gage & Facility Registry
           </h1>
           <p class="text-[11px] text-slate-500">
             Real-time streamflow gages, trans-mountain diversion acoustic meters, and reservoir elevation sensors
@@ -251,7 +251,7 @@
       </div>
     </div>
 
-    <!-- Telemetry Table Card -->
+    <!-- Gage & Facility Table Card -->
     <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex-1 flex flex-col">
       <div class="overflow-x-auto flex-1">
         <table class="w-full text-left text-xs border-collapse data-table">
@@ -272,7 +272,7 @@
           </thead>
           <tbody id="telemetry-rows" class="divide-y divide-slate-100">
             <tr>
-              <td colspan="11" class="text-center py-12 text-slate-400">Loading hydrologic telemetry network...</td>
+              <td colspan="11" class="text-center py-12 text-slate-400">Loading hydrologic monitoring network...</td>
             </tr>
           </tbody>
         </table>
@@ -654,7 +654,7 @@
 
         let noteText = s.notes || (s.id === '09380000' ? "Statutory Lee Ferry Compact boundary (1922 Treaty)" : (s.provider === 'USBR' ? "USBR Lower Colorado Hourly Hydroelectric Release" : "USGS NWIS Real-Time Discharge"));
         if (isOffline) {
-          noteText = `Telemetry Offline (Last reported: ${formatTimestamp(s.timestamp)})`;
+          noteText = `Station Offline (Last reported: ${formatTimestamp(s.timestamp)})`;
         }
 
         const hier = getStationHierarchy(s.id, 'streamflow');
@@ -983,7 +983,7 @@
       document.getElementById('total-count').textContent = allNodes.length;
 
       if (nodes.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="11" class="text-center py-8 text-slate-400">No telemetry stations match the current filter criteria.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="11" class="text-center py-8 text-slate-400">No stations match the current filter criteria.</td></tr>`;
         return;
       }
 
@@ -1178,7 +1178,7 @@
                   <td class="p-2 font-bold text-slate-900">station_id</td>
                   <td class="p-2">string</td>
                   <td class="p-2">—</td>
-                  <td class="p-2 font-sans">Official 8-digit USGS gage number (e.g. <code>09380000</code>) or state telemetry code.</td>
+                  <td class="p-2 font-sans">Official 8-digit USGS gage number (e.g. <code>09380000</code>) or state station code.</td>
                 </tr>
                 <tr>
                   <td class="p-2 font-bold text-slate-900">reading_num</td>
@@ -1221,7 +1221,7 @@
             The platform maintains pre-compiled, downsampled JSON matrices for instant static querying without backend database overhead:
           </p>
           <ul class="list-disc list-inside space-y-1 text-slate-700 text-xs font-mono ml-1">
-            <li><code>web/data/live_water_data.json</code>: Real-time telemetry snapshot for all 98 facilities.</li>
+            <li><code>web/data/live_water_data.json</code>: Real-time observation snapshot for all 98 facilities.</li>
             <li><code>web/data/river_network.geojson</code>: 83 continuous river reaches snapped to 0.00m tolerance.</li>
             <li><code>web/data/station_hierarchy.json</code>: Sentinel classifications, RBI scores, and coordinates.</li>
             <li><code>web/data/replay_7d.json</code>: 170-hour temporal flow replay matrix (81.9 KB).</li>

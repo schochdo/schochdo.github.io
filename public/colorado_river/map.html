@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Colorado River Basin Water Infrastructure & Hydrology Dashboard</title>
   
   <!-- MapLibre GL CSS -->
@@ -47,7 +47,7 @@
       <button class="nav-header-btn portal-btn" onclick="window.open('./portal.html','_blank')" title="Open Academic Data Portal &amp; Historical Reservoirs">
         <span class="btn-text">Data Portal</span>
       </button>
-      <button class="nav-header-btn telemetry-btn" onclick="window.open('./telemetry.html','_blank')" title="Open Gage &amp; Telemetry Registry Table">
+      <button class="nav-header-btn telemetry-btn" onclick="window.open('./telemetry.html','_blank')" title="Open Gage &amp; Facility Registry Table">
         <span class="btn-text">Gage Registry</span>
       </button>
 
@@ -168,8 +168,8 @@
               <label class="toggle-label" style="padding-left: 14px; font-size: 11px; color: var(--text-muted);">
                 <span>↳ % of Daily Average</span>
               </label>
-              <label class="toggle-label" title="Show all 98 telemetry monitoring points: 79 streamflows, 4 tunnels, 4 canals, 11 reservoirs">
-                <span>Telemetry Stations (98 Gages &amp; Points)</span>
+              <label class="toggle-label" title="Show all 98 monitoring stations: 79 streamflows, 4 tunnels, 4 canals, 11 reservoirs">
+                <span>Active Stations (98 Gages &amp; Facilities)</span>
                 <input type="checkbox" id="toggle-streamflow-gauges" checked onchange="toggleLayer('streamflow-gauges')">
                 <span class="slider"></span>
               </label>
@@ -360,10 +360,10 @@
         </div>
       </div>
 
-      <!-- Docked Bottom Collapsible Telemetry Gage Tray -->
+      <!-- Docked Bottom Collapsible Station Tray -->
       <div class="map-gage-tray collapsed" id="map-gage-tray">
         <!-- Full-Width Drawer Handle Strip at Top (Clickable Slide Toggle) -->
-        <div class="tray-handle-strip" id="tray-handle-strip" onclick="toggleMapGageTray()" title="Click to open or collapse telemetry tray" role="button" tabindex="0" aria-expanded="false" aria-label="Toggle telemetry tray">
+        <div class="tray-handle-strip" id="tray-handle-strip" onclick="toggleMapGageTray()" title="Click to open or collapse station tray" role="button" tabindex="0" aria-expanded="false" aria-label="Toggle station tray">
           <div class="tray-handle-bar">
             <span class="tray-handle-arrow" id="tray-handle-arrow">▲</span>
           </div>
@@ -373,7 +373,7 @@
         <div class="map-tray-header-bar" id="map-tray-header" onclick="toggleMapGageTray()">
           <div class="tray-header-left">
             <span class="tray-indicator-dot"></span>
-            <span class="tray-title-text">Telemetry Gages &amp; Facilities</span>
+            <span class="tray-title-text">Gages &amp; Monitoring Facilities</span>
             <span class="tray-badge" id="tray-node-count">98</span>
             <span class="tray-sub-hint hidden sm:inline">&bull; Click row to fly</span>
           </div>
@@ -394,7 +394,7 @@
           </div>
 
           <div class="tray-header-right" onclick="event.stopPropagation()">
-            <button class="tray-action-btn" onclick="openDedicatedLedger()" title="Open Full-Screen Telemetry Ledger in New Tab">
+            <button class="tray-action-btn" onclick="openDedicatedLedger()" title="Open Full-Screen Gage Ledger in New Tab">
               <span>Full Ledger ↗</span>
             </button>
           </div>
@@ -409,12 +409,11 @@
                 <th>Hierarchy / Status</th>
                 <th>Type</th>
                 <th style="text-align: right;">Current Flow / Volume</th>
-                <th style="text-align: center;">Action</th>
               </tr>
             </thead>
             <tbody id="tray-table-rows">
               <tr>
-                <td colspan="6" style="text-align: center; padding: 24px; color: #94a3b8;">Loading telemetry nodes...</td>
+                <td colspan="5" style="text-align: center; padding: 24px; color: #94a3b8;">Loading monitoring stations...</td>
               </tr>
             </tbody>
           </table>
@@ -491,7 +490,7 @@
             <line x1="12" y1="20" x2="12" y2="4"></line>
             <line x1="6" y1="20" x2="6" y2="14"></line>
           </svg>
-          <span>Basin Telemetry &amp; Storage</span>
+          <span>Basin Streamflow &amp; Storage</span>
         </div>
         <button class="sidebar-close-btn" onclick="closeSidebar()" aria-label="Close sidebar">✕</button>
       </div>
@@ -510,7 +509,7 @@
         <button class="nav-header-btn budget-btn" onclick="window.open('./sankey.html','_blank')" title="Open Annual Water Budget Diagram">
           <span class="btn-text">Water Budget</span>
         </button>
-        <button class="nav-header-btn telemetry-btn" onclick="window.open('./telemetry.html','_blank')" title="Open Gage &amp; Telemetry Registry Table">
+        <button class="nav-header-btn telemetry-btn" onclick="window.open('./telemetry.html','_blank')" title="Open Gage &amp; Facility Registry Table">
           <span class="btn-text">Gage Registry</span>
         </button>
       </div>
@@ -745,7 +744,7 @@
       <div class="modal-header">
         <div class="modal-title-group">
           <h2>Hydrologic Data and APIs</h2>
-          <p>Real-time telemetry feeds, REST endpoints, and conservation-of-mass river routing code powering this project.</p>
+          <p>Real-time monitoring feeds, REST endpoints, and conservation-of-mass river routing code powering this project.</p>
         </div>
         <button class="modal-close-btn" onclick="closeApiModal()" title="Close dialog">✕</button>
       </div>
@@ -754,11 +753,11 @@
         <!-- Chapter 1: USGS NWIS Instantaneous Values API -->
         <div class="api-section">
           <div class="api-section-header">
-            <h3 class="api-section-title">1. USGS Streamflow Telemetry</h3>
+            <h3 class="api-section-title">1. USGS Streamflow Observations</h3>
             <span class="api-tag usgs">USGS REST API</span>
           </div>
           <p class="law-text">
-            Real-time streamflow across the 25+ river reaches and confluences is ingested directly from the <strong>USGS Instantaneous Values (IV) Web Service</strong>. Measurements are refreshed at 15- to 60-minute intervals from satellite-telemetry acoustic Doppler and stage sensors.
+            Real-time streamflow across the 25+ river reaches and confluences is ingested directly from the <strong>USGS Instantaneous Values (IV) Web Service</strong>. Measurements are refreshed at 15- to 60-minute intervals from acoustic Doppler and stage sensors.
           </p>
           <table class="api-param-table">
             <thead>
@@ -778,7 +777,7 @@
               <tr>
                 <td><code>siteStatus</code></td>
                 <td><code>all</code></td>
-                <td>Includes active operational telemetry nodes across all 7 basin states.</td>
+                <td>Includes active operational streamgage stations across all 7 basin states.</td>
               </tr>
               <tr>
                 <td><code>format</code></td>
@@ -1001,7 +1000,7 @@ metrics_payload = {
 
 with open("web/data/latest_metrics.json", "w") as f:
     json.dump(metrics_payload, f, indent=2)
-print("Hydrologic telemetry pipeline synced successfully.")</code></pre>
+print("Hydrologic monitoring pipeline synced successfully.")</code></pre>
           </div>
         </div>
 
@@ -1039,7 +1038,7 @@ print("Hydrologic telemetry pipeline synced successfully.")</code></pre>
                 </div>
               </div>
               <div style="font-size:11px; color:#475569; margin-top:4px;">
-                <strong>Real-Time Telemetry &amp; Hydrological Metrics:</strong> Uses official USGS <code>dataretrieval</code> to ingest live discharge (<code>00060</code>), 50-year daily p50 statistics, sequential reach mass-balance deltas (&Delta;Q), and reservoir elevations (<code>62614</code>). Exports static contract <code>latest_conditions.json</code>.
+                <strong>Real-Time Streamflow Observations &amp; Hydrological Metrics:</strong> Uses official USGS <code>dataretrieval</code> to ingest live discharge (<code>00060</code>), 50-year daily p50 statistics, sequential reach mass-balance deltas (&Delta;Q), and reservoir elevations (<code>62614</code>). Exports static contract <code>latest_conditions.json</code>.
               </div>
             </div>
 

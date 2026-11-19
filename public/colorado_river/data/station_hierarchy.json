@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "description": "Richards-Baker Flashiness Index & Basin Sentinel Hierarchy for Colorado River telemetry nodes",
+    "description": "Richards-Baker Flashiness Index & Basin Sentinel Hierarchy for Colorado River monitoring nodes",
     "formula": "RBI = sum(|Q_t - Q_{t-1}|) / sum(Q_t)",
     "tiers": [
       "Compact Sentinel (Tier 1)",

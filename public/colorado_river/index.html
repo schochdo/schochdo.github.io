@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Colorado River Basin | Douglas Schoch (DAT1001 Fall 2026)</title>
   
   <!-- Editorial Typography: Inter -->
@@ -62,13 +62,6 @@
       max-height: 100dvh;
       overflow: hidden;
       box-sizing: border-box;
-    }
-      color: #334155;
-      -webkit-font-smoothing: antialiased;
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      overflow: hidden;
     }
     .tabular-nums {
       font-variant-numeric: tabular-nums;
@@ -214,7 +207,7 @@
           </svg>
           <span>System Map</span>
         </button>
-        <button onclick="setTab('telemetry')" id="tab-btn-telemetry" class="sidebar-link" title="Master Facility Database & Telemetry Ledger (98 Stations)">
+        <button onclick="setTab('telemetry')" id="tab-btn-telemetry" class="sidebar-link" title="Master Facility Database & Station Ledger (98 Stations)">
           <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
           </svg>
@@ -780,7 +773,7 @@
           <footer class="mt-8 pt-5 pb-6 border-t border-[#cbd5e1] flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-[11px] text-[#64748b]">
             <div>
               <div class="font-bold text-[#0f172a]">Colorado River Basin Research &amp; Open Science Documentation</div>
-              <div class="text-[10px] text-[#64748b] mt-0.5">Colorado Mountain College • DAT1001 • Telemetry from USGS NWIS, USBR HydroData &amp; USDA SNOTEL</div>
+              <div class="text-[10px] text-[#64748b] mt-0.5">Colorado Mountain College • DAT1001 • Streamflow &amp; Reservoir Records from USGS NWIS, USBR HydroData &amp; USDA SNOTEL</div>
             </div>
             <div class="flex flex-wrap items-center gap-2.5 text-[11px]">
               <span class="font-semibold text-[#334155]">Reproducible Notebooks:</span>
@@ -1064,7 +1057,7 @@
         </div>
 
         <!-- ========================================== -->
-        <!-- TAB 5: GAGE TELEMETRY REGISTRY             -->
+        <!-- TAB 5: GAGE & FACILITY REGISTRY            -->
         <!-- ========================================== -->
         <div id="section-telemetry" class="hidden flex-1 w-full h-full min-h-0 relative">
           <iframe id="iframe-telemetry" src="./telemetry.html" class="w-full h-full border-none"></iframe>
@@ -1277,7 +1270,7 @@
             <span class="text-[10px] font-bold text-stone-500">Colorado River Basin Hydrology</span>
           </div>
           <h2 class="text-lg font-black text-stone-900 tracking-tight mt-1">Data Sources and Research Notebooks</h2>
-          <p class="text-xs text-stone-600">Authoritative federal &amp; state telemetry feeds, mass-balance models, and reproducible Jupyter workflows</p>
+          <p class="text-xs text-stone-600">Authoritative federal &amp; state monitoring feeds, mass-balance models, and reproducible Jupyter workflows</p>
         </div>
         <button onclick="closeModals()" class="text-stone-400 hover:text-stone-700 p-1.5 rounded-lg hover:bg-stone-200/60 transition" title="Close dialog (Esc)">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -1304,7 +1297,7 @@
                 <span class="w-2 h-2 rounded-full bg-sky-600"></span>
                 <span>1. Reproducible Research Notebooks</span>
               </h3>
-              <p class="text-[11px] text-stone-500">Fully documented Jupyter notebooks detailing geospatial routing, reach telemetry, and tributary ML models</p>
+              <p class="text-[11px] text-stone-500">Fully documented Jupyter notebooks detailing geospatial routing, reach streamflow, and tributary ML models</p>
             </div>
             <span class="text-[10px] font-mono text-stone-500 bg-stone-100 px-2 py-0.5 rounded border border-stone-200">notebooks/*.ipynb</span>
           </div>
@@ -1346,9 +1339,9 @@
               <div>
                 <div class="flex items-center justify-between text-[10px] text-stone-500 mb-1">
                   <span class="font-bold text-sky-700 uppercase">Notebook 02</span>
-                  <span>Hydrology Telemetry</span>
+                  <span>Hydrology Records</span>
                 </div>
-                <h4 class="font-black text-stone-900 text-xs leading-snug">Real-Time Streamflow Telemetry</h4>
+                <h4 class="font-black text-stone-900 text-xs leading-snug">Real-Time Streamflow Observations</h4>
                 <p class="text-[11px] text-stone-600 mt-1.5 leading-relaxed">
                   Sentinel streamgage ingestion across 25 sequential reaches, historical medians comparison, flow health percentiles, and conservation reach deltas (ΔQ).
                 </p>
@@ -1546,7 +1539,7 @@
                       Colorado Decision Support Systems (CDSS) ↗
                     </a>
                     <a href="https://dwr.state.co.us/Rest/GET/Help/Api/GET-api-v2-telemetrystations-telemetrystation" target="_blank" rel="noopener noreferrer" class="text-stone-500 hover:text-stone-800 hover:underline block text-[10px]">
-                      Telemetry Stations API Schema ↗
+                      DWR Stations API Schema ↗
                     </a>
                   </td>
                 </tr>
@@ -1685,7 +1678,7 @@
           <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-[11px]">
             <div class="p-2.5 bg-stone-50 rounded border border-stone-200">
               <div class="font-mono font-bold text-stone-900">src/fetch_water_data.py</div>
-              <div class="text-[10px] text-stone-500 mt-0.5">Automated telemetry fetcher for 25 USGS streamgages and USBR Lake Powell/Mead elevations.</div>
+              <div class="text-[10px] text-stone-500 mt-0.5">Automated data fetcher for 25 USGS streamgages and USBR Lake Powell/Mead elevations.</div>
             </div>
             <div class="p-2.5 bg-stone-50 rounded border border-stone-200">
               <div class="font-mono font-bold text-stone-900">src/fetch_historical_portal_data.py</div>
@@ -3227,6 +3220,15 @@ for ts in data["value"]["timeSeries"]:
         container.appendChild(row);
       });
     }
+
+    // Prevent WebKit / iPad Safari page-level pinch zoom when scrolling with mouse wheel or trackpad
+    window.addEventListener('wheel', (e) => {
+      if (e.ctrlKey || e.metaKey) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+    window.addEventListener('gesturestart', (e) => e.preventDefault());
+    window.addEventListener('gesturechange', (e) => e.preventDefault());
 
     // Initialize portal on DOM content loaded
     document.addEventListener('DOMContentLoaded', () => {

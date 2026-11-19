@@ -748,9 +748,9 @@
     function handleCanvasWheel(e) {
       CameraStateMachine.cancelProgrammaticFlight(map);
 
-      // 1. Chromium Trackpad Pinch (dispatched as wheel with ctrlKey = true)
-      if (e.ctrlKey) {
-        e.preventDefault(); // Prevents browser tab zoom, lets MapLibre scrollZoom handle smooth map zoom
+      // 1. Chromium & Safari Trackpad / Mouse Wheel Pinch (ctrlKey or metaKey)
+      if (e.ctrlKey || e.metaKey) {
+        e.preventDefault(); // Prevents browser tab/page zoom, lets MapLibre scrollZoom handle smooth map zoom
         return;
       }
 

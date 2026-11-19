@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Colorado River Basin Map</title>
   
   <!-- MapLibre GL CSS -->
@@ -438,8 +438,8 @@
                 <input type="checkbox" id="toggle-flow-health" checked onchange="toggleLayer('flow-health')">
                 <span class="slider"></span>
               </label>
-              <label class="toggle-label" title="Show all 98 telemetry monitoring points: 79 streamflows, 4 tunnels, 4 canals, 11 reservoirs">
-                <span>Telemetry Stations (98 Gages &amp; Points)</span>
+              <label class="toggle-label" title="Show all 98 monitoring stations: 79 streamflows, 4 tunnels, 4 canals, 11 reservoirs">
+                <span>Active Stations (98 Gages &amp; Facilities)</span>
                 <input type="checkbox" id="toggle-streamflow-gauges" checked onchange="toggleLayer('streamflow-gauges')">
                 <span class="slider"></span>
               </label>
@@ -628,10 +628,10 @@
         </div>
       </div>
 
-      <!-- Docked Bottom Collapsible Telemetry Gage Tray -->
+      <!-- Docked Bottom Collapsible Station Tray -->
       <div class="map-gage-tray collapsed" id="map-gage-tray">
         <!-- Full-Width Drawer Handle Strip at Top (Clickable Slide Toggle) -->
-        <div class="tray-handle-strip" id="tray-handle-strip" onclick="toggleMapGageTray()" title="Click to open or collapse telemetry tray" role="button" tabindex="0" aria-expanded="false" aria-label="Toggle telemetry tray">
+        <div class="tray-handle-strip" id="tray-handle-strip" onclick="toggleMapGageTray()" title="Click to open or collapse station tray" role="button" tabindex="0" aria-expanded="false" aria-label="Toggle station tray">
           <div class="tray-handle-bar">
             <span class="tray-handle-arrow" id="tray-handle-arrow">▲</span>
           </div>
@@ -641,7 +641,7 @@
         <div class="map-tray-header-bar" id="map-tray-header" onclick="toggleMapGageTray()">
           <div class="tray-header-left">
             <span class="tray-indicator-dot"></span>
-            <span class="tray-title-text">Telemetry Gages &amp; Facilities</span>
+            <span class="tray-title-text">Gages &amp; Monitoring Facilities</span>
             <span class="tray-badge" id="tray-node-count">98</span>
             <span class="tray-sub-hint hidden sm:inline">&bull; Click row to fly</span>
           </div>
@@ -662,7 +662,7 @@
           </div>
 
           <div class="tray-header-right" onclick="event.stopPropagation()">
-            <button class="tray-action-btn" onclick="openDedicatedLedger()" title="Open Full-Screen Telemetry Ledger in New Tab">
+            <button class="tray-action-btn" onclick="openDedicatedLedger()" title="Open Full-Screen Gage Ledger in New Tab">
               <span>Full Ledger ↗</span>
             </button>
           </div>
@@ -677,12 +677,11 @@
                 <th>Hierarchy / Status</th>
                 <th>Type</th>
                 <th style="text-align: right;">Current Flow / Volume</th>
-                <th style="text-align: center;">Action</th>
               </tr>
             </thead>
             <tbody id="tray-table-rows">
               <tr>
-                <td colspan="6" style="text-align: center; padding: 24px; color: #94a3b8;">Loading telemetry nodes...</td>
+                <td colspan="5" style="text-align: center; padding: 24px; color: #94a3b8;">Loading monitoring stations...</td>
               </tr>
             </tbody>
           </table>

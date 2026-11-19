@@ -249,7 +249,7 @@
     _showLoading(isLoading) {
       const timeDisplay = document.getElementById('replay-time-display');
       if (timeDisplay && isLoading) {
-        timeDisplay.textContent = `Loading ${this.activePeriod} telemetry matrix...`;
+        timeDisplay.textContent = `Loading ${this.activePeriod} flow matrix...`;
       }
     },
 

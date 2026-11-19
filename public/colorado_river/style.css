@@ -644,7 +644,7 @@ body {
 /* Map Legend (Docked & Collapsible) */
 .map-legend {
   position: absolute;
-  bottom: calc(66px + env(safe-area-inset-bottom, 0px));
+  bottom: 66px;
   left: max(20px, calc(16px + env(safe-area-inset-left, 0px)));
   z-index: 1060;
   width: 290px;
@@ -1414,7 +1414,7 @@ input:checked + .slider:before {
   margin-bottom: 6px;
 }
 
-/* Docked Bottom Collapsible Telemetry Gage Tray */
+/* Docked Bottom Collapsible Station Tray */
 .map-gage-tray {
   position: absolute;
   bottom: 0;
@@ -1432,7 +1432,8 @@ input:checked + .slider:before {
   overflow: hidden;
   max-width: 100vw;
   box-sizing: border-box;
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding: 0;
+  margin: 0;
 }
 
 body.sidebar-drawer-active .map-gage-tray,
@@ -1441,11 +1442,17 @@ body.sidebar-drawer-active .map-gage-tray,
 }
 
 .map-gage-tray.collapsed {
-  height: calc(54px + env(safe-area-inset-bottom, 0px)) !important;
+  height: 54px !important;
+  max-height: 54px !important;
+  bottom: 0 !important;
+  padding-bottom: 0 !important;
 }
 
 .map-gage-tray.expanded {
   height: calc(260px + env(safe-area-inset-bottom, 0px)) !important;
+  max-height: min(calc(260px + env(safe-area-inset-bottom, 0px)), 40vh) !important;
+  bottom: 0 !important;
+  padding-bottom: env(safe-area-inset-bottom, 0px) !important;
 }
 
 /* Full-Width Drawer Handle Strip at top of Tray */
@@ -1747,12 +1754,14 @@ body.sidebar-drawer-active .map-gage-tray,
 
 .tray-table tbody tr.active-station-row {
   background: #e0f2fe !important;
-  outline: 1px solid #0284c7;
+  outline: 1.5px solid #0284c7;
+  position: relative;
+  z-index: 2;
 }
 
 /* Dynamic offset of Map Legend and Trackball above Collapsible Tray */
 .map-legend {
-  bottom: calc(66px + env(safe-area-inset-bottom, 0px));
+  bottom: 66px;
   z-index: 1060;
   transition: bottom 0.24s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -1766,7 +1775,7 @@ body.map-gage-tray-expanded .map-legend,
 }
 
 .trackball-nav-control {
-  bottom: calc(66px + env(safe-area-inset-bottom, 0px));
+  bottom: 66px;
   z-index: 1060;
   transition: bottom 0.24s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -1784,7 +1793,7 @@ body.map-gage-tray-expanded .trackball-nav-control,
 
 .flow-replay-bar {
   position: absolute;
-  bottom: calc(66px + env(safe-area-inset-bottom, 0px));
+  bottom: 66px;
   left: 50%;
   transform: translateX(-50%);
   width: min(840px, calc(100vw - 32px));
@@ -3122,7 +3131,7 @@ body.map-gage-tray-expanded .flow-replay-bar,
 
   /* Scaled Trackball on Mobile / Tablet */
   .trackball-nav-control {
-    bottom: calc(66px + env(safe-area-inset-bottom, 0px));
+    bottom: 66px;
     right: max(14px, calc(10px + env(safe-area-inset-right, 0px)));
     transform: scale(0.82);
     transform-origin: bottom right;
@@ -3136,7 +3145,7 @@ body.map-gage-tray-expanded .flow-replay-bar,
   }
 
   .map-legend {
-    bottom: calc(66px + env(safe-area-inset-bottom, 0px));
+    bottom: 66px;
     left: max(12px, calc(8px + env(safe-area-inset-left, 0px)));
     z-index: 1060;
   }

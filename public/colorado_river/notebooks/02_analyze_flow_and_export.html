@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>02: Real-Time Telemetry &amp; Hydrological Metric Engine — Colorado River Research Notebook</title>
+  <title>02: Real-Time Hydrologic Metric &amp; Monitoring Engine — Colorado River Research Notebook</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- KaTeX for LaTeX mathematical rendering -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
@@ -187,7 +187,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
           <span>Return to Portal</span>
         </a>
         <div class="h-4 w-px bg-stone-700 hidden sm:block"></div>
-        <span class="text-xs font-bold text-stone-300 hidden md:inline truncate max-w-md">02: Real-Time Telemetry &amp; Hydrological Metric Engine</span>
+        <span class="text-xs font-bold text-stone-300 hidden md:inline truncate max-w-md">02: Real-Time Hydrologic Metric &amp; Monitoring Engine</span>
       </div>
 
       <div class="flex items-center gap-2">
@@ -218,15 +218,15 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
           <span class="text-[10px] font-bold text-stone-400">•</span>
           <span class="text-[10px] font-mono text-stone-500">02_analyze_flow_and_export.ipynb</span>
         </div>
-        <h1 class="text-2xl md:text-3xl font-black text-stone-900 tracking-tight leading-tight">02: Real-Time Telemetry &amp; Hydrological Metric Engine</h1>
+        <h1 class="text-2xl md:text-3xl font-black text-stone-900 tracking-tight leading-tight">02: Real-Time Hydrologic Metric &amp; Monitoring Engine</h1>
         <p class="text-xs text-stone-600 mt-2">Static archival rendering generated from the master research repository. Interactive code blocks, mathematical formulations, and data figures preserved.</p>
       </div>
 
       <!-- Notebook Rendered Content -->
       <div class="notebook-content">
-        <div class="notebook-cell markdown-cell"><h1 id="02-real-time-telemetry-hydrological-metric-engine" class="notebook-h1">02: Real-Time Telemetry & Hydrological Metric Engine <a href="#02-real-time-telemetry-hydrological-metric-engine" class="anchor-link">#</a></h1>
+        <div class="notebook-cell markdown-cell"><h1 id="02-real-time-hydrologic-metric-monitoring-engine" class="notebook-h1">02: Real-Time Hydrologic Metric &amp; Monitoring Engine <a href="#02-real-time-hydrologic-metric-monitoring-engine" class="anchor-link">#</a></h1>
 <p class="notebook-p"><strong>DAT1001 • Geospatial Pipeline Decoupling</strong></p>
-<p class="notebook-p">This notebook ingests real-time streamflow and reservoir telemetry using the official USGS <code class="inline-code">dataretrieval</code> library:</p>
+<p class="notebook-p">This notebook ingests real-time streamflow and reservoir observations using the official USGS <code class="inline-code">dataretrieval</code> library:</p>
 <ol class="notebook-ol">
 <li><strong>USGS NWIS Real-Time Discharge & Stage:</strong> Fetches instantaneous streamflow (<code class="inline-code">00060</code>, cfs) and gauge height (<code class="inline-code">00065</code>, ft) for all basin sentinel stations.</li>
 <li><strong>Historical Daily Statistics (p50 Medians):</strong> Queries historical 50-year daily statistics to calculate <code class="inline-code">pct<em>of</em>median = (current<em>cfs / median</em>cfs) * 100</code>.</li>
@@ -617,7 +617,7 @@ Notebook 02 execution complete!
           <span class="text-[10px] font-normal text-stone-400">Jump to section</span>
         </h3>
         <nav class="space-y-0.5 max-h-[calc(100vh-140px)] overflow-y-auto pr-1">
-          <a href="#02-real-time-telemetry-hydrological-metric-engine" class="block text-xs py-1 hover:text-sky-700 transition truncate font-bold text-stone-800" style="padding-left: 0px;">02: Real-Time Telemetry &amp; Hydrological Metric Engine</a>
+          <a href="#02-real-time-hydrologic-metric-monitoring-engine" class="block text-xs py-1 hover:text-sky-700 transition truncate font-bold text-stone-800" style="padding-left: 0px;">02: Real-Time Hydrologic Metric &amp; Monitoring Engine</a>
 <a href="#step-1-define-basin-sentinel-gauges-sequential-reaches" class="block text-xs py-1 hover:text-sky-700 transition truncate font-bold text-stone-800" style="padding-left: 12px;">Step 1: Define Basin Sentinel Gauges &amp; Sequential Reaches</a>
 <a href="#step-2-query-real-time-streamflow-historical-medians" class="block text-xs py-1 hover:text-sky-700 transition truncate font-bold text-stone-800" style="padding-left: 12px;">Step 2: Query Real-Time Streamflow &amp; Historical Medians</a>
 <a href="#step-3-compute-flow-health-percent-of-median" class="block text-xs py-1 hover:text-sky-700 transition truncate font-bold text-stone-800" style="padding-left: 12px;">Step 3: Compute Flow Health &amp; Percent of Median</a>

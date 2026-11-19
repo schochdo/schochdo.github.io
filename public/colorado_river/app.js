@@ -629,7 +629,7 @@ function initMap() {
   map.on('zoomstart', () => hideHoverTooltip());
   }
 
-  // Always kick off telemetry and geography ingestion immediately
+  // Always kick off hydrology and geography ingestion immediately
   loadData();
   initLayersHoverBehavior();
 }
@@ -1133,7 +1133,7 @@ function computeCanalWeight(flowCfs) {
   return Math.round(Math.min(7.5, Math.max(2.2, 1.8 + Math.sqrt(flowCfs) * 0.065)) * 10) / 10;
 }
 
-// 3-Tier Hydrologic Station Telemetry Resolver
+// 3-Tier Hydrologic Station Observation Resolver
 function resolveStation(st) {
   if (!st) {
     return {
@@ -1141,7 +1141,7 @@ function resolveStation(st) {
       status: 'offline',
       timestamp: null,
       age_hours: 999999,
-      source_label: 'Telemetry Offline'
+      source_label: 'Station Offline'
     };
   }
   const ts = st.timestamp || null;
@@ -1168,7 +1168,7 @@ function resolveStation(st) {
       status: 'offline',
       timestamp: ts,
       age_hours: age,
-      source_label: 'Telemetry Offline'
+      source_label: 'Station Offline'
     };
   }
   
@@ -1178,7 +1178,7 @@ function resolveStation(st) {
   } else if (st.provider === 'CDWR' || (st.id && String(st.id).endsWith('TUNCO'))) {
     sourceLabel = 'CDWR HydroBase';
   } else if (status === 'delayed') {
-    sourceLabel = 'Delayed Telemetry';
+    sourceLabel = 'Delayed Feed';
   } else if (status === 'daily') {
     sourceLabel = 'USGS Daily Mean';
   }
@@ -1285,7 +1285,7 @@ function applyLiveHydrology(riverNetwork, metrics) {
     const cat = f.properties.category || "minor_tributary";
     let flow = null;
     let status = "offline";
-    let sourceLabel = "Telemetry Offline";
+    let sourceLabel = "Station Offline";
     let gaugeInfo = f.properties.notes || "";
     let timestamp = null;
     let gaugeId = f.properties.gauge_id || null;
@@ -1422,7 +1422,7 @@ function applyLiveHydrology(riverNetwork, metrics) {
         timestamp = rC.timestamp || rG.timestamp;
         sourceLabel = "Confluence Mass Balance (Live)";
       } else {
-        flow = null; status = "offline"; timestamp = null; sourceLabel = "Telemetry Offline (Incomplete Gages)";
+        flow = null; status = "offline"; timestamp = null; sourceLabel = "Station Offline (Incomplete Gages)";
       }
       gaugeInfo = "Colorado River (Cisco, UT) + Green River (Green River, UT) into Lake Powell";
       gaugeId = "09180500";
@@ -1437,7 +1437,7 @@ function applyLiveHydrology(riverNetwork, metrics) {
     } else if (r === "lees_ferry") {
       const res = resolveStation(leesFerry);
       flow = res.flow_cfs; status = res.status; timestamp = res.timestamp;
-      sourceLabel = res.status === 'offline' ? 'Telemetry Offline' : 'USGS Gage (1922 Compact Divide)';
+      sourceLabel = res.status === 'offline' ? 'Station Offline' : 'USGS Gage (1922 Compact Divide)';
       gaugeInfo = "USGS #09380000 at Lees Ferry, AZ (Glen Canyon Release)";
       gaugeId = "09380000";
     } else if (r === "marble_canyon") {
@@ -1447,7 +1447,7 @@ function applyLiveHydrology(riverNetwork, metrics) {
         flow = Math.round(rLf.flow_cfs + (rP.flow_cfs || 0));
         status = rLf.status; timestamp = rLf.timestamp; sourceLabel = "Mass Balance (Lees Ferry + Paria)";
       } else {
-        flow = null; status = "offline"; timestamp = null; sourceLabel = "Telemetry Offline";
+        flow = null; status = "offline"; timestamp = null; sourceLabel = "Station Offline";
       }
       gaugeInfo = `USGS #09380000 at Lees Ferry + USGS #09382000 Paria River`;
       gaugeId = "09380000";
@@ -1475,13 +1475,13 @@ function applyLiveHydrology(riverNetwork, metrics) {
     } else if (r === "grand_canyon") {
       const res = resolveStation(phantomRanch);
       flow = res.flow_cfs; status = res.status; timestamp = res.timestamp;
-      sourceLabel = res.status === 'offline' ? 'Telemetry Offline' : 'USGS Gage (Phantom Ranch Control)';
+      sourceLabel = res.status === 'offline' ? 'Station Offline' : 'USGS Gage (Phantom Ranch Control)';
       gaugeInfo = "USGS #09402500 near Grand Canyon, AZ (Phantom Ranch, Mile 88; Granite Gorges to Diamond Creek)";
       gaugeId = "09402500";
     } else if (r === "grand_canyon_lower") {
       const res = resolveStation(diamondCreek);
       flow = res.flow_cfs; status = res.status; timestamp = res.timestamp;
-      sourceLabel = res.status === 'offline' ? 'Telemetry Offline' : 'USGS Gage (Diamond Creek Compliance)';
+      sourceLabel = res.status === 'offline' ? 'Station Offline' : 'USGS Gage (Diamond Creek Compliance)';
       gaugeInfo = "USGS #09404200 above Diamond Creek near Peach Springs, AZ (Mile 225 Compliance into Lake Mead)";
       gaugeId = "09404200";
       if (flow != null && phantomRanch && phantomRanch.flow_cfs != null) {
@@ -1495,19 +1495,19 @@ function applyLiveHydrology(riverNetwork, metrics) {
     } else if (r === "lower_basin_hoover_davis" || r === "lower_basin_upper") {
       const res = resolveStation(hooverDam);
       flow = res.flow_cfs; status = res.status; timestamp = res.timestamp;
-      sourceLabel = res.status === 'offline' ? 'Telemetry Offline' : 'USBR Hourly Dam Release';
+      sourceLabel = res.status === 'offline' ? 'Station Offline' : 'USBR Hourly Dam Release';
       gaugeInfo = "USBR Hoover Dam Hydroelectric Release (USBR Lower Colorado Hourly Operations)";
       gaugeId = "USBR-HOOVER";
     } else if (r === "lower_basin_davis_parker") {
       const res = resolveStation(davisDam);
       flow = res.flow_cfs; status = res.status; timestamp = res.timestamp;
-      sourceLabel = res.status === 'offline' ? 'Telemetry Offline' : 'USBR Hourly Dam Release';
+      sourceLabel = res.status === 'offline' ? 'Station Offline' : 'USBR Hourly Dam Release';
       gaugeInfo = "USBR Davis Dam Hydroelectric Release (USBR Lower Colorado Hourly Operations past Laughlin/Needles to Lake Havasu)";
       gaugeId = "USBR-DAVIS";
     } else if (r === "lower_basin_parker_paloverde" || r === "lower_basin_middle") {
       const res = resolveStation(parkerDam);
       flow = res.flow_cfs; status = res.status; timestamp = res.timestamp;
-      sourceLabel = res.status === 'offline' ? 'Telemetry Offline' : 'USBR Hourly Dam Release (Post-Havasu Diversions)';
+      sourceLabel = res.status === 'offline' ? 'Station Offline' : 'USBR Hourly Dam Release (Post-Havasu Diversions)';
       gaugeInfo = "USBR Parker Dam Hydroelectric Release (Downstream of CAP & CRA Diversions)";
       gaugeId = "USBR-PARKER";
       if (flow != null && davisDam && davisDam.flow_cfs != null) {
@@ -1541,7 +1541,7 @@ function applyLiveHydrology(riverNetwork, metrics) {
     } else if (r === "lower_basin_taper") {
       const res = resolveStation(imperialTailrace);
       flow = res.flow_cfs; status = res.status; timestamp = res.timestamp;
-      sourceLabel = res.status === 'offline' ? 'Telemetry Offline' : "Residual Channel Flow Below Major Diversions";
+      sourceLabel = res.status === 'offline' ? 'Station Offline' : "Residual Channel Flow Below Major Diversions";
       gaugeInfo = "Downstream of Imperial Dam / All-American Canal diversion to Morelos Dam (Mexico)";
       gaugeId = "09429500";
     } else if (r === "div_canal_alimentador_central" || r === "canal_alimentador_central") {
@@ -1619,7 +1619,7 @@ function applyLiveHydrology(riverNetwork, metrics) {
         status = rGr.status; timestamp = rGr.timestamp;
         sourceLabel = "Mass Balance (Green River, UT + San Rafael)";
       } else {
-        flow = null; status = "offline"; timestamp = null; sourceLabel = "Telemetry Offline";
+        flow = null; status = "offline"; timestamp = null; sourceLabel = "Station Offline";
       }
       gaugeInfo = `USGS #09315000 at Green River, UT + USGS #09328500 San Rafael River`;
       gaugeId = "09315000";
@@ -1890,7 +1890,7 @@ function applyLiveHydrology(riverNetwork, metrics) {
       f.properties.hist_normal_cfs = gaugeId ? getHistoricalNormal(gaugeId) : null;
       f.properties.health_pct = null;
       f.properties.health_color = '#94a3b8';
-      f.properties.health_label = 'Telemetry Offline';
+      f.properties.health_label = 'Station Offline';
     } else {
       f.properties.weight = computeRiverWeight(flow, cat);
       const norm = gaugeId ? getHistoricalNormal(gaugeId) : null;
@@ -1913,7 +1913,7 @@ function applyLiveHydrology(riverNetwork, metrics) {
     map.getSource('rivers').setData(riverNetwork);
   }
 
-  // Update canals source with live telemetry & offline status
+  // Update canals source with live observations & offline status
   if (map && map.getSource('canals') && cachedGeography?.tunnels) {
     const updatedCanals = cachedGeography.tunnels.filter(t => !t.id || !t.id.endsWith("TUNCO")).map(t => {
       const metric = metrics?.canals?.find(m => m.id === t.id) || (metrics?.streamflows?.find(s => s.id === t.id));
@@ -2023,7 +2023,7 @@ async function loadData(forceLive = false) {
     populateTelemetryTable(metrics);
     updateSidebar(metrics);
     const initialDateStr = formatTimestamp(metrics.fetched_at);
-    if (syncElem) syncElem.textContent = `Telemetry Snapshot (${initialDateStr})`;
+    if (syncElem) syncElem.textContent = `Observation Snapshot (${initialDateStr})`;
 
     // Check if there was a pending station request while waiting for metrics
     if (window._pendingFocusStation) {
@@ -2181,10 +2181,10 @@ async function loadData(forceLive = false) {
         populateTelemetryTable(metrics);
         updateSidebar(metrics);
         const timeNow = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        if (syncElem) syncElem.textContent = `Live Telemetry (Synced ${timeNow})`;
+        if (syncElem) syncElem.textContent = `Live Observations (Synced ${timeNow})`;
       }
     }).catch(liveErr => {
-      console.warn("Live telemetry query fell back to snapshot:", liveErr);
+      console.warn("Live observation query fell back to snapshot:", liveErr);
     });
 
     // Check if URL or pending caller specified a station to fly to
@@ -2201,7 +2201,7 @@ async function loadData(forceLive = false) {
 
   } catch (error) {
     console.error("Error loading water dashboard data:", error);
-    if (syncElem) syncElem.textContent = "Telemetry Snapshot (Offline)";
+    if (syncElem) syncElem.textContent = "Observation Snapshot (Offline)";
   }
 }
 
@@ -2697,7 +2697,7 @@ function renderGeography(geo, riverNetwork, lakes, powellContours) {
             </div>
             <div style="font-size:11px; color:#475569; line-height:1.4;">
               <strong>Storage:</strong> ${(matchRes.storage_af / 1e6).toFixed(2)}M Acre-Feet<br>
-              <strong>Elevation:</strong> ${matchRes.elevation_ft ? matchRes.elevation_ft.toLocaleString() + ' ft' : 'USBR Telemetry'}<br>
+              <strong>Elevation:</strong> ${matchRes.elevation_ft ? matchRes.elevation_ft.toLocaleString() + ' ft' : 'USBR Records'}<br>
               <strong>Role:</strong> ${matchRes.role || 'Basin Storage'}<br>
               ${matchedDam?.legal_priority ? `<strong>Legal Priority:</strong> ${matchedDam.legal_priority}<br>` : ''}
             </div>
@@ -2785,7 +2785,7 @@ function renderGeography(geo, riverNetwork, lakes, powellContours) {
           endpointUrl = `https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeseriesday/?abbrev=${resAbbrev}&format=json`;
           pyCode = `import requests
 
-# Colorado DWR HydroBase Storage Telemetry
+# Colorado DWR HydroBase Storage Records
 url = "https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeseriesday/"
 params = {
     "abbrev": "${resAbbrev}",  # ${cleanResName}
@@ -2794,13 +2794,13 @@ params = {
 res = requests.get(url, params=params, timeout=10).json()
 reading = res["ResultList"][0]
 print(f"${cleanResName}: {reading['measValue']} AF on {reading['measDate']}")`;
-          notes = "Colorado DWR daily reservoir storage accounting & dam telemetry.";
+          notes = "Colorado DWR daily reservoir storage accounting & dam records.";
         } else {
           const usgsGauge = matchRes.id === 'lake_powell' ? '09379900' : (matchRes.id === 'lake_mead' ? '09421000' : '09379900');
           endpointUrl = `https://waterservices.usgs.gov/nwis/iv/?sites=${usgsGauge}&parameterCd=62614&format=json`;
           pyCode = `import requests
 
-# USGS Lake Elevation & USBR HydroData Telemetry
+# USGS Lake Elevation & USBR HydroData Records
 url = "https://waterservices.usgs.gov/nwis/iv/"
 params = {
     "sites": "${usgsGauge}",       # ${cleanResName}
@@ -3980,7 +3980,7 @@ print(f"${cleanTName}: {flow_cfs:,.1f} cfs")`;
           codeTitle: `Colorado DWR: ${t.id}`,
           endpointUrl: endpoint,
           pythonCode: pyCode,
-          notes: "Trans-mountain diversion telemetry under Continental Divide."
+          notes: "Trans-mountain diversion monitoring under Continental Divide."
         });
         const popup = new maplibregl.Popup({ offset: 8 }).setHTML(popupHtml);
         showFeaturePopup(popup, e.lngLat);
@@ -4173,7 +4173,7 @@ print(f"${cleanTName}: {flow_cfs:,.1f} cfs")`;
           : `https://waterservices.usgs.gov/nwis/iv/?sites=${t.id}&parameterCd=00060&format=json`;
         const pyCode = `import requests
 
-# ${t.id === "09522000" ? "USGS / CILA Border Station" : "USGS Canal Telemetry Station"} #${t.id}
+# ${t.id === "09522000" ? "USGS / CILA Border Station" : "USGS Canal Monitoring Station"} #${t.id}
 url = "${isDvStation ? "https://waterservices.usgs.gov/nwis/dv/" : "https://waterservices.usgs.gov/nwis/iv/"}"
 params = {
     "sites": "${t.id}",       # ${cleanCName}
@@ -4186,14 +4186,14 @@ try:
     flow_cfs = float(val["value"])
     print(f"${cleanCName}: {flow_cfs:,.0f} cfs at {val['dateTime']}")
 except Exception as e:
-    print(f"${cleanCName}: Telemetry offline or inactive ({e})")`;
+    print(f"${cleanCName}: Station offline or inactive ({e})")`;
 
         const popupHtml = formatTabbedPopup({
           dataHtml,
           codeTitle: t.id === "09522000" ? `USGS / CILA Border Station #${t.id}` : `USGS Canal #${t.id}`,
           endpointUrl: endpoint,
           pythonCode: pyCode,
-          notes: t.id === "09522000" ? "1944 Treaty international diversion telemetry at Morelos Dam." : (isOffline ? "Gage discontinued by USGS NWIS in Oct 2022." : "Major conveyance canal telemetry.")
+          notes: t.id === "09522000" ? "1944 Treaty international diversion monitoring at Morelos Dam." : (isOffline ? "Gage discontinued by USGS NWIS in Oct 2022." : "Major conveyance canal monitoring.")
         });
         const popup = new maplibregl.Popup({ offset: 8 }).setHTML(popupHtml);
         showFeaturePopup(popup, e.lngLat);
@@ -4259,6 +4259,7 @@ except Exception as e:
       if (hasHigherPriorityFeature(e.point, ['streamflow-gauges-hit-buffer'])) return;
       if (e.originalEvent) e.originalEvent._handled = true;
       const d = e.features[0].properties;
+      if (d.id) highlightActiveStationRow(d.id);
       const portal = getPortalInfo(d);
       let singleSentenceNote = '';
       if (d.historical_note) {
@@ -4293,7 +4294,7 @@ params = {
     "parameterCd": "00060",  # Tailwater release discharge (cfs)
     "format": "json"
 }
-# Telemetry synchronizes daily release schedules with reservoir storage curves`;
+# Operations synchronize daily release schedules with reservoir storage curves`;
 
       const popupHtml = formatTabbedPopup({
         dataHtml,
@@ -4510,7 +4511,7 @@ print(f"Discharge: {flow_cfs:,.0f} cfs at {val['dateTime']}")`;
     codeTitle: `USGS Gauge #${s.id}`,
     endpointUrl: `https://waterservices.usgs.gov/nwis/iv/?sites=${s.id}&parameterCd=00060&format=json`,
     pythonCode: pyCode,
-    notes: "Parameter 00060 = Discharge (cfs). Telemetry refreshed every 15–60 minutes."
+    notes: "Parameter 00060 = Discharge (cfs). Data refreshed every 15–60 minutes."
   });
 }
 
@@ -4520,7 +4521,7 @@ function formatReservoirStationPopup(r) {
   const portalLink = portal ? `<a href="${portal.url}" target="_blank" rel="noopener" style="color:#0284c7; text-decoration:none; font-weight:700; margin-left:4px;">↗</a>` : '';
   const isFrontRange = r.category === 'front_range' || (r.id && ['lake_granby', 'dillon_reservoir', 'green_mountain', 'homestake_reservoir'].includes(r.id));
   const capacityPct = (r.capacity_pct !== undefined && r.capacity_pct !== null) ? r.capacity_pct : Math.round(((r.storage_af || 0) / (r.capacity_af || 1)) * 100);
-  const elevText = r.elevation_ft ? `${Number(r.elevation_ft).toLocaleString()} ft` : 'USBR Telemetry';
+  const elevText = r.elevation_ft ? `${Number(r.elevation_ft).toLocaleString()} ft` : 'USBR Records';
   const storageAfText = r.storage_af ? `${Math.round(r.storage_af).toLocaleString()} AF` : (r.storage_maf ? `${r.storage_maf.toFixed(2)}M AF` : 'Teletype Reported');
   const capAfText = r.capacity_af ? `${Math.round(r.capacity_af).toLocaleString()} AF` : 'Authoritative Capacity';
 
@@ -4557,7 +4558,7 @@ function formatReservoirStationPopup(r) {
 
   const pyCode = isFrontRange ? `import requests
 
-# Colorado DWR HydroBase Daily Reservoir Telemetry
+# Colorado DWR HydroBase Daily Reservoir Records
 url = "https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeseriesday/"
 params = {"abbrev": "${r.id.toUpperCase()}", "format": "json"}
 res = requests.get(url, params=params, timeout=10).json()
@@ -4571,10 +4572,10 @@ print(f"${cleanResName} Storage: ${storageAfText} (${capacityPct}% Full)")`;
 
   return formatTabbedPopup({
     dataHtml,
-    codeTitle: `${cleanResName} Telemetry`,
+    codeTitle: `${cleanResName} Records`,
     endpointUrl,
     pythonCode: pyCode,
-    notes: "Official storage reservoir telemetry. Water surface elevation converted to volume via USBR/CDSS elevation-area-capacity curves."
+    notes: "Official storage reservoir records. Water surface elevation converted to volume via USBR/CDSS elevation-area-capacity curves."
   });
 }
 
@@ -4746,7 +4747,7 @@ reading = res["ResultList"][0]
 flow_cfs = float(reading["measValue"])
 print(f"${cleanTName}: {flow_cfs:,.1f} cfs")` : `import requests
 
-# USGS Canal Telemetry Station #${t.id}
+# USGS Canal Monitoring Station #${t.id}
 url = "https://waterservices.usgs.gov/nwis/iv/"
 params = {
     "sites": "${t.id}",       # ${cleanTName}
@@ -4763,7 +4764,7 @@ print(f"${cleanTName}: {flow_cfs:,.0f} cfs")`;
       codeTitle: isFrontRange ? `Colorado DWR: ${t.id}` : `USGS Canal #${t.id}`,
       endpointUrl: endpoint,
       pythonCode: pyCode,
-      notes: isFrontRange ? "Trans-mountain diversion telemetry under Continental Divide." : "Major conveyance canal telemetry."
+      notes: isFrontRange ? "Trans-mountain diversion monitoring under Continental Divide." : "Major conveyance canal monitoring."
     });
 
     const popup = new maplibregl.Popup({ offset: 12 }).setHTML(popupHtml);
@@ -4829,7 +4830,7 @@ print(f"${cleanTName}: {flow_cfs:,.0f} cfs")`;
     stationMarkers[t.id] = { marker, popup, lat: t.lat, lon: t.lon, type: isFrontRange ? 'diversion_tunnel' : 'diversion_canal' };
   });
 
-  // 3. Storage Reservoirs: Register station markers and popups for 1:1 map & telemetry parity
+  // 3. Storage Reservoirs: Register station markers and popups for 1:1 map & station registry parity
   (metrics.reservoirs || []).forEach(r => {
     const popupHtml = formatReservoirStationPopup(r);
     const popup = new maplibregl.Popup({ offset: 12 }).setHTML(popupHtml);
@@ -4846,7 +4847,7 @@ print(f"${cleanTName}: {flow_cfs:,.0f} cfs")`;
     stationMarkers[r.id] = { popup, lat: r.lat, lon: r.lon, type: 'reservoir', data: r };
   });
 
-  // 4. Native WebGL Point Layer for All Telemetry Stations (98 Stations: 79 Streamflows, 4 Tunnels, 4 Canals, 11 Reservoirs)
+  // 4. Native WebGL Point Layer for All Monitoring Stations (98 Stations: 79 Streamflows, 4 Tunnels, 4 Canals, 11 Reservoirs)
   const allStationFeatures = [];
 
   (metrics.streamflows || []).forEach(s => {
@@ -5067,6 +5068,7 @@ print(f"${cleanTName}: {flow_cfs:,.0f} cfs")`;
       if (!e.features.length) return;
       if (e.originalEvent) e.originalEvent._handled = true;
       const g = e.features[0].properties;
+      highlightActiveStationRow(g.id);
       const entry = stationMarkers[g.id];
       if (entry && entry.popup) {
         showFeaturePopup(entry.popup, [entry.lon, entry.lat]);
@@ -5250,7 +5252,7 @@ function updateSidebar(metrics) {
   renderResCardList("front-range-res-list", frontRangeRes);
 }
 
-// Map Telemetry Gage Tray State & Logic
+// Map Gage Tray State & Logic
 let trayGageNodes = [];
 let activeTrayCategory = 'all';
 let trayFilterQuery = '';
@@ -5383,7 +5385,7 @@ function renderTrayRows() {
   });
 
   if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:18px; color:#94a3b8;">No facilities match "${trayFilterQuery}"</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:18px; color:#94a3b8;">No facilities match "${trayFilterQuery}"</td></tr>`;
     return;
   }
 
@@ -5408,17 +5410,12 @@ function renderTrayRows() {
       : '';
 
     return `
-      <tr data-station-id="${node.id}" data-lat="${node.lat}" data-lon="${node.lon}" style="cursor:pointer;">
+      <tr data-station-id="${node.id}" data-lat="${node.lat}" data-lon="${node.lon}" style="cursor:pointer;" title="Click row to fly to ${node.name.replace(/"/g, '&quot;')} on map">
         <td style="font-weight:600; color:#0f172a;">${node.name}${portalLink}</td>
         <td style="font-family:monospace; color:#64748b; font-size:11px; white-space:nowrap;">${node.id}</td>
         <td><span style="display:inline-block; padding:1px 6px; border-radius:3px; font-size:10px; ${node.tier.badge}">${node.tier.label}</span></td>
         <td><span class="type-pill ${node.type}">${node.type.replace('_', ' ')}</span></td>
         <td style="text-align:right; font-weight:700; font-variant-numeric:tabular-nums; white-space:nowrap;">${node.reading}</td>
-        <td style="text-align:center; white-space:nowrap;">
-          <button type="button" style="padding:2px 7px; font-size:10.5px; font-weight:700; background:#f1f5f9; color:#0284c7; border:1px solid #cbd5e1; border-radius:4px; cursor:pointer;" title="Fly to this station on the map">
-            Map ↗
-          </button>
-        </td>
       </tr>
     `;
   }).join('');
@@ -5695,6 +5692,7 @@ window.addEventListener('message', (e) => {
 
 function handleConduitCardClick(type, id, center, zoomLevel) {
   if (!map) return;
+  highlightActiveStationRow(id);
   // Keep Basin Metrics open while flying and highlighting target
   if (typeof closeMapMenu === 'function') {
     closeMapMenu();
@@ -5717,7 +5715,7 @@ function handleConduitCardClick(type, id, center, zoomLevel) {
     flashFeatureHighlight(type);
   }
 
-  // 4. Open feature telemetry popup
+  // 4. Open feature detail popup
   setTimeout(() => {
     if (stationMarkers[id]) {
       showFeaturePopup(stationMarkers[id].popup, center);
@@ -5732,6 +5730,7 @@ function handleConduitCardClick(type, id, center, zoomLevel) {
 
 function handleReservoirCardClick(r) {
   if (!map) return;
+  if (r.id) highlightActiveStationRow(r.id);
   // Keep Basin Metrics open while flying and highlighting target
   if (typeof closeMapMenu === 'function') {
     closeMapMenu();
@@ -5817,7 +5816,7 @@ function formatCanalPopupHtml(t) {
     : `https://waterservices.usgs.gov/nwis/iv/?sites=${t.id}&parameterCd=00060&format=json`;
   const pyCode = `import requests
 
-# ${t.id === "09522000" ? "USGS / CILA Border Station" : "USGS Canal Telemetry Station"} #${t.id}
+# ${t.id === "09522000" ? "USGS / CILA Border Station" : "USGS Canal Monitoring Station"} #${t.id}
 url = "${isDvStation ? "https://waterservices.usgs.gov/nwis/dv/" : "https://waterservices.usgs.gov/nwis/iv/"}"
 params = {
     "sites": "${t.id}",       # ${cleanCName}
@@ -5830,14 +5829,14 @@ try:
     flow_cfs = float(val["value"])
     print(f"${cleanCName}: {flow_cfs:,.0f} cfs at {val['dateTime']}")
 except Exception as e:
-    print(f"${cleanCName}: Telemetry offline or inactive ({e})")`;
+    print(f"${cleanCName}: Station offline or inactive ({e})")`;
 
   return formatTabbedPopup({
     dataHtml,
     codeTitle: t.id === "09522000" ? `USGS / CILA Border Station #${t.id}` : `USGS Canal #${t.id}`,
     endpointUrl: endpoint,
     pythonCode: pyCode,
-    notes: t.id === "09522000" ? "1944 Treaty international diversion telemetry at Morelos Dam." : (isOffline ? "Gage discontinued by USGS NWIS in Oct 2022." : "Major conveyance canal telemetry.")
+    notes: t.id === "09522000" ? "1944 Treaty international diversion monitoring at Morelos Dam." : (isOffline ? "Gage discontinued by USGS NWIS in Oct 2022." : "Major conveyance canal monitoring.")
   });
 }
 
@@ -5877,7 +5876,7 @@ function formatReservoirDetailPopup(matchRes, cleanName) {
     endpointUrl = `https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeseriesday/?abbrev=${resAbbrev}&format=json`;
     pyCode = `import requests
 
-# Colorado DWR HydroBase Storage Telemetry
+# Colorado DWR HydroBase Storage Records
 url = "https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeseriesday/"
 params = {
     "abbrev": "${resAbbrev}",  # ${cleanResName}
@@ -5886,13 +5885,13 @@ params = {
 res = requests.get(url, params=params, timeout=10).json()
 reading = res["ResultList"][0]
 print(f"${cleanResName}: {reading['measValue']} AF on {reading['measDate']}")`;
-    notes = "Colorado DWR daily reservoir storage accounting & dam telemetry.";
+    notes = "Colorado DWR daily reservoir storage accounting & dam records.";
   } else {
     const usgsGauge = matchRes.id === 'lake_powell' ? '09379900' : (matchRes.id === 'lake_mead' ? '09421000' : '09379900');
     endpointUrl = `https://waterservices.usgs.gov/nwis/iv/?sites=${usgsGauge}&parameterCd=62614&format=json`;
     pyCode = `import requests
 
-# USGS Lake Elevation & USBR HydroData Telemetry
+# USGS Lake Elevation & USBR HydroData Records
 url = "https://waterservices.usgs.gov/nwis/iv/"
 params = {
     "sites": "${usgsGauge}",       # ${cleanResName}
