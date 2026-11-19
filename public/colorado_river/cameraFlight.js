@@ -37,6 +37,7 @@
     root.CameraStateMachine = exports.CameraStateMachine;
     root.safeFlyTo = exports.safeFlyTo;
     root.safeEaseTo = exports.safeEaseTo;
+    root.enforceTerrainClearance = exports.enforceTerrainClearance;
     root.initKeyboardFlight = exports.initKeyboardFlight;
     root.useKeyboardFlight = exports.useKeyboardFlight;
   }
@@ -79,8 +80,8 @@
   }
 
   var CAMERA_CONSTANTS = {
-    MIN_CAMERA_CLEARANCE_METERS: 25.0, // Ground collision floor (Pitfall 5)
-    MIN_ZOOM_CLEARANCE_METERS: 25.0,
+    MIN_CAMERA_CLEARANCE_METERS: 35.0, // Ground collision floor (Pitfall 5)
+    MIN_ZOOM_CLEARANCE_METERS: 35.0,
     LOOKAHEAD_SECONDS: 0.6, // 0.6-second predictive lookahead
     MIN_PITCH_DEG: 0,
     MAX_PITCH_DEG: 82,
@@ -172,6 +173,35 @@
   }
 
   /**
+   * Enforces terrain collision safety floor without camera bobbing.
+   * If the ground directly beneath the camera rises within
+   * MIN_CAMERA_CLEARANCE_METERS of current camera altitude, ratchets
+   * transform.elevation upward to safely clear the obstacle.
+   * When terrain drops (valleys/canyons), elevation is held constant.
+   */
+  function enforceTerrainClearance(mapInstance) {
+    if (!mapInstance || typeof mapInstance.getTerrain !== 'function' || !mapInstance.getTerrain() || mapInstance.getPitch() <= 5) return;
+    var tr = (mapInstance._camera && mapInstance._camera.transform) || mapInstance.transform;
+    if (!tr) return;
+
+    var camPos = tr.getCameraPosition ? tr.getCameraPosition() : null;
+    if (!camPos || !camPos.lngLat || !isFinite(camPos.altitude)) return;
+
+    var groundUnderCam = mapInstance.queryTerrainElevation ? mapInstance.queryTerrainElevation(camPos.lngLat) : null;
+    if (groundUnderCam === null || groundUnderCam === undefined || !isFinite(groundUnderCam)) return;
+
+    var minClearance = CAMERA_CONSTANTS.MIN_CAMERA_CLEARANCE_METERS;
+    var requiredAlt = groundUnderCam + minClearance;
+    if (requiredAlt > camPos.altitude) {
+      var deltaH = requiredAlt - camPos.altitude;
+      tr.elevation = (tr.elevation || 0) + deltaH;
+      if (typeof mapInstance.triggerRepaint === 'function') {
+        mapInstance.triggerRepaint();
+      }
+    }
+  }
+
+  /**
    * SECTION 1.2: SAFE NAVIGATION WRAPPERS
    * safeFlyTo & safeEaseTo with coordinate validation, ground clamping,
    * FSM state tracking, and progressive pitch ceiling enforcement.
@@ -201,6 +231,10 @@
     var onEnd = function () {
       if (CameraStateMachine.getMode() === 'flyto') {
         CameraStateMachine.setMode('idle');
+      }
+      if (mapInstance && typeof mapInstance.getPitch === 'function' && mapInstance.getPitch() > 5 && mapInstance.getTerrain && mapInstance.getTerrain()) {
+        mapInstance._elevationFreeze = true;
+        enforceTerrainClearance(mapInstance);
       }
     };
     mapInstance.once('moveend', onEnd);
@@ -240,6 +274,10 @@
       var onEnd = function () {
         if (CameraStateMachine.getMode() === 'flyto') {
           CameraStateMachine.setMode('idle');
+        }
+        if (mapInstance && typeof mapInstance.getPitch === 'function' && mapInstance.getPitch() > 5 && mapInstance.getTerrain && mapInstance.getTerrain()) {
+          mapInstance._elevationFreeze = true;
+          enforceTerrainClearance(mapInstance);
         }
       };
       mapInstance.once('moveend', onEnd);
@@ -552,45 +590,20 @@
       // 4. Vertical Altitude Elevator (Q / E or PageDown / PageUp)
       // True vertical elevator: changes altitude straight up/down without lateral drift
       if (altitudeDelta !== 0) {
-        var curCenter2 = map.getCenter();
-        var curBearing2 = map.getBearing();
-        var curPitch2 = map.getPitch();
         var curCamLngLat2 = info.camLngLat;
         var groundUnderCam2 = map.queryTerrainElevation ? (map.queryTerrainElevation(curCamLngLat2) || 0) : 0;
-        var groundUnderCenter2 = info.groundElevation;
         var deltaAltMeters = altitudeDelta * (speedMps * 0.75) * dt;
 
         var targetCamAlt = heldFlightAltitude + deltaAltMeters;
         var minAllowedCamAlt = groundUnderCam2 + CAMERA_CONSTANTS.MIN_CAMERA_CLEARANCE_METERS;
 
-        if (!(deltaAltMeters < 0 && targetCamAlt < minAllowedCamAlt)) {
-          var nextCamAlt = Math.max(minAllowedCamAlt, targetCamAlt);
-          var pitchRad = (curPitch2 * Math.PI) / 180;
-          var bearingRad = (curBearing2 * Math.PI) / 180;
-
-          var prevHeightAboveGround = Math.max(10, heldFlightAltitude - groundUnderCenter2);
-          var nextHeightAboveGround = Math.max(10, nextCamAlt - groundUnderCenter2);
-
-          var zoomAdjust = -Math.log2(nextHeightAboveGround / prevHeightAboveGround);
-          var nextZoomElev = Math.max(1.0, Math.min(20.5, map.getZoom() + zoomAdjust));
-
-          // Offset center horizontally so ground focal intersection stays fixed along bearing vector
-          var deltaGroundDist = (nextHeightAboveGround - prevHeightAboveGround) * Math.tan(pitchRad);
-          var deltaEastElev = deltaGroundDist * Math.sin(bearingRad);
-          var deltaNorthElev = deltaGroundDist * Math.cos(bearingRad);
-
-          var metersPerDegLatElev = CAMERA_CONSTANTS.METERS_PER_DEG_LAT;
-          var latRadElev = (curCenter2.lat * Math.PI) / 180;
-          var metersPerDegLngElev = metersPerDegLatElev * Math.max(0.1, Math.cos(latRadElev));
-
-          var nextCenterLatElev = Math.max(-85, Math.min(85, curCenter2.lat + deltaNorthElev / metersPerDegLatElev));
-          var nextCenterLngElev = curCenter2.lng + deltaEastElev / metersPerDegLngElev;
-
-          heldFlightAltitude = nextCamAlt;
-          map.jumpTo({
-            center: [nextCenterLngElev, nextCenterLatElev],
-            zoom: nextZoomElev
-          });
+        if (deltaAltMeters > 0 || targetCamAlt >= minAllowedCamAlt) {
+          var trElev = (map._camera && map._camera.transform) || map.transform;
+          if (trElev) {
+            trElev.elevation = (trElev.elevation || 0) + deltaAltMeters;
+            heldFlightAltitude = targetCamAlt;
+            if (typeof map.triggerRepaint === 'function') map.triggerRepaint();
+          }
         }
       }
 
@@ -626,16 +639,21 @@
         var lookCamLng = camLngLatH.lng + lookEastMeters / mPerDegLngH;
 
         var maxGroundCam = sampleTerrainObstacle(map, nextCamLng, nextCamLat, lookCamLng, lookCamLat);
-        var groundCenter = map.queryTerrainElevation ? (map.queryTerrainElevation([disp.nextLng, disp.nextLat]) || 0) : 0;
-        var highestObstacle = Math.max(maxGroundCam, groundCenter, info.groundElevation);
+        var minAllowedAltH = maxGroundCam + CAMERA_CONSTANTS.MIN_CAMERA_CLEARANCE_METERS;
 
-        var minAllowedAltH = highestObstacle + CAMERA_CONSTANTS.MIN_CAMERA_CLEARANCE_METERS;
+        // Ensure elevation freeze is active so MapLibre does not track terrain under center
+        map._elevationFreeze = true;
+
         if (minAllowedAltH > heldFlightAltitude) {
+          var deltaElev = minAllowedAltH - heldFlightAltitude;
           heldFlightAltitude = minAllowedAltH;
+          var trH = (map._camera && map._camera.transform) || map.transform;
+          if (trH) {
+            trH.elevation = (trH.elevation || 0) + deltaElev;
+          }
         }
 
         map.jumpTo({ center: [disp.nextLng, disp.nextLat] });
-        adjustZoomForTargetAltitude(map, heldFlightAltitude);
       }
 
       try {
@@ -697,7 +715,11 @@
       stopFlight(true);
     }
 
-    function onDragStart() {
+    function onPanStart() {
+      if (map.getPitch() > 5 && map.getTerrain && map.getTerrain()) {
+        map._elevationFreeze = true;
+        enforceTerrainClearance(map);
+      }
       if (CameraStateMachine.getMode() === 'flyto') {
         CameraStateMachine.cancelProgrammaticFlight(map);
       }
@@ -706,8 +728,19 @@
       }
     }
 
-    function onDragEnd() {
-      // Clean settlement after drag
+    function onPanMove() {
+      if (map.getPitch() > 5 && map.getTerrain && map.getTerrain()) {
+        map._elevationFreeze = true;
+        enforceTerrainClearance(map);
+      }
+    }
+
+    function onPanEnd() {
+      if (map.getPitch() > 5 && map.getTerrain && map.getTerrain()) {
+        map._elevationFreeze = true;
+        enforceTerrainClearance(map);
+      }
+      enforceProgressivePitch();
     }
 
     // SECTION 6 & PITFALL 4: Guard synchronous pitch corrections inside moveend and zoom
@@ -734,9 +767,12 @@
     window.addEventListener('focus', stopFlightOnBlur);
     document.addEventListener('visibilitychange', stopFlightOnBlur);
 
-    map.on('dragstart', onDragStart);
-    map.on('dragend', onDragEnd);
-    map.on('moveend', enforceProgressivePitch);
+    map.on('movestart', onPanStart);
+    map.on('move', onPanMove);
+    map.on('dragstart', onPanStart);
+    map.on('drag', onPanMove);
+    map.on('dragend', onPanEnd);
+    map.on('moveend', onPanEnd);
     map.on('zoom', enforceProgressivePitch);
 
     var canvasContainer = map.getCanvasContainer ? map.getCanvasContainer() : map.getContainer();
@@ -1013,9 +1049,12 @@
       window.removeEventListener('focus', stopFlightOnBlur);
       document.removeEventListener('visibilitychange', stopFlightOnBlur);
 
-      map.off('dragstart', onDragStart);
-      map.off('dragend', onDragEnd);
-      map.off('moveend', enforceProgressivePitch);
+      map.off('movestart', onPanStart);
+      map.off('move', onPanMove);
+      map.off('dragstart', onPanStart);
+      map.off('drag', onPanMove);
+      map.off('dragend', onPanEnd);
+      map.off('moveend', onPanEnd);
       map.off('zoom', enforceProgressivePitch);
 
       if (canvasContainer) {
@@ -1056,12 +1095,9 @@
   initKeyboardFlight.CameraStateMachine = CameraStateMachine;
   initKeyboardFlight.safeFlyTo = safeFlyTo;
   initKeyboardFlight.safeEaseTo = safeEaseTo;
+  initKeyboardFlight.enforceTerrainClearance = enforceTerrainClearance;
+  initKeyboardFlight.initKeyboardFlight = initKeyboardFlight;
+  initKeyboardFlight.useKeyboardFlight = initKeyboardFlight;
 
-  return {
-    CameraStateMachine: CameraStateMachine,
-    safeFlyTo: safeFlyTo,
-    safeEaseTo: safeEaseTo,
-    initKeyboardFlight: initKeyboardFlight,
-    useKeyboardFlight: initKeyboardFlight
-  };
+  return initKeyboardFlight;
 });
