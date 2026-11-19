@@ -639,6 +639,8 @@
               ticks: {
                 autoSkip: false,
                 align: 'inner',
+                maxRotation: 0,
+                minRotation: 0,
                 callback: (v) => {
                   if (Math.abs(v - 0.0) < 0.05) return 'Steady / Dam';
                   if (Math.abs(v - 0.8) < 0.05) return 'Desert Flash';
