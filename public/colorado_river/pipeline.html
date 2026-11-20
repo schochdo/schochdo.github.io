@@ -274,12 +274,10 @@
 
           <!-- 1. Background State Boundaries & Regional Watermarks -->
           <g id="state-layer">
-            <!-- WY-UT/CO border (41st parallel) -->
-            <line x1="360" y1="82" x2="1240" y2="82" class="state-line" />
+            <!-- WY-UT/CO border (41st/42nd parallel, spans entire Upper Basin) -->
+            <line x1="80" y1="82" x2="1240" y2="82" class="state-line" />
             <!-- UT-CO border (109th meridian) -->
             <line x1="900" y1="82" x2="900" y2="351" class="state-line" />
-            <!-- NV-UT border (114th meridian from 42° N to 37° N) -->
-            <line x1="360" y1="82" x2="360" y2="351" class="state-line" />
             <!-- UT/AZ border (37th parallel) -->
             <line x1="360" y1="351" x2="900" y2="351" class="state-line" />
             <!-- CO-NM border (37th parallel) -->
@@ -287,27 +285,34 @@
             <!-- AZ-NM border (109th meridian) -->
             <line x1="900" y1="351" x2="900" y2="671" class="state-line" />
 
-            <!-- NV-AZ border: 114th meridian drops south from 37th parallel into Lake Mead, then runs down river through Hoover Dam -->
-            <path d="M 360,351 L 360,430 L 480,515" class="state-line" />
-            <line x1="480" y1="515" x2="480" y2="575" class="state-line" stroke="#94a3b8" stroke-dasharray="4 4" />
+            <!-- NV-UT & NV-AZ border: 114th meridian runs straight south from 42° N down to Lake Mead -->
+            <line x1="360" y1="82" x2="360" y2="520" class="state-line" />
+            <!-- Lake Mead to Hoover Dam transition -->
+            <path d="M 360,520 Q 405,535 480,561" class="state-line" />
 
-            <!-- NV-CA diagonal border (from Colorado River at ~35° N near Laughlin/Needles northwest toward Lake Tahoe) -->
-            <line x1="480" y1="575" x2="140" y2="370" class="state-line" />
+            <!-- River border: Hoover Dam to southern tip of NV (~35° N near Laughlin) -->
+            <line x1="480" y1="561" x2="480" y2="580" class="state-line" stroke="#94a3b8" stroke-dasharray="4 4" />
 
-            <!-- CA-AZ border (down the Colorado River from ~35° N to Mexican Border) -->
-            <line x1="480" y1="575" x2="480" y2="671" class="state-line" stroke="#94a3b8" stroke-dasharray="4 4" />
+            <!-- NV-CA diagonal border: from Colorado River at ~35° N northwest to Lake Tahoe (39° N, 120° W) -->
+            <line x1="480" y1="580" x2="80" y2="250" class="state-line" />
+
+            <!-- NV-CA western border: 120th meridian from Lake Tahoe north to 42° N (Oregon border) -->
+            <line x1="80" y1="250" x2="80" y2="82" class="state-line" />
+
+            <!-- CA-AZ border: down the Colorado River from ~35° N to Mexican Border -->
+            <line x1="480" y1="580" x2="480" y2="671" class="state-line" stroke="#94a3b8" stroke-dasharray="4 4" />
 
             <!-- US-Mexico International Boundary -->
-            <line x1="120" y1="671" x2="900" y2="671" class="state-line" stroke-width="1.8" stroke="#fca5a5" />
+            <line x1="60" y1="671" x2="900" y2="671" class="state-line" stroke-width="1.8" stroke="#fca5a5" />
 
             <!-- State Watermark Names (Positioned accurately inside each state jurisdiction) -->
             <text id="state-wy" x="750" y="32" class="state-name" text-anchor="middle">WYOMING</text>
             <text id="state-co" x="1140" y="225" class="state-name" text-anchor="middle">COLORADO</text>
             <text id="state-ut" x="465" y="160" class="state-name" text-anchor="middle">UTAH</text>
             <text id="state-nm" x="1070" y="415" class="state-name" text-anchor="middle">NEW MEXICO</text>
-            <text id="state-nv" x="250" y="390" class="state-name" text-anchor="middle">NEVADA</text>
+            <text id="state-nv" x="220" y="340" class="state-name" text-anchor="middle">NEVADA</text>
             <text id="state-az" x="790" y="550" class="state-name" text-anchor="middle">ARIZONA</text>
-            <text id="state-ca" x="150" y="450" class="state-name text-[12px]" text-anchor="middle">CALIFORNIA</text>
+            <text id="state-ca" x="130" y="440" class="state-name text-[12px]" text-anchor="middle">CALIFORNIA</text>
             <text id="state-baja" x="240" y="715" class="state-name text-[11px]" text-anchor="middle">BAJA CALIFORNIA</text>
             <text id="state-mex" x="830" y="715" class="state-name text-[11px]" text-anchor="middle">MEXICO</text>
           </g>
@@ -404,10 +409,10 @@
             <!-- Upper Green River (Headwaters to Yampa Confluence - 3.60 MAF) -->
             <path id="river-green-upper" class="river-path" d="M 580,36 L 580,182" stroke="#0284c7" stroke-width="12.4" />
             <g id="card-green-river" transform="translate(305, 34)">
-              <rect x="0" y="0" width="250" height="52" rx="6" fill="#ffffff" fill-opacity="0.95" stroke="#0284c7" stroke-width="1.5" filter="drop-shadow(0 2px 6px rgba(2,132,199,0.12))"/>
+              <rect x="0" y="0" width="260" height="52" rx="6" fill="#ffffff" fill-opacity="0.95" stroke="#0284c7" stroke-width="1.5" filter="drop-shadow(0 2px 6px rgba(2,132,199,0.12))"/>
               <text x="12" y="18" fill="#0c4a6e" font-size="13" font-weight="900">Green River (4.90 MAF)</text>
               <text x="12" y="32" fill="#0f172a" font-size="10.5" font-weight="800">Wind River Range &bull; Flaming Gorge</text>
-              <text x="12" y="45" fill="#475569" font-size="9.5" font-weight="600">Upper Green: 3.60 MAF &bull; Delivers ~40% of Powell Flow</text>
+              <text x="12" y="45" fill="#475569" font-size="9" font-weight="600">Upper Green: 3.60 MAF &bull; ~40% of Powell Inflow</text>
             </g>
 
             <!-- Yampa River (CO -> Green River - 1.30 MAF) -->
@@ -478,10 +483,10 @@
 
             <!-- Virgin River (0.18 MAF) -->
             <path id="river-virgin" class="river-path" d="M 380,455 L 480,543" stroke="#0284c7" stroke-width="4.3" />
-            <text x="360" y="438" fill="#0284c7" font-size="11" font-weight="700" text-anchor="end">Virgin River</text>
-            <text x="360" y="451" fill="#475569" font-size="9" font-weight="500" text-anchor="end">Zion NP &amp; Utah/Nevada</text>
-            <rect x="300" y="457" width="58" height="17" rx="4" class="badge-bg blue" />
-            <text x="329" y="466" class="maf-badge badge-text-blue text-[8.5px]">0.18 MAF</text>
+            <text x="348" y="438" fill="#0284c7" font-size="11" font-weight="700" text-anchor="end">Virgin River</text>
+            <text x="348" y="451" fill="#475569" font-size="9" font-weight="500" text-anchor="end">Zion NP &amp; Utah/Nevada</text>
+            <rect x="290" y="457" width="58" height="17" rx="4" class="badge-bg blue" />
+            <text x="319" y="466" class="maf-badge badge-text-blue text-[8.5px]">0.18 MAF</text>
 
             <!-- Lake Mead Reservoir Body (In-line on River at x=480) -->
             <g id="reservoir-mead-group" class="cursor-pointer">
@@ -602,7 +607,7 @@
 
           <!-- 6. Compact Legend Box -->
           <g id="legend-box" transform="translate(35, 18)">
-            <rect x="0" y="0" width="240" height="180" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2" filter="drop-shadow(0 3px 12px rgba(15, 23, 42, 0.05))" />
+            <rect x="0" y="0" width="258" height="182" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2" filter="drop-shadow(0 3px 12px rgba(15, 23, 42, 0.05))" />
             <text x="16" y="20" fill="#0f172a" font-size="12" font-weight="900" letter-spacing="0.04em">Legend</text>
             <text x="16" y="33" fill="#64748b" font-size="8" font-weight="700" letter-spacing="0.04em">FLOW WIDTHS (MAF/YR) &amp; POOLS (MAF)</text>
             
@@ -622,8 +627,8 @@
             <text x="58" y="120" fill="#1e293b" font-size="10.5" font-weight="600">Reservoir Evaporation &amp; Loss</text>
 
             <text x="16" y="140" fill="#0369a1" font-size="8.5" font-weight="700">Scaling: Width = 2.0 + 5.5 &times; &radic;MAF (px)</text>
-            <text x="16" y="153" fill="#0f766e" font-size="8" font-weight="600">Continuity: Downstream = Upstream + Tribs &minus; Divs &minus; Losses</text>
-            <text x="16" y="166" fill="#64748b" font-size="8" font-weight="500">Click any feature to inspect live operational data ↗</text>
+            <text x="16" y="153" fill="#0f766e" font-size="8" font-weight="600">Mass-Balance: Mainstem + Tribs &minus; Divs &minus; Losses</text>
+            <text x="16" y="166" fill="#64748b" font-size="8" font-weight="500">Click any feature to inspect live operational data &nearr;</text>
           </g>
         </svg>
 
