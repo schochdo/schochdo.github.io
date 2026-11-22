@@ -288,7 +288,7 @@ window.switchPopupTab = switchPopupTab;
 
 function copyPopupCode(btn, ev) {
   if (ev) ev.stopPropagation();
-  const container = btn.closest('.popup-code-box') || btn.closest('.code-snippet-box');
+  const container = btn.closest('.popup-pane-code') || btn.closest('.popup-code-box') || btn.closest('.code-snippet-box');
   const codeEl = container?.querySelector('pre code');
   if (!codeEl) return;
   const text = codeEl.innerText;
@@ -329,11 +329,13 @@ function formatTabbedPopup({ dataHtml, codeTitle, endpointUrl, pythonCode, notes
         ${dataHtml}
       </div>
       <div class="popup-pane-code" style="display:none;">
-        <div style="font-size:11px; font-weight:700; color:#0f172a; margin-bottom:4px;">${codeTitle || 'Python Query'}</div>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:4px;">
+          <div style="font-size:11px; font-weight:700; color:#0f172a;">${codeTitle || 'Python Query'}</div>
+          <button class="popup-copy-btn" onclick="copyPopupCode(this, event)" style="background:#ffffff; border:1px solid #cfc8ba; color:#4f463a; font-size:9.5px; border-radius:2px; padding:2px 7px; cursor:pointer; font-weight:600; flex-shrink:0;">Copy</button>
+        </div>
         ${notes ? `<div style="font-size:10.5px; color:#5c5346; margin-bottom:6px; line-height:1.35;">${notes}</div>` : ''}
-        <div class="popup-code-box" style="position:relative; background:#f2ede2; border:1px solid #cfc8ba; border-radius:2px; padding:8px; overflow:hidden;">
-          <button onclick="copyPopupCode(this, event)" style="position:absolute; top:4px; right:4px; background:#ffffff; border:1px solid #cfc8ba; color:#4f463a; font-size:9.5px; border-radius:2px; padding:2px 6px; cursor:pointer; font-weight:600;">Copy</button>
-          <pre style="margin:0; font-family:ui-monospace,Menlo,monospace; font-size:10.5px; color:#0f172a; line-height:1.4; max-height:160px; overflow-y:auto; white-space:pre-wrap;"><code>${cleanCode}</code></pre>
+        <div class="popup-code-box" style="background:#f2ede2; border:1px solid #cfc8ba; border-radius:2px; padding:8px; overflow:hidden;">
+          <pre style="margin:0; font-family:ui-monospace,Menlo,monospace; font-size:10.5px; color:#0f172a; line-height:1.4; max-height:160px; overflow-y:auto; white-space:pre-wrap; padding-right:4px;"><code>${cleanCode}</code></pre>
         </div>
         ${endpointUrl ? `<div style="margin-top:6px; font-size:10px; color:#5c5346; word-break:break-all;"><strong style="color:#4f463a;">Endpoint:</strong> <a href="${endpointUrl}" target="_blank" rel="noopener" style="color:#2b5c8f; text-decoration:none; font-weight:600;">REST API URL ↗</a></div>` : ''}
       </div>
