@@ -2288,21 +2288,21 @@ function getPortalInfo(item) {
   if (id === 'USBR-DAVIS' || id === 'USBR_DAVIS' || id === '09423000' || name.includes('davis dam')) {
     return {
       name: 'USBR Lower Colorado Water Operations',
-      url: 'https://www.usbr.gov/lc/region/g4000/hourly/hourly.html',
+      url: 'https://www.usbr.gov/lc/region/g4000/riverops/hourly7.html',
       label: 'USBR Hourly Dam Operations (Davis Dam)'
     };
   }
   if (id === 'USBR-HOOVER' || id === 'USBR_HOOVER' || id === '09421500' || name.includes('hoover dam')) {
     return {
       name: 'USBR Lower Colorado Water Operations',
-      url: 'https://www.usbr.gov/lc/region/g4000/hourly/hourly.html',
+      url: 'https://www.usbr.gov/lc/region/g4000/riverops/hourly7.html',
       label: 'USBR Hourly Dam Operations (Hoover Dam)'
     };
   }
   if (id === 'USBR-PARKER' || id === 'USBR_PARKER' || id === '09427520' || name.includes('parker dam')) {
     return {
       name: 'USBR Lower Colorado Water Operations',
-      url: 'https://www.usbr.gov/lc/region/g4000/hourly/hourly.html',
+      url: 'https://www.usbr.gov/lc/region/g4000/riverops/hourly7.html',
       label: 'USBR Hourly Dam Operations (Parker Dam)'
     };
   }
@@ -2388,7 +2388,7 @@ function getPortalInfo(item) {
     },
     lake_mohave: {
       name: 'USBR Lower Colorado River Operations',
-      url: 'https://www.usbr.gov/lc/region/g4000/hourly/mohave-elv.html',
+      url: 'https://www.usbr.gov/lc/region/g4000/hourly/levels.html',
       label: 'USBR Lake Mohave / Davis Dam Portal'
     },
     blue_mesa: {
@@ -2398,7 +2398,7 @@ function getPortalInfo(item) {
     },
     lake_havasu: {
       name: 'USBR Lower Colorado River Operations',
-      url: 'https://www.usbr.gov/lc/region/g4000/hourly/havasu-elv.html',
+      url: 'https://www.usbr.gov/lc/region/g4000/hourly/levels.html',
       label: 'USBR Lake Havasu / Parker Dam Portal'
     },
     dillon_reservoir: {
@@ -2408,7 +2408,7 @@ function getPortalInfo(item) {
     },
     lake_granby: {
       name: 'Northern Water / USBR C-BT Project',
-      url: 'https://www.northernwater.org/what-we-do/deliver-water/c-bt-project',
+      url: 'https://www.northernwater.org/what-we-do/deliver-water/colorado-big-thompson-project',
       label: 'Northern Water C-BT Granby Portal'
     },
     green_mountain: {
@@ -2438,7 +2438,7 @@ function getPortalInfo(item) {
     },
     parker_dam: {
       name: 'USBR Parker-Davis Project',
-      url: 'https://www.usbr.gov/lc/region/g4000/hourly/havasu-elv.html',
+      url: 'https://www.usbr.gov/lc/region/g4000/hourly/levels.html',
       label: 'USBR Parker Dam / Lake Havasu'
     },
     imperial_dam: {
@@ -2458,7 +2458,7 @@ function getPortalInfo(item) {
     },
     granby_dam: {
       name: 'Northern Water C-BT Project',
-      url: 'https://www.northernwater.org/what-we-do/deliver-water/c-bt-project',
+      url: 'https://www.northernwater.org/what-we-do/deliver-water/colorado-big-thompson-project',
       label: 'Northern Water Granby Dam'
     },
     ruedi_dam: {
@@ -2483,7 +2483,7 @@ function getPortalInfo(item) {
     },
     davis_dam: {
       name: 'USBR Parker-Davis Project',
-      url: 'https://www.usbr.gov/lc/region/g4000/hourly/mohave-elv.html',
+      url: 'https://www.usbr.gov/lc/region/g4000/hourly/levels.html',
       label: 'USBR Davis Dam / Lake Mohave'
     },
     morelos_dam: {
@@ -2493,7 +2493,7 @@ function getPortalInfo(item) {
     },
     blue_mesa_dam: {
       name: 'USBR Aspinall Unit',
-      url: 'https://www.usbr.gov/uc/rm/crsp/gunnison/',
+      url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/913/dashboard.html',
       label: 'USBR Blue Mesa Dam'
     },
     mcphee_dam: {
@@ -2503,7 +2503,7 @@ function getPortalInfo(item) {
     },
     theodore_roosevelt_dam: {
       name: 'Salt River Project (SRP) Water Operations',
-      url: 'https://www.srpnet.com/water-irrigation/water-operations',
+      url: 'https://www.srpnet.com/grid-water-management/water-management/where-water-from',
       label: 'SRP Roosevelt Dam Operations'
     }
   };
@@ -3714,11 +3714,11 @@ print(f"Canal Diversion: {flow_cfs:,.0f} cfs at {val['dateTime']}")`;
       const isUsbrReach = gaugeId.startsWith('USBR') || (p.name && p.name.includes('USBR'));
       const isCdssReach = gaugeId.endsWith('CO') || gaugeId.endsWith('TUNCO') || gaugeId.endsWith('DIVCO');
       if (isUsbrReach) {
-        endpointUrl = "https://www.usbr.gov/lc/region/g4000/hourly/hourly.html";
+        endpointUrl = "https://www.usbr.gov/lc/region/g4000/riverops/hourly7.html";
         pyCode = `import requests
 
 # USBR Lower Colorado River Operations Teletype
-url = "https://www.usbr.gov/lc/region/g4000/hourly/hourly.html"
+url = "https://www.usbr.gov/lc/region/g4000/riverops/hourly7.html"
 res = requests.get(url, timeout=10)
 # Managed hydroelectric release parsed from USBR RiverOps teletype
 print(f"${cleanReachName}: Hydroelectric release from USBR Lower Colorado Operations")`;
@@ -4365,7 +4365,7 @@ params = {
       const popupHtml = formatTabbedPopup({
         dataHtml,
         codeTitle: `${cleanDamName}`,
-        endpointUrl: portal?.url || 'https://www.usbr.gov/lc/region/g4000/hourly/hourly.html',
+        endpointUrl: portal?.url || 'https://www.usbr.gov/lc/region/g4000/riverops/hourly7.html',
         pythonCode: pyCode,
         notes: `Federal dam operations & tailwater release monitoring. Built ${d.year}.`
       });
@@ -4548,7 +4548,7 @@ function formatGaugePopup(s) {
     if (/^\d{8}$/.test(s.id)) {
       portalUrl = `https://waterdata.usgs.gov/monitoring-location/${s.id}/#parameterCode=00060`;
     } else if (isUsbr) {
-      portalUrl = 'https://www.usbr.gov/lc/region/g4000/hourly/hourly.html';
+      portalUrl = 'https://www.usbr.gov/lc/region/g4000/riverops/hourly7.html';
     } else if (isCdss) {
       portalUrl = `https://dwr.state.co.us/Tools/Stations?station=${encodeURIComponent(s.id)}`;
     } else {
@@ -4599,11 +4599,11 @@ function formatGaugePopup(s) {
 
   if (isUsbr) {
     codeTitle = `USBR Operations #${s.id}`;
-    endpointUrl = "https://www.usbr.gov/lc/region/g4000/hourly/hourly.html";
+    endpointUrl = "https://www.usbr.gov/lc/region/g4000/riverops/hourly7.html";
     pyCode = `import requests
 
 # USBR Lower Colorado River Operations Teletype
-url = "https://www.usbr.gov/lc/region/g4000/hourly/hourly.html"
+url = "https://www.usbr.gov/lc/region/g4000/riverops/hourly7.html"
 res = requests.get(url, timeout=10)
 # Managed hydroelectric release parsed hourly from the USBR RiverOps teletype table.
 print(f"Station: ${cleanName}")
@@ -4690,7 +4690,7 @@ function formatReservoirStationPopup(r) {
 
   const endpointUrl = isFrontRange
     ? `https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeseriesday/?abbrev=${r.id.toUpperCase()}&format=json`
-    : `https://www.usbr.gov/lc/region/g4000/hourly/hourly.html`;
+    : `https://www.usbr.gov/lc/region/g4000/riverops/hourly7.html`;
 
   const pyCode = isFrontRange ? `import requests
 

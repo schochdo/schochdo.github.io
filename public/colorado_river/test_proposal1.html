@@ -795,7 +795,7 @@
         summary: "Annual lower system losses: 1.40 MAF/yr (Lake Mead & lower reservoir surface evaporation: 0.90 MAF • River channel transit seepage and phreatophyte uptake: 0.50 MAF).",
         stationId: "lake_mead",
         stationLabel: "USBR Lower Colorado",
-        portalUrl: "https://www.usbr.gov/lc/region/g4000/hourly/hourly.html",
+        portalUrl: "https://www.usbr.gov/lc/region/g4000/riverops/hourly7.html",
         flowCfs: null,
         pctMean: null
       },
@@ -832,7 +832,7 @@
         summary: "Atmospheric evaporation from Lake Mead and Lake Powell water surfaces (~0.90 MAF) plus riparian evapotranspiration and channel seepage (~0.50 MAF).",
         stationId: "lake_powell",
         stationLabel: "USBR LC Operations",
-        portalUrl: "https://www.usbr.gov/lc/region/g4000/hourly/hourly.html",
+        portalUrl: "https://www.usbr.gov/lc/region/g4000/riverops/hourly7.html",
         flowCfs: null,
         pctMean: null
       },
@@ -906,7 +906,7 @@
         summary: "Senior run-of-the-river irrigation producing ~90% of US winter leafy greens in Yuma, Wellton-Mohawk, and Parker (~52% of AZ use).",
         stationId: "USBR-PARKER",
         stationLabel: "USBR Parker Dam Operations",
-        portalUrl: "https://www.usbr.gov/lc/region/g4000/hourly/hourly.html",
+        portalUrl: "https://www.usbr.gov/lc/region/g4000/riverops/hourly7.html",
         flowCfs: 1620,
         pctMean: "94%"
       },
@@ -1175,7 +1175,7 @@
         summary: "Senior run-of-the-river irrigation diversions for Palo Verde, Yuma Valley, and Wellton-Mohawk irrigation districts.",
         stationId: "USBR-PARKER",
         stationLabel: "USBR Parker / Imperial Operations",
-        portalUrl: "https://www.usbr.gov/lc/region/g4000/hourly/hourly.html",
+        portalUrl: "https://www.usbr.gov/lc/region/g4000/riverops/hourly7.html",
         flowCfs: 1620,
         pctMean: "94%"
       },
@@ -1220,7 +1220,7 @@
         summary: "Thalweg channel infiltration, phreatophyte evapotranspiration, and unmeasured operational losses on the lower river.",
         stationId: "USBR-HOOVER",
         stationLabel: "USBR Lower Colorado Water Accounting",
-        portalUrl: "https://www.usbr.gov/lc/region/g4000/hourly/hourly.html",
+        portalUrl: "https://www.usbr.gov/lc/region/g4000/riverops/hourly7.html",
         flowCfs: null,
         pctMean: null
       },
@@ -1276,7 +1276,7 @@
         summary: "Senior run-of-the-river irrigation producing ~90% of North America's winter leafy greens in Yuma, Wellton-Mohawk, and Parker (~52% of AZ use).",
         stationId: "USBR-PARKER",
         stationLabel: "USBR Parker Dam Tailwater",
-        portalUrl: "https://www.usbr.gov/lc/region/g4000/hourly/hourly.html",
+        portalUrl: "https://www.usbr.gov/lc/region/g4000/riverops/hourly7.html",
         flowCfs: 1620,
         pctMean: "94%"
       },
@@ -1348,7 +1348,7 @@
         summary: "Channel seepage into underlying alluvial aquifers and vegetative evapotranspiration by phreatophytes along the lower river corridor.",
         stationId: "USBR-HOOVER",
         stationLabel: "USBR River Accounting",
-        portalUrl: "https://www.usbr.gov/lc/region/g4000/hourly/hourly.html",
+        portalUrl: "https://www.usbr.gov/lc/region/g4000/riverops/hourly7.html",
         flowCfs: null,
         pctMean: null
       }
@@ -1380,7 +1380,7 @@
         if (/^\d{8}$/.test(meta.stationId)) {
           portalUrl = `https://waterdata.usgs.gov/monitoring-location/${meta.stationId}/#parameterCode=00060`;
         } else if (meta.stationId.startsWith('USBR')) {
-          portalUrl = 'https://www.usbr.gov/lc/region/g4000/hourly/hourly.html';
+          portalUrl = 'https://www.usbr.gov/lc/region/g4000/riverops/hourly7.html';
         } else if (meta.stationId.endsWith('CO')) {
           portalUrl = `https://dwr.state.co.us/Tools/Stations?station=${encodeURIComponent(meta.stationId)}`;
         }
