@@ -513,7 +513,7 @@
                 </div>
 
                 <!-- Reference Benchmarks Grid -->
-                <div class="grid grid-cols-4 gap-1.5 py-1.5 border-t border-[#e6e0d5] text-[10px] tabular-nums mt-1">
+                <div class="grid grid-cols-3 gap-1.5 py-1.5 border-t border-[#e6e0d5] text-[10px] tabular-nums mt-1">
                   <div>
                     <span class="text-[#64748b] block text-[9px]">Full Capacity:</span>
                     <strong class="text-[#0f172a] text-[10.5px]">~60.0 MAF</strong>
@@ -524,11 +524,7 @@
                   </div>
                   <div>
                     <span class="text-[#64748b] block text-[9px]">Today (2026):</span>
-                    <strong class="text-[#9e3f32] text-[10.5px]">~17.7 MAF (29.5%)</strong>
-                  </div>
-                  <div>
-                    <span class="text-[#64748b] block text-[9px]">Min Power Limit:</span>
-                    <strong class="text-[#c26d2d] text-[10.5px]">~6.0 MAF</strong>
+                    <strong class="text-[#9e3f32] text-[10.5px]">~17.6 MAF (29.3%)</strong>
                   </div>
                 </div>
 
@@ -662,7 +658,7 @@
             </div>
 
             <!-- Key System Volumetric Statistics Grid -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 my-4">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 my-4">
               <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
                 <span class="text-[10px] font-bold text-stone-500 uppercase block">Total System Capacity</span>
                 <span class="text-sm font-black text-stone-900 tabular-nums">~60.0 MAF</span>
@@ -674,14 +670,9 @@
                 <span class="text-[10px] text-stone-500 block">93.7% of total basin capacity</span>
               </div>
               <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
-                <span class="text-[10px] font-bold text-amber-600 uppercase block">Combined Min Power Limit</span>
-                <span class="text-sm font-black text-amber-800 tabular-nums">~6.0 MAF</span>
-                <span class="text-[10px] text-stone-500 block">Critical hydroelectric heads</span>
-              </div>
-              <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
                 <span class="text-[10px] font-bold text-emerald-600 uppercase block">Current Active Water</span>
-                <span id="metric-current-total-maf" class="text-sm font-black text-emerald-800 tabular-nums">~17.7 MAF</span>
-                <span class="text-[10px] text-stone-500 block">~29.5% combined system fullness</span>
+                <span id="metric-current-total-maf" class="text-sm font-black text-emerald-800 tabular-nums">~17.6 MAF</span>
+                <span class="text-[10px] text-stone-500 block">~29.3% combined system fullness</span>
               </div>
             </div>
 
@@ -2138,8 +2129,7 @@
             plugins: {
               horizontalThresholdPlugin: {
                 lines: [
-                  { value: 60.0, customLabel: 'Full System Capacity (~60.0 MAF)', color: '#475569', textColor: '#334155', dash: [6, 4], noBox: true },
-                  { value: 6.0, customLabel: 'Min Power Pool Limit (~6.0 MAF)', color: '#c26d2d', textColor: '#9a4f1b', dash: [5, 3], noBox: true }
+                  { value: 60.0, customLabel: 'Full System Capacity (~60.0 MAF)', color: '#475569', textColor: '#334155', dash: [6, 4], noBox: true }
                 ]
               },
               legend: {
@@ -2326,19 +2316,6 @@
           textColor: '#0f172a', 
           width: 1.0, 
           dash: [6, 4],
-          noBox: true,
-          font: { size: 11, weight: '600' },
-          position: 'end',
-          xAdjust: -6,
-          yAdjust: -8
-        },
-        { 
-          value: 6.0, 
-          customLabel: 'Combined Min Power Limit (~6.0 MAF)', 
-          color: '#b91c1c', 
-          textColor: '#991b1b', 
-          width: 1.5, 
-          dash: [5, 3],
           noBox: true,
           font: { size: 11, weight: '600' },
           position: 'end',
