@@ -86,7 +86,7 @@
       background: #ffffff;
       border: 1px solid #cbd5e1;
       border-radius: 3px;
-      padding: 10px 12px;
+      padding: 9px 11px;
       font-size: 11px;
       color: #0f172a;
       pointer-events: auto;
@@ -94,9 +94,11 @@
       transform: translateY(4px);
       transition: opacity 0.15s ease, transform 0.15s ease;
       z-index: 1000;
-      max-width: 320px;
+      max-width: min(300px, calc(100vw - 24px));
+      box-sizing: border-box;
+      overflow-wrap: break-word;
       box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
-      line-height: 1.4;
+      line-height: 1.35;
     }
     #sankey-tooltip.visible {
       opacity: 1;
@@ -108,17 +110,19 @@
       background: #ffffff;
       border: 1px solid #cfc8ba;
       border-radius: 2px;
-      padding: 10px 12px;
-      font-size: 11.5px;
+      padding: 9px 11px;
+      font-size: 11px;
       color: #0f172a;
       pointer-events: none;
       opacity: 0;
       transform: translateY(4px);
       transition: opacity 0.12s ease, transform 0.12s ease;
       z-index: 1000;
-      max-width: 340px;
+      max-width: min(300px, calc(100vw - 24px));
+      box-sizing: border-box;
+      overflow-wrap: break-word;
       box-shadow: 0 4px 10px -1px rgba(15, 23, 42, 0.12), 0 2px 4px -2px rgba(15, 23, 42, 0.06);
-      line-height: 1.4;
+      line-height: 1.35;
       display: none;
     }
     #stacked-tooltip.visible {
@@ -349,7 +353,7 @@
                 <!-- 1. Upper CO Mainstem: 4.00 MAF = 96px -->
                 <div class="bar-segment w-full bg-[#0284c7] border-t border-sky-700/40 flex flex-col justify-center px-2 text-white font-bold cursor-pointer transition"
                      style="height: 96px;"
-                     onmouseenter="inspectStackedSegment('Upper Colorado Mainstem Headwaters', '4.00 MAF/yr (5,525 cfs)', '26.3% of Basin Natural Runoff', 'Alpine snowmelt originating in Rocky Mountain National Park, Fraser, Blue, and Eagle rivers above Dotsero. The primary snowmelt engine.', 'Physical Inflow')"
+                     onmouseenter="inspectStackedSegment('Upper Colorado Mainstem Headwaters', '4.00 MAF/yr (5,525 cfs)', '26.3% of Basin Natural Runoff', 'Alpine snowmelt from RMNP, Fraser, Blue & Eagle above Dotsero.', 'Physical Inflow')"
                      onmouseleave="clearStackedInspect()">
                   <span class="text-[11px] leading-tight">Mainstem Headwaters</span>
                   <span class="text-[10px] font-normal opacity-90 tabular-nums">4.00 MAF (26.3%)</span>
@@ -358,7 +362,7 @@
                 <!-- 2. Green River Basin: 4.90 MAF = 117.6px -->
                 <div class="bar-segment w-full bg-[#0369a1] border-t border-sky-800/40 flex flex-col justify-center px-2 text-white font-bold cursor-pointer transition"
                      style="height: 117.6px;"
-                     onmouseenter="inspectStackedSegment('Green River Basin (WY/UT/CO)', '4.90 MAF/yr (6,768 cfs)', '32.2% of Basin Natural Runoff', 'Wind River Range, Flaming Gorge, undammed Yampa River (1.30 MAF), and White River. The largest single Upper Basin tributary system.', 'Physical Inflow')"
+                     onmouseenter="inspectStackedSegment('Green River Basin (WY/UT/CO)', '4.90 MAF/yr (6,768 cfs)', '32.2% of Basin Natural Runoff', 'Wind River Range, Flaming Gorge, Yampa (1.30 MAF) & White rivers.', 'Physical Inflow')"
                      onmouseleave="clearStackedInspect()">
                   <span class="text-[11px] leading-tight">Green River Basin</span>
                   <span class="text-[10px] font-normal opacity-90 tabular-nums">4.90 MAF (32.2%)</span>
@@ -367,7 +371,7 @@
                 <!-- 3. Gunnison River: 2.10 MAF = 50.4px -->
                 <div class="bar-segment w-full bg-[#0ea5e9] border-t border-sky-600/40 flex flex-col justify-center px-2 text-white font-bold cursor-pointer transition"
                      style="height: 50.4px;"
-                     onmouseenter="inspectStackedSegment('Gunnison River Basin', '2.10 MAF/yr (2,901 cfs)', '13.8% of Basin Natural Runoff', 'West Slope Colorado snowpack, Blue Mesa Reservoir, and Aspinall Unit storage into Grand Junction confluence.', 'Physical Inflow')"
+                     onmouseenter="inspectStackedSegment('Gunnison River Basin', '2.10 MAF/yr (2,901 cfs)', '13.8% of Basin Natural Runoff', 'West Slope snowpack & Aspinall Unit into Grand Junction.', 'Physical Inflow')"
                      onmouseleave="clearStackedInspect()">
                   <span class="text-[10.5px] leading-tight">Gunnison River</span>
                   <span class="text-[9.5px] font-normal opacity-90 tabular-nums">2.10 MAF (13.8%)</span>
@@ -376,7 +380,7 @@
                 <!-- 4. San Juan River: 2.10 MAF = 50.4px -->
                 <div class="bar-segment w-full bg-[#38bdf8] border-t border-sky-400/40 flex flex-col justify-center px-2 text-stone-900 font-bold cursor-pointer transition"
                      style="height: 50.4px;"
-                     onmouseenter="inspectStackedSegment('San Juan River Basin', '2.10 MAF/yr (2,901 cfs)', '13.8% of Basin Natural Runoff', 'San Juan Mountains in Southwest Colorado and Northwest New Mexico, Navajo Dam and Animas River into Lake Powell.', 'Physical Inflow')"
+                     onmouseenter="inspectStackedSegment('San Juan River Basin', '2.10 MAF/yr (2,901 cfs)', '13.8% of Basin Natural Runoff', 'San Juan Mtns, Navajo Dam & Animas River into Lake Powell.', 'Physical Inflow')"
                      onmouseleave="clearStackedInspect()">
                   <span class="text-[10.5px] leading-tight">San Juan River</span>
                   <span class="text-[9.5px] font-semibold text-stone-700 tabular-nums">2.10 MAF (13.8%)</span>
@@ -385,7 +389,7 @@
                 <!-- 5. Dolores & Upper Minor Tribs: 0.80 MAF = 19.2px -->
                 <div class="bar-segment w-full bg-[#7dd3fc] border-t-2 border-amber-500 flex items-center justify-between px-2 text-stone-900 text-[10px] font-bold cursor-pointer transition"
                      style="height: 19.2px;"
-                     onmouseenter="inspectStackedSegment('Dolores &amp; Minor Upper Tribs', '0.80 MAF/yr (1,105 cfs)', '5.3% of Basin Natural Runoff', 'Dolores River, Escalante, Dirty Devil, and minor headwater drainages upstream of Lee\'s Ferry.', 'Physical Inflow')"
+                     onmouseenter="inspectStackedSegment('Dolores &amp; Minor Upper Tribs', '0.80 MAF/yr (1,105 cfs)', '5.3% of Basin Natural Runoff', 'Dolores, Escalante, Dirty Devil & minor tributaries above Lee\'s Ferry.', 'Physical Inflow')"
                      onmouseleave="clearStackedInspect()">
                   <span>Dolores &amp; Minor Tribs</span>
                   <span class="tabular-nums font-semibold">0.80 MAF</span>
@@ -395,7 +399,7 @@
                 <div class="bar-segment w-full bg-[#0d9488] border-t border-teal-700/40 cursor-pointer transition"
                      style="height: 6.0px;"
                      title="Little Colorado River: 0.25 MAF/yr"
-                     onmouseenter="inspectStackedSegment('Little Colorado River (AZ)', '0.25 MAF/yr (345 cfs)', '1.6% of Basin Natural Runoff', 'Northern Arizona White Mountains plateau, enters mainstem in upper Grand Canyon below Lee\'s Ferry.', 'Physical Inflow')"
+                     onmouseenter="inspectStackedSegment('Little Colorado River (AZ)', '0.25 MAF/yr (345 cfs)', '1.6% of Basin Natural Runoff', 'White Mtns plateau entering the upper Grand Canyon below Lee\'s Ferry.', 'Physical Inflow')"
                      onmouseleave="clearStackedInspect()">
                 </div>
 
@@ -403,14 +407,14 @@
                 <div class="bar-segment w-full bg-[#14b8a6] border-t border-teal-600/40 cursor-pointer transition"
                      style="height: 6.7px;"
                      title="Virgin & Bill Williams: 0.28 MAF/yr"
-                     onmouseenter="inspectStackedSegment('Virgin &amp; Bill Williams Rivers', '0.28 MAF/yr (387 cfs)', '1.8% of Basin Natural Runoff', 'Virgin River entering Lake Mead Overton Arm (0.18 MAF) and Bill Williams River entering Lake Havasu (0.10 MAF).', 'Physical Inflow')"
+                     onmouseenter="inspectStackedSegment('Virgin &amp; Bill Williams Rivers', '0.28 MAF/yr (387 cfs)', '1.8% of Basin Natural Runoff', 'Virgin River into Mead (0.18 MAF) & Bill Williams into Havasu.', 'Physical Inflow')"
                      onmouseleave="clearStackedInspect()">
                 </div>
 
                 <!-- 8. Gila River Basin: 0.87 MAF = 20.9px -->
                 <div class="bar-segment w-full bg-[#2dd4bf] border-t-2 border-stone-400 flex items-center justify-between px-2 text-stone-900 text-[10px] font-bold cursor-pointer transition"
                      style="height: 20.9px;"
-                     onmouseenter="inspectStackedSegment('Gila River Basin (AZ / NM)', '0.87 MAF/yr (1,202 cfs)', '5.7% of Basin Natural Runoff (Consumed Upstream)', 'Drains central Arizona (Salt, Verde, and Gila rivers). 100% intercepted upstream by Phoenix &amp; Salt River Project; legally excluded from mainstream 7.5 MAF compact pool by Arizona v. California (1963).', 'Physical Inflow')"
+                     onmouseenter="inspectStackedSegment('Gila River Basin (AZ / NM)', '0.87 MAF/yr (1,202 cfs)', '5.7% of Basin Natural Runoff (Consumed Upstream)', 'Salt, Verde & Gila rivers; intercepted upstream (excluded from 7.5 MAF).', 'Physical Inflow')"
                      onmouseleave="clearStackedInspect()">
                   <span class="truncate">Gila River Basin (AZ)</span>
                   <span class="tabular-nums font-semibold">0.87 MAF</span>
@@ -453,7 +457,7 @@
                 <!-- 1. Colorado: 3.86 MAF = 92.6px -->
                 <div class="bar-segment w-full bg-[#1e40af] border-t border-blue-900/40 flex flex-col justify-center px-2 text-white font-bold cursor-pointer transition"
                      style="height: 92.6px;"
-                     onmouseenter="inspectStackedSegment('Colorado (Upper Basin)', '3.86 MAF/yr (5,332 cfs)', '51.75% of Upper Basin Apportionment', '1948 Upper Colorado River Basin Compact entitlement. Major in-basin agriculture, West Slope irrigation, and Denver trans-mountain diversions.', 'Paper Allocation')"
+                     onmouseenter="inspectStackedSegment('Colorado (Upper Basin)', '3.86 MAF/yr (5,332 cfs)', '51.75% of Upper Basin Apportionment', '1948 Compact entitlement: West Slope ag & Front Range exports.', 'Paper Allocation')"
                      onmouseleave="clearStackedInspect()">
                   <span class="text-[11px] leading-tight">Colorado (Upper)</span>
                   <span class="text-[10px] font-normal opacity-90 tabular-nums">3.86 MAF (51.75%)</span>
@@ -462,7 +466,7 @@
                 <!-- 2. Utah: 1.71 MAF = 41.0px -->
                 <div class="bar-segment w-full bg-[#2563eb] border-t border-blue-700/40 flex flex-col justify-center px-2 text-white font-bold cursor-pointer transition"
                      style="height: 41.0px;"
-                     onmouseenter="inspectStackedSegment('Utah (Upper Basin)', '1.71 MAF/yr (2,362 cfs)', '23.00% of Upper Basin Apportionment', 'Central Utah Project (CUP), Uinta Basin agriculture, and Wasatch Front municipal supplies.', 'Paper Allocation')"
+                     onmouseenter="inspectStackedSegment('Utah (Upper Basin)', '1.71 MAF/yr (2,362 cfs)', '23.00% of Upper Basin Apportionment', 'Uinta Basin ag & Central Utah Project to the Wasatch Front.', 'Paper Allocation')"
                      onmouseleave="clearStackedInspect()">
                   <span class="text-[10.5px] leading-tight">Utah (Upper)</span>
                   <span class="text-[9.5px] font-normal opacity-90 tabular-nums">1.71 MAF (23.0%)</span>
@@ -471,7 +475,7 @@
                 <!-- 3. Wyoming: 1.04 MAF = 25.0px -->
                 <div class="bar-segment w-full bg-[#3b82f6] border-t border-blue-500/40 flex items-center justify-between px-2 text-white text-[10px] font-bold cursor-pointer transition"
                      style="height: 25.0px;"
-                     onmouseenter="inspectStackedSegment('Wyoming (Upper Basin)', '1.04 MAF/yr (1,437 cfs)', '14.00% of Upper Basin Apportionment', 'Green River basin livestock irrigation and Fontenelle Reservoir diversions.', 'Paper Allocation')"
+                     onmouseenter="inspectStackedSegment('Wyoming (Upper Basin)', '1.04 MAF/yr (1,437 cfs)', '14.00% of Upper Basin Apportionment', 'Green River basin livestock irrigation & Fontenelle diversions.', 'Paper Allocation')"
                      onmouseleave="clearStackedInspect()">
                   <span>Wyoming (Upper)</span>
                   <span class="tabular-nums">1.04 MAF</span>
@@ -480,7 +484,7 @@
                 <!-- 4. New Mexico: 0.84 MAF = 20.2px -->
                 <div class="bar-segment w-full bg-[#60a5fa] border-t border-blue-300/40 flex items-center justify-between px-2 text-stone-900 text-[10px] font-bold cursor-pointer transition"
                      style="height: 20.2px;"
-                     onmouseenter="inspectStackedSegment('New Mexico (Upper Basin)', '0.84 MAF/yr (1,160 cfs)', '11.25% of Upper Basin Apportionment', 'San Juan-Chama trans-mountain export to Rio Grande basin and Navajo Indian Irrigation Project (NIIP).', 'Paper Allocation')"
+                     onmouseenter="inspectStackedSegment('New Mexico (Upper Basin)', '0.84 MAF/yr (1,160 cfs)', '11.25% of Upper Basin Apportionment', 'San Juan-Chama Rio Grande export & Navajo Irrigation Project (NIIP).', 'Paper Allocation')"
                      onmouseleave="clearStackedInspect()">
                   <span>New Mexico (Upper)</span>
                   <span class="tabular-nums font-semibold">0.84 MAF</span>
@@ -490,14 +494,14 @@
                 <div class="bar-segment w-full bg-[#93c5fd] border-t border-amber-600 cursor-pointer"
                      style="height: 1.2px;"
                      title="Arizona Upper Share: 0.05 MAF (50,000 AF)"
-                     onmouseenter="inspectStackedSegment('Arizona (Upper Basin Share)', '0.05 MAF/yr (69 cfs)', '50,000 AF Statutory Upper Allocation', 'Arizona statutory Upper Basin allocation under the 1948 Compact (primarily for Navajo Generating Station and Page, AZ).', 'Paper Allocation')"
+                     onmouseenter="inspectStackedSegment('Arizona (Upper Basin Share)', '0.05 MAF/yr (69 cfs)', '50,000 AF Statutory Upper Allocation', '1948 Compact Upper Basin share for Page, AZ & local demands.', 'Paper Allocation')"
                      onmouseleave="clearStackedInspect()">
                 </div>
 
                 <!-- 6. California: 4.40 MAF = 105.6px -->
                 <div class="bar-segment w-full bg-[#c2410c] border-t-2 border-stone-800 flex flex-col justify-center px-2 text-white font-bold cursor-pointer transition"
                      style="height: 105.6px;"
-                     onmouseenter="inspectStackedSegment('California (1928 BCPA / 1964 Decree)', '4.40 MAF/yr (6,078 cfs)', 'Largest Lower Basin Consumer', 'Imperial Irrigation District (2.6-3.1 MAF), Coachella Valley, Palo Verde Valley, and MWD Colorado River Aqueduct (CRA) to 19M coastal Californians.', 'Paper Allocation')"
+                     onmouseenter="inspectStackedSegment('California (1928 BCPA / 1964 Decree)', '4.40 MAF/yr (6,078 cfs)', 'Largest Lower Basin Consumer', 'Imperial/Coachella/Palo Verde ag & MWD Aqueduct to coastal SoCal.', 'Paper Allocation')"
                      onmouseleave="clearStackedInspect()">
                   <span class="text-[11px] leading-tight">California (Lower)</span>
                   <span class="text-[10px] font-normal opacity-90 tabular-nums">4.40 MAF (Largest User)</span>
@@ -506,7 +510,7 @@
                 <!-- 7. Arizona Lower Mainstem: 2.80 MAF = 67.2px -->
                 <div class="bar-segment w-full bg-[#ea580c] border-t border-orange-700/40 flex flex-col justify-center px-2 text-white font-bold cursor-pointer transition"
                      style="height: 67.2px;"
-                     onmouseenter="inspectStackedSegment('Arizona (Lower Basin Mainstem)', '2.80 MAF/yr (3,868 cfs)', 'Junior Mainstem Apportionment', 'Central Arizona Project (CAP 1.5 MAF, junior priority) and senior on-river agricultural rights (Yuma, Wellton-Mohawk, CRIT).', 'Paper Allocation')"
+                     onmouseenter="inspectStackedSegment('Arizona (Lower Basin Mainstem)', '2.80 MAF/yr (3,868 cfs)', 'Junior Mainstem Apportionment', 'CAP canal (junior) & senior Yuma, Wellton-Mohawk, and CRIT rights.', 'Paper Allocation')"
                      onmouseleave="clearStackedInspect()">
                   <span class="text-[10.5px] leading-tight">Arizona (Lower Mainstem)</span>
                   <span class="text-[9.5px] font-normal opacity-90 tabular-nums">2.80 MAF (CAP + Yuma)</span>
@@ -516,14 +520,14 @@
                 <div class="bar-segment w-full bg-[#fb923c] border-t border-orange-500/40 cursor-pointer transition"
                      style="height: 7.2px;"
                      title="Nevada (SNWA / Las Vegas): 0.30 MAF/yr"
-                     onmouseenter="inspectStackedSegment('Nevada (SNWA / Las Vegas)', '0.30 MAF/yr (414 cfs)', 'Southern Nevada Water Authority', 'Las Vegas municipal drinking water drawn directly from Lake Mead intake straws.', 'Paper Allocation')"
+                     onmouseenter="inspectStackedSegment('Nevada (SNWA / Las Vegas)', '0.30 MAF/yr (414 cfs)', 'Southern Nevada Water Authority', 'Las Vegas municipal supply drawn from Lake Mead intake straws.', 'Paper Allocation')"
                      onmouseleave="clearStackedInspect()">
                 </div>
 
                 <!-- 9. Compact Art. III(b): 1.00 MAF = 24.0px -->
                 <div class="bar-segment w-full bg-[#fdba74] border-t border-orange-400/40 flex items-center justify-between px-2 text-stone-900 text-[9.5px] font-bold cursor-pointer transition"
                      style="height: 24.0px;"
-                     onmouseenter="inspectStackedSegment('1922 Compact Article III(b)', '1.00 MAF/yr (1,381 cfs)', 'Lower Basin Apportionment Expansion', 'Allows Lower Basin to increase its consumptive use by 1.0 MAF annually beyond the base 7.5 MAF.', 'Paper Allocation')"
+                     onmouseenter="inspectStackedSegment('1922 Compact Article III(b)', '1.00 MAF/yr (1,381 cfs)', 'Lower Basin Apportionment Expansion', 'Grants Lower Basin +1.0 MAF/yr beyond the base 7.5 MAF share.', 'Paper Allocation')"
                      onmouseleave="clearStackedInspect()">
                   <span>Compact Art. III(b)</span>
                   <span class="tabular-nums font-semibold">1.00 MAF</span>
@@ -532,7 +536,7 @@
                 <!-- 10. 1944 Mexican Treaty: 1.50 MAF = 36.0px -->
                 <div class="bar-segment w-full bg-[#7c3aed] border-t border-purple-700/40 flex items-center justify-between px-2 text-white text-[10px] font-bold cursor-pointer transition"
                      style="height: 36.0px;"
-                     onmouseenter="inspectStackedSegment('1944 Mexican Water Treaty', '1.50 MAF/yr (2,072 cfs)', 'International Treaty Obligation', 'Guaranteed annual delivery to Mexico at Morelos Dam for Mexicali Valley agriculture and Baja California municipalities.', 'Treaty Obligation')"
+                     onmouseenter="inspectStackedSegment('1944 Mexican Water Treaty', '1.50 MAF/yr (2,072 cfs)', 'International Treaty Obligation', '1944 Treaty delivery at Morelos Dam for Mexicali ag & Baja cities.', 'Treaty Obligation')"
                      onmouseleave="clearStackedInspect()">
                   <span>1944 Mexico Treaty</span>
                   <span class="tabular-nums font-semibold">1.50 MAF</span>
@@ -541,7 +545,7 @@
                 <!-- 11. Evaporation & Losses: 1.60 MAF = 38.4px -->
                 <div class="bar-segment w-full bg-[#64748b] border-t-2 border-red-600 flex items-center justify-between px-2 text-white text-[10px] font-bold cursor-pointer transition"
                      style="height: 38.4px;"
-                     onmouseenter="inspectStackedSegment('Reservoir Evaporation &amp; Transit Losses', '1.60 MAF/yr (2,210 cfs)', 'Physical Evaporation (Omitted from 1922 Compact)', 'Lake Powell (0.38 MAF), Lake Mead (0.65 MAF), and lower channel transit/riparian seepage (0.55 MAF). The 1922 Compact never deducted evaporation, creating an immediate structural deficit.', 'System Depletion')"
+                     onmouseenter="inspectStackedSegment('Reservoir Evaporation &amp; Transit Losses', '1.60 MAF/yr (2,210 cfs)', 'Physical Evaporation (Omitted from 1922 Compact)', 'Powell/Mead evaporation (1.03 MAF) & channel losses not in 1922 Compact.', 'System Depletion')"
                      onmouseleave="clearStackedInspect()">
                   <span>Evaporation &amp; Losses</span>
                   <span class="tabular-nums font-semibold">1.60 MAF</span>
@@ -619,7 +623,7 @@
     const NODE_META = {
       "Upper Basin Allocations": {
         cleanTitle: "Upper Basin Allocations",
-        summary: "Apportioned consumptive use across Colorado, Utah, Wyoming, and New Mexico under the 1922 Colorado River Compact (4.50 MAF total current consumption).",
+        summary: "1922 Compact upper state depletions across CO, UT, WY, and NM.",
         stationId: "09095500",
         stationLabel: "Upper Basin Network",
         portalUrl: "https://waterdata.usgs.gov/monitoring-location/09095500/#parameterCode=00060",
@@ -628,7 +632,7 @@
       },
       "Lake Powell Storage Pool (Glen Canyon Dam)": {
         cleanTitle: "Lake Powell Storage Pool (Glen Canyon Dam)",
-        summary: "Glen Canyon Dam regulatory pool (24.3 MAF capacity). Buffers Upper Basin inflows to guarantee 7.50+ MAF delivery past Lees Ferry to the Lower Basin.",
+        summary: "Glen Canyon regulatory pool (24.3 MAF) buffering Lees Ferry releases.",
         stationId: "lake_powell",
         stationLabel: "USBR Lake Powell",
         portalUrl: "https://www.usbr.gov/uc/water/crsp/cs/gcd.html",
@@ -637,7 +641,7 @@
       },
       "Lower Basin Tributary & Overdraft Inflows": {
         cleanTitle: "Lower Basin Tributary & Overdraft Inflows",
-        summary: "Combined Lower Basin supply increments: natural tributary inflows (Virgin & Little Colorado rivers, ~0.45 MAF) plus reservoir storage overdraft (~2.05 MAF drawdown).",
+        summary: "Lower Basin tributary inflows (~0.45 MAF) plus storage overdraft.",
         stationId: "lake_mead",
         stationLabel: "USBR Lower Colorado",
         portalUrl: "https://www.usbr.gov/lc/region/g4000/hourly/mead-elv.html",
@@ -646,7 +650,7 @@
       },
       "Lower Basin Allocations (Lake Mead Hub)": {
         cleanTitle: "Lower Basin Allocations (Lake Mead Hub)",
-        summary: "Hoover Dam mainstem distribution hub controlling 10.40 MAF of releases to California (4.40), Arizona (2.80), Nevada (0.30), 1944 Mexico Treaty (1.50), and system losses (1.40).",
+        summary: "Hoover Dam hub releasing 10.40 MAF to CA, AZ, NV, Mexico & losses.",
         stationId: "lake_mead",
         stationLabel: "USBR Lake Mead",
         portalUrl: "https://www.usbr.gov/lc/region/g4000/hourly/mead-elv.html",
@@ -655,7 +659,7 @@
       },
       "Lower Basin Allocations & Deliveries": {
         cleanTitle: "Lower Basin Allocations & Deliveries (Hoover Hub)",
-        summary: "Hoover Dam mainstem release hub governing 10.40 MAF total deliveries: CA (4.40 MAF), AZ (2.80 MAF), NV (0.30 MAF), 1944 Mexico Treaty (1.50 MAF), and reservoir evaporation & transit losses (1.40 MAF).",
+        summary: "Hoover Dam release hub: CA, AZ, NV, Mexico treaty & system losses.",
         stationId: "lake_mead",
         stationLabel: "USBR Boulder Canyon Decree Accounting",
         portalUrl: "https://www.usbr.gov/lc/region/g4000/wtracct.html",
@@ -664,7 +668,7 @@
       },
       "Reservoir Storage Overdraft": {
         cleanTitle: "Reservoir Storage Overdraft",
-        summary: "Annual structural deficit drawn from storage in Lake Mead and Lake Powell (-2.05 MAF/yr) to bridge the physical gap between 14.90 MAF consumptive depletions and 12.85 MAF natural runoff.",
+        summary: "Annual storage overdraft (~2.05 MAF/yr) bridging supply-demand gap.",
         stationId: "lake_mead",
         stationLabel: "USBR Mead Teletype & Operations",
         portalUrl: "https://www.usbr.gov/lc/region/g4000/hourly/mead-elv.html",
@@ -673,7 +677,7 @@
       },
       "All-American Canal & Imperial (CA)": {
         cleanTitle: "All-American Canal & Imperial Valley (CA)",
-        summary: "Senior 1901 Present Perfected Rights conveying 3.40 MAF from Imperial Dam across 80 miles to Imperial Irrigation District (IID) and Coachella Valley (CVWD).",
+        summary: "80-mile gravity canal from Imperial Dam serving IID & Coachella ag.",
         stationId: "09527700",
         stationLabel: "IID Water Department",
         portalUrl: "https://www.iid.com/water",
@@ -682,7 +686,7 @@
       },
       "Colorado River Aqueduct (CA / MWD)": {
         cleanTitle: "Colorado River Aqueduct (CA / MWD)",
-        summary: "242-mile conveyance system lifting 1.00 MAF across desert ranges via 5 pumping plants to Metropolitan Water District of Southern California serving 19 million residents.",
+        summary: "242-mile aqueduct lifting water to MWD for 19M SoCal residents.",
         stationId: "09424150",
         stationLabel: "MWD System Operations",
         portalUrl: "https://www.mwdh2o.com/",
@@ -691,7 +695,7 @@
       },
       "Central Arizona Project (AZ / CAP)": {
         cleanTitle: "Central Arizona Project (AZ / CAP)",
-        summary: "336-mile canal lifting 1.38 MAF 2,900 ft from Lake Havasu across desert to municipal providers in Phoenix, Tucson, and Native American tribal communities.",
+        summary: "336-mile canal lifting water 2,900 ft to Phoenix, Tucson & tribes.",
         stationId: "09426650",
         stationLabel: "CAP Water Operations",
         portalUrl: "https://www.cap-az.com/",
@@ -700,7 +704,7 @@
       },
       "Lower River Mainstem Canals (AZ)": {
         cleanTitle: "Lower River Mainstem Canals (AZ)",
-        summary: "Senior run-of-the-river gravity irrigation diversions diverting 1.42 MAF for Yuma Valley, Wellton-Mohawk, and Parker agricultural districts.",
+        summary: "Senior gravity diversions for Yuma, Wellton-Mohawk & Parker ag.",
         stationId: "USBR-PARKER",
         stationLabel: "USBR Yuma Area Office",
         portalUrl: "https://www.usbr.gov/lc/yuma/",
@@ -709,7 +713,7 @@
       },
       "SNWA / Lake Mead Intakes (NV)": {
         cleanTitle: "SNWA Lake Mead Intakes (NV)",
-        summary: "Three deep lake intake straws (including low-lake pumping station at 860 ft elevation) supplying >90% of Las Vegas Valley drinking water (0.30 MAF net consumptive use).",
+        summary: "Lake Mead deep intake straws supplying >90% of Las Vegas water.",
         stationId: "lake_mead",
         stationLabel: "SNWA Water Resource Plan",
         portalUrl: "https://www.snwa.com/",
@@ -718,7 +722,7 @@
       },
       "Morelos Dam Diversion (Mexico)": {
         cleanTitle: "Morelos Dam Diversion (1944 Mexico Treaty)",
-        summary: "1944 Treaty delivery of 1.50 MAF diverted at Morelos Dam into Canal Alimentador Central for Mexicali Valley agriculture (1.25 MAF) and Baja California cities (0.25 MAF).",
+        summary: "1944 Treaty flow at Morelos Dam for Mexicali ag & Baja cities.",
         stationId: "09522000",
         stationLabel: "IBWC / CILA Treaty Portal",
         portalUrl: "https://www.ibwc.gov/",
@@ -727,7 +731,7 @@
       },
       "Reservoir Evaporation & Transit Losses": {
         cleanTitle: "Reservoir Evaporation & Transit Losses",
-        summary: "Annual lower system losses: Lake Mead, Powell, Mohave, and Havasu surface evaporation (0.90 MAF) plus river channel transit infiltration and riparian vegetation losses (0.50 MAF).",
+        summary: "Lower reservoir evaporation (~0.90 MAF) & channel transit losses.",
         stationId: "lake_mead",
         stationLabel: "USBR Supply & Demand Study",
         portalUrl: "https://www.usbr.gov/lc/region/programs/crbstudy.html",
@@ -736,7 +740,7 @@
       },
       "Western Slope Gravity Canals": {
         cleanTitle: "Western Slope Gravity Canals",
-        summary: "Senior in-basin agricultural irrigation across Colorado, Utah, Wyoming, and New Mexico (~3.90 MAF total consumptive use).",
+        summary: "In-basin irrigation across CO, UT, WY, and NM (~3.90 MAF/yr).",
         stationId: "09095500",
         stationLabel: "USGS Cameo / Grand Valley",
         portalUrl: "https://waterdata.usgs.gov/monitoring-location/09095500/#parameterCode=00060",
@@ -745,7 +749,7 @@
       },
       "Front Range Tunnels (CO)": {
         cleanTitle: "Front Range Municipal Tunnels (CO)",
-        summary: "Adams, Moffat, Roberts, and Boustead trans-mountain tunnels under the Continental Divide supplying Denver and Colorado Springs (~0.48 MAF).",
+        summary: "Continental Divide tunnels serving Denver & Colorado Springs.",
         stationId: "ROBTUNCO",
         stationLabel: "CDSS #ROBTUNCO",
         portalUrl: "https://dwr.state.co.us/Tools/Stations?station=ROBTUNCO",
@@ -754,7 +758,7 @@
       },
       "Wasatch Front Tunnels (UT / CUP)": {
         cleanTitle: "Wasatch Front Municipal Tunnels (UT / CUP)",
-        summary: "Strawberry Valley Tunnel and Central Utah Project trans-basin conduits delivering water to Salt Lake City and Utah County (~0.12 MAF).",
+        summary: "Trans-basin tunnels serving Salt Lake City & Utah County.",
         stationId: "09315000",
         stationLabel: "Central Utah WCD",
         portalUrl: "https://waterrights.utah.gov/",
@@ -763,7 +767,7 @@
       },
       "Colorado": {
         cleanTitle: "Colorado Consumptive Use",
-        summary: "Total annual consumptive use: 2.33 MAF/yr (Western Slope Ag: 1.85 MAF • Front Range Cities: 0.48 MAF).",
+        summary: "2.33 MAF/yr use: Western Slope Ag (1.85) & Front Range Cities (0.48).",
         stationId: "09095500",
         stationLabel: "USGS Cameo",
         portalUrl: "https://waterdata.usgs.gov/monitoring-location/09095500/#parameterCode=00060",
@@ -772,7 +776,7 @@
       },
       "Utah": {
         cleanTitle: "Utah Consumptive Use",
-        summary: "Total annual consumptive use: 1.04 MAF/yr (Uinta Basin Ag: 0.92 MAF • Wasatch Front Cities: 0.12 MAF).",
+        summary: "1.04 MAF/yr use: Uinta Basin Ag (0.92) & Wasatch Cities (0.12).",
         stationId: "09315000",
         stationLabel: "USGS Green River, UT",
         portalUrl: "https://waterdata.usgs.gov/monitoring-location/09315000/#parameterCode=00060",
@@ -781,7 +785,7 @@
       },
       "Wyoming": {
         cleanTitle: "Wyoming Consumptive Use",
-        summary: "Total annual consumptive use: 0.63 MAF/yr (Upper Green River native hay meadow irrigation and cattle ranching).",
+        summary: "0.63 MAF/yr use: Upper Green River hay meadows & cattle ranching.",
         stationId: "09211200",
         stationLabel: "USGS Upper Green",
         portalUrl: "https://waterdata.usgs.gov/monitoring-location/09211200/#parameterCode=00060",
@@ -790,7 +794,7 @@
       },
       "New Mexico": {
         cleanTitle: "New Mexico Consumptive Use",
-        summary: "Total annual consumptive use: 0.50 MAF/yr (San Juan Basin, Navajo Indian Irrigation Project, and municipal diversions).",
+        summary: "0.50 MAF/yr use: San Juan Basin, NIIP & San Juan-Chama exports.",
         stationId: "09368000",
         stationLabel: "USGS Shiprock",
         portalUrl: "https://waterdata.usgs.gov/monitoring-location/09368000/#parameterCode=00060",
@@ -799,7 +803,7 @@
       },
       "California": {
         cleanTitle: "California Consumptive Use",
-        summary: "Total annual consumptive use: 4.40 MAF/yr (All-American Canal Ag: 3.40 MAF • Colorado River Aqueduct / MWD Cities: 1.00 MAF).",
+        summary: "4.40 MAF/yr use: Imperial/Coachella Ag (3.40) & MWD Cities (1.00).",
         stationId: "09527700",
         stationLabel: "USGS Imperial Valley",
         portalUrl: "https://waterdata.usgs.gov/monitoring-location/09527700/#parameterCode=00060",
@@ -808,7 +812,7 @@
       },
       "Arizona": {
         cleanTitle: "Arizona Consumptive Use",
-        summary: "Total annual consumptive use: 2.80 MAF/yr (Lower River Mainstem Ag: 1.42 MAF • Central Arizona Project Municipal & Tribal: 1.38 MAF).",
+        summary: "2.80 MAF/yr use: On-River Ag (1.42) & CAP Canal Cities/Tribes (1.38).",
         stationId: "09426650",
         stationLabel: "USGS CAP Mark Wilmer",
         portalUrl: "https://waterdata.usgs.gov/monitoring-location/09426650/#parameterCode=00060",
@@ -817,7 +821,7 @@
       },
       "Nevada": {
         cleanTitle: "Nevada Consumptive Use",
-        summary: "Total annual consumptive use: 0.30 MAF/yr (SNWA deep lake intakes supplying Las Vegas Valley municipal drinking water).",
+        summary: "0.30 MAF/yr use: SNWA deep Lake Mead intakes for Las Vegas.",
         stationId: "lake_mead",
         stationLabel: "SNWA Lake Mead Intakes",
         portalUrl: "https://www.snwa.com/",
@@ -826,7 +830,7 @@
       },
       "1944 Mexico Treaty": {
         cleanTitle: "Mexico (1944 Treaty Delivery)",
-        summary: "International treaty delivery: 1.50 MAF/yr delivered at Morelos Dam for Mexicali Valley agriculture (1.25) and Baja California cities (0.25).",
+        summary: "1.50 MAF/yr 1944 Treaty flow: Mexicali Ag (1.25) & Baja Cities (0.25).",
         stationId: "09522000",
         stationLabel: "IBWC Morelos Dam",
         portalUrl: "https://www.ibwc.gov/",
@@ -835,7 +839,7 @@
       },
       "System Losses & Evaporation": {
         cleanTitle: "System Losses & Evaporation",
-        summary: "Annual lower system losses: 1.40 MAF/yr (Lake Mead & lower reservoir surface evaporation: 0.90 MAF • River channel transit seepage and streamside vegetation uptake: 0.50 MAF).",
+        summary: "1.40 MAF/yr losses: Reservoir evaporation (0.90) & transit/ET (0.50).",
         stationId: "lake_mead",
         stationLabel: "USBR Lower Colorado",
         portalUrl: "https://www.usbr.gov/lc/region/g4000/hourly/hourly.html",
@@ -845,7 +849,7 @@
       // --- Tier 2: Storage Reservoirs & Pools ---
       "Lake Powell Pool (Glen Canyon Dam)": {
         cleanTitle: "Lake Powell Pool (Glen Canyon Dam)",
-        summary: "Glen Canyon Dam regulatory pool (24.3 MAF capacity). Buffers Upper Basin inflows to guarantee 7.50+ MAF Compact delivery at Lees Ferry.",
+        summary: "Glen Canyon pool (24.3 MAF) buffering Lees Ferry Compact deliveries.",
         stationId: "lake_powell",
         stationLabel: "USBR Lake Powell",
         portalUrl: "https://www.usbr.gov/uc/water/crsp/cs/gcd.html",
@@ -854,7 +858,7 @@
       },
       "Lake Mead Pool (Hoover Dam Hub)": {
         cleanTitle: "Lake Mead Pool (Hoover Dam Hub)",
-        summary: "Hoover Dam mainstem reservoir (26.1 MAF capacity). Controls Lower Basin releases to California, Arizona, Nevada, Mexico, and system evaporation.",
+        summary: "Hoover Dam pool (26.1 MAF) governing CA, AZ, NV & Mexico releases.",
         stationId: "lake_mead",
         stationLabel: "USBR Lake Mead",
         portalUrl: "https://www.usbr.gov/lc/region/g4000/hourly/mead-elv.html",
@@ -863,7 +867,7 @@
       },
       "Lower Basin Tributaries (Virgin & Little CO)": {
         cleanTitle: "Lower Basin Tributaries (Virgin & Little CO)",
-        summary: "Tributaries entering below Lees Ferry (Virgin River, Little Colorado River, Bill Williams River) providing ~0.45 MAF natural inflow to Lake Mead.",
+        summary: "Virgin, Little Colorado & Bill Williams inflows below Lees Ferry.",
         stationId: "09415000",
         stationLabel: "USGS #09415000 (Virgin River)",
         portalUrl: "https://waterdata.usgs.gov/monitoring-location/09415000/#parameterCode=00060",
@@ -872,7 +876,7 @@
       },
       "System Losses & Conveyance": {
         cleanTitle: "System Losses & Conveyance",
-        summary: "Atmospheric evaporation from Lake Mead and Lake Powell water surfaces (~0.90 MAF) plus riparian evapotranspiration and channel seepage (~0.50 MAF).",
+        summary: "Powell & Mead surface evaporation (~0.90) plus transit/riparian loss.",
         stationId: "lake_powell",
         stationLabel: "USBR LC Operations",
         portalUrl: "https://www.usbr.gov/lc/region/g4000/hourly/hourly.html",
@@ -883,7 +887,7 @@
       // --- Tier 5: State-Disaggregated End Uses ---
       "Colorado Western Slope Ag": {
         cleanTitle: "Colorado Western Slope Agriculture",
-        summary: "Senior irrigation diversions for orchards, alfalfa, and cattle ranching in Grand Valley, Uncompahgre, and Gunnison basins (~79% of CO use).",
+        summary: "Grand Valley, Uncompahgre & Gunnison irrigation (~79% of CO use).",
         stationId: "09095500",
         stationLabel: "USGS #09095500 (Cameo)",
         portalUrl: "https://waterdata.usgs.gov/monitoring-location/09095500/#parameterCode=00060",
@@ -892,7 +896,7 @@
       },
       "Front Range Municipal (CO)": {
         cleanTitle: "Front Range Municipalities (Denver/CO Springs)",
-        summary: "Denver Water, Aurora, and Colorado Springs trans-mountain exports under Continental Divide via Roberts, Moffat, Adams, and Boustead tunnels (~21% of CO use).",
+        summary: "Trans-mountain tunnel exports to Denver & Front Range (~21% of CO).",
         stationId: "ROBTUNCO",
         stationLabel: "CDSS #ROBTUNCO",
         portalUrl: "https://dwr.state.co.us/Tools/Stations?station=ROBTUNCO",
@@ -901,7 +905,7 @@
       },
       "Utah Uinta Basin Ag": {
         cleanTitle: "Utah Uinta & Green River Agriculture",
-        summary: "Direct agricultural diversions supporting irrigated pasture and forage crops across eastern Utah (~88% of UT use).",
+        summary: "Pasture & forage irrigation across eastern Utah (~88% of UT use).",
         stationId: "09315000",
         stationLabel: "USGS #09315000 (Green River, UT)",
         portalUrl: "https://waterdata.usgs.gov/monitoring-location/09315000/#parameterCode=00060",
@@ -910,7 +914,7 @@
       },
       "Wasatch Front Municipal (UT)": {
         cleanTitle: "Wasatch Front Cities (Salt Lake/Provo)",
-        summary: "Central Utah Project (CUP) and Strawberry Valley trans-basin deliveries to Salt Lake City and Utah County urban corridor (~12% of UT use).",
+        summary: "CUP & Strawberry exports to Salt Lake & Utah County (~12% of UT).",
         stationId: "09315000",
         stationLabel: "Central Utah WCD",
         portalUrl: "https://waterrights.utah.gov/",
@@ -919,7 +923,7 @@
       },
       "Wyoming Upper Green Ag": {
         cleanTitle: "Wyoming Upper Green River Agriculture",
-        summary: "Native hay meadow irrigation and cattle ranching in Sublette and Sweetwater counties (~100% of WY use).",
+        summary: "Hay meadow irrigation & ranching in Upper Green Basin (~100% WY).",
         stationId: "09211200",
         stationLabel: "USGS #09211200",
         portalUrl: "https://waterdata.usgs.gov/monitoring-location/09211200/#parameterCode=00060",
@@ -928,7 +932,7 @@
       },
       "New Mexico San Juan Ag": {
         cleanTitle: "New Mexico San Juan & NAPI Agriculture",
-        summary: "Navajo Indian Irrigation Project (NIIP), Hogback, and Fruitland canals plus San Juan-Chama trans-basin exports (~100% of NM use).",
+        summary: "NIIP, Hogback/Fruitland canals & San Juan-Chama exports (~100% NM).",
         stationId: "09368000",
         stationLabel: "USGS #09368000 (Shiprock)",
         portalUrl: "https://waterdata.usgs.gov/monitoring-location/09368000/#parameterCode=00060",
@@ -937,7 +941,7 @@
       },
       "California Imperial & Coachella Ag": {
         cleanTitle: "California Imperial & Coachella Agriculture",
-        summary: "Senior 1901 Present Perfected Rights irrigating ~500,000 acres of winter vegetable and alfalfa crops via All-American Canal (~77% of CA use).",
+        summary: "Senior 1901 rights watering ~500k acres via All-American (~77% CA).",
         stationId: "09527700",
         stationLabel: "USGS #09527700 (Imperial Valley)",
         portalUrl: "https://waterdata.usgs.gov/monitoring-location/09527700/#parameterCode=00060",
@@ -946,7 +950,7 @@
       },
       "Arizona Mainstem River Ag": {
         cleanTitle: "Arizona Mainstem River Agriculture",
-        summary: "Senior run-of-the-river irrigation producing ~90% of US winter leafy greens in Yuma, Wellton-Mohawk, and Parker (~52% of AZ use).",
+        summary: "Senior on-river irrigation in Yuma, Wellton & Parker (~52% of AZ).",
         stationId: "USBR-PARKER",
         stationLabel: "USBR Parker Dam Operations",
         portalUrl: "https://www.usbr.gov/lc/region/g4000/hourly/hourly.html",
@@ -955,7 +959,7 @@
       },
       "Central Arizona Ag & Tribal (CAP)": {
         cleanTitle: "Central Arizona Ag & Tribal (CAP)",
-        summary: "Pinal County agricultural irrigation and Gila River / Tohono O'odham tribal settlement water conveyed via CAP canal (~16% of AZ use).",
+        summary: "Pinal County ag & tribal settlement water via CAP (~16% of AZ).",
         stationId: "09426650",
         stationLabel: "CAP Pinal Reach",
         portalUrl: "https://www.cap-az.com/",
@@ -964,7 +968,7 @@
       },
       "Central Arizona Municipal (Phoenix/Tucson)": {
         cleanTitle: "Central Arizona Municipal (Phoenix & Tucson)",
-        summary: "Drinking water for 5+ million residents in Maricopa, Pinal, and Pima counties lifted 2,900 ft via Central Arizona Project aqueduct (~32% of AZ use).",
+        summary: "Municipal water lifted 2,900 ft via CAP to Phoenix/Tucson (~32% AZ).",
         stationId: "09426650",
         stationLabel: "USGS #09426650 (CAP Mark Wilmer)",
         portalUrl: "https://waterdata.usgs.gov/monitoring-location/09426650/#parameterCode=00060",
@@ -973,7 +977,7 @@
       },
       "Baja California Municipal (Tijuana/Mexicali)": {
         cleanTitle: "Baja California Cities (Tijuana & Mexicali)",
-        summary: "Drinking water pumped via the Rio Colorado-Tijuana Aqueduct across the Sierra de Juarez to 2+ million residents (~17% of Mexico use).",
+        summary: "Tijuana Aqueduct pumped over Sierra de Juarez for 2M+ (~17% MX).",
         stationId: "09522000",
         stationLabel: "Morelos Dam Municipal Take",
         portalUrl: "https://www.ibwc.gov/",
@@ -984,7 +988,7 @@
       // --- Tier 1: Inflow Sources & Storage Overdraft ---
       "Upper Colorado Mainstem": {
         cleanTitle: "Upper Colorado Mainstem",
-        summary: "Alpine snowpack originating in the Colorado Rockies; supplies ~50% of Lake Powell natural runoff.",
+        summary: "Colorado Rockies snowmelt supplying ~50% of Lake Powell runoff.",
         stationId: "09095500",
         stationLabel: "USGS #09095500 (Cameo, CO)",
         portalUrl: "https://waterdata.usgs.gov/monitoring-location/09095500/#parameterCode=00060",
@@ -993,7 +997,7 @@
       },
       "Green River Basin": {
         cleanTitle: "Green River Basin",
-        summary: "Wind River & Uinta snowmelt regulated by Flaming Gorge Dam; supplies ~34% of Lake Powell inflow.",
+        summary: "Wind River & Uinta snowmelt via Flaming Gorge (~34% of Powell inflow).",
         stationId: "09315000",
         stationLabel: "USGS #09315000 (Green River, UT)",
         portalUrl: "https://waterdata.usgs.gov/monitoring-location/09315000/#parameterCode=00060",
@@ -1002,7 +1006,7 @@
       },
       "San Juan River Basin": {
         cleanTitle: "San Juan River Basin",
-        summary: "San Juan Mountains runoff in Colorado and New Mexico regulated by Navajo Dam; supplies ~14% of inflow.",
+        summary: "San Juan Mtns runoff via Navajo Dam (~14% of Lake Powell inflow).",
         stationId: "09379500",
         stationLabel: "USGS #09379500 (Bluff, UT)",
         portalUrl: "https://waterdata.usgs.gov/monitoring-location/09379500/#parameterCode=00060",
@@ -1011,7 +1015,7 @@
       },
       "Reservoir Storage Drawdown": {
         cleanTitle: "Reservoir Storage Overdraft",
-        summary: "Annual structural overdraft drawn from storage in Lake Mead and Lake Powell to bridge consumptive demand.",
+        summary: "Annual storage overdraft from Powell & Mead bridging basin demand.",
         stationId: "lake_mead",
         stationLabel: "USBR Lake Mead",
         portalUrl: "https://www.usbr.gov/lc/region/g4000/hourly/mead-elv.html",
@@ -1022,7 +1026,7 @@
       // --- Tier 2: 1922 Compact Split ---
       "Upper Basin (Above Lees Ferry)": {
         cleanTitle: "Upper Basin (Above Lees Ferry)",
-        summary: "Apportioned consumptive use for Colorado, Utah, Wyoming, and New Mexico under the 1922 & 1948 Compacts.",
+        summary: "1922 & 1948 Compact consumptive use for CO, UT, WY, and NM.",
         stationId: "09095500",
         stationLabel: "Upper Basin Network",
         portalUrl: "https://waterdata.usgs.gov/monitoring-location/09095500/#parameterCode=00060",
@@ -1031,7 +1035,7 @@
       },
       "Lower Basin & Mainstem Hub": {
         cleanTitle: "Lower Basin & Mainstem Hub",
-        summary: "Lees Ferry deliveries (7.90 MAF) plus storage drawdown (2.05 MAF) feeding Lower Basin states, Mexico, and losses.",
+        summary: "Lees Ferry flows + storage drawdown supplying Lower Basin & Mexico.",
         stationId: "09380000",
         stationLabel: "USGS #09380000 (Lees Ferry)",
         portalUrl: "https://waterdata.usgs.gov/monitoring-location/09380000/#parameterCode=00060",
@@ -1042,7 +1046,7 @@
       // --- Tier 3: 7 States, Mexico & Losses ---
       "Colorado": {
         cleanTitle: "State of Colorado (Upper Basin)",
-        summary: "51.75% of Upper Basin Compact allocation. Diverts for Western Slope ranches and Front Range cities.",
+        summary: "51.75% Upper Basin share for West Slope ag & Front Range cities.",
         stationId: "09095500",
         stationLabel: "Colorado River Basin CO",
         portalUrl: "https://dwr.state.co.us/",
@@ -1051,7 +1055,7 @@
       },
       "Utah": {
         cleanTitle: "State of Utah (Upper Basin)",
-        summary: "23.00% of Upper Basin Compact allocation. Supplies Uinta Basin agriculture and the Wasatch Front urban corridor.",
+        summary: "23.00% Upper Basin share for Uinta Basin ag & Wasatch Front cities.",
         stationId: "09315000",
         stationLabel: "Utah Division of Water Rights",
         portalUrl: "https://waterrights.utah.gov/",
@@ -1060,7 +1064,7 @@
       },
       "Wyoming": {
         cleanTitle: "State of Wyoming (Upper Basin)",
-        summary: "14.00% of Upper Basin Compact allocation. Native hay, alfalfa pasture, and soda ash mining in the Green River Valley.",
+        summary: "14.00% Upper Basin share for Green River hay, pasture & mining.",
         stationId: "09211200",
         stationLabel: "Wyoming State Engineer",
         portalUrl: "https://seo.wyo.gov/",
@@ -1069,7 +1073,7 @@
       },
       "New Mexico": {
         cleanTitle: "State of New Mexico (Upper Basin)",
-        summary: "11.25% of Upper Basin Compact allocation. San Juan-Chama diversions and Navajo Agricultural Products Industry (NAPI).",
+        summary: "11.25% Upper Basin share for San Juan-Chama exports & NAPI.",
         stationId: "09368000",
         stationLabel: "NM Interstate Stream Commission",
         portalUrl: "https://www.ose.state.nm.us/",
@@ -1078,7 +1082,7 @@
       },
       "California": {
         cleanTitle: "State of California (Lower Basin)",
-        summary: "4.40 MAF statutory apportionment. Senior 1901 Present Perfected Rights (IID, Coachella, Palo Verde) & MWD.",
+        summary: "4.40 MAF apportionment for senior 1901 ag rights & MWD SoCal.",
         stationId: "09527700",
         stationLabel: "All-American Canal / CRA",
         portalUrl: "https://www.iid.com/water",
@@ -1087,7 +1091,7 @@
       },
       "Arizona": {
         cleanTitle: "State of Arizona (Lower Basin)",
-        summary: "2.80 MAF statutory apportionment. Senior on-river agriculture in Yuma/Parker and junior CAP canal to Phoenix/Tucson.",
+        summary: "2.80 MAF apportionment: senior on-river ag & junior CAP cities.",
         stationId: "09426650",
         stationLabel: "CAP / Yuma Operations",
         portalUrl: "https://www.cap-az.com/",
@@ -1096,7 +1100,7 @@
       },
       "Nevada": {
         cleanTitle: "State of Nevada (Lower Basin)",
-        summary: "0.30 MAF statutory apportionment. Deep straw intakes at Lake Mead supplying municipal water to Las Vegas (SNWA).",
+        summary: "0.30 MAF apportionment via Lake Mead deep straws to Las Vegas.",
         stationId: "lake_mead",
         stationLabel: "SNWA Lake Mead Intakes",
         portalUrl: "https://www.snwa.com/",
@@ -1105,7 +1109,7 @@
       },
       "1944 Mexico Treaty": {
         cleanTitle: "1944 Mexico Water Treaty",
-        summary: "Guaranteed 1.50 MAF treaty obligation delivered at Morelos Dam for the Mexicali Valley and northern Baja cities.",
+        summary: "1.50 MAF 1944 Treaty delivery at Morelos Dam for Mexicali & Baja.",
         stationId: "09522000",
         stationLabel: "IBWC / CILA Morelos Dam",
         portalUrl: "https://www.ibwc.gov/",
@@ -1114,7 +1118,7 @@
       },
       "System Evaporative Losses": {
         cleanTitle: "System Losses & Evaporation",
-        summary: "Atmospheric evaporation from Lake Mead and Lake Powell water surfaces plus lower river riparian channel losses.",
+        summary: "Powell & Mead surface evaporation plus lower channel transit loss.",
         stationId: "lake_powell",
         stationLabel: "USBR CRSP / LC Operations",
         portalUrl: "https://www.usbr.gov/uc/water/crsp/cs/gcd.html",
@@ -1125,7 +1129,7 @@
       // --- Tier 4: Canals & Pipelines ---
       "Western Slope Gravity Canals": {
         cleanTitle: "Western Slope Gravity Canals (CO)",
-        summary: "Grand Valley Project Canal, Government Highline Canal, and Orchard Mesa irrigation diversions.",
+        summary: "Grand Valley, Highline & Orchard Mesa mainstem irrigation canals.",
         stationId: "09095500",
         stationLabel: "Grand Valley Project",
         portalUrl: "https://waterdata.usgs.gov/monitoring-location/09095500/#parameterCode=00060",
@@ -1134,7 +1138,7 @@
       },
       "Colorado Front Range Tunnels": {
         cleanTitle: "Front Range Tunnels (CO)",
-        summary: "Adams Tunnel, Roberts Tunnel, Moffat Tunnel, and Boustead Tunnel conveying West Slope Colorado River water across the Continental Divide to Denver, Colorado Springs, and Fort Collins.",
+        summary: "Adams, Roberts, Moffat & Boustead tunnels serving Front Range cities.",
         stationId: "ROBTUNCO",
         stationLabel: "CDSS #ROBTUNCO",
         portalUrl: "https://dwr.state.co.us/Tools/Stations?station=ROBTUNCO",
@@ -1143,7 +1147,7 @@
       },
       "Utah Wasatch Tunnels (CUP)": {
         cleanTitle: "Wasatch Front Tunnels (UT / CUP)",
-        summary: "Strawberry Valley and Central Utah Project (CUP) tunnels conveying Green River tributary water across the Wasatch Range to Salt Lake City and Utah Valley.",
+        summary: "Strawberry & CUP tunnels crossing the Wasatch Range to Salt Lake.",
         stationId: "09315000",
         stationLabel: "Central Utah WCD",
         portalUrl: "https://waterrights.utah.gov/",
@@ -1152,7 +1156,7 @@
       },
       "Trans-Mountain Diversion Tunnels": {
         cleanTitle: "Trans-Mountain Tunnels (CO)",
-        summary: "Adams Tunnel, Roberts Tunnel, Moffat Tunnel, and Boustead Tunnel conveying West Slope water under the Divide.",
+        summary: "Trans-mountain tunnels exporting West Slope water under the Divide.",
         stationId: "ROBTUNCO",
         stationLabel: "CDSS #ROBTUNCO",
         portalUrl: "https://dwr.state.co.us/Tools/Stations?station=ROBTUNCO",
@@ -1161,7 +1165,7 @@
       },
       "Uinta & Green Basin Canals": {
         cleanTitle: "Uinta & Green Basin Canals (UT)",
-        summary: "Direct agricultural diversions supporting irrigated alfalfa and cattle ranching across eastern Utah.",
+        summary: "Direct diversions for alfalfa & cattle ranching in eastern Utah.",
         stationId: "09315000",
         stationLabel: "USGS #09315000",
         portalUrl: "https://waterdata.usgs.gov/monitoring-location/09315000/#parameterCode=00060",
@@ -1170,7 +1174,7 @@
       },
       "Central Utah Project (CUP)": {
         cleanTitle: "Central Utah Project & Strawberry (UT)",
-        summary: "Trans-basin collection system conveying Green River tributaries across the Wasatch Range to Salt Lake City and Utah Valley.",
+        summary: "CUP trans-basin tunnels serving Salt Lake & Utah Valley cities.",
         stationId: "09315000",
         stationLabel: "Central Utah WCD",
         portalUrl: "https://waterrights.utah.gov/",
@@ -1179,7 +1183,7 @@
       },
       "Upper Green River Irrigation": {
         cleanTitle: "Upper Green River Irrigation (WY)",
-        summary: "Native grass pasture, hay production, and grazing diversions in Sublette and Sweetwater counties.",
+        summary: "Hay & pasture diversions in Sublette and Sweetwater counties.",
         stationId: "09211200",
         stationLabel: "USGS #09211200",
         portalUrl: "https://waterdata.usgs.gov/monitoring-location/09211200/#parameterCode=00060",
@@ -1188,7 +1192,7 @@
       },
       "San Juan Basin Diversions": {
         cleanTitle: "San Juan Basin Canals & NAPI (NM)",
-        summary: "Hogback, Fruitland, and Navajo Indian Irrigation Project (NIIP) diversions plus San Juan-Chama export tunnel.",
+        summary: "Hogback, Fruitland & NIIP canals plus San Juan-Chama export.",
         stationId: "09368000",
         stationLabel: "USGS #09368000",
         portalUrl: "https://waterdata.usgs.gov/monitoring-location/09368000/#parameterCode=00060",
@@ -1197,7 +1201,7 @@
       },
       "All-American Canal (AAC)": {
         cleanTitle: "All-American Canal (CA)",
-        summary: "80-mile gravity canal from Imperial Dam conveying 3.40 MAF to Imperial Irrigation District and Coachella Valley.",
+        summary: "80-mile gravity canal from Imperial Dam to IID & Coachella.",
         stationId: "09527700",
         stationLabel: "USGS #09527700 (AAC Intake)",
         portalUrl: "https://waterdata.usgs.gov/monitoring-location/09527700/#parameterCode=00060",
@@ -1206,7 +1210,7 @@
       },
       "Colorado River Aqueduct (CRA)": {
         cleanTitle: "Colorado River Aqueduct (CA)",
-        summary: "242-mile aqueduct with 5 pumping plants lifting water 1,617 ft across desert mountains to MWD in Los Angeles/San Diego.",
+        summary: "242-mile pumped aqueduct from Parker Dam to MWD Los Angeles.",
         stationId: "09424150",
         stationLabel: "USGS #09424150 (Lake Havasu Intake)",
         portalUrl: "https://waterdata.usgs.gov/monitoring-location/09424150/#parameterCode=00060",
@@ -1215,7 +1219,7 @@
       },
       "Lower River Gravity Canals (AZ)": {
         cleanTitle: "Lower River Gravity Canals (AZ)",
-        summary: "Senior run-of-the-river irrigation diversions for Palo Verde, Yuma Valley, and Wellton-Mohawk irrigation districts.",
+        summary: "Senior gravity diversions for Palo Verde, Yuma & Wellton-Mohawk.",
         stationId: "USBR-PARKER",
         stationLabel: "USBR Parker / Imperial Operations",
         portalUrl: "https://www.usbr.gov/lc/region/g4000/hourly/hourly.html",
@@ -1224,7 +1228,7 @@
       },
       "Central Arizona Project (CAP)": {
         cleanTitle: "Central Arizona Project (CAP)",
-        summary: "336-mile canal lifting water 2,900 ft from Lake Havasu across desert to Phoenix, Tucson, and tribal communities.",
+        summary: "336-mile canal lifting Lake Havasu water to Phoenix & Tucson.",
         stationId: "09426650",
         stationLabel: "USGS #09426650 (Mark Wilmer Pumping Plant)",
         portalUrl: "https://waterdata.usgs.gov/monitoring-location/09426650/#parameterCode=00060",
@@ -1233,7 +1237,7 @@
       },
       "Lake Mead SNWA Intakes": {
         cleanTitle: "Lake Mead Intakes / SNWA (NV)",
-        summary: "Three deep lake intakes (including low-lake pumping station at 860 ft) supplying 90% of Las Vegas drinking water.",
+        summary: "Three deep Lake Mead intakes (to 860 ft) serving Las Vegas.",
         stationId: "lake_mead",
         stationLabel: "USBR Lake Mead Pool",
         portalUrl: "https://www.usbr.gov/lc/region/g4000/hourly/mead-elv.html",
@@ -1242,7 +1246,7 @@
       },
       "Morelos Dam & Central Feeder Canal": {
         cleanTitle: "Morelos Dam & Main Canal",
-        summary: "Mexican diversion dam near Yuma directing treaty flows into Canal Alimentador Central for irrigation and municipal water.",
+        summary: "Diversion dam near Yuma feeding Mexico's Canal Alimentador Central.",
         stationId: "09522000",
         stationLabel: "USGS #09522000",
         portalUrl: "https://waterdata.usgs.gov/monitoring-location/09522000/#parameterCode=00060",
@@ -1251,7 +1255,7 @@
       },
       "Reservoir Open-Water Evaporation": {
         cleanTitle: "Reservoir Evaporation (Mead & Powell)",
-        summary: "Vast surface areas of Lake Mead (~0.55 MAF/yr) and Lake Powell (~0.35 MAF/yr) lost directly to arid atmospheric evaporation.",
+        summary: "Arid surface evaporation from Lake Mead (~0.55) & Powell (~0.35).",
         stationId: "lake_powell",
         stationLabel: "USBR Evaporation Accounting",
         portalUrl: "https://www.usbr.gov/uc/water/crsp/cs/gcd.html",
@@ -1260,7 +1264,7 @@
       },
       "River Transit & Riparian Losses": {
         cleanTitle: "River Transit Seepage & Losses",
-        summary: "Riverbed seepage, streamside vegetation evapotranspiration, and unmeasured operational losses on the lower river.",
+        summary: "Riverbed seepage, phreatophyte ET & lower channel transit losses.",
         stationId: "USBR-HOOVER",
         stationLabel: "USBR Lower Colorado Water Accounting",
         portalUrl: "https://www.usbr.gov/lc/region/g4000/hourly/hourly.html",
@@ -1271,7 +1275,7 @@
       // --- Tier 5: Consumptive Sector / End Use ---
       "Western Slope Agriculture": {
         cleanTitle: "Western Slope Agriculture (CO, UT, WY, NM)",
-        summary: "In-basin irrigated pasture, alfalfa, and cattle ranching across western Colorado, Utah, Wyoming, and New Mexico (~86% of Upper Basin use).",
+        summary: "Irrigated pasture, alfalfa & cattle across CO/UT/WY/NM (~86% Upper).",
         stationId: "09095500",
         stationLabel: "Upper Basin Agriculture",
         portalUrl: "https://waterdata.usgs.gov/monitoring-location/09095500/#parameterCode=00060",
@@ -1280,7 +1284,7 @@
       },
       "Front Range Municipalities": {
         cleanTitle: "Front Range Municipalities (Denver / CO Springs)",
-        summary: "Denver Water, Aurora, Colorado Springs, and Northern Colorado cities receiving trans-mountain water under the Continental Divide.",
+        summary: "Denver, Aurora, Co. Springs & Northern CO cities via Divide tunnels.",
         stationId: "ROBTUNCO",
         stationLabel: "CDSS #ROBTUNCO",
         portalUrl: "https://dwr.state.co.us/Tools/Stations?station=ROBTUNCO",
@@ -1289,7 +1293,7 @@
       },
       "Wasatch Front Municipalities": {
         cleanTitle: "Wasatch Front Cities (Salt Lake & Provo)",
-        summary: "Municipal and industrial water delivered via the Central Utah Project and Strawberry Valley to the Wasatch urban corridor.",
+        summary: "Wasatch Front M&I water delivered via CUP & Strawberry tunnels.",
         stationId: "09315000",
         stationLabel: "Utah Central Valley",
         portalUrl: "https://waterrights.utah.gov/",
@@ -1298,7 +1302,7 @@
       },
       "California Agriculture (Imperial & Coachella)": {
         cleanTitle: "California Agriculture (Imperial & Coachella)",
-        summary: "Senior 1901 Present Perfected Rights irrigating ~500,000 acres of winter crops and alfalfa in Imperial & Coachella Valleys (~77% of CA use).",
+        summary: "Senior 1901 rights irrigating ~500k acres in Imperial/Coachella.",
         stationId: "09527700",
         stationLabel: "USGS #09527700 (Imperial Valley)",
         portalUrl: "https://waterdata.usgs.gov/monitoring-location/09527700/#parameterCode=00060",
@@ -1307,7 +1311,7 @@
       },
       "Southern California Municipal (MWD)": {
         cleanTitle: "Southern California Cities (Los Angeles & San Diego)",
-        summary: "Metropolitan Water District of Southern California serving 19 million residents across LA, Orange, and San Diego counties (~23% of CA use).",
+        summary: "MWD Southern California serving 19M across LA, OC & San Diego.",
         stationId: "09424150",
         stationLabel: "USGS #09424150 (MWD CRA)",
         portalUrl: "https://waterdata.usgs.gov/monitoring-location/09424150/#parameterCode=00060",
@@ -1316,7 +1320,7 @@
       },
       "Arizona Mainstem Agriculture (Yuma & Palo Verde)": {
         cleanTitle: "Arizona Mainstem Agriculture (Yuma & Palo Verde)",
-        summary: "Senior run-of-the-river irrigation producing ~90% of North America's winter leafy greens in Yuma, Wellton-Mohawk, and Parker (~52% of AZ use).",
+        summary: "Yuma, Wellton-Mohawk & Parker winter produce (~52% of AZ use).",
         stationId: "USBR-PARKER",
         stationLabel: "USBR Parker Dam Tailwater",
         portalUrl: "https://www.usbr.gov/lc/region/g4000/hourly/hourly.html",
@@ -1325,7 +1329,7 @@
       },
       "Central Arizona Municipal (Phoenix & Tucson)": {
         cleanTitle: "Central Arizona Municipal (Phoenix & Tucson)",
-        summary: "Drinking water for 5+ million residents in Maricopa, Pinal, and Pima counties delivered via CAP canal (~32% of AZ use).",
+        summary: "Municipal water via CAP for Maricopa, Pinal & Pima (~32% of AZ).",
         stationId: "09426650",
         stationLabel: "USGS #09426650 (CAP)",
         portalUrl: "https://waterdata.usgs.gov/monitoring-location/09426650/#parameterCode=00060",
@@ -1334,7 +1338,7 @@
       },
       "Central Arizona Agriculture & Tribal": {
         cleanTitle: "Central Arizona Ag & Tribal (CAP)",
-        summary: "Pinal County agricultural irrigation and Gila River / Tohono O'odham tribal water settlements delivered through CAP canal (~16% of AZ use).",
+        summary: "Pinal ag & Gila/Tohono O'odham settlements via CAP (~16% of AZ).",
         stationId: "09426650",
         stationLabel: "CAP Pinal Reach",
         portalUrl: "https://www.cap-az.com/",
@@ -1343,7 +1347,7 @@
       },
       "Las Vegas Valley Municipal (SNWA)": {
         cleanTitle: "Las Vegas Valley Municipal (SNWA)",
-        summary: "Supplies 2.3 million residents and resort corridor in Clark County via Lake Mead deep straw intakes (>93% of NV use).",
+        summary: "Supplies 2.3M Clark County residents via Mead straws (>93% NV).",
         stationId: "lake_mead",
         stationLabel: "USBR Lake Mead",
         portalUrl: "https://www.snwa.com/",
@@ -1352,7 +1356,7 @@
       },
       "Southern Nevada Irrigation & Parks": {
         cleanTitle: "Southern Nevada Parks & Irrigation",
-        summary: "Treated landscape irrigation, parks, and golf courses utilizing recycled water and minor local allocations (<7% of NV use).",
+        summary: "Parks, golf & landscape irrigation plus reuse credits (<7% of NV).",
         stationId: "lake_mead",
         stationLabel: "SNWA Conservation Pool",
         portalUrl: "https://www.snwa.com/",
@@ -1361,7 +1365,7 @@
       },
       "Mexicali Valley Agriculture": {
         cleanTitle: "Mexicali Valley Agriculture (Mexico)",
-        summary: "Irrigation District 014 (Rio Colorado) watering wheat, cotton, and vegetables in Baja California and Sonora (~83% of Mexico use).",
+        summary: "Irrigation District 014 watering Baja & Sonora crops (~83% Mexico).",
         stationId: "09522000",
         stationLabel: "CILA Irrigation District 014",
         portalUrl: "https://www.ibwc.gov/",
@@ -1370,7 +1374,7 @@
       },
       "Baja Municipal (Tijuana & Mexicali)": {
         cleanTitle: "Baja California Cities (Tijuana & Mexicali)",
-        summary: "Drinking water pumped via the Rio Colorado-Tijuana Aqueduct across the Sierra de Juarez to 2+ million residents (~17% of Mexico use).",
+        summary: "Tijuana Aqueduct pumped over Sierra de Juarez for 2M+ (~17% MX).",
         stationId: "09522000",
         stationLabel: "Morelos Dam Municipal Take",
         portalUrl: "https://www.ibwc.gov/",
@@ -1379,7 +1383,7 @@
       },
       "Atmospheric Evaporation (Mead & Powell)": {
         cleanTitle: "Atmospheric Evaporation Losses",
-        summary: "Total evaporative loss to the atmosphere from Lake Powell, Lake Mead, Lake Mohave, and Lake Havasu reservoir pools.",
+        summary: "Total evaporative loss from Powell, Mead, Mohave & Havasu pools.",
         stationId: "lake_powell",
         stationLabel: "USBR CRSP / LC Accounting",
         portalUrl: "https://www.usbr.gov/uc/water/crsp/cs/gcd.html",
@@ -1388,7 +1392,7 @@
       },
       "Riparian & Channel Seepage": {
         cleanTitle: "Riparian & Seepage Losses",
-        summary: "Channel seepage into underlying alluvial aquifers and plant transpiration along the lower river corridor.",
+        summary: "Alluvial aquifer seepage & riparian ET along the lower corridor.",
         stationId: "USBR-HOOVER",
         stationLabel: "USBR River Accounting",
         portalUrl: "https://www.usbr.gov/lc/region/g4000/hourly/hourly.html",
@@ -1484,7 +1488,7 @@
       ` : '';
 
       return `
-        <div class="sankey-card" style="font-family:'Inter',sans-serif; min-width:260px; max-width:340px; line-height:1.4;">
+        <div class="sankey-card" style="font-family:'Inter',sans-serif; min-width:220px; max-width:280px; line-height:1.35;">
           <div style="font-size:13px; font-weight:800; color:#0f172a; margin-bottom:2px;">${cleanTitle}</div>
           <div style="font-size:11px; color:#475569; margin-bottom:6px; line-height:1.35;">${summary}</div>
           <div style="border-top:1px solid #e2e8f0; border-bottom:1px solid #e2e8f0; padding:4px 0; margin-bottom:6px; font-size:11px;">
@@ -1519,21 +1523,19 @@
       else if (d.category === 'deficit') { catLabel = "Storage Drawdown"; catColor = "#b2182b"; }
 
       return `
-        <div class="sankey-card" style="font-family:'Inter',sans-serif; min-width:250px; max-width:320px; line-height:1.4;">
+        <div class="sankey-card" style="font-family:'Inter',sans-serif; min-width:220px; max-width:276px; line-height:1.35;">
           <div style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:${catColor}; margin-bottom:2px;">${catLabel}</div>
-          <div style="font-size:13px; font-weight:800; color:#0f172a; margin-bottom:2px;">${conduitTitle}</div>
-          <div style="font-size:11px; color:#475569; margin-bottom:6px; line-height:1.35;">${sourceName} → ${targetName}</div>
-          <div style="border-top:1px solid #e2e8f0; border-bottom:1px solid #e2e8f0; padding:6px 0; margin-bottom:6px; font-size:11px;">
+          <div style="font-size:12.5px; font-weight:800; color:#0f172a; margin-bottom:5px;">${conduitTitle}</div>
+          <div style="border-top:1px solid #e2e8f0; padding-top:5px; font-size:11px;">
             <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
               <span style="color:#64748b;">Annual Volume:</span>
               <strong style="color:#0f172a; font-variant-numeric:tabular-nums;">${d.value.toFixed(2)} MAF/yr</strong>
             </div>
             <div style="display:flex; justify-content:space-between;">
-              <span style="color:#64748b;">Continuous Rate (Equiv):</span>
+              <span style="color:#64748b;">Equiv. Rate:</span>
               <strong style="color:#0284c7; font-variant-numeric:tabular-nums;">~${rateCfs.toLocaleString()} cfs</strong>
             </div>
           </div>
-          <div style="font-size:10.5px; color:#64748b;">Water Budget Accounting • 1 MAF/yr ≈ 1,381 cfs</div>
         </div>
       `;
     }
@@ -2121,11 +2123,14 @@
 
     function updateTooltip(e) {
       const tooltip = document.getElementById("sankey-tooltip");
-      const rect = tooltip.getBoundingClientRect();
+      const tipW = tooltip.offsetWidth || tooltip.getBoundingClientRect().width;
+      const tipH = tooltip.offsetHeight || tooltip.getBoundingClientRect().height;
       let x = e.clientX + 14;
       let y = e.clientY + 14;
-      if (x + rect.width > window.innerWidth - 16) x = e.clientX - rect.width - 14;
-      if (y + rect.height > window.innerHeight - 16) y = e.clientY - rect.height - 14;
+      if (x + tipW > window.innerWidth - 12) x = e.clientX - tipW - 14;
+      if (y + tipH > window.innerHeight - 12) y = e.clientY - tipH - 14;
+      x = Math.max(8, Math.min(window.innerWidth - tipW - 12, x));
+      y = Math.max(8, Math.min(window.innerHeight - tipH - 12, y));
       tooltip.style.left = x + 'px';
       tooltip.style.top = y + 'px';
     }
@@ -2142,13 +2147,16 @@
     function positionStackedTooltip(e) {
       const tip = document.getElementById('stacked-tooltip');
       if (!tip || !stackedHoverActive || !e) return;
-      const rect = tip.getBoundingClientRect();
+      const tipW = tip.offsetWidth || tip.getBoundingClientRect().width;
+      const tipH = tip.offsetHeight || tip.getBoundingClientRect().height;
       let x = e.clientX + 14;
       let y = e.clientY + 14;
-      if (x + rect.width > window.innerWidth - 16) x = e.clientX - rect.width - 14;
-      if (y + rect.height > window.innerHeight - 16) y = e.clientY - rect.height - 14;
-      tip.style.left = Math.max(8, x) + 'px';
-      tip.style.top = Math.max(8, y) + 'px';
+      if (x + tipW > window.innerWidth - 12) x = e.clientX - tipW - 14;
+      if (y + tipH > window.innerHeight - 12) y = e.clientY - tipH - 14;
+      x = Math.max(8, Math.min(window.innerWidth - tipW - 12, x));
+      y = Math.max(8, Math.min(window.innerHeight - tipH - 12, y));
+      tip.style.left = x + 'px';
+      tip.style.top = y + 'px';
     }
 
     (function bindStackedMouseTracking() {

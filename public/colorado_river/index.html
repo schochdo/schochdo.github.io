@@ -2022,8 +2022,7 @@
                 const supply = items[0].parsed.y;
                 const demand = items[1] ? items[1].parsed.y : 0;
                 const diff = supply - demand;
-                const status = diff >= 0 ? 'Surplus (Storage Refilling)' : 'Deficit (Storage Draining)';
-                return `\nNet Hydrologic Balance: ${diff >= 0 ? '+' : ''}${parseInt(diff).toLocaleString()} cfs\nSystem Mode: ${status}`;
+                return `Net Balance: ${diff >= 0 ? '+' : ''}${parseInt(diff).toLocaleString()} cfs (${diff >= 0 ? 'Refilling' : 'Draining'})`;
               }
             }
           }
@@ -2189,7 +2188,7 @@
                     };
                     return desc[items[0].label] || items[0].label;
                   },
-                  label: ctx => ` Baseline Normal Consumptive Use: ${ctx.parsed.y.toFixed(1)} MAF/yr`
+                  label: ctx => ` Consumptive Use: ${ctx.parsed.y.toFixed(1)} MAF/yr`
                 }
               }
             },

@@ -161,17 +161,20 @@
       background: #ffffff;
       border: 1.5px solid #94a3b8;
       border-radius: 2px;
-      padding: 10px 14px;
-      font-size: 12px;
+      padding: 9px 11px;
+      font-size: 11.5px;
       color: #0f172a;
       pointer-events: none;
       opacity: 0;
       transform: translateY(4px);
       transition: opacity 0.12s ease, transform 0.12s ease;
       z-index: 1000;
-      max-width: 360px;
+      width: max-content;
+      max-width: min(300px, calc(100vw - 24px));
+      box-sizing: border-box;
+      overflow-wrap: break-word;
       box-shadow: 0 8px 24px rgba(15, 23, 42, 0.14), 0 2px 6px rgba(15, 23, 42, 0.06);
-      line-height: 1.4;
+      line-height: 1.35;
     }
     #flow-tooltip.visible {
       opacity: 1;
@@ -791,60 +794,60 @@
             <!-- Lake Granby Storage Pool & Granby Dam -->
             <rect x="91" y="271" width="22" height="8" rx="2" fill="url(#res-water-grad)" stroke="var(--res-stroke)" stroke-width="1.2"
               class="cursor-pointer"
-              onmouseenter="showElevationGageInfo('Lake Granby (C-BT Storage Pool)', 'Mile 20.0', '8,280 ft (Full Pool)', '539,800 AF Capacity', 'Granby Dam Outlet', 'C-BT Headwaters Storage', 'Primary storage reservoir for Colorado-Big Thompson trans-mountain diversion project under the Continental Divide.')"
+              onmouseenter="showElevationGageInfo('Lake Granby (C-BT Pool)', 'Mile 20.0', '8,280 ft (Full Pool)', '539,800 AF Capacity', 'Granby Dam Outlet', 'C-BT Headwaters Storage', 'Primary C-BT storage feeding Adams Tunnel exports.')"
               onmouseleave="hideGapInfo()"/>
             <line x1="113" y1="270" x2="113" y2="280" stroke="var(--dam-color)" stroke-width="2.5" stroke-linecap="square"/>
 
             <!-- Flaming Gorge Dam & Pool on Green River (Elev 6,040 ft) -->
             <rect x="333" y="356" width="18" height="8" rx="2" fill="var(--res-pool)" stroke="var(--res-stroke)" stroke-width="1.2"
               class="cursor-pointer"
-              onmouseenter="showElevationGageInfo('Flaming Gorge Dam & Reservoir (Green River)', 'Mile 290 above Confluence', '6,040 ft (Full Pool)', '3.78M AF Capacity', '450 ft Dam Height', 'DROA Drought Buffer', 'Primary drought response reserve supporting Lake Powell under the Drought Response Operations Agreement.')"
+              onmouseenter="showElevationGageInfo('Flaming Gorge Reservoir', 'Mile 290 abv Conf', '6,040 ft (Full Pool)', '3.75M AF Capacity', '450 ft Dam Height', 'DROA Drought Buffer', 'Upper Green drought-response reserve for Lake Powell.')"
               onmouseleave="hideGapInfo()"/>
             <line x1="342" y1="355" x2="342" y2="365" stroke="var(--dam-color)" stroke-width="2.5" stroke-linecap="square"/>
             <rect x="337.0" y="355.0" width="10.0" height="10.0" rx="1" fill="#ffffff" stroke="var(--trib-color)" stroke-width="2.2" class="profile-node"
-              onmouseenter="showElevationGageInfo('USGS #09315000 Green River at Green River, UT', 'Green River Trib (Mile 118 above Confluence)', '4,080 ft', '3,880 cfs', 'None (Free-flowing)', 'Major Inflow Control', 'Dominant Upper Basin tributary draining WY, UT, and CO. Provides ~33% of total Colorado River water.')"
+              onmouseenter="showElevationGageInfo('USGS #09315000 Green River at Green River, UT', 'Mile 118 abv Conf', '4,080 ft', '3,880 cfs Avg', 'Free-flowing', 'Major Inflow Control', 'Drains WY, UT, CO (~34% of Lake Powell inflow).')"
               onmouseleave="hideGapInfo()"/>
 
             <!-- Blue Mesa Dam on Gunnison River (Elev 7,519 ft) -->
             <rect x="218" y="300" width="16" height="8" rx="2" fill="var(--res-pool)" stroke="var(--res-stroke)" stroke-width="1.2"
               class="cursor-pointer"
-              onmouseenter="showElevationGageInfo('Blue Mesa Dam & Reservoir (Gunnison River)', 'Mile 60 above Grand Junction', '7,519 ft (Full Pool)', '829,500 AF Capacity', 'Wayne N. Aspinall Unit', 'Upper Basin DROA Storage', 'Largest water body in Colorado. Regulates Gunnison River before it carves through Black Canyon.')"
+              onmouseenter="showElevationGageInfo('Blue Mesa Reservoir', 'Mile 60 abv GJ', '7,519 ft (Full Pool)', '829,500 AF Capacity', 'Aspinall Unit', 'Upper Basin DROA Storage', 'Colorado\'s largest lake; regulates Gunnison inflows.')"
               onmouseleave="hideGapInfo()"/>
             <line x1="226" y1="299" x2="226" y2="309" stroke="var(--dam-color)" stroke-width="2.5" stroke-linecap="square"/>
 
             <!-- Navajo Dam on San Juan River (Elev 6,085 ft) -->
             <rect x="442" y="355" width="16" height="8" rx="2" fill="var(--res-pool)" stroke="var(--res-stroke)" stroke-width="1.2"
               class="cursor-pointer"
-              onmouseenter="showElevationGageInfo('Navajo Dam & Reservoir (San Juan River)', 'Mile 120 above Powell', '6,085 ft (Full Pool)', '1.70M AF Capacity', 'San Juan-Chama Forebay', 'Four Corners Master Reserve', 'Impounds Navajo Lake in New Mexico. Supplies San Juan-Chama diversion and Navajo Indian Irrigation Project.')"
+              onmouseenter="showElevationGageInfo('Navajo Reservoir (San Juan River)', 'Mile 120 abv Powell', '6,085 ft (Full Pool)', '1.70M AF Capacity', 'San Juan-Chama Forebay', 'Four Corners Reserve', 'Supplies San Juan-Chama diversion &amp; NIIP irrigation.')"
               onmouseleave="hideGapInfo()"/>
             <line x1="450" y1="354" x2="450" y2="364" stroke="var(--dam-color)" stroke-width="2.5" stroke-linecap="square"/>
 
             <!-- Lake Powell Storage Pool & Glen Canyon Dam -->
             <rect x="372" y="451" width="109" height="8" rx="2" fill="url(#res-water-grad)" stroke="var(--res-stroke)" stroke-width="1.5"
               class="cursor-pointer"
-              onmouseenter="showElevationGageInfo('Lake Powell Reservoir Pool', 'Mile 390.0 to 535.0 (145 mi)', '3,540 ft (Current Pool)', 'Active Storage: ~7.6M AF', '390 ft Head Drop at Glen Canyon Dam', 'Upper Basin Master Storage Buffer', 'Stores up to 24.3 MAF when full. Buffer protecting Upper Basin compact compliance during multi-year droughts.')"
+              onmouseenter="showElevationGageInfo('Lake Powell Reservoir Pool', 'Mile 390–535 (145 mi)', '3,540 ft (Current)', '24.32M AF Capacity', '390 ft Head Drop', 'Upper Basin Master Buffer', 'Min power: 3,490 ft • Dead pool: 3,370 ft • ~0.38 MAF evap.')"
               onmouseleave="hideGapInfo()"/>
             <line x1="481" y1="449" x2="481" y2="470" stroke="var(--dam-color)" stroke-width="3.5" stroke-linecap="square"/>
 
             <!-- Lake Mead Storage Pool & Hoover Dam -->
             <rect x="695" y="546" width="64" height="8" rx="2" fill="url(#res-water-grad)" stroke="var(--res-stroke)" stroke-width="1.5"
               class="cursor-pointer"
-              onmouseenter="showElevationGageInfo('Lake Mead Reservoir Pool', 'Mile 780.0 to 865.0 (85 mi)', '1,065 ft (Current Pool)', 'Active Storage: ~8.8M AF', '395 ft Head Drop at Hoover Dam', 'Lower Basin Flow Master Control', 'Largest reservoir by volume in the US (26.1M AF capacity). Governs water releases to NV, AZ, CA, and Mexico.')"
+              onmouseenter="showElevationGageInfo('Lake Mead Reservoir Pool', 'Mile 780–865 (85 mi)', '1,041 ft (Current)', '26.13M AF Capacity', '395 ft Head Drop', 'Lower Basin Master Control', 'Tier 1: 1,075 ft • Dead pool: 895 ft • ~0.65 MAF evap.')"
               onmouseleave="hideGapInfo()"/>
             <line x1="759" y1="544" x2="759" y2="565" stroke="var(--dam-color)" stroke-width="3.5" stroke-linecap="square"/>
 
             <!-- Lake Mohave & Davis Dam -->
             <rect x="760" y="561" width="49" height="6" rx="1.5" fill="var(--res-pool)" stroke="var(--res-stroke)" stroke-width="1.2"
               class="cursor-pointer"
-              onmouseenter="showElevationGageInfo('Lake Mohave (Davis Dam Pool)', 'Mile 865.0 to 932.0 (67 mi)', '647 ft (Full Pool)', '1.81M AF Capacity', '135 ft Head Drop at Davis Dam', 'Downstream Reregulation', 'Reregulates hydro peaking releases from Hoover Dam to provide uniform flow downstream to Parker Dam.')"
-              onmouseleave="hideGapInfo()"/>>
+              onmouseenter="showElevationGageInfo('Lake Mohave (Davis Dam Pool)', 'Mile 865–932 (67 mi)', '647 ft (Full Pool)', '1.81M AF Capacity', '135 ft Head Drop', 'Downstream Reregulation', 'Smooths Hoover peaking releases toward Parker Dam.')"
+              onmouseleave="hideGapInfo()"/>
             <line x1="809" y1="561" x2="809" y2="571" stroke="var(--dam-color)" stroke-width="2.5" stroke-linecap="square"/>
 
             <!-- Lake Havasu & Parker Dam -->
             <rect x="810" y="568" width="65" height="6" rx="1.5" fill="var(--res-pool)" stroke="var(--res-stroke)" stroke-width="1.2"
               class="cursor-pointer"
-              onmouseenter="showElevationGageInfo('Lake Havasu (Parker Dam Pool)', 'Mile 932.0 to 977.0 (45 mi)', '450 ft (Full Pool)', '619,400 AF Capacity', '72 ft Head Drop at Parker Dam', 'Major Pumping Forebay', 'Pumping forebay for the Colorado River Aqueduct (CRA -> SoCal) and Central Arizona Project (CAP -> Phoenix/Tucson).')"
-              onmouseleave="hideGapInfo()"/>>
+              onmouseenter="showElevationGageInfo('Lake Havasu (Parker Dam Pool)', 'Mile 932–977 (45 mi)', '450 ft (Full Pool)', '619,400 AF Capacity', '72 ft Head Drop', 'Major Pumping Forebay', 'Forebay for CRA (SoCal) and CAP (Phoenix/Tucson) intakes.')"
+              onmouseleave="hideGapInfo()"/>
             <line x1="875" y1="568" x2="875" y2="576" stroke="var(--dam-color)" stroke-width="2.5" stroke-linecap="square"/>
 
             <!-- Imperial Dam Sluiceway -->
@@ -856,57 +859,57 @@
             <!-- USGS Sentinel Streamgaging Stations -->
             <!-- Gage 1: Source / Grand Lake (Mile 0) -->
             <rect x="75.0" y="198.0" width="10.0" height="10.0" rx="1" fill="#ffffff" stroke="#0284c7" stroke-width="2.0" class="profile-node"
-              onmouseenter="showElevationGageInfo('USGS #09010500 Colorado River below Baker Gulch, CO', 'Mile 8.5 (Continental Divide Headwaters)', '8,750 ft', '18 cfs', 'None (Alpine Snowmelt)', 'Alpine Source Baseline', 'Alpine origin near La Poudre Pass. Tracks natural headwater runoff above all trans-basin diversion tunnels.')"
+              onmouseenter="showElevationGageInfo('USGS #09010500 Baker Gulch, CO', 'Mile 8.5 (Headwaters)', '8,750 ft', '18 cfs Avg', 'Alpine Snowmelt', 'Source Baseline', 'Tracks natural headwater runoff above Front Range tunnels.')"
               onmouseleave="hideGapInfo()"/>
 
             <!-- Gage 2: Dotsero (Mile 135) -->
             <rect x="175.5" y="352.5" width="9.0" height="9.0" rx="1" fill="#ffffff" stroke="#0284c7" stroke-width="1.8" class="profile-node"
-              onmouseenter="showElevationGageInfo('USGS #09070500 Colorado River near Dotsero, CO (Shoshone Call)', 'Mile 134.8', '6,130 ft', '1,240 cfs', 'Shoshone Hydroelectric Plant (1902 Call)', 'Mainstem Mountain Reach', 'Enforces the Shoshone Hydroelectric Plant 1902 senior non-consumptive call (1,250 cfs / 1,408 cfs total) above Glenwood Canyon, governing upstream Front Range tunnel exports.')"
+              onmouseenter="showElevationGageInfo('USGS #09070500 Dotsero (Shoshone Call)', 'Mile 134.8', '6,130 ft', '1,240 cfs Avg', 'Glenwood Canyon Drop', 'Shoshone 1902 Call', 'Administers Shoshone 1,250 cfs 1902 senior call over tunnels.')"
               onmouseleave="hideGapInfo()"/>
 
             <!-- Gage 3: Cameo / Grand Valley (Mile 190) -->
             <rect x="221.5" y="403.5" width="9.0" height="9.0" rx="1" fill="#ffffff" stroke="#0284c7" stroke-width="1.8" class="profile-node"
-              onmouseenter="showElevationGageInfo('USGS #09095500 Colorado River near Cameo, CO', 'Mile 190.2', '4,790 ft', '2,150 cfs', 'Grand Valley Diversion Roller Dam', 'Grand Valley Agricultural Control', 'Critical regulatory gage for Grand Valley irrigation call. Determines whether senior water rights force junior upstream storage curtailments.')"
+              onmouseenter="showElevationGageInfo('USGS #09095500 Colorado River near Cameo, CO', 'Mile 190.2', '4,790 ft', '2,150 cfs Avg', 'Grand Valley Roller Dam', 'Grand Valley Control', 'Governs senior Grand Valley irrigation call above Gunnison.')"
               onmouseleave="hideGapInfo()"/>
 
             <!-- Gage 4: Cisco (Mile 285) -->
             <rect x="266.5" y="430.5" width="9.0" height="9.0" rx="1" fill="#ffffff" stroke="#0284c7" stroke-width="1.8" class="profile-node"
-              onmouseenter="showElevationGageInfo('USGS #09180500 Colorado River near Cisco, UT', 'Mile 285.4 (CO-UT State Line)', '4,090 ft', '3,920 cfs', 'None (Free-flowing Canyons)', 'Upper Colorado Master Inflow', 'Master accounting station for Colorado mainstem inflow before Green River junction. Drains 24,100 sq mi of Colorado Rockies.')"
+              onmouseenter="showElevationGageInfo('USGS #09180500 Colorado River near Cisco, UT', 'Mile 285.4', '4,090 ft', '3,920 cfs Avg', 'Free-flowing Canyons', 'Mainstem Inflow', 'Upper CO mainstem yield before Green River confluence.')"
               onmouseleave="hideGapInfo()"/>
 
             <!-- Confluence Node: Green + Colorado (Mile 350) -->
             <rect x="336.0" y="437.0" width="12.0" height="12.0" rx="1" fill="#0d9488" stroke="#ffffff" stroke-width="2.0" class="profile-node"
-              onmouseenter="showElevationGageInfo('Cataract Canyon Confluence (Green & Colorado Rivers)', 'Mile 350.0 (Canyonlands National Park)', '3,880 ft', 'Combined: ~7,800 cfs', 'Cataract Canyon Rapids (Drops 400 ft in 14 mi)', 'Master Basin Confluence', 'Topological junction of the Green and Colorado rivers. The combined river doubles in discharge before plunging into Lake Powell.')"
+              onmouseenter="showElevationGageInfo('Cataract Canyon Confluence', 'Mile 350.0', '3,880 ft', '~7,800 cfs Avg', '400 ft / 14 mi', 'Master Confluence', 'Green + Colorado merge above Lake Powell (~10.45 MAF/yr).')"
               onmouseleave="hideGapInfo()"/>
 
             <!-- Gage 5: Lees Ferry (Mile 551) -->
             <rect x="496.5" y="465.5" width="13.0" height="13.0" rx="1" fill="#0284c7" stroke="#ffffff" stroke-width="2.2" class="profile-node"
-              onmouseenter="showElevationGageInfo('USGS #09380000 at Lees Ferry, AZ', 'Mile 551.0 (Mile 0.0 of Compact)', '3,110 ft', '6,680 cfs', 'Glen Canyon Dam Release', '1922 Compact Divide', '1922 Colorado River Compact legal division point between Upper and Lower Basins. Mandates 75 MAF rolling 10-year delivery.')"
+              onmouseenter="showElevationGageInfo('USGS #09380000 at Lees Ferry, AZ', 'Mile 551.0 (Compact Mile 0)', '3,110 ft', '6,680 cfs', 'Glen Canyon Release', '1922 Compact Divide', 'Legal Upper/Lower Basin divider (75 MAF/10-yr Compact rule).')"
               onmouseleave="hideGapInfo()"/>
 
             <!-- Gage 6: Grand Canyon / Phantom Ranch (Mile 639) -->
             <rect x="535.5" y="493.5" width="9.0" height="9.0" rx="1" fill="#ffffff" stroke="#0284c7" stroke-width="1.8" class="profile-node"
-              onmouseenter="showElevationGageInfo('USGS #09402500 near Grand Canyon, AZ (Phantom Ranch)', 'Mile 639.0 (Mile 88 below Lees Ferry)', '2,420 ft', '7,150 cfs', 'Granite Gorge Rapids', 'Mid-Canyon Gaging Station', 'Only mid-canyon streamgage accessible by foot/mule. Gages sediment pulses and Little Colorado River flash flood inflows.')"
+              onmouseenter="showElevationGageInfo('USGS #09402500 Phantom Ranch, AZ', 'Mile 639.0', '2,420 ft', '7,150 cfs', 'Granite Gorge', 'Mid-Canyon Station', 'Tracks sediment pulses &amp; Little Colorado inflows in canyon.')"
               onmouseleave="hideGapInfo()"/>
 
             <!-- Gage 7: Diamond Creek (Mile 776) -->
             <rect x="657.5" y="534.5" width="9.0" height="9.0" rx="1" fill="#ffffff" stroke="#0284c7" stroke-width="1.8" class="profile-node"
-              onmouseenter="showElevationGageInfo('USGS #09404200 above Diamond Creek, AZ', 'Mile 776.0 (Mile 225 below Lees Ferry)', '1,335 ft', '8,920 cfs', 'Lake Mead Delta Inflow', 'Lower Grand Canyon Compliance', 'End of 137-mile wilderness canyon stretch. Measures canyon wave travel lag and Lake Mead inflow.')"
+              onmouseenter="showElevationGageInfo('USGS #09404200 Diamond Creek, AZ', 'Mile 776.0', '1,335 ft', '8,920 cfs', 'Mead Delta Inflow', 'Lower Canyon Compliance', 'Terminal Grand Canyon gauge entering Lake Mead.')"
               onmouseleave="hideGapInfo()"/>
 
             <!-- Gage 8: Hoover Dam (Mile 905) -->
             <rect x="753.5" y="544.5" width="11.0" height="11.0" rx="1" fill="#334155" stroke="#ffffff" stroke-width="1.8" class="profile-node"
-              onmouseenter="showElevationGageInfo('Hoover Dam (USBR Hydroelectric Operations)', 'Mile 905.0', '1,220 ft (Crest) / 1,040 ft (Pool)', '7,502 cfs Release', '395 ft Active Hydraulic Head Drop', 'Lower Basin Flow Master Control', 'Controls all water deliveries to CA, AZ, NV, and Mexico. Releases water into Lake Mohave based on downstream water orders.')"
+              onmouseenter="showElevationGageInfo('Hoover Dam (USBR Operations)', 'Mile 905.0', '1,220 ft Crest / 1,041 ft Pool', '7,502 cfs Avg', '395 ft Head Drop', 'Lower Basin Control', 'Releases scheduled deliveries to NV, AZ, CA, and Mexico.')"
               onmouseleave="hideGapInfo()"/>
 
             <!-- Gage 9: Below Imperial Dam (Mile 1,195) -->
             <rect x="971.5" y="579.5" width="9.0" height="9.0" rx="1" fill="#ffffff" stroke="#0284c7" stroke-width="1.8" class="profile-node"
-              onmouseenter="showElevationGageInfo('USGS #09429500 below Imperial Dam, AZ-CA', 'Mile 1,195.0', '160 ft', '186 cfs', 'All-American Canal Diverts ~3,600+ cfs', 'Agricultural Diversion Control', 'Residual channel flow after ~80% of Lower Basin water is diverted into the All-American Canal for Imperial Valley and Gila Project.')"
+              onmouseenter="showElevationGageInfo('USGS #09429500 below Imperial Dam, AZ-CA', 'Mile 1,195.0', '160 ft', '186 cfs', 'AAC Takes ~3,600 cfs', 'Diversion Control', 'Residual mainstem flow after All-American &amp; Gila canals.')"
               onmouseleave="hideGapInfo()"/>
 
             <!-- Gage 10: Gulf of California / Delta (Mile 1,400) -->
             <rect x="1125.0" y="585.0" width="10.0" height="10.0" rx="1" fill="#0284c7" stroke="#ffffff" stroke-width="2.0" class="profile-node"
-              onmouseenter="showElevationGageInfo('Colorado River Delta & Sea Level', 'Mile 1,400.0', '0 ft (Sea Level)', '0 cfs (Dry Sands)', 'Historical Delta Estuary', 'Terminal Ocean Sink', 'Historically discharged ~15 MAF/yr into Gulf of California. Now largely desiccated sandflats except during pulse flows.')"
+              onmouseenter="showElevationGageInfo('Colorado River Delta (Mexico)', 'Mile 1,400.0', '0 ft (Sea Level)', '0 cfs (Dewatered)', 'Historic Estuary', 'Terminal Sink', 'Dewatered below Morelos Dam outside Minute 323 pulses.')"
               onmouseleave="hideGapInfo()"/>
           </g>
 
@@ -916,7 +919,7 @@
           <g id="layer-labels-and-callouts">
             <!-- 1. Lake Granby Callout Badge (Safely offset to right of slope with leader line to dam crest) -->
             <g id="badge-lake-granby" class="cursor-pointer"
-               onmouseenter="showElevationGageInfo('Lake Granby (C-BT Storage Pool)', 'Mile 20.0', '8,280 ft (Full Pool)', '539,800 AF Capacity', 'Granby Dam Outlet', 'C-BT Headwaters Storage', 'Primary storage reservoir for Colorado-Big Thompson trans-mountain diversion project under the Continental Divide.')"
+               onmouseenter="showElevationGageInfo('Lake Granby (C-BT Pool)', 'Mile 20.0', '8,280 ft (Full Pool)', '539,800 AF Capacity', 'Granby Dam Outlet', 'C-BT Headwaters Storage', 'Primary C-BT storage feeding Adams Tunnel exports.')"
                onmouseleave="hideGapInfo()">
               <!-- Leader line pointing from card directly to dam crest -->
               <line x1="122" y1="256" x2="113" y2="271" stroke="#0284c7" stroke-width="1.2" stroke-linecap="square"/>
@@ -927,7 +930,7 @@
 
             <!-- 2. Blue Mesa Label Badge (Safely carded to the left of Gunnison vertical line) -->
             <g id="badge-blue-mesa" class="cursor-pointer"
-               onmouseenter="showElevationGageInfo('Blue Mesa Dam & Reservoir (Gunnison River)', 'Mile 60 above Grand Junction', '7,519 ft (Full Pool)', '829,500 AF Capacity', 'Wayne N. Aspinall Unit', 'Upper Basin DROA Storage', 'Largest water body in Colorado. Regulates Gunnison River before it carves through Black Canyon.')"
+               onmouseenter="showElevationGageInfo('Blue Mesa Reservoir', 'Mile 60 abv GJ', '7,519 ft (Full Pool)', '829,500 AF Capacity', 'Aspinall Unit', 'Upper Basin DROA Storage', 'Colorado\'s largest lake; regulates Gunnison inflows.')"
                onmouseleave="hideGapInfo()">
               <rect x="152" y="295" width="60" height="18" rx="1.5" fill="#ffffff" fill-opacity="0.97" stroke="var(--res-stroke)" stroke-width="1.2" filter="drop-shadow(0 1px 4px rgba(15,23,42,0.09))"/>
               <text x="182" y="308" text-anchor="middle" class="text-[9px] fill-slate-900 font-bold">Blue Mesa</text>
@@ -935,7 +938,7 @@
 
             <!-- 3. Flaming Gorge Label Badge (Safely carded to the left of Green River vertical line) -->
             <g id="badge-flaming-gorge" class="cursor-pointer"
-               onmouseenter="showElevationGageInfo('Flaming Gorge Dam & Reservoir (Green River)', 'Mile 290 above Confluence', '6,040 ft (Full Pool)', '3.78M AF Capacity', '450 ft Dam Height', 'DROA Drought Buffer', 'Primary drought response reserve supporting Lake Powell under the Drought Response Operations Agreement.')"
+               onmouseenter="showElevationGageInfo('Flaming Gorge Reservoir', 'Mile 290 abv Conf', '6,040 ft (Full Pool)', '3.75M AF Capacity', '450 ft Dam Height', 'DROA Drought Buffer', 'Upper Green drought-response reserve for Lake Powell.')"
                onmouseleave="hideGapInfo()">
               <rect x="246" y="349" width="80" height="18" rx="1.5" fill="#ffffff" fill-opacity="0.97" stroke="var(--res-stroke)" stroke-width="1.2" filter="drop-shadow(0 1px 4px rgba(15,23,42,0.09))"/>
               <text x="286" y="362" text-anchor="middle" class="text-[9px] fill-slate-900 font-bold">Flaming Gorge</text>
@@ -943,7 +946,7 @@
 
             <!-- 4. Navajo Dam Label Badge (Safely carded to the left of San Juan vertical line) -->
             <g id="badge-navajo-dam" class="cursor-pointer"
-               onmouseenter="showElevationGageInfo('Navajo Dam & Reservoir (San Juan River)', 'Mile 120 above Powell', '6,085 ft (Full Pool)', '1.70M AF Capacity', 'San Juan-Chama Forebay', 'Four Corners Master Reserve', 'Impounds Navajo Lake in New Mexico. Supplies San Juan-Chama diversion and Navajo Indian Irrigation Project.')"
+               onmouseenter="showElevationGageInfo('Navajo Reservoir (San Juan River)', 'Mile 120 abv Powell', '6,085 ft (Full Pool)', '1.70M AF Capacity', 'San Juan-Chama Forebay', 'Four Corners Reserve', 'Supplies San Juan-Chama diversion &amp; NIIP irrigation.')"
                onmouseleave="hideGapInfo()">
               <rect x="362" y="348" width="74" height="18" rx="1.5" fill="#ffffff" fill-opacity="0.97" stroke="var(--res-stroke)" stroke-width="1.2" filter="drop-shadow(0 1px 4px rgba(15,23,42,0.09))"/>
               <text x="399" y="361" text-anchor="middle" class="text-[9px] fill-slate-900 font-bold">Navajo Dam</text>
@@ -952,7 +955,7 @@
             <!-- 5. Major Basin Headwaters Cards (Major Tributaries) -->
             <!-- Green River Basin Card -->
             <g transform="translate(225, 18)" class="cursor-pointer"
-               onmouseenter="showElevationGageInfo('Green River Headwaters & Wind River Range', '730 River Miles to Confluence', '13,800 ft (Alpine Crest)', '4.90 MAF/yr Mean Runoff', 'Alpine Fall Line to Canyonlands', 'Largest Colorado River Tributary', 'Originates in Wyoming Wind River Range glacial cirques and Uinta Mountains, Utah. Regulated at Flaming Gorge Dam.')"
+               onmouseenter="showElevationGageInfo('Green River Headwaters', '730 mi to Confluence', '13,800 ft Crest', '4.90 MAF/yr Mean', 'WY Wind River Range', 'Largest Tributary', 'Drains WY/UT snowpack into Flaming Gorge &amp; Canyonlands.')"
                onmouseleave="hideGapInfo()">
               <rect x="0" y="0" width="234" height="40" rx="2" fill="#ffffff" fill-opacity="0.97" stroke="#0d9488" stroke-width="1.5" filter="drop-shadow(0 2px 8px rgba(13,148,136,0.14))"/>
               <text x="117" y="16" text-anchor="middle" class="text-[12px] font-black fill-teal-950">Green River Basin (4.90 MAF &bull; 730 mi)</text>
@@ -961,7 +964,7 @@
 
             <!-- Gunnison River Basin Card -->
             <g transform="translate(116, 90)" class="cursor-pointer"
-               onmouseenter="showElevationGageInfo('Gunnison River Basin (Elk Mountains)', 'Mile 190 at Grand Junction', '12,000 ft Crest', '2.10 MAF/yr Mean Runoff', 'Black Canyon Gorge', 'Second-Largest Inflow', 'Carves the sheer Black Canyon of the Gunnison. Joins mainstem Colorado at Grand Junction.')"
+               onmouseenter="showElevationGageInfo('Gunnison River Basin', 'Mile 190 at GJ', '12,000 ft Crest', '2.10 MAF/yr Mean', 'Black Canyon Gorge', '2nd-Largest Inflow', 'Drains CO Elk Mtns through Blue Mesa to Grand Junction.')"
                onmouseleave="hideGapInfo()">
               <rect x="0" y="0" width="220" height="38" rx="2" fill="#ffffff" fill-opacity="0.97" stroke="#0d9488" stroke-width="1.4" filter="drop-shadow(0 2px 6px rgba(13,148,136,0.12))"/>
               <text x="110" y="16" text-anchor="middle" class="text-[11.5px] font-black fill-teal-950">Gunnison River (2.10 MAF)</text>
@@ -970,7 +973,7 @@
 
             <!-- San Juan River Basin Card -->
             <g transform="translate(365, 110)" class="cursor-pointer"
-               onmouseenter="showElevationGageInfo('San Juan River Basin (San Juan Mountains)', 'Enters Lake Powell at Mile 480', '11,500 ft Alpine Crest', '2.50 MAF/yr Mean Runoff', 'Four Corners Canyon Country', 'Third-Largest Inflow', 'Drains the snowy San Juan range in southwest Colorado and northern New Mexico. Joined by Animas River.')"
+               onmouseenter="showElevationGageInfo('San Juan River Basin', 'Enters Powell Mile 480', '11,500 ft Crest', '2.50 MAF/yr Mean', 'Four Corners Canyons', '3rd-Largest Inflow', 'Drains SW Colorado &amp; NM (Navajo Dam &amp; Animas River).')"
                onmouseleave="hideGapInfo()">
               <rect x="0" y="0" width="170" height="38" rx="2" fill="#ffffff" fill-opacity="0.97" stroke="#0d9488" stroke-width="1.4" filter="drop-shadow(0 2px 6px rgba(13,148,136,0.12))"/>
               <text x="85" y="16" text-anchor="middle" class="text-[11px] font-black fill-teal-950">San Juan River (2.50 MAF)</text>
@@ -979,7 +982,7 @@
 
             <!-- Little Colorado River Card -->
             <g transform="translate(460, 180)" class="cursor-pointer"
-               onmouseenter="showElevationGageInfo('Little Colorado River', 'Enters Grand Canyon at Mile 615', '9,500 ft Headwaters', '0.25 MAF/yr Flash Runoff', 'Grand Canyon Confluence', 'Ephemeral Sediment Carrier', 'Sacred turquoise waters of the Hopi and Navajo. Subject to intense desert flash flooding that pulses sediment into Grand Canyon.')"
+               onmouseenter="showElevationGageInfo('Little Colorado River', 'Grand Canyon Mile 615', '9,500 ft Crest', '0.25 MAF/yr Mean', 'Marble Canyon Conf', 'Monsoon Sediment', 'Seasonal desert flash-flood tributary entering Grand Canyon.')"
                onmouseleave="hideGapInfo()">
               <rect x="0" y="0" width="152" height="32" rx="2" fill="#ffffff" fill-opacity="0.97" stroke="#0d9488" stroke-width="1.2" filter="drop-shadow(0 2px 4px rgba(13,148,136,0.1))"/>
               <text x="76" y="13" text-anchor="middle" class="text-[10px] font-black fill-teal-950">Little Colorado (0.25 MAF)</text>
@@ -988,7 +991,7 @@
 
             <!-- Virgin River Card -->
             <g transform="translate(620, 220)" class="cursor-pointer"
-               onmouseenter="showElevationGageInfo('Virgin River (Zion National Park)', 'Enters Lake Mead at Overton Arm', '9,000 ft Headwaters', '0.18 MAF/yr Runoff', 'Zion Canyon Carver', 'Lower Basin Tributary', 'Carves Zion National Park, flowing southwest across Utah, Arizona strip, and Nevada into Lake Mead Overton Arm.')"
+               onmouseenter="showElevationGageInfo('Virgin River (Zion NP)', 'Lake Mead Overton Arm', '9,000 ft Crest', '0.18 MAF/yr Mean', 'Zion Canyon', 'Lower Basin Tributary', 'Flows from Zion (UT) into Lake Mead Overton Arm.')"
                onmouseleave="hideGapInfo()">
               <rect x="0" y="0" width="140" height="32" rx="2" fill="#ffffff" fill-opacity="0.97" stroke="#0d9488" stroke-width="1.2" filter="drop-shadow(0 2px 4px rgba(13,148,136,0.1))"/>
               <text x="70" y="13" text-anchor="middle" class="text-[10px] font-black fill-teal-950">Virgin River (0.18 MAF)</text>
@@ -997,7 +1000,7 @@
 
             <!-- Gila River Card -->
             <g transform="translate(925, 248)" class="cursor-pointer"
-               onmouseenter="showElevationGageInfo('Gila River Basin (AZ / NM)', 'Confluence near Yuma, AZ (Mile 1,220)', '8,000 ft Headwaters', '0.87 MAF/yr Historical Flow', 'Heavily Depleted Reach', 'Lower Basin Tributary', 'Historically the largest Lower Basin tributary draining central/southern Arizona and New Mexico. Today largely dewatered by agricultural diversions.')"
+               onmouseenter="showElevationGageInfo('Gila River Basin (AZ / NM)', 'Yuma Conf Mile 1,220', '8,000 ft Crest', '0.87 MAF/yr Historic', 'Depleted Terminal Reach', 'Lower Basin Tributary', 'Intercepted near Phoenix (CAP/SRP); dry at Yuma mouth.')"
                onmouseleave="hideGapInfo()">
               <rect x="0" y="0" width="140" height="34" rx="2" fill="#ffffff" fill-opacity="0.97" stroke="#0d9488" stroke-width="1.2" filter="drop-shadow(0 2px 4px rgba(13,148,136,0.1))"/>
               <text x="70" y="14" text-anchor="middle" class="text-[10px] font-black fill-teal-950">Gila River (0.87 MAF)</text>
@@ -1103,35 +1106,35 @@
       const typeHtml = type ? `<span class="text-[9.5px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-xs bg-sky-100 text-sky-800 border border-sky-200">${type}</span>` : '';
       const mileHtml = mile ? `<span class="text-[10.5px] font-bold tabular-numbers text-slate-500">${mile}</span>` : '';
 
-      let metricsHtml = '<div class="grid grid-cols-2 gap-1.5 my-2 text-xs">';
+      let metricsHtml = '<div class="grid grid-cols-2 gap-1 my-1.5 text-[11px]">';
       if (elev && elev !== 'N/A') {
-        metricsHtml += `<div class="p-1.5 rounded-xs bg-slate-50 border border-slate-200">
+        metricsHtml += `<div class="p-1 rounded-xs bg-slate-50 border border-slate-200">
           <div class="text-[9px] text-slate-500 uppercase font-bold tracking-wide">Elevation</div>
           <div class="font-bold text-sky-800 tabular-numbers mt-0.5">${elev}</div>
         </div>`;
       }
       if (flow && flow !== 'N/A') {
-        metricsHtml += `<div class="p-1.5 rounded-xs bg-slate-50 border border-slate-200">
+        metricsHtml += `<div class="p-1 rounded-xs bg-slate-50 border border-slate-200">
           <div class="text-[9px] text-slate-500 uppercase font-bold tracking-wide">Flow / Volume</div>
           <div class="font-bold text-slate-900 tabular-numbers mt-0.5">${flow}</div>
         </div>`;
       }
       if (drop && drop !== 'N/A' && drop !== 'None') {
-        metricsHtml += `<div class="col-span-2 p-1.5 rounded-xs bg-slate-50 border border-slate-200">
+        metricsHtml += `<div class="col-span-2 p-1 rounded-xs bg-slate-50 border border-slate-200">
           <div class="text-[9px] text-slate-500 uppercase font-bold tracking-wide">Hydraulic Head / Drop</div>
-          <div class="font-bold text-slate-700 text-[11px] mt-0.5">${drop}</div>
+          <div class="font-bold text-slate-700 text-[10.5px] mt-0.5">${drop}</div>
         </div>`;
       }
       metricsHtml += '</div>';
 
-      const notesHtml = notes ? `<div class="text-[11px] text-slate-600 leading-snug pt-1.5 border-t border-slate-200">${notes}</div>` : '';
+      const notesHtml = notes ? `<div class="text-[10.5px] text-slate-600 leading-snug pt-1 border-t border-slate-200">${notes}</div>` : '';
 
       tooltip.innerHTML = `
         <div class="flex items-center justify-between gap-2 pb-1 border-b border-slate-200">
           ${typeHtml}
           ${mileHtml}
         </div>
-        <div class="font-bold text-slate-900 text-sm mt-1.5">${title}</div>
+        <div class="font-bold text-slate-900 text-[12.5px] leading-tight mt-1">${title}</div>
         ${metricsHtml}
         ${notesHtml}
       `;
@@ -1192,31 +1195,30 @@
 
     const CFS_PER_MAF_YR = 1381.27;
 
-    function renderComparisonCard(title, badgeLabel, rows, note) {
+    function renderComparisonCard(title, badgeLabel, rows) {
       let rowsHtml = '';
       for (const r of rows) {
         rowsHtml += `
-          <div class="flex justify-between items-baseline ${r.border ? 'pt-1.5 border-t border-slate-200 mt-1' : ''}">
-            <span class="text-slate-600">${r.label}:</span>
-            <span class="${r.highlight ? r.highlight : 'font-bold text-slate-900'}">${r.value}</span>
+          <div class="flex justify-between items-baseline gap-2 ${r.border ? 'pt-1 border-t border-slate-200 mt-0.5' : ''}">
+            <span class="text-slate-600 shrink-0">${r.label}:</span>
+            <span class="text-right ${r.highlight ? r.highlight : 'font-bold text-slate-900'}">${r.value}</span>
           </div>
         `;
       }
       return `
-        <div class="mt-3 pt-2.5 border-t border-slate-200">
-          <div class="flex items-center justify-between mb-1.5 text-[10px] uppercase tracking-wider font-bold text-slate-500">
-            <span>${title}</span>
-            <span class="tabular-nums text-slate-400 font-normal lowercase">${badgeLabel || '1 maf/yr ≈ 1,381 cfs'}</span>
+        <div class="mt-2 pt-2 border-t border-slate-200">
+          <div class="flex items-center justify-between gap-2 mb-1 text-[9.5px] uppercase tracking-wider font-bold text-slate-500">
+            <span class="truncate">${title}</span>
+            <span class="tabular-nums text-slate-400 font-normal shrink-0">${badgeLabel || '1 MAF/yr ≈ 1,381 cfs'}</span>
           </div>
-          <div class="bg-slate-50 border border-slate-200 rounded p-2 text-[11px] space-y-1">
+          <div class="bg-slate-50 border border-slate-200 rounded p-1.5 text-[10.5px] space-y-0.5">
             ${rowsHtml}
           </div>
-          ${note ? `<div class="text-[9.5px] text-slate-500 mt-1.5 italic leading-tight">${note}</div>` : ''}
         </div>
       `;
     }
 
-    function flowComparisonBox(siteId, annualMaf, gaugeName, seasonalNote) {
+    function flowComparisonBox(siteId, annualMaf, gaugeName) {
       if (!liveMetrics || !liveMetrics.streamflows) return '';
       const s = liveMetrics.streamflows.find(i => i.id === siteId);
       if (!s || s.flow_cfs == null) return '';
@@ -1226,26 +1228,19 @@
       const pct = Math.round((liveCfs / meanCfs) * 100);
 
       const rows = [
-        { label: 'Long-Term Budget Mean', value: `${annualMaf.toFixed(2)} MAF/yr <span class="font-normal text-slate-500">(~${meanCfs.toLocaleString()} cfs continuous)</span>` },
-        { label: gaugeName || 'Live Gauge Discharge', value: `${liveCfs.toLocaleString()} cfs`, highlight: 'font-bold text-sky-800' },
-        { label: 'Current Pace of Annual Mean', value: `${pct}%`, highlight: `font-bold ${pct >= 100 ? 'text-emerald-700' : 'text-amber-700'}`, border: true }
+        { label: 'Annual Mean', value: `${annualMaf.toFixed(2)} MAF/yr (~${meanCfs.toLocaleString()} cfs)` },
+        { label: `Live Flow (#${siteId})`, value: `${liveCfs.toLocaleString()} cfs <span class="${pct >= 100 ? 'text-emerald-700' : 'text-amber-700'}">(${pct}% mean)</span>`, highlight: 'font-bold text-sky-800' }
       ];
 
-      const note = seasonalNote || 'Continuous mean bridges annual volume to instantaneous rate (1 cfs sustained for 1 yr = 724 AF). Real-time gauge reflects instantaneous seasonal discharge, not annual volume.';
-
-      return renderComparisonCard('Annual Budget vs. Real-Time Gauge', '1 MAF/yr ≈ 1,381 cfs', rows, note);
+      return renderComparisonCard('Budget vs. Live Gauge', '1 MAF/yr ≈ 1,381 cfs', rows);
     }
 
-    function combinedInflowBox(siteIds, annualMaf, label, seasonalNote) {
+    function combinedInflowBox(siteIds, annualMaf, label) {
       if (!liveMetrics || !liveMetrics.streamflows) return '';
       let sum = 0;
-      let names = [];
       for (const id of siteIds) {
         const s = liveMetrics.streamflows.find(i => i.id === id);
-        if (s && s.flow_cfs != null) {
-          sum += s.flow_cfs;
-          names.push(`${s.name.split(',')[0].replace('Colorado River near ', '').replace('Green River at ', '')}: ${Math.round(s.flow_cfs).toLocaleString()} cfs`);
-        }
+        if (s && s.flow_cfs != null) sum += s.flow_cfs;
       }
       if (sum === 0) return '';
 
@@ -1254,17 +1249,14 @@
       const pct = Math.round((liveCfs / meanCfs) * 100);
 
       const rows = [
-        { label: 'Long-Term Inflow Mean', value: `${annualMaf.toFixed(2)} MAF/yr <span class="font-normal text-slate-500">(~${meanCfs.toLocaleString()} cfs continuous)</span>` },
-        { label: label || 'Live Inflow Sum', value: `${liveCfs.toLocaleString()} cfs <span class="text-[10px] text-slate-500 block">(${names.join(' + ')})</span>`, highlight: 'font-bold text-sky-800' },
-        { label: 'Current Pace of Inflow Mean', value: `${pct}%`, highlight: `font-bold ${pct >= 100 ? 'text-emerald-700' : 'text-amber-700'}`, border: true }
+        { label: 'Annual Mean', value: `${annualMaf.toFixed(2)} MAF/yr (~${meanCfs.toLocaleString()} cfs)` },
+        { label: 'Live Sum', value: `${liveCfs.toLocaleString()} cfs <span class="${pct >= 100 ? 'text-emerald-700' : 'text-amber-700'}">(${pct}% mean)</span>`, highlight: 'font-bold text-sky-800' }
       ];
 
-      const note = seasonalNote || 'Combined instantaneous flow from Colorado Mainstem and Green River entering Cataract Canyon before Lake Powell.';
-
-      return renderComparisonCard('Combined Inflows vs. Real-Time Gauges', '1 MAF/yr ≈ 1,381 cfs', rows, note);
+      return renderComparisonCard('Inflow vs. Live Gauges', '1 MAF/yr ≈ 1,381 cfs', rows);
     }
 
-    function canalComparisonBox(divKey, annualMaf, label, diversionNote) {
+    function canalComparisonBox(divKey, annualMaf, label) {
       if (!liveMetrics || !liveMetrics.canals) return '';
       const canalMap = {
         'cra': '09424150',
@@ -1280,14 +1272,11 @@
       const pct = Math.round((liveCfs / meanCfs) * 100);
 
       const rows = [
-        { label: 'Annual Statutory Allocation', value: `${annualMaf.toFixed(2)} MAF/yr <span class="font-normal text-slate-500">(~${meanCfs.toLocaleString()} cfs continuous)</span>` },
-        { label: label || 'Live Diversion Rate', value: `${liveCfs.toLocaleString()} cfs`, highlight: 'font-bold text-orange-800' },
-        { label: 'Current Diversion vs. Annual Mean', value: `${pct}%`, highlight: `font-bold ${pct >= 100 ? 'text-emerald-700' : 'text-amber-700'}`, border: true }
+        { label: 'Annual Quota', value: `${annualMaf.toFixed(2)} MAF/yr (~${meanCfs.toLocaleString()} cfs)` },
+        { label: 'Live Diversion', value: `${liveCfs.toLocaleString()} cfs <span class="${pct >= 100 ? 'text-emerald-700' : 'text-amber-700'}">(${pct}% mean)</span>`, highlight: 'font-bold text-orange-800' }
       ];
 
-      const note = diversionNote || 'Diversion rates respond to seasonal agricultural demand cycles and municipal aqueduct pumping schedules.';
-
-      return renderComparisonCard('Annual Allocation vs. Live Diversion', '1 MAF/yr ≈ 1,381 cfs', rows, note);
+      return renderComparisonCard('Quota vs. Live Diversion', '1 MAF/yr ≈ 1,381 cfs', rows);
     }
 
     function tunnelComparisonBox(annualMaf) {
@@ -1297,22 +1286,15 @@
       const liveCfs = Math.round(sum);
       const pct = Math.round((liveCfs / meanCfs) * 100);
 
-      const tunnelBreakdown = liveMetrics.tunnels
-        .map(t => `${t.name.split(' ')[0]}: ${Math.round(t.flow_cfs || 0)}`)
-        .join(', ');
-
       const rows = [
-        { label: 'Aggregate Annual Export', value: `~${annualMaf.toFixed(2)} MAF/yr <span class="font-normal text-slate-500">(~${meanCfs.toLocaleString()} cfs continuous)</span>` },
-        { label: 'Live Front Range Export', value: `${liveCfs.toLocaleString()} cfs <span class="text-[10px] text-slate-500 block">(${tunnelBreakdown})</span>`, highlight: 'font-bold text-orange-800' },
-        { label: 'Current Export vs. Annual Mean', value: `${pct}%`, highlight: `font-bold ${pct >= 100 ? 'text-emerald-700' : 'text-amber-700'}`, border: true }
+        { label: 'Annual Export', value: `~${annualMaf.toFixed(2)} MAF/yr (~${meanCfs.toLocaleString()} cfs)` },
+        { label: 'Live Export', value: `${liveCfs.toLocaleString()} cfs <span class="${pct >= 100 ? 'text-emerald-700' : 'text-amber-700'}">(${pct}% mean)</span>`, highlight: 'font-bold text-orange-800' }
       ];
 
-      const note = 'Trans-mountain exports to Front Range cities (Denver, Aurora, C-BT) depend on municipal reservoir storage and West Slope call conditions.';
-
-      return renderComparisonCard('Trans-Mountain Export vs. Live Flow', '1 MAF/yr ≈ 1,381 cfs', rows, note);
+      return renderComparisonCard('Export vs. Live Flow', '1 MAF/yr ≈ 1,381 cfs', rows);
     }
 
-    function reservoirStorageBox(resId, thresholds) {
+    function reservoirStorageBox(resId) {
       if (!liveMetrics || !liveMetrics.reservoirs) return '';
       const r = liveMetrics.reservoirs.find(i => i.id === resId);
       if (!r) return '';
@@ -1323,12 +1305,11 @@
       const elev = r.elevation_ft ? `${r.elevation_ft.toFixed(1)} ft` : 'N/A';
 
       const rows = [
-        { label: 'Current Active Storage', value: `${storageMaf}M AF <span class="font-normal text-slate-500">of ${capMaf}M AF capacity</span>` },
-        { label: 'Reservoir Pool Status', value: `${pct}% Capacity`, highlight: `font-bold ${pct < 30 ? 'text-red-700' : 'text-amber-700'}` },
-        { label: 'Water Surface Elevation', value: elev, highlight: 'font-bold text-sky-800' }
+        { label: 'Active Storage', value: `${storageMaf} / ${capMaf} MAF <span class="${pct < 30 ? 'text-red-700' : 'text-amber-700'}">(${pct}%)</span>` },
+        { label: 'Pool Elevation', value: elev, highlight: 'font-bold text-sky-800' }
       ];
 
-      return renderComparisonCard('Live Storage & Pool Elevation', 'Bureau of Reclamation', rows, thresholds || 'Storage values reflect official daily Bureau of Reclamation reservoir operational accounting.');
+      return renderComparisonCard('Live Storage & Pool', 'USBR', rows);
     }
 
     let selectedElementId = null;
@@ -1399,10 +1380,10 @@
       ` : '';
 
       const portalHtml = portal ? `
-        <div class="mt-2.5 pt-2 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2 text-[11px]">
-          <div class="flex items-center gap-1.5">
-            <span class="text-slate-500 font-medium">Official Portal:</span>
-            <a href="${portal.url}" target="_blank" rel="noopener" class="text-sky-600 hover:text-sky-800 font-bold flex items-center gap-1 underline underline-offset-2" onclick="event.stopPropagation();">${portal.label} ↗</a>
+        <div class="mt-2 pt-1.5 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2 text-[10.5px]">
+          <div class="flex items-center gap-1 min-w-0">
+            <span class="text-slate-500 font-medium">Portal:</span>
+            <a href="${portal.url}" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 font-bold truncate underline underline-offset-2" onclick="event.stopPropagation();">${portal.label} ↗</a>
           </div>
           ${showOnMapBtn}
         </div>
@@ -1411,8 +1392,8 @@
       el.addEventListener('mouseenter', (e) => {
         if (selectedElementId && selectedElementId !== elemId) return;
         tooltip.innerHTML = `
-          <div class="font-bold text-sky-700 text-sm mb-1">${title}</div>
-          <div class="text-xs text-slate-700">${getDetails()}</div>
+          <div class="font-bold text-sky-800 text-[12.5px] leading-tight mb-1">${title}</div>
+          <div class="text-[11px] text-slate-700 leading-snug">${getDetails()}</div>
           ${portalHtml}
         `;
         tooltip.classList.add('visible');
@@ -1432,12 +1413,12 @@
         e.stopPropagation();
         selectElement(elemId);
         tooltip.innerHTML = `
-          <div class="flex items-center justify-between border-b border-slate-200 pb-1 mb-2">
-            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Selected Feature</span>
+          <div class="flex items-center justify-between border-b border-slate-200 pb-1 mb-1.5">
+            <span class="text-[9.5px] font-bold uppercase tracking-wider text-slate-400">Selected Feature</span>
             <span class="text-[10px] text-slate-500 cursor-pointer font-bold hover:text-slate-800" onclick="clearSelection(); tooltip.classList.remove('visible');">✕ Close</span>
           </div>
-          <div class="font-bold text-sky-700 text-sm mb-1">${title}</div>
-          <div class="text-xs text-slate-700">${getDetails()}</div>
+          <div class="font-bold text-sky-800 text-[12.5px] leading-tight mb-1">${title}</div>
+          <div class="text-[11px] text-slate-700 leading-snug">${getDetails()}</div>
           ${portalHtml}
         `;
         tooltip.classList.add('visible');
@@ -1447,339 +1428,288 @@
 
     function updateTooltipPos(e) {
       if (!tooltip) return;
-      const rect = tooltip.getBoundingClientRect();
-      const tipWidth = rect.width || 360;
-      const tipHeight = rect.height || 260;
+      const tipWidth = tooltip.offsetWidth || 300;
+      const tipHeight = tooltip.offsetHeight || 200;
 
       let clientX = (e && typeof e.clientX === 'number') ? e.clientX : lastMouseX;
       let clientY = (e && typeof e.clientY === 'number') ? e.clientY : lastMouseY;
 
-      let x = clientX + 16;
-      let y = clientY + 16;
+      let x = clientX + 14;
+      let y = clientY + 14;
 
-      if (x + tipWidth > window.innerWidth - 16) {
-        x = clientX - tipWidth - 16;
+      if (x + tipWidth > window.innerWidth - 12) {
+        x = clientX - tipWidth - 14;
       }
-      if (y + tipHeight > window.innerHeight - 16) {
-        y = clientY - tipHeight - 16;
+      if (y + tipHeight > window.innerHeight - 12) {
+        y = clientY - tipHeight - 14;
       }
 
-      if (x < 16) x = 16;
-      if (y < 16) y = 16;
+      x = Math.min(window.innerWidth - tipWidth - 12, Math.max(12, x));
+      y = Math.min(window.innerHeight - tipHeight - 12, Math.max(12, y));
 
       tooltip.style.left = x + 'px';
       tooltip.style.top = y + 'px';
     }
 
     function setupTooltips() {
-      attachElement('river-headwaters', 'Colorado River Headwaters (Rocky Mountain NP)', () => `
-        <strong>Region:</strong> Rocky Mountain National Park / Continental Divide, CO<br>
-        <strong>Upper Basin Headwaters Yield:</strong> ~4.00 MAF/yr natural runoff prior to trans-mountain export<br>
-        <strong>Headwater Source:</strong> High-altitude snowpack, Blue &amp; Fraser River basins<br>
-        <strong>Accounting:</strong> Administers 1902 Shoshone Hydroelectric Plant senior call (1,250 cfs / 1,408 cfs total) above Glenwood Canyon; feeds Upper Division apportionments` + flowComparisonBox('09070500', 1.50, 'USGS #09070500 Dotsero (Shoshone Call)', 'Measures upper mainstem runoff entering Glenwood Canyon for Shoshone Power Plant water rights.') + `
+      attachElement('river-headwaters', 'Colorado River Headwaters (RMNP)', () => `
+        <strong>Yield:</strong> ~4.00 MAF/yr alpine snowpack (Fraser &amp; Blue basins)<br>
+        <strong>Call Control:</strong> Enforces 1902 Shoshone right (1,250 cfs at #09070500)` + flowComparisonBox('09070500', 1.50) + `
       `, {
-        label: 'USGS Station #09070500 (Dotsero / Shoshone Call)',
+        label: 'USGS #09070500 (Dotsero)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09070500/'
       });
 
-      attachElement('div-frontrange', 'Denver & Front Range Diversions', () => `
-        <strong>Structures:</strong> Adams Tunnel (C-BT), Roberts Tunnel (Denver), Moffat &amp; Boustead Tunnels<br>
-        <strong>Annual Diversion:</strong> ~0.55 MAF/yr (~550,000 acre-feet / ~760 cfs)<br>
-        <strong>Destination:</strong> Trans-mountain export to Denver, Fort Collins, Boulder, Colorado Springs<br>
-        <strong>Impact:</strong> Transfers wet water out of the Colorado River basin into the South Platte and Arkansas basins` + tunnelComparisonBox(0.55) + `
+      attachElement('div-frontrange', 'Denver & Front Range Tunnels', () => `
+        <strong>Bores:</strong> Adams, Roberts, Moffat &amp; Boustead (~0.55 MAF/yr)<br>
+        <strong>Role:</strong> Trans-divide export to Denver, Aurora &amp; Northern CO` + tunnelComparisonBox(0.55) + `
       `, {
-        label: 'CDSS Station #ROBTUNCO',
+        label: 'CDSS #ROBTUNCO',
         url: 'https://dwr.state.co.us/Tools/Stations?station=ROBTUNCO'
       });
 
-      attachElement('river-green', 'Green River (Largest Tributary Basin)', () => `
-        <strong>Headwaters:</strong> Wind River Range (WY) and Uinta Mountains (UT)<br>
-        <strong>Annual Runoff:</strong> ~4.90 MAF/yr (Delivers ~40% of total flow into Lake Powell)<br>
-        <strong>Major Inflow:</strong> Joined by Yampa River in Dinosaur National Monument<br>
-        <strong>Storage:</strong> Regulated by Flaming Gorge Dam (3.78M AF capacity)` + flowComparisonBox('09315000', 4.90, 'USGS #09315000 Green River Flow', 'Combined Green, Yampa, and White River flow. Autumn baseflow is typically 50–70% of continuous mean.') + `
+      attachElement('river-green', 'Green River Basin', () => `
+        <strong>Yield:</strong> ~4.90 MAF/yr (~40% of Lake Powell inflow)<br>
+        <strong>Control:</strong> Flaming Gorge Dam (3.75M AF) &amp; Yampa confluence` + flowComparisonBox('09315000', 4.90) + `
       `, {
-        label: 'USGS Station #09315000 (Green River, UT)',
+        label: 'USGS #09315000 (Green River, UT)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09315000/'
       });
 
       attachElement('river-yampa', 'Yampa River (Wild Tributary)', () => `
-        <strong>Drainage:</strong> Northwest Colorado (Flat Tops &amp; Park Range)<br>
-        <strong>Annual Yield:</strong> ~1.30 MAF/yr<br>
-        <strong>Significance:</strong> The largest remaining free-flowing, undammed major tributary in the Colorado River system` + flowComparisonBox('09260050', 1.30, 'USGS #09260050 Deerlodge Park Flow', 'Uncontrolled snowmelt river. May-June peaks routinely reach 10,000–15,000 cfs.') + `
+        <strong>Yield:</strong> ~1.30 MAF/yr (Flat Tops &amp; Park Range)<br>
+        <strong>Status:</strong> Largest undammed major Colorado tributary` + flowComparisonBox('09260050', 1.30) + `
       `, {
-        label: 'USGS Station #09260050 (Deerlodge Park)',
+        label: 'USGS #09260050 (Deerlodge)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09260050/'
       });
 
       attachElement('river-upper-main', 'Colorado River Upper Mainstem', () => `
-        <strong>Reach:</strong> Dotsero to Grand Valley and Utah State Line<br>
-        <strong>Annual Flow:</strong> ~5.55 MAF/yr (after Gunnison confluence, before Green River confluence)<br>
-        <strong>Major Inflows:</strong> Roaring Fork, Eagle, and Gunnison Rivers` + flowComparisonBox('09180500', 5.55, 'USGS #09180500 Cisco Flow', 'Colorado mainstem flow near Utah border after absorbing Gunnison and Dolores river inflows.') + `
+        <strong>Yield:</strong> ~5.55 MAF/yr (Dotsero through Grand Valley)<br>
+        <strong>Inflows:</strong> Roaring Fork, Eagle &amp; Gunnison rivers` + flowComparisonBox('09180500', 5.55) + `
       `, {
-        label: 'USGS Station #09180500 (Cisco, UT)',
+        label: 'USGS #09180500 (Cisco, UT)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09180500/'
       });
 
       attachElement('river-gunnison', 'Gunnison River Basin', () => `
-        <strong>Drainage:</strong> Central Colorado West Slope (Gunnison, Uncompahgre, Crested Butte)<br>
-        <strong>Annual Runoff:</strong> ~2.10 MAF/yr<br>
-        <strong>Regulation:</strong> Blue Mesa, Morrow Point, and Crystal Reservoirs (Aspinall Unit)` + flowComparisonBox('09152500', 2.10, 'USGS #09152500 Grand Junction Flow', 'Gunnison River discharge entering the Colorado mainstem at Grand Junction.') + `
+        <strong>Yield:</strong> ~2.10 MAF/yr (central West Slope)<br>
+        <strong>Storage:</strong> Blue Mesa, Morrow Point &amp; Crystal (Aspinall)` + flowComparisonBox('09152500', 2.10) + `
       `, {
-        label: 'USGS Station #09152500 (Grand Junction)',
+        label: 'USGS #09152500 (Grand Jct)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09152500/'
       });
 
       attachElement('river-sanjuan', 'San Juan River Basin', () => `
-        <strong>Origin:</strong> San Juan Mountains in Southwest Colorado and Northwest New Mexico<br>
-        <strong>Annual Runoff:</strong> ~2.10 - 2.50 MAF/yr (including Animas River)<br>
-        <strong>Regulation:</strong> Navajo Dam (1.70M AF capacity)` + flowComparisonBox('09379500', 2.50, 'USGS #09379500 Bluff Flow', 'San Juan River flow after receiving Animas River runoff, discharging into Lake Powell.') + `
+        <strong>Yield:</strong> ~2.10–2.50 MAF/yr (SW CO &amp; NW NM)<br>
+        <strong>Control:</strong> Navajo Dam (1.70M AF) &amp; Animas River` + flowComparisonBox('09379500', 2.50) + `
       `, {
-        label: 'USGS Station #09379500 (Bluff, UT)',
+        label: 'USGS #09379500 (Bluff, UT)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09379500/'
       });
 
-      attachElement('river-cataract', 'Cataract Canyon (Combined Powell Inflow)', () => `
-        <strong>Reach:</strong> Confluence of Green and Colorado Rivers in Canyonlands NP<br>
-        <strong>Annual Inflow:</strong> ~10.45 MAF combined Green (4.90 MAF) + Mainstem (5.55 MAF) flow<br>
-        <strong>Significance:</strong> Gatekeeper canyon representing the full combined yield of Upper Basin rivers` + combinedInflowBox(['09180500', '09315000'], 10.45, 'Cisco (Mainstem) + Green River Inflow Sum') + `
+      attachElement('river-cataract', 'Cataract Canyon (Powell Inflow)', () => `
+        <strong>Combined Yield:</strong> ~10.45 MAF/yr (Green 4.90 + CO 5.55)<br>
+        <strong>Location:</strong> Confluence gatekeeper entering Lake Powell` + combinedInflowBox(['09180500', '09315000'], 10.45) + `
       `, {
-        label: 'USGS Station #09180500 (Inflow Control)',
+        label: 'USGS #09180500',
         url: 'https://waterdata.usgs.gov/monitoring-location/09180500/'
       });
 
       attachElement('dam-flaminggorge', 'Flaming Gorge Dam & Reservoir', () => `
-        <strong>Total Capacity:</strong> 3.75 Million Acre-Feet (Primary drought response buffer reservoir)<br>
-        <strong>Function:</strong> Regulates the upper Green River; utilized under the Drought Response Operations Agreement (DROA) to support Lake Powell` + reservoirStorageBox('flaming_gorge', 'DROA operational reserve supporting Lake Powell. Capacity: 3.75M AF.') + `
+        <strong>Capacity:</strong> 3.75 MAF (Upper Green River)<br>
+        <strong>Role:</strong> DROA drought-release reserve backing Lake Powell` + reservoirStorageBox('flaming_gorge') + `
       `, {
-        label: 'USBR Flaming Gorge Operations Portal',
+        label: 'USBR Flaming Gorge',
         url: 'https://www.usbr.gov/uc/water/crsp/cs/fgd.html'
       });
 
-      attachElement('dam-bluemesa', 'Blue Mesa Dam & Reservoir (Aspinall Unit)', () => `
-        <strong>Total Capacity:</strong> 829,500 Acre-Feet (Largest body of water in Colorado)<br>
-        <strong>Function:</strong> Headwater regulation on Gunnison River; DROA emergency release source` + reservoirStorageBox('blue_mesa', 'Aspinall Unit master reservoir. Capacity: 829,500 AF.') + `
+      attachElement('dam-bluemesa', 'Blue Mesa Dam (Aspinall Unit)', () => `
+        <strong>Capacity:</strong> 0.83 MAF (Gunnison River)<br>
+        <strong>Role:</strong> Largest lake in CO; Upper Basin DROA reserve` + reservoirStorageBox('blue_mesa') + `
       `, {
-        label: 'USBR Blue Mesa Dashboard',
+        label: 'USBR Blue Mesa',
         url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/913/dashboard.html'
       });
 
       attachElement('dam-navajo', 'Navajo Dam & Reservoir', () => `
-        <strong>Total Capacity:</strong> 1.70 Million Acre-Feet (San Juan River basin)<br>
-        <strong>Function:</strong> Regulates San Juan River and supplies San Juan-Chama diversion and Navajo Indian Irrigation Project (NIIP)` + reservoirStorageBox('navajo_reservoir', 'San Juan River regulation and DROA support. Capacity: 1.70M AF.') + `
+        <strong>Capacity:</strong> 1.70 MAF (San Juan River, NM)<br>
+        <strong>Role:</strong> San Juan-Chama diversion &amp; NIIP supply` + reservoirStorageBox('navajo_reservoir') + `
       `, {
-        label: 'USBR Navajo Dam Portal',
+        label: 'USBR Navajo Dam',
         url: 'https://www.usbr.gov/uc/water/crsp/cs/nvd.html'
       });
 
       attachElement('dam-glencanyon', 'Lake Powell & Glen Canyon Dam', () => `
-        <strong>Total Capacity:</strong> 24.32 Million Acre-Feet<br>
-        <strong>Function:</strong> Master regulatory storage bank for Upper Basin states<br>
-        <strong>Evaporative Loss:</strong> ~0.38 MAF/yr (~380,000 AF) lost to intense desert sunlight<br>
-        <strong>Minimum Power Pool:</strong> Elevation 3,490 ft (threat of losing hydroelectric generation)` + reservoirStorageBox('lake_powell', 'Minimum Power Pool: 3,490 ft. Dead Pool: 3,370 ft. Total Capacity: 24.32M AF.') + `
+        <strong>Thresholds:</strong> Min power 3,490 ft • Dead pool 3,370 ft<br>
+        <strong>Role:</strong> Upper Basin Compact bank (~0.38 MAF/yr evap)` + reservoirStorageBox('lake_powell') + `
       `, {
-        label: 'USBR Glen Canyon / Lake Powell Portal',
+        label: 'USBR Glen Canyon',
         url: 'https://www.usbr.gov/uc/water/crsp/cs/gcd.html'
       });
 
-      attachElement('node-leesferry', "Lee's Ferry (1922 Colorado River Compact Point)", () => `
-        <strong>Location:</strong> 1 mile downstream of Paria River confluence, Arizona<br>
-        <strong>Legal Cornerstone:</strong> Constitutional divider separating Upper Division (CO, UT, WY, NM) from Lower Division (AZ, CA, NV)<br>
-        <strong>Delivery Obligation:</strong> Base 75.0 MAF / 10-yr period (7.50 MAF/yr) + half of Mexico Treaty (0.75 MAF/yr) = <strong>8.25 MAF/yr target</strong> (8.23 MAF normal release under 2007 Guidelines; range 7.0–9.0 MAF).` + flowComparisonBox('09380000', 8.23, 'USGS #09380000 Lees Ferry Release', 'Annual target delivery of 8.23 MAF/yr converts to a continuous average release rate of 11,368 cfs.') + `
+      attachElement('node-leesferry', "Lee's Ferry (1922 Compact Divide)", () => `
+        <strong>Compact Rule:</strong> 75 MAF / 10-yr floor (~8.23 MAF/yr normal)<br>
+        <strong>Role:</strong> Constitutional boundary separating Upper &amp; Lower Basins` + flowComparisonBox('09380000', 8.23) + `
       `, {
-        label: 'USGS Station #09380000 (Lees Ferry)',
+        label: 'USGS #09380000 (Lees Ferry)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09380000/'
       });
 
       attachElement('river-grandcanyon', 'Grand Canyon Reach', () => `
-        <strong>Reach:</strong> Lees Ferry through Grand Canyon to Lake Mead (277 miles)<br>
-        <strong>Regulated Discharge:</strong> Governed by Glen Canyon Dam Adaptive Management releases (~8.23 – 9.0 MAF/yr)<br>
-        <strong>Tributaries:</strong> Little Colorado River and Kanab Creek
-      `, {
-        label: 'USGS Station #09402500 (Phantom Ranch)',
+        <strong>Reach:</strong> Lees Ferry to Lake Mead (277 river miles)<br>
+        <strong>Inflows:</strong> Little Colorado River &amp; Kanab Creek (~8.23–9.0 MAF)` , {
+        label: 'USGS #09402500 (Phantom Ranch)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09402500/'
       });
 
       attachElement('river-littleco', 'Little Colorado River', () => `
-        <strong>Origin:</strong> White Mountains of eastern Arizona<br>
-        <strong>Annual Runoff:</strong> ~0.25 MAF/yr<br>
-        <strong>Ecological Role:</strong> Critical habitat for endangered Humpback Chub` + flowComparisonBox('09402000', 0.25, 'USGS #09402000 Cameron Flow', 'Desert river characterized by low baseflows punctuated by violent summer monsoon surges.') + `
+        <strong>Yield:</strong> ~0.25 MAF/yr (eastern AZ desert plateau)<br>
+        <strong>Character:</strong> Monsoon flash pulses; endangered Humpback Chub habitat` + flowComparisonBox('09402000', 0.25) + `
       `, {
-        label: 'USGS Station #09402000 (Cameron, AZ)',
+        label: 'USGS #09402000 (Cameron)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09402000/'
       });
 
       attachElement('river-virgin', 'Virgin River', () => `
-        <strong>Origin:</strong> Southwestern Utah (Zion National Park) to Lake Mead<br>
-        <strong>Annual Runoff:</strong> ~0.18 MAF/yr<br>
-        <strong>Lower Basin Inflow:</strong> Flow tributary enters Lake Mead Overton Arm` + flowComparisonBox('09415000', 0.18, 'USGS #09415000 Littlefield Flow', 'Lower Basin tributary flowing through Virgin River Gorge into Lake Mead.') + `
+        <strong>Yield:</strong> ~0.18 MAF/yr (Zion NP through UT/AZ/NV)<br>
+        <strong>Sink:</strong> Enters Lake Mead Overton Arm` + flowComparisonBox('09415000', 0.18) + `
       `, {
-        label: 'USGS Station #09415000 (Littlefield, AZ)',
+        label: 'USGS #09415000 (Littlefield)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09415000/'
       });
 
-      attachElement('dam-hoover', 'Hoover Dam &amp; Lake Mead (NV–AZ Border)', () => `
-        <strong>Location:</strong> Black Canyon on Nevada–Arizona State Border<br>
-        <strong>Total Capacity:</strong> 26.13 Million Acre-Feet (Largest reservoir in the US by volume)<br>
-        <strong>Function:</strong> Master Lower Basin regulatory hub; releases water to NV (SNWA), AZ, CA, and Mexico<br>
-        <strong>Evaporative Loss:</strong> ~0.65 MAF/yr (~650,000 AF) evaporated annually into Mojave Desert air<br>
-        <strong>Dead Pool Elevation:</strong> 895 ft (water cannot physically pass through intake towers)` + reservoirStorageBox('lake_mead', 'Shortage Tier 1 Trigger: 1,075 ft. Dead Pool: 895 ft (~142 ft cushion). Total Capacity: 26.13M AF.') + `
+      attachElement('dam-hoover', 'Hoover Dam &amp; Lake Mead', () => `
+        <strong>Thresholds:</strong> Tier 1: 1,075 ft • Dead pool: 895 ft<br>
+        <strong>Role:</strong> Lower Basin hub (NV/AZ/CA/MX) • ~0.65 MAF/yr evap` + reservoirStorageBox('lake_mead') + `
       `, {
-        label: 'USBR Hoover Dam / Lake Mead Portal',
+        label: 'USBR Hoover / Mead',
         url: 'https://www.usbr.gov/lc/region/g4000/hourly/mead-elv.html'
       });
 
-      attachElement('div-snwa', 'Southern Nevada Water Authority (SNWA / Las Vegas)', () => `
-        <strong>Intake:</strong> Lake Mead Intake No. 3 (depth 860 ft) &amp; Low Lake Level Pumping Station<br>
-        <strong>Legal Apportionment:</strong> 0.30 MAF/yr (Boulder Canyon Project Act 1928)<br>
-        <strong>Net Consumption:</strong> ~0.24 MAF/yr (recycles indoor municipal water back to Lake Mead via Las Vegas Wash for return flow credits)<br>
-        <strong>Beneficiary:</strong> 2.3+ million residents across Las Vegas, Henderson, North Las Vegas, and Boulder City
-      `, {
-        label: 'SNWA Lake Mead Operations Portal',
+      attachElement('div-snwa', 'Southern Nevada Water Authority (SNWA)', () => `
+        <strong>Quota:</strong> 0.30 MAF/yr apportionment (~0.24 MAF net via Las Vegas Wash)<br>
+        <strong>Intake:</strong> Lake Mead Intake No. 3 (860 ft depth) serving 2.3M residents` , {
+        label: 'SNWA Portal',
         url: 'https://www.snwa.com/'
       });
 
       attachElement('dam-parker', 'Parker Dam & Lake Havasu', () => `
-        <strong>Reservoir Capacity:</strong> 619,400 Acre-Feet<br>
-        <strong>Function:</strong> Primary forebay pumping pool for CRA (Southern California) and CAP (Central Arizona)<br>
-        <strong>Impounds:</strong> Lake Havasu on Arizona-California border` + reservoirStorageBox('lake_havasu', 'Primary forebay pumping pool for CRA and CAP aqueducts. Capacity: 619,400 AF.') + `
+        <strong>Capacity:</strong> 0.62 MAF (AZ–CA border)<br>
+        <strong>Role:</strong> Forebay pumping pool for CRA (SoCal) &amp; CAP (AZ)` + reservoirStorageBox('lake_havasu') + `
       `, {
-        label: 'USBR Lake Havasu Operations (Levels)',
+        label: 'USBR Lake Havasu',
         url: 'https://www.usbr.gov/lc/region/g4000/hourly/levels.html'
       });
 
       attachElement('div-cap', 'Central Arizona Project (CAP)', () => `
-        <strong>Intake:</strong> Mark Wilmer Pumping Plant at Lake Havasu / Parker Dam<br>
-        <strong>Aqueduct Length:</strong> 336 miles across Sonoran Desert to Phoenix, Pinal County, and Tucson<br>
-        <strong>Annual Diversion:</strong> ~1.50 MAF/yr (~1,500 - 2,200 cfs)<br>
-        <strong>Legal Priority:</strong> Junior priority under 1968 Colorado River Basin Project Act; absorbs mandatory cuts first during shortages` + canalComparisonBox('cap', 1.50, 'USGS #09426650 CAP Intake Rate') + `
+        <strong>Reach:</strong> 336 mi from Lake Havasu to Phoenix &amp; Tucson<br>
+        <strong>Priority:</strong> Junior 1968 allocation (~1.50 MAF/yr; takes first cuts)` + canalComparisonBox('cap', 1.50) + `
       `, {
-        label: 'USGS Station #09426650 (CAP Intake)',
+        label: 'USGS #09426650 (CAP Intake)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09426650/'
       });
 
-      attachElement('div-cra', 'Colorado River Aqueduct (CRA)', () => `
-        <strong>Operator:</strong> Metropolitan Water District of Southern California (MWD)<br>
-        <strong>Intake:</strong> Whitsett Intake Pumping Plant at Lake Havasu<br>
-        <strong>Aqueduct Length:</strong> 242 miles across Mojave Desert to Lake Mathews<br>
-        <strong>Annual Diversion:</strong> ~1.05 MAF/yr (supplies drinking water to 19 million Southern Californians)` + canalComparisonBox('cra', 1.05, 'USGS #09424150 CRA Intake Rate') + `
+      attachElement('div-cra', 'Colorado River Aqueduct (CRA / MWD)', () => `
+        <strong>Reach:</strong> 242 mi from Lake Havasu to Southern California<br>
+        <strong>Service:</strong> ~1.05 MAF/yr serving 19M MWD urban residents` + canalComparisonBox('cra', 1.05) + `
       `, {
-        label: 'USGS Station #09424150 (CRA Intake)',
+        label: 'USGS #09424150 (CRA Intake)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09424150/'
       });
 
       attachElement('dam-imperial', 'Imperial Dam & Desilting Works', () => `
-        <strong>Location:</strong> 18 miles north of Yuma, AZ<br>
-        <strong>Function:</strong> Master diversion headworks diverting ~80% of Lower Colorado River flow into the All-American Canal and Gila Gravity Canal
-      `, {
-        label: 'USBR Imperial Dam / Yuma Area Office',
+        <strong>Location:</strong> 18 mi north of Yuma, AZ<br>
+        <strong>Role:</strong> Diverts ~80% of lower river flow into All-American &amp; Gila canals` , {
+        label: 'USBR Yuma Office',
         url: 'https://www.usbr.gov/lc/yuma/'
       });
 
       attachElement('div-aac', 'All-American Canal (AAC)', () => `
-        <strong>Intake:</strong> Imperial Dam (north of Yuma, AZ)<br>
-        <strong>Capacity:</strong> 26,155 cfs (largest irrigation canal in the world)<br>
-        <strong>Annual Diversion:</strong> ~2.90 - 3.10 MAF/yr<br>
-        <strong>Beneficiaries:</strong> Imperial Irrigation District (IID) &amp; Coachella Valley (~500,000 acres of winter agriculture)<br>
-        <strong>Seniority:</strong> Senior Present Perfected Rights (Priority 1 &amp; 2)` + canalComparisonBox('aac', 2.90, 'USGS #09527700 AAC Imperial Diversion Rate') + `
+        <strong>Diversion:</strong> ~2.90–3.10 MAF/yr (26,155 cfs max capacity)<br>
+        <strong>Priority:</strong> Senior 1901 Present Perfected Rights (IID &amp; Coachella ag)` + canalComparisonBox('aac', 2.90) + `
       `, {
-        label: 'USGS Station #09527700 (All-American Canal)',
+        label: 'USGS #09527700 (AAC)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09527700/'
       });
 
-      attachElement('div-mexico', '1944 Mexican Water Treaty Delivery', () => `
-        <strong>Delivery Location:</strong> Morelos Dam (Northern International Boundary near Yuma)<br>
-        <strong>Guaranteed Treaty Allocation:</strong> 1.500 Million Acre-Feet annually<br>
-        <strong>Beneficiary:</strong> Mexicali Valley agriculture &amp; municipal water users in Baja California &amp; Sonora
-      `, {
-        label: 'IBWC Morelos Dam Operations',
+      attachElement('div-mexico', '1944 Mexican Water Treaty', () => `
+        <strong>Treaty Quota:</strong> 1.50 MAF/yr at Morelos Dam near Yuma<br>
+        <strong>Use:</strong> Mexicali Valley agriculture &amp; Baja California cities` , {
+        label: 'IBWC Morelos Dam',
         url: 'https://www.ibwc.gov/'
       });
 
-      attachElement('loss-powell', 'Lake Powell Evaporative Losses', () => `
-        <strong>Volume Lost:</strong> ~0.38 MAF/yr (~380,000 Acre-Feet)<br>
-        <strong>Mechanism:</strong> Surface evaporation from 160,000+ acres of canyon water under high-altitude desert sunlight<br>
-        <strong>Bank Storage:</strong> Additional volume absorbs into porous Navajo Sandstone canyon walls
-      `, {
-        label: 'USBR HydroData Lake Powell Dashboard',
+      attachElement('loss-powell', 'Lake Powell Evaporation', () => `
+        <strong>Loss Rate:</strong> ~0.38 MAF/yr open-water evaporation<br>
+        <strong>Secondary Loss:</strong> Sandstone bank storage infiltration` , {
+        label: 'USBR Powell Dashboard',
         url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/919/dashboard.html'
       });
 
-      attachElement('loss-mead', 'Lake Mead Evaporative Losses', () => `
-        <strong>Volume Lost:</strong> ~0.65 MAF/yr (~650,000 Acre-Feet)<br>
-        <strong>Mechanism:</strong> Extreme Mojave Desert solar irradiance and low humidity drive huge surface losses<br>
-        <strong>Scale:</strong> Evaporation from Lake Mead exceeds entire municipal consumption of the state of Nevada
-      `, {
-        label: 'USBR Lake Mead Operations Dashboard',
+      attachElement('loss-mead', 'Lake Mead Evaporation', () => `
+        <strong>Loss Rate:</strong> ~0.65 MAF/yr (exceeds Nevada's 0.30 MAF quota)<br>
+        <strong>Driver:</strong> Mojave Desert surface area &amp; solar radiation` , {
+        label: 'USBR Mead Teletype',
         url: 'https://www.usbr.gov/lc/region/g4000/hourly/mead-elv.html'
       });
 
-      attachElement('loss-lower', 'Lower River Transit & Vegetation Losses', () => `
-        <strong>Volume Lost:</strong> ~0.55 MAF/yr (~550,000 Acre-Feet)<br>
-        <strong>Causes:</strong> Channel bed seepage, evaporation between Hoover and Morelos Dam, and riverbank plant transpiration
-      `, {
-        label: 'USBR Lower Colorado Operations Accounting',
+      attachElement('loss-lower', 'Lower River Transit Losses', () => `
+        <strong>Loss Rate:</strong> ~0.55 MAF/yr (Hoover to Morelos Dam)<br>
+        <strong>Drivers:</strong> Alluvial bed seepage &amp; riparian vegetation uptake` , {
+        label: 'USBR LC Accounting',
         url: 'https://www.usbr.gov/lc/region/g4000/hourly/levels.html'
       });
 
-      attachElement('river-delta-dry', 'Colorado River Delta (Historic Channel)', () => `
-        <strong>Status:</strong> 100% dewatered in normal years (0 MAF reaches the sea)<br>
-        <strong>Ecological History:</strong> Once a 2-million-acre lush estuarine ecosystem described by Aldo Leopold<br>
-        <strong>Modern Restoration:</strong> Minute 319 (2014) and Minute 323 (2017) pulse flows provide occasional environmental waters
-      `, {
-        label: 'IBWC / CILA Minute 323 Delta Restoration',
+      attachElement('river-delta-dry', 'Colorado River Delta (Mexico)', () => `
+        <strong>Status:</strong> 100% dewatered in normal years (0 MAF to Gulf)<br>
+        <strong>Restoration:</strong> Minute 319/323 environmental pulse flows` , {
+        label: 'IBWC Minute 323',
         url: 'https://www.ibwc.gov/'
       });
 
-      attachElement('river-lower-spine', 'Lower Basin Mainstem (Hoover to Parker Dam)', () => `
-        <strong>Flow Volume:</strong> ~9.00 MAF/yr (Full managed release from Lake Mead)<br>
-        <strong>Conduit Width:</strong> Mass-conserved flow width narrower than Grand Canyon inflow after 0.65 MAF evaporative loss<br>
-        <strong>Destination:</strong> Delivers full statutory supply downstream to Parker Dam pumping intakes
-      `, {
-        label: 'USGS Station #09421500 (Hoover Dam Tailrace)',
+      attachElement('river-lower-spine', 'Lower Basin Mainstem (Hoover–Parker)', () => `
+        <strong>Annual Volume:</strong> ~9.00 MAF/yr managed Lake Mead release<br>
+        <strong>Role:</strong> Feeds Parker Dam pumping intakes &amp; downstream deliveries` , {
+        label: 'USGS #09421500 (Hoover)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09421500/'
       });
 
-      attachElement('river-lower-mid', 'Lower Colorado River (Parker Dam to Transit Loss)', () => `
-        <strong>Flow Volume:</strong> ~6.45 MAF/yr (Post-CRA &amp; CAP diversions)<br>
-        <strong>Remaining Uses:</strong> Feeds downstream channel transit, Imperial Valley, and Mexican Treaty delivery` + flowComparisonBox('09429100', 6.45, 'USGS #09429100 Below Palo Verde Flow', 'Managed reach delivering agricultural supplies.') + `
+      attachElement('river-lower-mid', 'Lower River (Parker–Imperial)', () => `
+        <strong>Annual Volume:</strong> ~6.45 MAF/yr after CRA &amp; CAP pulls<br>
+        <strong>Role:</strong> Delivers Palo Verde, Imperial &amp; Mexico water` + flowComparisonBox('09429100', 6.45) + `
       `, {
-        label: 'USGS Station #09427520 (Below Parker Dam)',
+        label: 'USGS #09427520 (Parker)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09427520/'
       });
 
-      attachElement('river-lower-canal', 'Lower Colorado River (Transit Loss to Imperial Dam)', () => `
-        <strong>Flow Volume:</strong> ~5.90 MAF/yr (Post-channel depletion)<br>
-        <strong>Next Headworks:</strong> Approaches Imperial Dam desilting works
-      `, {
-        label: 'USGS Station #09429490 (Cibola, AZ)',
+      attachElement('river-lower-canal', 'Lower River (Above Imperial Dam)', () => `
+        <strong>Annual Volume:</strong> ~5.90 MAF/yr post-channel transit losses<br>
+        <strong>Next Node:</strong> Enters Imperial Dam desilting headworks` , {
+        label: 'USGS #09429490 (Cibola)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09429490/'
       });
 
-      attachElement('river-lower-treaty', 'Lower Colorado River (Imperial to Morelos Dam)', () => `
-        <strong>Flow Volume:</strong> ~2.60 MAF/yr (1.50 MAF Mexican Treaty Water diverted at Morelos)<br>
-        <strong>Final Destination:</strong> Guaranteed delivery to Mexico at Morelos Dam
-      `, {
-        label: 'USGS Station #09522000 (Yuma, AZ)',
+      attachElement('river-lower-treaty', 'Lower River (Imperial–Morelos)', () => `
+        <strong>Annual Volume:</strong> ~2.60 MAF/yr (1.50 MAF diverted at Morelos)<br>
+        <strong>Destination:</strong> International boundary delivery to Mexico` , {
+        label: 'USGS #09522000 (Yuma)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09522000/'
       });
 
       attachElement('river-green-upper', 'Green River (Upper Wyoming Reach)', () => `
-        <strong>Headwaters:</strong> Wind River Range &amp; Flaming Gorge Reservoir<br>
-        <strong>Annual Inflow:</strong> ~3.60 MAF/yr (before Yampa confluence)<br>
-        <strong>Conduit Width:</strong> Proportional width (12.4px &rarr; 14.2px / 4.90 MAF upon receiving Yampa River)
-      ` + flowComparisonBox('09234500', 3.60, 'USGS #09234500 Flaming Gorge Release', 'Releases from Flaming Gorge Dam are regulated under DROA.') + `
+        <strong>Annual Volume:</strong> ~3.60 MAF/yr before Yampa confluence<br>
+        <strong>Scaling:</strong> Widens to 4.90 MAF below Yampa River junction` + flowComparisonBox('09234500', 3.60) + `
       `, {
-        label: 'USGS Station #09217000 (Green River, WY)',
+        label: 'USGS #09217000 (WY)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09217000/'
       });
 
-      attachElement('river-upper-main-pre', 'Upper Colorado River (Grand Valley Reach)', () => `
-        <strong>Reach:</strong> Dotsero to Grand Junction<br>
-        <strong>Annual Flow:</strong> ~3.45 MAF/yr (after Front Range trans-mountain diversions)<br>
-        <strong>Conduit Width:</strong> Proportional width (12.2px &rarr; 15.0px / 5.55 MAF upon receiving Gunnison River)
-      ` + flowComparisonBox('09095500', 3.45, 'USGS #09095500 Cameo Flow', 'Mainstem flow in Grand Valley above Grand Valley Project diversions.') + `
+      attachElement('river-upper-main-pre', 'Upper Colorado (Grand Valley Reach)', () => `
+        <strong>Annual Volume:</strong> ~3.45 MAF/yr post Front Range exports<br>
+        <strong>Scaling:</strong> Widens to 5.55 MAF below Gunnison confluence` + flowComparisonBox('09095500', 3.45) + `
       `, {
-        label: 'USGS Station #09095500 (Cameo, CO)',
+        label: 'USGS #09095500 (Cameo)',
         url: 'https://waterdata.usgs.gov/monitoring-location/09095500/'
       });
     }
