@@ -222,25 +222,27 @@
 <body class="flex flex-col min-h-screen w-screen bg-[#f5f2eb]">
 
   <!-- Compact Standard Header -->
-  <header class="bg-[#f5f2eb] border-b border-stone-300 px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 box-border z-20">
+  <header class="bg-[#f5f2eb] border-b border-stone-300 px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 box-border z-20">
     <div>
       <h1 class="text-lg md:text-xl font-black text-slate-900 tracking-tight leading-none">Tributaries &amp; Deficit</h1>
     </div>
 
-    <!-- Center: Interactive Regime Filter Buttons -->
-    <div class="flex items-center gap-1.5 shrink-0" role="group" aria-label="River Regime Filters">
-      <button id="btn-all" onclick="filterRegime('all')" class="px-2.5 py-1 text-xs font-semibold rounded transition-colors bg-slate-800 text-white shadow-xs">
-        All Rivers
-      </button>
-      <button id="btn-snowmelt" onclick="filterRegime('snowmelt')" class="px-2.5 py-1 text-xs font-semibold rounded transition-colors bg-sky-50 hover:bg-sky-100 text-[#0072B2] border border-[#0072B2]/30">
-        Snowmelt Rivers
-      </button>
-      <button id="btn-dam" onclick="filterRegime('dam_controlled')" class="px-2.5 py-1 text-xs font-semibold rounded transition-colors bg-emerald-50 hover:bg-emerald-100 text-[#009E73] border border-[#009E73]/30">
-        Dam-Controlled
-      </button>
-      <button id="btn-flash" onclick="filterRegime('flash_flood')" class="px-2.5 py-1 text-xs font-semibold rounded transition-colors bg-orange-50 hover:bg-orange-100 text-[#D55E00] border border-[#D55E00]/30">
-        Desert Flash-Flood
-      </button>
+    <!-- Compact Regime Key & Direct Selection Hint (Top Two Charts) -->
+    <div id="regime-key" class="flex flex-wrap items-center gap-3 text-xs shrink-0">
+      <span id="regime-legend-snowmelt" class="legend-item font-semibold" onclick="toggleRegimeCategory('snowmelt')" title="Click to highlight all Snowmelt rivers">
+        <span class="legend-color-box" style="background: #0072B2; border-radius: 9999px;"></span>
+        <span class="text-[#0072B2]">Snowmelt</span>
+      </span>
+      <span id="regime-legend-dam_controlled" class="legend-item font-semibold" onclick="toggleRegimeCategory('dam_controlled')" title="Click to highlight all Dam-Regulated rivers">
+        <span class="legend-color-box" style="background: #009E73; border-radius: 9999px;"></span>
+        <span class="text-[#009E73]">Dam-Regulated</span>
+      </span>
+      <span id="regime-legend-flash_flood" class="legend-item font-semibold" onclick="toggleRegimeCategory('flash_flood')" title="Click to highlight all Desert Flash-Flood rivers">
+        <span class="legend-color-box" style="background: #D55E00; border-radius: 9999px;"></span>
+        <span class="text-[#D55E00]">Desert Flash</span>
+      </span>
+      <span class="text-[11px] text-slate-500 hidden sm:inline">• Click lines/bubbles to compare (Shift-click for category)</span>
+      <button id="btn-reset-selection" onclick="clearRiverSelection()" class="hidden text-[11px] font-bold text-[#2b5c8f] hover:underline cursor-pointer">Reset</button>
     </div>
   </header>
 
@@ -559,9 +561,82 @@
       }
     ];
 
-    // Shared State
-    let selectedRiverId = null;
-    let selectedRegime = 'all';
+    // Shared Multi-Select State (river IDs across top two charts)
+    const selectedRiverIds = new Set();
+
+    function isRiverActive(r) {
+      return selectedRiverIds.size === 0 || selectedRiverIds.has(r.id);
+    }
+
+    function regimeLabelText(regime) {
+      if (regime === 'snowmelt') return 'Alpine Snowmelt';
+      if (regime === 'dam_controlled') return 'Dam-Regulated Release';
+      return 'Desert Flash-Flood';
+    }
+
+    function formatRiverHoverLines(r) {
+      return [
+        `Regime: ${regimeLabelText(r.regime)}`,
+        `Annual Inflow: ${r.y.toFixed(2)} MAF/yr (${r.sharePct}% of Powell inflow)`,
+        `Flashiness (RBI): ${r.rbi.toFixed(2)}`,
+        `Travel to Powell: ${r.travelDays}d peak (~${r.distanceMi} river mi)`
+      ];
+    }
+
+    function pointToSegmentDistance(px, py, x1, y1, x2, y2) {
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      const lenSq = dx * dx + dy * dy;
+      if (lenSq === 0) return Math.hypot(px - x1, py - y1);
+      const t = Math.max(0, Math.min(1, ((px - x1) * dx + (py - y1) * dy) / lenSq));
+      return Math.hypot(px - (x1 + t * dx), py - (y1 + t * dy));
+    }
+
+    function findHitRiverOnChart(chart, evt, isLineChart) {
+      if (!chart || !evt) return null;
+      const x = evt.x != null ? evt.x : evt.native?.offsetX;
+      const y = evt.y != null ? evt.y : evt.native?.offsetY;
+      if (x == null || y == null) return null;
+
+      // 1. Check direct label pill boxes first
+      const boxes = chart._labelBoxes || [];
+      for (const b of boxes) {
+        if (b.riverId && x >= b.x && x <= b.x + b.w && y >= b.y && y <= b.y + b.h) {
+          return b.riverId;
+        }
+      }
+
+      // 2. Check proximity to plotted bubbles or line segments
+      let bestId = null;
+      let bestDist = isLineChart ? 16 : Infinity;
+      chart.data.datasets.forEach((ds, idx) => {
+        const meta = chart.getDatasetMeta(idx);
+        if (!meta || meta.hidden || !meta.data || !meta.data.length) return;
+        const rId = ds.riverId || ds.data?.[0]?.river?.id;
+        if (!rId) return;
+
+        if (!isLineChart) {
+          const el = meta.data[0];
+          const rad = el.options?.radius || ds.data?.[0]?.r || 8;
+          const dist = Math.hypot(x - el.x, y - el.y);
+          if (dist <= rad + 8 && dist < bestDist) {
+            bestDist = dist;
+            bestId = rId;
+          }
+        } else {
+          for (let i = 0; i < meta.data.length - 1; i++) {
+            const p1 = meta.data[i];
+            const p2 = meta.data[i + 1];
+            const d = pointToSegmentDistance(x, y, p1.x, p1.y, p2.x, p2.y);
+            if (d < bestDist) {
+              bestDist = d;
+              bestId = rId;
+            }
+          }
+        }
+      });
+      return bestId;
+    }
 
     let chartBubble = null;
     let chartTravel = null;
@@ -597,12 +672,13 @@
 
         ctx.save();
         ctx.font = 'bold 9px "Inter", -apple-system, sans-serif';
+        const labelBoxes = [];
 
         chart.data.datasets.forEach(ds => {
           const r = ds.data[0].river;
           if (!r) return;
 
-          const isSelected = selectedRiverId ? (r.id === selectedRiverId) : (selectedRegime === 'all' || r.regime === selectedRegime);
+          const isSelected = isRiverActive(r);
           const isDimmed = !isSelected;
 
           const xPos = xScale.getPixelForValue(r.x);
@@ -630,6 +706,7 @@
 
             const pillX = px - pillW / 2;
             const pillY = py - pillH / 2;
+            labelBoxes.push({ riverId: r.id, regime: r.regime, x: pillX, y: pillY, w: pillW, h: pillH });
 
             ctx.save();
             ctx.fillStyle = isDimmed ? 'rgba(255, 255, 255, 0.6)' : '#ffffff';
@@ -652,6 +729,7 @@
           }
         });
 
+        chart._labelBoxes = labelBoxes;
         ctx.restore();
       }
     };
@@ -686,12 +764,14 @@
             legend: { display: false },
             tooltip: {
               callbacks: {
-                title: (items) => `${items[0].raw.river.name} (${items[0].raw.river.station})`,
-                label: (ctx) => [
-                  `Annual Inflow: ${ctx.raw.river.y.toFixed(2)} MAF/yr (${ctx.raw.river.sharePct}% of Powell)`,
-                  `Flashiness Score: ${ctx.raw.river.rbi.toFixed(2)}`,
-                  `Regime: ${ctx.raw.river.regime === 'snowmelt' ? 'Snowmelt-Driven' : ctx.raw.river.regime === 'dam_controlled' ? 'Dam-Regulated' : 'Desert Flash Flood'}`
-                ]
+                title: (items) => {
+                  const r = items[0]?.raw?.river;
+                  return r ? `${r.name} (USGS ${r.station})` : '';
+                },
+                label: (ctx) => {
+                  const r = ctx.raw?.river;
+                  return r ? formatRiverHoverLines(r) : [];
+                }
               }
             }
           },
@@ -743,13 +823,19 @@
               grid: { color: '#e2e8f0', lineWidth: 1 }
             }
           },
-          onClick: (evt, elements) => {
-            if (elements && elements.length > 0) {
-              const datasetIdx = elements[0].datasetIndex;
-              const r = chartBubble.data.datasets[datasetIdx].data[0].river;
-              selectRiver(r.id === selectedRiverId ? null : r.id);
+          onHover: (evt) => {
+            const hit = findHitRiverOnChart(chartBubble, evt, false);
+            evt.native.target.style.cursor = hit ? 'pointer' : 'default';
+          },
+          onClick: (evt) => {
+            const hitId = findHitRiverOnChart(chartBubble, evt, false);
+            if (!hitId) {
+              clearRiverSelection();
+            } else if (evt.native?.shiftKey) {
+              const r = RIVERS.find(item => item.id === hitId);
+              if (r) toggleRegimeCategory(r.regime);
             } else {
-              selectRiver(null);
+              toggleRiverSelection(hitId);
             }
           }
         }
@@ -784,7 +870,7 @@
         const minX = chartArea.left + 2;
         const minY = chartArea.top + 2;
 
-        const addBox = (label, anchorX, anchorY, xOffset, yOffset, color, isDimmed) => {
+        const addBox = (riverId, regime, label, anchorX, anchorY, xOffset, yOffset, color, isDimmed) => {
           const textWidth = ctx.measureText(label).width;
           const pillW = textWidth + 10;
           const maxX = Math.max(minX, chartArea.right - pillW - 2);
@@ -793,34 +879,35 @@
           const cy = anchorY + yOffset;
           const x = Math.min(maxX, Math.max(minX, cx - pillW / 2));
           const y = Math.min(maxY, Math.max(minY, cy - pillH / 2));
-          boxes.push({ label, anchorX, anchorY, x, y, w: pillW, h: pillH, maxX, maxY, color, isDimmed });
+          boxes.push({ riverId, regime, label, anchorX, anchorY, x, y, w: pillW, h: pillH, maxX, maxY, color, isDimmed });
         };
 
         mainRivers.forEach(item => {
           const ds = chart.data.datasets.find(d => d.riverId === item.id);
           if (!ds) return;
-          const isSelected = selectedRiverId ? (ds.riverId === selectedRiverId) : (selectedRegime === 'all' || ds.regime === selectedRegime);
+          const isSelected = isRiverActive({ id: ds.riverId, regime: ds.regime });
           const isDimmed = !isSelected;
           const xPos = xScale.getPixelForValue(item.xVal);
           const yPos = yScale.getPixelForValue(item.yVal);
           if (xPos >= chartArea.left - 20 && xPos <= chartArea.right + 20 && yPos >= chartArea.top - 20 && yPos <= chartArea.bottom + 20) {
-            addBox(item.label, xPos, yPos, item.xOffset, item.yOffset, ds.borderColor, isDimmed);
+            addBox(ds.riverId, ds.regime, item.label, xPos, yPos, item.xOffset, item.yOffset, ds.borderColor, isDimmed);
           }
         });
 
-        // If another river is selected, include it in the same collision-free label layer
-        if (selectedRiverId && !mainRivers.some(m => m.id === selectedRiverId)) {
-          const selRiver = RIVERS.find(r => r.id === selectedRiverId);
+        // Include any selected rivers not among the 5 default peak labels (e.g. Dirty Devil / Escalante)
+        selectedRiverIds.forEach(selId => {
+          if (mainRivers.some(m => m.id === selId)) return;
+          const selRiver = RIVERS.find(r => r.id === selId);
           if (selRiver) {
             const peakIdx = Math.round(selRiver.travelDays);
             const peakY = selRiver.travelCurve[peakIdx] || 0.45;
             const xPos = xScale.getPixelForValue(peakIdx);
             const yPos = yScale.getPixelForValue(peakY);
             if (xPos >= chartArea.left && xPos <= chartArea.right) {
-              addBox(`${selRiver.name.split(' ')[0]} ${selRiver.travelDays}d`, xPos, yPos, 0, -16, selRiver.color, false);
+              addBox(selRiver.id, selRiver.regime, `${selRiver.name.split(' ')[0]} ${selRiver.travelDays}d`, xPos, yPos, 0, -16, selRiver.color, false);
             }
           }
-        }
+        });
 
         // Pairwise AABB collision resolution (12 iterations, 4px padding)
         const pad = 4;
@@ -892,6 +979,7 @@
           ctx.restore();
         });
 
+        chart._labelBoxes = boxes;
         ctx.restore();
       }
     };
@@ -914,6 +1002,7 @@
           const peakIdx = Math.round(r.travelDays);
           return ctx.dataIndex === peakIdx ? 4.5 : 0;
         },
+        pointHitRadius: 24,
         pointBackgroundColor: r.color,
         pointBorderColor: '#ffffff',
         pointBorderWidth: 1.5,
@@ -931,6 +1020,10 @@
           responsive: true,
           maintainAspectRatio: false,
           animation: false,
+          interaction: {
+            mode: 'nearest',
+            intersect: true
+          },
           layout: {
             padding: { left: 18, right: 10, top: 16, bottom: 4 }
           },
@@ -938,7 +1031,14 @@
             legend: { display: false },
             tooltip: {
               callbacks: {
-                label: (ctx) => `${ctx.dataset.label.split(':')[0]}: ${ctx.parsed.x} days arrival`
+                title: (items) => {
+                  const r = RIVERS.find(rv => rv.id === items[0]?.dataset?.riverId);
+                  return r ? `${r.name} (USGS ${r.station})` : '';
+                },
+                label: (ctx) => {
+                  const r = RIVERS.find(rv => rv.id === ctx.dataset?.riverId);
+                  return r ? formatRiverHoverLines(r) : [];
+                }
               }
             }
           },
@@ -975,13 +1075,19 @@
               grid: { color: '#e2e8f0', lineWidth: 1 }
             }
           },
-          onClick: (evt, elements) => {
-            if (elements && elements.length > 0) {
-              const dsIdx = elements[0].datasetIndex;
-              const rId = chartTravel.data.datasets[dsIdx].riverId;
-              selectRiver(rId === selectedRiverId ? null : rId);
+          onHover: (evt) => {
+            const hit = findHitRiverOnChart(chartTravel, evt, true);
+            evt.native.target.style.cursor = hit ? 'pointer' : 'default';
+          },
+          onClick: (evt) => {
+            const hitId = findHitRiverOnChart(chartTravel, evt, true);
+            if (!hitId) {
+              clearRiverSelection();
+            } else if (evt.native?.shiftKey) {
+              const r = RIVERS.find(item => item.id === hitId);
+              if (r) toggleRegimeCategory(r.regime);
             } else {
-              selectRiver(null);
+              toggleRiverSelection(hitId);
             }
           }
         }
@@ -1397,96 +1503,67 @@
     }
 
     // ================================================================
-    // INTERACTIVITY: GAPMINDER SELECTION & REGIME FILTER
+    // INTERACTIVITY: DIRECT MULTI-LINE & REGIME CATEGORY SELECTION
     // ================================================================
-    function selectRiver(riverId) {
-      selectedRiverId = riverId;
-      const pill = document.getElementById('status-pill');
-
-      if (!riverId) {
-        if (selectedRegime === 'all') {
-          if (pill) {
-            pill.textContent = 'Click any tributary or flow curve below to inspect';
-            pill.className = 'text-[11px] font-medium text-slate-700 bg-slate-100 border border-slate-200 rounded-full px-3 py-0.5 truncate max-w-[440px]';
-          }
-        } else {
-          updateRegimePillText();
-        }
+    function toggleRiverSelection(riverId) {
+      if (!riverId) return;
+      if (selectedRiverIds.has(riverId)) {
+        selectedRiverIds.delete(riverId);
       } else {
-        const river = RIVERS.find(r => r.id === riverId);
-        if (river && pill) {
-          pill.textContent = river.summary;
-          const pillClass = river.regime === 'snowmelt' ? 'text-[#0072B2] bg-sky-50 border-[#0072B2]/40' :
-                            river.regime === 'flash_flood' ? 'text-[#D55E00] bg-orange-50 border-[#D55E00]/40' :
-                            'text-[#009E73] bg-emerald-50 border-[#009E73]/40';
-          pill.className = `text-[11px] font-semibold ${pillClass} border rounded-full px-3 py-0.5 truncate max-w-[440px]`;
-        }
+        selectedRiverIds.add(riverId);
       }
-
       applyVisualSelection();
     }
 
-    function filterRegime(regime) {
-      selectedRegime = regime;
-      selectedRiverId = null;
-
-      // Update button styling
-      const btns = {
-        'all': document.getElementById('btn-all'),
-        'snowmelt': document.getElementById('btn-snowmelt'),
-        'dam_controlled': document.getElementById('btn-dam'),
-        'flash_flood': document.getElementById('btn-flash')
-      };
-
-      for (const [key, btn] of Object.entries(btns)) {
-        if (!btn) continue;
-        if (key === regime) {
-          btn.className = 'px-2.5 py-1 text-xs font-semibold rounded transition-colors bg-slate-800 text-white shadow-xs';
-        } else {
-          if (key === 'snowmelt') btn.className = 'px-2.5 py-1 text-xs font-semibold rounded transition-colors bg-sky-50 hover:bg-sky-100 text-[#0072B2] border border-[#0072B2]/30';
-          else if (key === 'dam_controlled') btn.className = 'px-2.5 py-1 text-xs font-semibold rounded transition-colors bg-emerald-50 hover:bg-emerald-100 text-[#009E73] border border-[#009E73]/30';
-          else if (key === 'flash_flood') btn.className = 'px-2.5 py-1 text-xs font-semibold rounded transition-colors bg-orange-50 hover:bg-orange-100 text-[#D55E00] border border-[#D55E00]/30';
-          else btn.className = 'px-2.5 py-1 text-xs font-semibold rounded transition-colors bg-white hover:bg-slate-100 text-slate-700 border border-slate-200';
-        }
+    function toggleRegimeCategory(regime) {
+      const catIds = RIVERS.filter(r => r.regime === regime).map(r => r.id);
+      if (!catIds.length) return;
+      const allAlreadySelected = catIds.every(id => selectedRiverIds.has(id)) && selectedRiverIds.size === catIds.length;
+      selectedRiverIds.clear();
+      if (!allAlreadySelected) {
+        catIds.forEach(id => selectedRiverIds.add(id));
       }
-
-      updateRegimePillText();
       applyVisualSelection();
     }
 
-    function updateRegimePillText() {
-      const pill = document.getElementById('status-pill');
-      if (!pill) return;
-      if (selectedRegime === 'all') {
-        pill.textContent = 'Click any tributary or flow curve below to inspect';
-        pill.className = 'text-[11px] font-medium text-slate-700 bg-slate-100 border border-slate-200 rounded-full px-3 py-0.5 truncate max-w-[440px]';
-      } else if (selectedRegime === 'snowmelt') {
-        pill.textContent = 'Filter: Mountain Snowmelt Rivers — Deliver 37% of inflow in a concentrated 60-day spring surge';
-        pill.className = 'text-[11px] font-semibold text-[#0072B2] bg-sky-50 border border-[#0072B2]/30 rounded-full px-3 py-0.5 truncate max-w-[440px]';
-      } else if (selectedRegime === 'dam_controlled') {
-        pill.textContent = 'Filter: Dam-Controlled Rivers — Deliver 53% of inflow via upstream storage releases';
-        pill.className = 'text-[11px] font-semibold text-[#009E73] bg-emerald-50 border border-[#009E73]/30 rounded-full px-3 py-0.5 truncate max-w-[440px]';
-      } else if (selectedRegime === 'flash_flood') {
-        pill.textContent = 'Filter: Desert Flash-Flood Streams — Sudden mudflow spikes that drain out in hours';
-        pill.className = 'text-[11px] font-semibold text-[#D55E00] bg-orange-50 border border-[#D55E00]/30 rounded-full px-3 py-0.5 truncate max-w-[440px]';
-      }
+    function clearRiverSelection() {
+      selectedRiverIds.clear();
+      applyVisualSelection();
     }
 
     function applyVisualSelection() {
-      // 1. Update Card 1 Bubble Chart (Crisp 1.5px border on unselected bubbles)
+      const hasFilter = selectedRiverIds.size > 0;
+
+      // Sync inline header regime key & Reset control
+      ['snowmelt', 'dam_controlled', 'flash_flood'].forEach(reg => {
+        const el = document.getElementById(`regime-legend-${reg}`);
+        if (!el) return;
+        const anyInRegime = RIVERS.some(r => r.regime === reg && selectedRiverIds.has(r.id));
+        if (!hasFilter || anyInRegime) {
+          el.classList.remove('dimmed');
+        } else {
+          el.classList.add('dimmed');
+        }
+      });
+      const resetBtn = document.getElementById('btn-reset-selection');
+      if (resetBtn) {
+        resetBtn.classList.toggle('hidden', !hasFilter);
+      }
+
+      // 1. Update Card 1 Bubble Chart
       if (chartBubble) {
         chartBubble.data.datasets.forEach(ds => {
           const r = ds.data[0].river;
-          const isSelected = selectedRiverId ? (r.id === selectedRiverId) : (selectedRegime === 'all' || r.regime === selectedRegime);
+          const isSelected = isRiverActive(r);
 
           if (isSelected) {
             ds.backgroundColor = hexToRgba(r.color, 0.85);
-            ds.borderColor = selectedRiverId ? '#1e293b' : r.color;
-            ds.borderWidth = selectedRiverId ? 3.0 : 1.5;
+            ds.borderColor = hasFilter ? '#1e293b' : r.color;
+            ds.borderWidth = hasFilter ? 2.8 : 1.5;
           } else {
-            ds.backgroundColor = hexToRgba(r.color, 0.16);
-            ds.borderColor = hexToRgba(r.color, 0.75); // Crisp 1.5px border with 0.75 opacity
-            ds.borderWidth = 1.5;
+            ds.backgroundColor = hexToRgba(r.color, 0.14);
+            ds.borderColor = hexToRgba(r.color, 0.45);
+            ds.borderWidth = 1.0;
           }
         });
         chartBubble.update('none');
@@ -1495,16 +1572,16 @@
       // 2. Update Card 2 Travel Curves
       if (chartTravel) {
         chartTravel.data.datasets.forEach(ds => {
-          const isSelected = selectedRiverId ? (ds.riverId === selectedRiverId) : (selectedRegime === 'all' || ds.regime === selectedRegime);
           const r = RIVERS.find(item => item.id === ds.riverId);
+          const isSelected = r ? isRiverActive(r) : true;
 
           if (isSelected) {
             ds.borderColor = r ? r.color : COLOR_DAM;
             ds.backgroundColor = hexToRgba(r ? r.color : COLOR_DAM, 0.16);
-            ds.borderWidth = selectedRiverId ? 3.5 : 2.0;
+            ds.borderWidth = hasFilter ? 3.2 : 2.0;
           } else {
             const baseColor = r ? r.color : '#94a3b8';
-            ds.borderColor = hexToRgba(baseColor, 0.18);
+            ds.borderColor = hexToRgba(baseColor, 0.16);
             ds.backgroundColor = 'transparent';
             ds.borderWidth = 1.0;
           }
