@@ -1171,9 +1171,9 @@
         const textWidth = ctx.measureText(labelText).width;
         const pillW = textWidth + 14;
         const pillH = 18;
-        // 10px buffer below top gridline for comfortable breathing room
-        const pillY = chartArea.top + 10;
-        const pillX = xPos - (pillW / 2);
+        // Position cleanly in top headroom above tallest bars and clamp horizontally
+        const pillY = chartArea.top + 2;
+        const pillX = Math.max(chartArea.left + 2, Math.min(chartArea.right - pillW - 2, xPos - (pillW / 2)));
 
         // Draw protective white badge pill with subtle border
         ctx.fillStyle = '#ffffff';
@@ -1306,7 +1306,7 @@
             },
             y: {
               min: 0,
-              max: 25,
+              max: 30,
               title: {
                 display: true,
                 text: 'Annual Volume (Million Acre-Feet)',
