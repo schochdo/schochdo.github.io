@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-11-22T12:38:34.794747",
+  "fetched_at": "2026-11-22T12:43:22.755520",
   "dam_releases": {
     "hoover_dam": {
       "id": "USBR_HOOVER",
@@ -8,7 +8,7 @@
       "timestamp": "2026-11-22T12:00:00-07:00",
       "source": "USBR Lower Colorado Hourly Operations",
       "source_url": "https://www.usbr.gov/lc/region/g4000/riverops/hourly7.html",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 36.0156,
       "lon": -114.7378
@@ -20,7 +20,7 @@
       "timestamp": "2026-11-22T12:00:00-07:00",
       "source": "USBR Lower Colorado Hourly Operations",
       "source_url": "https://www.usbr.gov/lc/region/g4000/riverops/hourly7.html",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 35.1989,
       "lon": -114.5683
@@ -32,7 +32,7 @@
       "timestamp": "2026-11-22T12:00:00-07:00",
       "source": "USBR Lower Colorado Hourly Operations",
       "source_url": "https://www.usbr.gov/lc/region/g4000/riverops/hourly7.html",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 34.2981,
       "lon": -114.1678
@@ -46,7 +46,7 @@
       "type": "streamflow",
       "flow_cfs": 9.88,
       "timestamp": "2026-11-22T12:15:00.000-07:00",
-      "age_hours": 0.4,
+      "age_hours": 0.5,
       "data_status": "live",
       "lat": 40.325833,
       "lon": -105.856111
@@ -58,7 +58,7 @@
       "type": "streamflow",
       "flow_cfs": 36.8,
       "timestamp": "2026-11-22T12:15:00.000-07:00",
-      "age_hours": 0.4,
+      "age_hours": 0.5,
       "data_status": "live",
       "lat": 40.00689167,
       "lon": -105.8482722
@@ -70,7 +70,7 @@
       "type": "streamflow",
       "flow_cfs": 75.3,
       "timestamp": "2026-11-22T11:45:00.000-07:00",
-      "age_hours": 0.9,
+      "age_hours": 1.0,
       "data_status": "live",
       "lat": 40.108319,
       "lon": -106.0041847
@@ -80,9 +80,9 @@
       "name": "Williams Fork near Parshall, CO",
       "provider": "USGS",
       "type": "streamflow",
-      "flow_cfs": 8.38,
-      "timestamp": "2026-11-22T11:30:00.000-07:00",
-      "age_hours": 1.1,
+      "flow_cfs": 10.5,
+      "timestamp": "2026-11-22T12:30:00.000-07:00",
+      "age_hours": 0.2,
       "data_status": "live",
       "lat": 40.0002,
       "lon": -106.180367
@@ -93,8 +93,8 @@
       "provider": "USGS",
       "type": "streamflow",
       "flow_cfs": 16.3,
-      "timestamp": "2026-11-22T11:30:00.000-07:00",
-      "age_hours": 1.1,
+      "timestamp": "2026-11-22T12:30:00.000-07:00",
+      "age_hours": 0.2,
       "data_status": "live",
       "lat": 40.108611,
       "lon": -106.413333
@@ -106,7 +106,7 @@
       "type": "streamflow",
       "flow_cfs": 26.6,
       "timestamp": "2026-11-22T12:00:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 39.56665329,
       "lon": -106.0494632
@@ -118,7 +118,7 @@
       "type": "streamflow",
       "flow_cfs": 63.0,
       "timestamp": "2026-11-22T12:15:00.000-07:00",
-      "age_hours": 0.4,
+      "age_hours": 0.5,
       "data_status": "live",
       "lat": 39.625556,
       "lon": -106.065833
@@ -130,7 +130,7 @@
       "type": "streamflow",
       "flow_cfs": 58.7,
       "timestamp": "2026-11-22T12:00:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 39.88026354,
       "lon": -106.3339175
@@ -142,7 +142,7 @@
       "type": "streamflow",
       "flow_cfs": 196.0,
       "timestamp": "2026-11-22T12:15:00.000-07:00",
-      "age_hours": 0.4,
+      "age_hours": 0.5,
       "data_status": "live",
       "lat": 40.036667,
       "lon": -106.439444
@@ -154,7 +154,7 @@
       "type": "streamflow",
       "flow_cfs": 114.0,
       "timestamp": "2026-11-22T12:15:00.000-07:00",
-      "age_hours": 0.4,
+      "age_hours": 0.5,
       "data_status": "live",
       "lat": 39.64942954,
       "lon": -106.9536554
@@ -166,7 +166,7 @@
       "type": "streamflow",
       "flow_cfs": 456.0,
       "timestamp": "2026-11-22T12:00:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 39.6446111,
       "lon": -107.0780139
@@ -178,7 +178,7 @@
       "type": "streamflow",
       "flow_cfs": 39.3,
       "timestamp": "2026-11-22T12:15:00.000-07:00",
-      "age_hours": 0.4,
+      "age_hours": 0.5,
       "data_status": "live",
       "lat": 39.36554075,
       "lon": -106.8255948
@@ -190,7 +190,7 @@
       "type": "streamflow",
       "flow_cfs": 439.0,
       "timestamp": "2026-11-22T11:45:00.000-07:00",
-      "age_hours": 0.9,
+      "age_hours": 1.0,
       "data_status": "live",
       "lat": 39.54666667,
       "lon": -107.33083333
@@ -202,7 +202,7 @@
       "type": "streamflow",
       "flow_cfs": 959.0,
       "timestamp": "2026-11-22T12:15:00.000-07:00",
-      "age_hours": 0.4,
+      "age_hours": 0.5,
       "data_status": "live",
       "lat": 39.5549819,
       "lon": -107.337554
@@ -213,8 +213,8 @@
       "provider": "USGS",
       "type": "streamflow",
       "flow_cfs": 1190.0,
-      "timestamp": "2026-11-22T12:15:00.000-07:00",
-      "age_hours": 0.4,
+      "timestamp": "2026-11-22T12:30:00.000-07:00",
+      "age_hours": 0.2,
       "data_status": "live",
       "lat": 39.2391463,
       "lon": -108.2661946
@@ -226,7 +226,7 @@
       "type": "streamflow",
       "flow_cfs": 250.0,
       "timestamp": "2026-11-22T12:15:00.000-07:00",
-      "age_hours": 0.4,
+      "age_hours": 0.5,
       "data_status": "live",
       "lat": 38.54193567,
       "lon": -106.9497661
@@ -237,8 +237,8 @@
       "provider": "USGS",
       "type": "streamflow",
       "flow_cfs": 213.0,
-      "timestamp": "2026-11-22T12:15:00.000-07:00",
-      "age_hours": 0.4,
+      "timestamp": "2026-11-22T12:30:00.000-07:00",
+      "age_hours": 0.2,
       "data_status": "live",
       "lat": 38.52915336,
       "lon": -107.648947
@@ -250,7 +250,7 @@
       "type": "streamflow",
       "flow_cfs": 460.0,
       "timestamp": "2026-11-22T12:15:00.000-07:00",
-      "age_hours": 0.4,
+      "age_hours": 0.5,
       "data_status": "live",
       "lat": 38.74194444,
       "lon": -108.08041667
@@ -260,9 +260,9 @@
       "name": "Gunnison River near Grand Junction, CO",
       "provider": "USGS",
       "type": "streamflow",
-      "flow_cfs": 1170.0,
-      "timestamp": "2026-11-22T11:30:00.000-07:00",
-      "age_hours": 1.1,
+      "flow_cfs": 1150.0,
+      "timestamp": "2026-11-22T12:30:00.000-07:00",
+      "age_hours": 0.2,
       "data_status": "live",
       "lat": 38.98331575,
       "lon": -108.4506446
@@ -274,7 +274,7 @@
       "type": "streamflow",
       "flow_cfs": 2540.0,
       "timestamp": "2026-11-22T11:45:00.000-07:00",
-      "age_hours": 0.9,
+      "age_hours": 1.0,
       "data_status": "live",
       "lat": 39.132742,
       "lon": -109.027075
@@ -286,7 +286,7 @@
       "type": "streamflow",
       "flow_cfs": 364.0,
       "timestamp": "2026-11-22T11:45:00.000-07:00",
-      "age_hours": 0.9,
+      "age_hours": 1.0,
       "data_status": "live",
       "lat": 37.47249579,
       "lon": -108.49760047
@@ -298,7 +298,7 @@
       "type": "streamflow",
       "flow_cfs": 104.0,
       "timestamp": "2026-11-22T12:15:00.000-07:00",
-      "age_hours": 0.4,
+      "age_hours": 0.5,
       "data_status": "live",
       "lat": 38.3102675,
       "lon": -108.8853805
@@ -309,8 +309,8 @@
       "provider": "USGS",
       "type": "streamflow",
       "flow_cfs": 405.0,
-      "timestamp": "2026-11-22T12:15:00.000-07:00",
-      "age_hours": 0.4,
+      "timestamp": "2026-11-22T12:30:00.000-07:00",
+      "age_hours": 0.2,
       "data_status": "live",
       "lat": 38.79720805,
       "lon": -109.1951142
@@ -322,7 +322,7 @@
       "type": "streamflow",
       "flow_cfs": 2940.0,
       "timestamp": "2026-11-22T12:00:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 38.81054095,
       "lon": -109.2934493
@@ -334,7 +334,7 @@
       "type": "streamflow",
       "flow_cfs": 215.0,
       "timestamp": "2026-11-22T11:45:00.000-07:00",
-      "age_hours": 0.9,
+      "age_hours": 1.0,
       "data_status": "live",
       "lat": 43.0190833,
       "lon": -110.1188611
@@ -346,7 +346,7 @@
       "type": "streamflow",
       "flow_cfs": 824.0,
       "timestamp": "2026-11-22T12:00:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 42.19269994,
       "lon": -110.1632544
@@ -358,7 +358,7 @@
       "type": "streamflow",
       "flow_cfs": 995.0,
       "timestamp": "2026-11-22T12:00:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 42.0209722,
       "lon": -110.0498056
@@ -370,7 +370,7 @@
       "type": "streamflow",
       "flow_cfs": 1020.0,
       "timestamp": "2026-11-22T11:30:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 41.5163221,
       "lon": -109.4490579
@@ -382,7 +382,7 @@
       "type": "streamflow",
       "flow_cfs": 1660.0,
       "timestamp": "2026-11-22T11:30:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 40.90829296,
       "lon": -109.422914
@@ -394,7 +394,7 @@
       "type": "streamflow",
       "flow_cfs": 247.0,
       "timestamp": "2026-11-22T12:15:00.000-07:00",
-      "age_hours": 0.4,
+      "age_hours": 0.5,
       "data_status": "live",
       "lat": 40.50273085,
       "lon": -108.0334482
@@ -406,7 +406,7 @@
       "type": "streamflow",
       "flow_cfs": 144.0,
       "timestamp": "2026-11-22T12:15:00.000-07:00",
-      "age_hours": 0.4,
+      "age_hours": 0.5,
       "data_status": "live",
       "lat": 40.54901667,
       "lon": -108.42432222
@@ -418,7 +418,7 @@
       "type": "streamflow",
       "flow_cfs": 406.0,
       "timestamp": "2026-11-22T12:15:00.000-07:00",
-      "age_hours": 0.4,
+      "age_hours": 0.5,
       "data_status": "live",
       "lat": 40.45161747,
       "lon": -108.52512937
@@ -428,9 +428,9 @@
       "name": "Green River near Jensen, UT (below Yampa)",
       "provider": "USGS",
       "type": "streamflow",
-      "flow_cfs": 2850.0,
-      "timestamp": "2026-11-22T12:15:00.000-07:00",
-      "age_hours": 0.4,
+      "flow_cfs": 2830.0,
+      "timestamp": "2026-11-22T12:30:00.000-07:00",
+      "age_hours": 0.2,
       "data_status": "live",
       "lat": 40.40871944,
       "lon": -109.23523611
@@ -442,7 +442,7 @@
       "type": "streamflow",
       "flow_cfs": 2660.0,
       "timestamp": "2026-11-22T12:00:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 40.0847972,
       "lon": -109.6758361
@@ -454,7 +454,7 @@
       "type": "streamflow",
       "flow_cfs": 631.0,
       "timestamp": "2026-11-22T12:00:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 40.21027778,
       "lon": -109.7813889
@@ -466,7 +466,7 @@
       "type": "streamflow",
       "flow_cfs": 214.0,
       "timestamp": "2026-11-22T12:00:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 40.03359167,
       "lon": -107.86241944
@@ -478,7 +478,7 @@
       "type": "streamflow",
       "flow_cfs": 296.0,
       "timestamp": "2026-11-22T11:45:00.000-07:00",
-      "age_hours": 0.9,
+      "age_hours": 1.0,
       "data_status": "live",
       "lat": 39.97885629,
       "lon": -109.1787269
@@ -490,7 +490,7 @@
       "type": "streamflow",
       "flow_cfs": 68.5,
       "timestamp": "2026-11-22T11:30:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 39.26444444,
       "lon": -110.3427778
@@ -501,8 +501,8 @@
       "provider": "USGS",
       "type": "streamflow",
       "flow_cfs": 4150.0,
-      "timestamp": "2026-11-22T12:15:00.000-07:00",
-      "age_hours": 0.4,
+      "timestamp": "2026-11-22T12:30:00.000-07:00",
+      "age_hours": 0.2,
       "data_status": "live",
       "lat": 38.98886944,
       "lon": -110.15035556
@@ -512,9 +512,9 @@
       "name": "San Rafael River near Green River, UT",
       "provider": "USGS",
       "type": "streamflow",
-      "flow_cfs": 64.4,
-      "timestamp": "2026-11-22T12:15:00.000-07:00",
-      "age_hours": 0.4,
+      "flow_cfs": 63.6,
+      "timestamp": "2026-11-22T12:30:00.000-07:00",
+      "age_hours": 0.2,
       "data_status": "live",
       "lat": 38.8583081,
       "lon": -110.3701469
@@ -525,8 +525,8 @@
       "provider": "USGS",
       "type": "streamflow",
       "flow_cfs": 146.0,
-      "timestamp": "2026-11-22T11:30:00.000-07:00",
-      "age_hours": 1.1,
+      "timestamp": "2026-11-22T12:30:00.000-07:00",
+      "age_hours": 0.2,
       "data_status": "live",
       "lat": 38.0971222,
       "lon": -110.4074167
@@ -538,7 +538,7 @@
       "type": "streamflow",
       "flow_cfs": 7.04,
       "timestamp": "2026-11-22T12:25:00.000-07:00",
-      "age_hours": 0.2,
+      "age_hours": 0.3,
       "data_status": "live",
       "lat": 37.77804389,
       "lon": -111.5746181
@@ -550,7 +550,7 @@
       "type": "streamflow",
       "flow_cfs": 323.0,
       "timestamp": "2026-11-22T12:00:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 37.26552778,
       "lon": -107.011
@@ -562,7 +562,7 @@
       "type": "streamflow",
       "flow_cfs": 418.0,
       "timestamp": "2026-11-22T12:15:00.000-07:00",
-      "age_hours": 0.4,
+      "age_hours": 0.5,
       "data_status": "live",
       "lat": 36.80188889,
       "lon": -107.6986389
@@ -574,7 +574,7 @@
       "type": "streamflow",
       "flow_cfs": 889.0,
       "timestamp": "2026-11-22T11:30:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 36.7225,
       "lon": -108.20175
@@ -586,7 +586,7 @@
       "type": "streamflow",
       "flow_cfs": 2410.0,
       "timestamp": "2026-11-22T12:00:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 36.72301667,
       "lon": -108.2255889
@@ -598,7 +598,7 @@
       "type": "streamflow",
       "flow_cfs": 2370.0,
       "timestamp": "2026-11-22T12:00:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 36.77666667,
       "lon": -108.6830556
@@ -608,9 +608,9 @@
       "name": "San Juan River near Bluff, UT",
       "provider": "USGS",
       "type": "streamflow",
-      "flow_cfs": 2100.0,
-      "timestamp": "2026-11-22T11:30:00.000-07:00",
-      "age_hours": 1.1,
+      "flow_cfs": 2110.0,
+      "timestamp": "2026-11-22T12:30:00.000-07:00",
+      "age_hours": 0.2,
       "data_status": "live",
       "lat": 37.150678,
       "lon": -109.866689
@@ -622,7 +622,7 @@
       "type": "streamflow",
       "flow_cfs": 7090.0,
       "timestamp": "2026-11-22T12:00:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 36.86433333,
       "lon": -111.58787222
@@ -634,7 +634,7 @@
       "type": "streamflow",
       "flow_cfs": 18.2,
       "timestamp": "2026-11-22T12:00:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 36.87221098,
       "lon": -111.59462862
@@ -646,7 +646,7 @@
       "type": "streamflow",
       "flow_cfs": 9.73,
       "timestamp": "2026-11-22T12:15:00.000-07:00",
-      "age_hours": 0.4,
+      "age_hours": 0.5,
       "data_status": "live",
       "lat": 34.31502222,
       "lon": -109.36233056
@@ -658,7 +658,7 @@
       "type": "streamflow",
       "flow_cfs": 1120.0,
       "timestamp": "2026-11-22T11:45:00.000-07:00",
-      "age_hours": 0.9,
+      "age_hours": 1.0,
       "data_status": "live",
       "lat": 35.9263819,
       "lon": -111.5673682
@@ -670,7 +670,7 @@
       "type": "streamflow",
       "flow_cfs": 9600.0,
       "timestamp": "2026-11-22T12:15:00.000-07:00",
-      "age_hours": 0.4,
+      "age_hours": 0.5,
       "data_status": "live",
       "lat": 36.10137176,
       "lon": -112.0862795
@@ -682,7 +682,7 @@
       "type": "streamflow",
       "flow_cfs": 13.3,
       "timestamp": "2026-11-22T12:30:00.000-07:00",
-      "age_hours": 0.1,
+      "age_hours": 0.2,
       "data_status": "live",
       "lat": 36.394381,
       "lon": -112.632522
@@ -694,7 +694,7 @@
       "type": "streamflow",
       "flow_cfs": 69.0,
       "timestamp": "2026-11-22T12:15:00.000-07:00",
-      "age_hours": 0.4,
+      "age_hours": 0.5,
       "data_status": "live",
       "lat": 36.30581618,
       "lon": -112.761305
@@ -706,7 +706,7 @@
       "type": "streamflow",
       "flow_cfs": 7420.0,
       "timestamp": "2026-11-22T02:30:00.000-07:00",
-      "age_hours": 10.1,
+      "age_hours": 10.2,
       "data_status": "daily",
       "lat": 35.7735994,
       "lon": -113.363544
@@ -718,7 +718,7 @@
       "type": "streamflow",
       "flow_cfs": 197.0,
       "timestamp": "2026-11-22T12:15:00.000-07:00",
-      "age_hours": 0.4,
+      "age_hours": 0.5,
       "data_status": "live",
       "lat": 37.2041494,
       "lon": -113.1807789
@@ -742,7 +742,7 @@
       "type": "streamflow",
       "flow_cfs": 44.3,
       "timestamp": "2026-11-22T11:25:00.000-08:00",
-      "age_hours": 0.2,
+      "age_hours": 0.3,
       "data_status": "live",
       "lat": 36.64302844,
       "lon": -114.5397075
@@ -753,8 +753,8 @@
       "provider": "USGS",
       "type": "streamflow",
       "flow_cfs": 13.4,
-      "timestamp": "2026-11-22T11:30:00.000-07:00",
-      "age_hours": 1.1,
+      "timestamp": "2026-11-22T12:30:00.000-07:00",
+      "age_hours": 0.2,
       "data_status": "live",
       "lat": 34.2310833,
       "lon": -113.6099306
@@ -766,7 +766,7 @@
       "type": "streamflow",
       "flow_cfs": 6540.0,
       "timestamp": "2026-11-22T11:30:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 33.7191361,
       "lon": -114.4975389
@@ -778,7 +778,7 @@
       "type": "streamflow",
       "flow_cfs": 260.0,
       "timestamp": "2026-11-22T11:45:00.000-07:00",
-      "age_hours": 0.9,
+      "age_hours": 1.0,
       "data_status": "live",
       "lat": 32.86758333,
       "lon": -114.472111
@@ -790,7 +790,7 @@
       "type": "streamflow",
       "flow_cfs": 6.26,
       "timestamp": "2026-11-22T12:00:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 31.62594167,
       "lon": -110.1751028
@@ -802,7 +802,7 @@
       "type": "streamflow",
       "flow_cfs": 59.4,
       "timestamp": "2026-11-22T11:30:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 33.1028564,
       "lon": -110.9765231
@@ -813,8 +813,8 @@
       "provider": "USGS",
       "type": "streamflow",
       "flow_cfs": 835.0,
-      "timestamp": "2026-11-22T12:15:00.000-07:00",
-      "age_hours": 0.4,
+      "timestamp": "2026-11-22T12:30:00.000-07:00",
+      "age_hours": 0.2,
       "data_status": "live",
       "lat": 33.61916667,
       "lon": -110.92208333
@@ -826,7 +826,7 @@
       "type": "streamflow",
       "flow_cfs": 4.76,
       "timestamp": "2026-11-22T12:00:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 33.55284137,
       "lon": -111.57654306
@@ -838,7 +838,7 @@
       "type": "streamflow",
       "flow_cfs": 777.0,
       "timestamp": "2026-11-22T12:00:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 34.4483605,
       "lon": -111.7898705
@@ -848,9 +848,9 @@
       "name": "Verde River below Bartlett Dam, AZ",
       "provider": "USGS",
       "type": "streamflow",
-      "flow_cfs": 488.0,
-      "timestamp": "2026-11-22T11:30:00.000-07:00",
-      "age_hours": 1.1,
+      "flow_cfs": 491.0,
+      "timestamp": "2026-11-22T12:30:00.000-07:00",
+      "age_hours": 0.2,
       "data_status": "live",
       "lat": 33.808289,
       "lon": -111.661911
@@ -862,7 +862,7 @@
       "type": "streamflow",
       "flow_cfs": 568.0,
       "timestamp": "2026-11-22T12:00:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 33.5586557,
       "lon": -111.6693043
@@ -874,7 +874,7 @@
       "type": "streamflow",
       "flow_cfs": 9.88,
       "timestamp": "2026-11-22T11:30:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 32.7608789,
       "lon": -114.4205019
@@ -886,7 +886,7 @@
       "type": "streamflow",
       "flow_cfs": 4755.0,
       "timestamp": "2026-11-22T12:00:00-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 35.1989,
       "lon": -114.5683
@@ -898,7 +898,7 @@
       "type": "streamflow",
       "flow_cfs": 3001.0,
       "timestamp": "2026-11-22T12:00:00-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 36.0156,
       "lon": -114.7378
@@ -910,7 +910,7 @@
       "type": "streamflow",
       "flow_cfs": 1900.0,
       "timestamp": "2026-11-22T12:00:00-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 34.2981,
       "lon": -114.1678
@@ -924,7 +924,7 @@
       "type": "diversion_tunnel",
       "flow_cfs": null,
       "timestamp": "2026-10-25T21:00:00",
-      "age_hours": 663.6,
+      "age_hours": 663.7,
       "data_status": "offline",
       "lat": 40.3283,
       "lon": -105.5786
@@ -936,7 +936,7 @@
       "type": "diversion_tunnel",
       "flow_cfs": 0.0,
       "timestamp": "2026-11-22T10:00:00",
-      "age_hours": 2.6,
+      "age_hours": 2.7,
       "data_status": "live",
       "lat": 39.2619,
       "lon": -106.5297
@@ -948,7 +948,7 @@
       "type": "diversion_tunnel",
       "flow_cfs": null,
       "timestamp": "2026-10-27T06:00:00",
-      "age_hours": 630.6,
+      "age_hours": 630.7,
       "data_status": "offline",
       "lat": 39.9022,
       "lon": -105.6433
@@ -960,7 +960,7 @@
       "type": "diversion_tunnel",
       "flow_cfs": 134.0,
       "timestamp": "2026-11-22T09:00:00",
-      "age_hours": 3.6,
+      "age_hours": 3.7,
       "data_status": "live",
       "lat": 39.4633,
       "lon": -105.6797
@@ -974,7 +974,7 @@
       "type": "diversion_canal",
       "flow_cfs": null,
       "timestamp": "2022-09-30T00:00:00.000",
-      "age_hours": 36348.6,
+      "age_hours": 36348.7,
       "data_status": "offline",
       "lat": 34.31612564,
       "lon": -114.1571702
@@ -986,7 +986,7 @@
       "type": "diversion_canal",
       "flow_cfs": 1020.0,
       "timestamp": "2026-10-31T00:00:00.000",
-      "age_hours": 540.6,
+      "age_hours": 540.7,
       "data_status": "delayed",
       "lat": 34.28890386,
       "lon": -114.1110573
@@ -998,7 +998,7 @@
       "type": "diversion_canal",
       "flow_cfs": 1830.0,
       "timestamp": "2026-10-31T00:00:00.000",
-      "age_hours": 540.6,
+      "age_hours": 540.7,
       "data_status": "delayed",
       "lat": 32.7056,
       "lon": -114.7292
@@ -1008,9 +1008,9 @@
       "name": "All-American Canal near Imperial Dam",
       "provider": "USGS",
       "type": "diversion_canal",
-      "flow_cfs": 667.0,
-      "timestamp": "2026-11-22T11:30:00.000-07:00",
-      "age_hours": 1.1,
+      "flow_cfs": 527.0,
+      "timestamp": "2026-11-22T12:30:00.000-07:00",
+      "age_hours": 0.2,
       "data_status": "live",
       "lat": 32.70425,
       "lon": -115.0481139
@@ -1146,11 +1146,11 @@
       "operator": null,
       "elevation_ft": 446.9,
       "feet_below_full": null,
-      "storage_af": 561100.0,
+      "storage_af": 560500.0,
       "capacity_af": 619400.0,
-      "capacity_pct": 90.6,
+      "capacity_pct": 90.5,
       "role": "Forebay Pumping Pool for CRA & CAP Aqueducts",
-      "timestamp": "2026-11-22T11:30:00.000-07:00",
+      "timestamp": "2026-11-22T12:30:00.000-07:00",
       "age_hours": 0.0,
       "data_status": "live",
       "lat": 34.2981,
@@ -1239,41 +1239,41 @@
     }
   ],
   "validation": {
-    "timestamp": "2026-11-22T12:38:34.781885",
+    "timestamp": "2026-11-22T12:43:22.743156",
     "overall_status": "VALID",
     "stale_stations": [
       {
         "id": "09424150",
         "name": "Colorado River Aqueduct",
-        "age_hours": 36348.6,
+        "age_hours": 36348.7,
         "status": "offline",
         "timestamp": "2022-09-30T00:00:00.000"
       },
       {
         "id": "09426650",
         "name": "Central Arizona Project (CAP Aqueduct)",
-        "age_hours": 540.6,
+        "age_hours": 540.7,
         "status": "delayed",
         "timestamp": "2026-10-31T00:00:00.000"
       },
       {
         "id": "09522000",
         "name": "Canal Alimentador Central (Central Feeder Canal)",
-        "age_hours": 540.6,
+        "age_hours": 540.7,
         "status": "delayed",
         "timestamp": "2026-10-31T00:00:00.000"
       },
       {
         "id": "ADATUNCO",
         "name": "Alva B. Adams Tunnel",
-        "age_hours": 663.6,
+        "age_hours": 663.7,
         "status": "offline",
         "timestamp": "2026-10-25T21:00:00"
       },
       {
         "id": "MOFTUNCO",
         "name": "Moffat Water Tunnel",
-        "age_hours": 630.6,
+        "age_hours": 630.7,
         "status": "offline",
         "timestamp": "2026-10-27T06:00:00"
       }
@@ -1294,7 +1294,7 @@
         "hist_ratio": 0.7057142857142857,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-22T12:15:00.000-07:00",
-        "age_hours": 0.4,
+        "age_hours": 0.5,
         "data_status": "live",
         "delta_cfs": null,
         "delta_pct": null,
@@ -1309,7 +1309,7 @@
         "hist_ratio": 0.7843749999999999,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-22T11:45:00.000-07:00",
-        "age_hours": 0.9,
+        "age_hours": 1.0,
         "data_status": "live",
         "delta_cfs": 65.42,
         "delta_pct": 662.1457489878543,
@@ -1324,7 +1324,7 @@
         "hist_ratio": 0.7843749999999999,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-22T11:45:00.000-07:00",
-        "age_hours": 0.9,
+        "age_hours": 1.0,
         "data_status": "live",
         "delta_cfs": 0.0,
         "delta_pct": 0.0,
@@ -1339,7 +1339,7 @@
         "hist_ratio": 0.3373493975903614,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-22T12:15:00.000-07:00",
-        "age_hours": 0.4,
+        "age_hours": 0.5,
         "data_status": "live",
         "delta_cfs": 120.7,
         "delta_pct": 160.29216467463482,
@@ -1354,7 +1354,7 @@
         "hist_ratio": 0.4470588235294118,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-22T12:00:00.000-07:00",
-        "age_hours": 0.6,
+        "age_hours": 0.7,
         "data_status": "live",
         "delta_cfs": 260.0,
         "delta_pct": 132.6530612244898,
@@ -1368,8 +1368,8 @@
         "median_50yr_cfs": 1850.0,
         "hist_ratio": 0.6432432432432432,
         "hist_status": "NORMAL",
-        "timestamp": "2026-11-22T12:15:00.000-07:00",
-        "age_hours": 0.4,
+        "timestamp": "2026-11-22T12:30:00.000-07:00",
+        "age_hours": 0.2,
         "data_status": "live",
         "delta_cfs": 734.0,
         "delta_pct": 160.96491228070175,
@@ -1384,7 +1384,7 @@
         "hist_ratio": 0.6864864864864865,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-22T11:45:00.000-07:00",
-        "age_hours": 0.9,
+        "age_hours": 1.0,
         "data_status": "live",
         "delta_cfs": 1350.0,
         "delta_pct": 113.4453781512605,
@@ -1399,7 +1399,7 @@
         "hist_ratio": 0.8121546961325967,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-22T12:00:00.000-07:00",
-        "age_hours": 0.6,
+        "age_hours": 0.7,
         "data_status": "live",
         "delta_cfs": 400.0,
         "delta_pct": 15.748031496062993,
@@ -1414,7 +1414,7 @@
         "hist_ratio": 0.6950980392156862,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-22T12:00:00.000-07:00",
-        "age_hours": 0.6,
+        "age_hours": 0.7,
         "data_status": "live",
         "delta_cfs": 4150.0,
         "delta_pct": 141.156462585034,
@@ -1429,7 +1429,7 @@
         "hist_ratio": 0.6950980392156862,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-22T12:00:00.000-07:00",
-        "age_hours": 0.6,
+        "age_hours": 0.7,
         "data_status": "live",
         "delta_cfs": 0.0,
         "delta_pct": 0.0,
@@ -1444,7 +1444,7 @@
         "hist_ratio": 0.8807339449541285,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-22T12:15:00.000-07:00",
-        "age_hours": 0.4,
+        "age_hours": 0.5,
         "data_status": "live",
         "delta_cfs": 2510.0,
         "delta_pct": 35.40197461212976,
@@ -1459,7 +1459,7 @@
         "hist_ratio": 0.8807339449541285,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-22T12:15:00.000-07:00",
-        "age_hours": 0.4,
+        "age_hours": 0.5,
         "data_status": "live",
         "delta_cfs": 0.0,
         "delta_pct": 0.0,
@@ -1474,7 +1474,7 @@
         "hist_ratio": 0.584251968503937,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-22T02:30:00.000-07:00",
-        "age_hours": 10.1,
+        "age_hours": 10.2,
         "data_status": "daily",
         "delta_cfs": -2180.0,
         "delta_pct": -22.708333333333332,
@@ -1489,7 +1489,7 @@
         "hist_ratio": 0.2858095238095238,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-22T12:00:00-07:00",
-        "age_hours": 0.6,
+        "age_hours": 0.7,
         "data_status": "live",
         "delta_cfs": -4419.0,
         "delta_pct": -59.555256064690035,
@@ -1504,7 +1504,7 @@
         "hist_ratio": 0.9144230769230769,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-22T12:00:00-07:00",
-        "age_hours": 0.6,
+        "age_hours": 0.7,
         "data_status": "live",
         "delta_cfs": 1754.0,
         "delta_pct": 58.44718427190936,
@@ -1519,7 +1519,7 @@
         "hist_ratio": 0.2159090909090909,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-22T12:00:00-07:00",
-        "age_hours": 0.6,
+        "age_hours": 0.7,
         "data_status": "live",
         "delta_cfs": -2855.0,
         "delta_pct": -60.042060988433235,
@@ -1534,7 +1534,7 @@
         "hist_ratio": 1.3653444676409185,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-22T11:30:00.000-07:00",
-        "age_hours": 1.1,
+        "age_hours": 1.2,
         "data_status": "live",
         "delta_cfs": 4640.0,
         "delta_pct": 244.21052631578948,
@@ -1549,7 +1549,7 @@
         "hist_ratio": 0.3044496487119438,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-22T11:45:00.000-07:00",
-        "age_hours": 0.9,
+        "age_hours": 1.0,
         "data_status": "live",
         "delta_cfs": -6280.0,
         "delta_pct": -96.02446483180428,
@@ -1564,7 +1564,7 @@
         "hist_ratio": 0.3044496487119438,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-22T11:45:00.000-07:00",
-        "age_hours": 0.9,
+        "age_hours": 1.0,
         "data_status": "live",
         "delta_cfs": 0.0,
         "delta_pct": 0.0,
@@ -1594,7 +1594,7 @@
       },
       "imperial_dam": {
         "upstream_paloverde_09429100_cfs": 6540.0,
-        "aac_diversion_09527700_cfs": 667.0,
+        "aac_diversion_09527700_cfs": 527.0,
         "tailrace_09429500_cfs": 260.0,
         "continuity_check": "PASS"
       },

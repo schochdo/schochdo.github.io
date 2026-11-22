@@ -2119,6 +2119,29 @@
             .text(d.value.toFixed(2) + " MAF/yr");
         }
       });
+
+      // Per-column vertical de-overlap pass for adjacent thin nodes
+      const colGroups = new Map();
+      textGroup.each(function(d) {
+        const key = d.depth;
+        if (!colGroups.has(key)) colGroups.set(key, []);
+        colGroups.get(key).push({ el: this, d });
+      });
+      colGroups.forEach(items => {
+        items.sort((a, b) => a.d.y0 - b.d.y0);
+        let prevBottom = -Infinity;
+        items.forEach(({ el }) => {
+          const box = el.getBBox();
+          if (box.y < prevBottom + 3) {
+            const delta = (prevBottom + 3) - box.y;
+            const curY = parseFloat(el.getAttribute("y") || "0");
+            el.setAttribute("y", curY + delta);
+            prevBottom = box.y + delta + box.height;
+          } else {
+            prevBottom = box.y + box.height;
+          }
+        });
+      });
     }
 
     function updateTooltip(e) {

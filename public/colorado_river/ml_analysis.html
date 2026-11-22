@@ -671,7 +671,7 @@
 
         ctx.save();
         ctx.font = 'bold 9px "Inter", -apple-system, sans-serif';
-        const labelBoxes = [];
+        const candidates = [];
 
         chart.data.datasets.forEach(ds => {
           const r = ds.data[0].river;
@@ -703,29 +703,50 @@
             if (r.id === 'dirty_devil') { py = yPos - (r.r + 14); }
             if (r.id === 'escalante') { py = yPos - (r.r + 4); }
 
-            const pillX = px - pillW / 2;
-            const pillY = py - pillH / 2;
-            labelBoxes.push({ riverId: r.id, regime: r.regime, x: pillX, y: pillY, w: pillW, h: pillH });
-
-            ctx.save();
-            ctx.fillStyle = isDimmed ? 'rgba(255, 255, 255, 0.6)' : '#ffffff';
-            ctx.shadowColor = 'rgba(15, 23, 42, 0.10)';
-            ctx.shadowBlur = 3;
-            ctx.shadowOffsetY = 1;
-            ctx.beginPath();
-            ctx.rect(pillX, pillY, pillW, pillH);
-            ctx.fill();
-
-            ctx.strokeStyle = isDimmed ? 'rgba(203, 213, 225, 0.5)' : '#cbd5e1';
-            ctx.lineWidth = 1;
-            ctx.stroke();
-            ctx.restore();
-
-            ctx.fillStyle = isDimmed ? 'rgba(71, 85, 105, 0.4)' : '#0f172a';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(labelText, px, py);
+            let pillX = Math.max(chartArea.left + 2, Math.min(chartArea.right - pillW - 2, px - pillW / 2));
+            let pillY = Math.max(chartArea.top + 2, Math.min(chartArea.bottom - pillH - 2, py - pillH / 2));
+            candidates.push({ r, isDimmed, labelText, pillX, pillY, pillW, pillH });
           }
+        });
+
+        const labelBoxes = [];
+        candidates.forEach(item => {
+          let { pillX, pillY, pillW, pillH } = item;
+          for (let iter = 0; iter < 6; iter++) {
+            const hit = labelBoxes.find(b =>
+              pillX < b.x + b.w + 2 &&
+              pillX + pillW + 2 > b.x &&
+              pillY < b.y + b.h + 2 &&
+              pillY + pillH + 2 > b.y
+            );
+            if (!hit) break;
+            if (hit.y - pillH - 3 >= chartArea.top + 2) {
+              pillY = hit.y - pillH - 3;
+            } else {
+              pillY = Math.min(chartArea.bottom - pillH - 2, hit.y + hit.h + 3);
+            }
+          }
+
+          labelBoxes.push({ riverId: item.r.id, regime: item.r.regime, x: pillX, y: pillY, w: pillW, h: pillH });
+
+          ctx.save();
+          ctx.fillStyle = item.isDimmed ? 'rgba(255, 255, 255, 0.6)' : '#ffffff';
+          ctx.shadowColor = 'rgba(15, 23, 42, 0.10)';
+          ctx.shadowBlur = 3;
+          ctx.shadowOffsetY = 1;
+          ctx.beginPath();
+          ctx.rect(pillX, pillY, pillW, pillH);
+          ctx.fill();
+
+          ctx.strokeStyle = item.isDimmed ? 'rgba(203, 213, 225, 0.5)' : '#cbd5e1';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+          ctx.restore();
+
+          ctx.fillStyle = item.isDimmed ? 'rgba(71, 85, 105, 0.4)' : '#0f172a';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(item.labelText, pillX + pillW / 2, pillY + pillH / 2);
         });
 
         chart._labelBoxes = labelBoxes;
@@ -785,20 +806,12 @@
                 color: '#475569'
               },
               ticks: {
+                stepSize: 0.2,
                 autoSkip: false,
                 align: 'inner',
                 maxRotation: 0,
                 minRotation: 0,
-                callback: (v) => {
-                  const num = Number(v).toFixed(2);
-                  if (Math.abs(v - 0.0) < 0.01) return `0.00 (Steady Dam)`;
-                  if (Math.abs(v - 0.2) < 0.01) return `0.20`;
-                  if (Math.abs(v - 0.4) < 0.01) return `0.40 (Snowmelt)`;
-                  if (Math.abs(v - 0.6) < 0.01) return `0.60`;
-                  if (Math.abs(v - 0.8) < 0.01) return `0.80 (Desert Flash)`;
-                  if (Math.abs(v - 1.0) < 0.01) return `1.00`;
-                  return '';
-                },
+                callback: (v) => Number(v).toFixed(2),
                 font: { size: 9.5, weight: '500' },
                 color: '#64748b'
               },
