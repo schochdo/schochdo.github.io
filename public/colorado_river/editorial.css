@@ -1025,3 +1025,36 @@ svg text.tabular-nums, svg .maf-badge, svg .axis-label {
 .flow-replay-bar .replay-slider {
   accent-color: #6b5744 !important;
 }
+
+/* MapLibre Popups — Warm Sandstone Corridor Theme */
+.maplibregl-popup-content {
+  background: #faf8f4 !important;
+  border: 1.5px solid #b8ae9c !important;
+  border-radius: 2px !important;
+  color: #2f251b !important;
+  box-shadow: 0 6px 18px rgba(62, 50, 38, 0.16) !important;
+}
+.maplibregl-popup-close-button {
+  color: #6b5744 !important;
+  border-radius: 2px !important;
+}
+.maplibregl-popup-close-button:hover {
+  color: #2f251b !important;
+  background: #ede6d8 !important;
+}
+.maplibregl-popup-anchor-top .maplibregl-popup-tip,
+.maplibregl-popup-anchor-top-left .maplibregl-popup-tip,
+.maplibregl-popup-anchor-top-right .maplibregl-popup-tip {
+  border-bottom-color: #b8ae9c !important;
+}
+.maplibregl-popup-anchor-bottom .maplibregl-popup-tip,
+.maplibregl-popup-anchor-bottom-left .maplibregl-popup-tip,
+.maplibregl-popup-anchor-bottom-right .maplibregl-popup-tip {
+  border-top-color: #b8ae9c !important;
+}
+.maplibregl-popup-anchor-left .maplibregl-popup-tip {
+  border-right-color: #b8ae9c !important;
+}
+.maplibregl-popup-anchor-right .maplibregl-popup-tip {
+  border-left-color: #b8ae9c !important;
+}

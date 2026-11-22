@@ -273,12 +273,12 @@ function switchPopupTab(tabName, btn) {
     b.classList.remove('active');
     b.style.fontWeight = '500';
     b.style.borderBottom = '2px solid transparent';
-    b.style.color = '#64748b';
+    b.style.color = '#5c5346';
   });
   btn.classList.add('active');
   btn.style.fontWeight = '700';
-  btn.style.borderBottom = '2px solid #1d4ed8';
-  btn.style.color = '#1d4ed8';
+  btn.style.borderBottom = '2px solid #2b5c8f';
+  btn.style.color = '#2b5c8f';
   const dataPane = container.querySelector('.popup-pane-data');
   const codePane = container.querySelector('.popup-pane-code');
   if (dataPane) dataPane.style.display = tabName === 'data' ? 'block' : 'none';
@@ -321,21 +321,21 @@ function formatTabbedPopup({ dataHtml, codeTitle, endpointUrl, pythonCode, notes
   const cleanCode = pythonCode.replace(/</g, '&lt;').replace(/>/g, '&gt;');
   return `
     <div class="custom-popup-body" onclick="event.stopPropagation()" onmousedown="event.stopPropagation()" style="font-family:'Inter',sans-serif; min-width:250px; max-width:320px; border-radius:2px;">
-      <div style="display:flex; border-bottom:1px solid #e2e8f0; margin-bottom:8px;">
-        <button class="popup-tab-btn active" onclick="switchPopupTab('data', this)" style="background:none; border:none; border-bottom:2px solid #1d4ed8; padding:4px 10px; font-size:11px; font-weight:700; color:#1d4ed8; cursor:pointer;">Data</button>
-        <button class="popup-tab-btn" onclick="switchPopupTab('code', this)" style="background:none; border:none; border-bottom:2px solid transparent; padding:4px 10px; font-size:11px; font-weight:500; color:#64748b; cursor:pointer;">API / Python</button>
+      <div style="display:flex; border-bottom:1px solid #cfc8ba; margin-bottom:8px;">
+        <button class="popup-tab-btn active" onclick="switchPopupTab('data', this)" style="background:none; border:none; border-bottom:2px solid #2b5c8f; padding:4px 10px; font-size:11px; font-weight:700; color:#2b5c8f; cursor:pointer;">Data</button>
+        <button class="popup-tab-btn" onclick="switchPopupTab('code', this)" style="background:none; border:none; border-bottom:2px solid transparent; padding:4px 10px; font-size:11px; font-weight:500; color:#5c5346; cursor:pointer;">API / Python</button>
       </div>
       <div class="popup-pane-data">
         ${dataHtml}
       </div>
       <div class="popup-pane-code" style="display:none;">
         <div style="font-size:11px; font-weight:700; color:#0f172a; margin-bottom:4px;">${codeTitle || 'Python Query'}</div>
-        ${notes ? `<div style="font-size:10.5px; color:#64748b; margin-bottom:6px; line-height:1.35;">${notes}</div>` : ''}
-        <div class="popup-code-box" style="position:relative; background:#f8fafc; border:1px solid #cbd5e1; border-radius:2px; padding:8px; overflow:hidden;">
-          <button onclick="copyPopupCode(this, event)" style="position:absolute; top:4px; right:4px; background:#ffffff; border:1px solid #cbd5e1; color:#475569; font-size:9.5px; border-radius:2px; padding:2px 6px; cursor:pointer; font-weight:600;">Copy</button>
+        ${notes ? `<div style="font-size:10.5px; color:#5c5346; margin-bottom:6px; line-height:1.35;">${notes}</div>` : ''}
+        <div class="popup-code-box" style="position:relative; background:#f2ede2; border:1px solid #cfc8ba; border-radius:2px; padding:8px; overflow:hidden;">
+          <button onclick="copyPopupCode(this, event)" style="position:absolute; top:4px; right:4px; background:#ffffff; border:1px solid #cfc8ba; color:#4f463a; font-size:9.5px; border-radius:2px; padding:2px 6px; cursor:pointer; font-weight:600;">Copy</button>
           <pre style="margin:0; font-family:ui-monospace,Menlo,monospace; font-size:10.5px; color:#0f172a; line-height:1.4; max-height:160px; overflow-y:auto; white-space:pre-wrap;"><code>${cleanCode}</code></pre>
         </div>
-        ${endpointUrl ? `<div style="margin-top:6px; font-size:10px; color:#64748b; word-break:break-all;"><strong style="color:#475569;">Endpoint:</strong> <a href="${endpointUrl}" target="_blank" rel="noopener" style="color:#1d4ed8; text-decoration:none; font-weight:600;">REST API URL ↗</a></div>` : ''}
+        ${endpointUrl ? `<div style="margin-top:6px; font-size:10px; color:#5c5346; word-break:break-all;"><strong style="color:#4f463a;">Endpoint:</strong> <a href="${endpointUrl}" target="_blank" rel="noopener" style="color:#2b5c8f; text-decoration:none; font-weight:600;">REST API URL ↗</a></div>` : ''}
       </div>
     </div>
   `;
@@ -2523,11 +2523,11 @@ function getPortalInfo(item) {
   return null;
 }
 
-function formatPortalHtml(portal, accentColor = '#0284c7') {
+function formatPortalHtml(portal, accentColor = '#2b5c8f') {
   if (!portal) return '';
   return `
-    <div style="margin-top:8px; padding-top:6px; border-top:1px solid #e2e8f0; font-size:11px; line-height:1.4;">
-      <span style="color:#64748b; font-weight:600;">Data Portal:</span> 
+    <div style="margin-top:8px; padding-top:6px; border-top:1px solid #cfc8ba; font-size:11px; line-height:1.4;">
+      <span style="color:#5c5346; font-weight:600;">Data Portal:</span> 
       <a href="${portal.url}" target="_blank" rel="noopener" style="color:${accentColor}; text-decoration:none; font-weight:700; display:inline-flex; align-items:center; gap:2px;">
         ${portal.label} <span style="font-size:10px;">↗</span>
       </a>
@@ -2725,15 +2725,15 @@ function renderGeography(geo, riverNetwork, lakes, powellContours) {
       if (matchRes) {
         showHoverTooltip(`
           <div style="font-family:'Inter',sans-serif; min-width:200px;">
-            <span style="font-size:10px; font-weight:700; color:#0369a1; background:#e0f2fe; padding:2px 6px; border-radius:4px; display:inline-block; margin-bottom:4px;">Major Storage Reservoir</span>
+            <span style="font-size:10px; font-weight:700; color:#2b5c8f; background:#ebe4d6; padding:2px 6px; border-radius:4px; display:inline-block; margin-bottom:4px;">Major Storage Reservoir</span>
             <strong style="font-size:13px; color:#0f172a; display:block;">${matchRes.name}</strong>
             ${matchedDam?.tier ? `<div style="font-size:10px;font-weight:700;color:#0e7490;margin-top:2px;">${matchedDam.tier}</div>` : ''}
-            ${matchedDam?.era ? `<div style="font-size:9.5px;font-weight:600;color:#64748b;margin-top:1px;">${matchedDam.era}</div>` : ''}
-            <div style="margin: 6px 0; padding: 6px 8px; background:#f8fafc; border-radius:6px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:baseline;">
-              <span style="font-size:11px; color:#475569; font-weight:600;">Current Storage:</span>
-              <span style="font-size:15px; font-weight:800; color:#0284c7;">${matchRes.capacity_pct}% <span style="font-size:11px; font-weight:600; color:#64748b;">Full</span></span>
+            ${matchedDam?.era ? `<div style="font-size:9.5px;font-weight:600;color:#5c5346;margin-top:1px;">${matchedDam.era}</div>` : ''}
+            <div style="margin: 6px 0; padding: 6px 8px; background:#f2ede2; border-radius:6px; border:1px solid #cfc8ba; display:flex; justify-content:space-between; align-items:baseline;">
+              <span style="font-size:11px; color:#4f463a; font-weight:600;">Current Storage:</span>
+              <span style="font-size:15px; font-weight:800; color:#2b5c8f;">${matchRes.capacity_pct}% <span style="font-size:11px; font-weight:600; color:#5c5346;">Full</span></span>
             </div>
-            <div style="font-size:11px; color:#475569; line-height:1.4;">
+            <div style="font-size:11px; color:#4f463a; line-height:1.4;">
               <strong>Storage:</strong> ${(matchRes.storage_af / 1e6).toFixed(2)}M Acre-Feet<br>
               <strong>Elevation:</strong> ${matchRes.elevation_ft ? matchRes.elevation_ft.toLocaleString() + ' ft' : 'USBR Records'}<br>
               <strong>Role:</strong> ${matchRes.role || 'Basin Storage'}<br>
@@ -2743,7 +2743,7 @@ function renderGeography(geo, riverNetwork, lakes, powellContours) {
         `, e.lngLat, 'lakes');
       } else {
         const area = p.AREASQKM ? `${Math.round(p.AREASQKM)} sq km` : "";
-        showHoverTooltip(`<strong>${name}</strong><br><span style="font-size:11px;color:#64748b;">USGS NHD Shoreline (${area})</span>`, e.lngLat, 'lakes');
+        showHoverTooltip(`<strong>${name}</strong><br><span style="font-size:11px;color:#5c5346;">USGS NHD Shoreline (${area})</span>`, e.lngLat, 'lakes');
       }
     });
 
@@ -2785,30 +2785,30 @@ function renderGeography(geo, riverNetwork, lakes, powellContours) {
       if (matchRes) {
         const dataHtml = `
           <div style="padding:2px;">
-            <span style="font-size:10px; font-weight:700; color:#0369a1; background:#e0f2fe; padding:2px 6px; border-radius:4px; display:inline-block; margin-bottom:4px;">Major Storage Reservoir</span>
+            <span style="font-size:10px; font-weight:700; color:#2b5c8f; background:#ebe4d6; padding:2px 6px; border-radius:4px; display:inline-block; margin-bottom:4px;">Major Storage Reservoir</span>
             <strong style="font-size:14px; color:#0f172a; display:block;">${matchRes.name}</strong>
-            <span style="font-size:11px; color:#64748b; font-weight:600;">${matchRes.river || ''}</span>
+            <span style="font-size:11px; color:#5c5346; font-weight:600;">${matchRes.river || ''}</span>
             ${matchedDam?.tier ? `<div style="font-size:10px;font-weight:700;color:#0e7490;margin-top:2px;">${matchedDam.tier}</div>` : ''}
-            ${matchedDam?.era ? `<div style="font-size:9.5px;font-weight:600;color:#64748b;margin-top:1px;">${matchedDam.era}</div>` : ''}
-            <div style="margin: 8px 0; padding: 8px 10px; background:#f8fafc; border-radius:6px; border:1px solid #e2e8f0;">
+            ${matchedDam?.era ? `<div style="font-size:9.5px;font-weight:600;color:#5c5346;margin-top:1px;">${matchedDam.era}</div>` : ''}
+            <div style="margin: 8px 0; padding: 8px 10px; background:#f2ede2; border-radius:6px; border:1px solid #cfc8ba;">
               <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
-                <span style="font-size:11px; color:#475569; font-weight:600;">Current Storage:</span>
-                <span style="font-size:16px; font-weight:800; color:#0284c7;">${matchRes.capacity_pct}% <span style="font-size:11px; font-weight:600; color:#64748b;">Full</span></span>
+                <span style="font-size:11px; color:#4f463a; font-weight:600;">Current Storage:</span>
+                <span style="font-size:16px; font-weight:800; color:#2b5c8f;">${matchRes.capacity_pct}% <span style="font-size:11px; font-weight:600; color:#5c5346;">Full</span></span>
               </div>
-              <div style="height:6px; background:#e2e8f0; border-radius:3px; overflow:hidden;">
+              <div style="height:6px; background:#cfc8ba; border-radius:3px; overflow:hidden;">
                 <div style="width:${Math.min(100, matchRes.capacity_pct)}%; height:100%; background:${matchRes.capacity_pct < 25 ? '#ef4444' : (matchRes.capacity_pct < 50 ? '#f59e0b' : '#0891b2')};"></div>
               </div>
             </div>
-            <div style="font-size:11.5px; color:#334155; line-height:1.5;">
+            <div style="font-size:11.5px; color:#3e3226; line-height:1.5;">
               <strong>Elevation:</strong> ${matchRes.elevation_ft ? matchRes.elevation_ft.toLocaleString() + ' ft' : 'USBR'}<br>
               <strong>Volume Stored:</strong> ${Math.round(matchRes.storage_af).toLocaleString()} Acre-Feet<br>
               <strong>Active Capacity:</strong> ${Math.round(matchRes.capacity_af || 0).toLocaleString()} Acre-Feet<br>
               <strong>Operational Role:</strong> ${matchRes.role || 'Basin Storage'}<br>
               ${matchedDam?.legal_priority ? `<strong>Legal Priority:</strong> ${matchedDam.legal_priority}<br>` : ''}
-              ${matchedDam?.historical_note ? `<div style="margin-top:6px;padding:6px 8px;background:#f8fafc;border-left:3px solid #0284c7;font-size:10.5px;color:#334155;line-height:1.4;">${matchedDam.historical_note}</div>` : ''}
+              ${matchedDam?.historical_note ? `<div style="margin-top:6px;padding:6px 8px;background:#f2ede2;border-left:3px solid #2b5c8f;font-size:10.5px;color:#3e3226;line-height:1.4;">${matchedDam.historical_note}</div>` : ''}
             </div>
             ${highlightBadge}
-            ${formatPortalHtml(portal, '#0284c7')}
+            ${formatPortalHtml(portal, '#2b5c8f')}
           </div>
         `;
 
@@ -2866,8 +2866,8 @@ print(f"${cleanResName} Elevation: {elev:,.1f} ft")`;
         const dataHtml = `
           <div style="padding:2px;">
             <strong style="font-size:13px; color:#0f172a; display:block;">${name}</strong>
-            <span style="font-size:11px; color:#64748b;">USGS NHD Shoreline ${area ? '(' + area + ')' : ''}</span>
-            ${formatPortalHtml(portal, '#0284c7')}
+            <span style="font-size:11px; color:#5c5346;">USGS NHD Shoreline ${area ? '(' + area + ')' : ''}</span>
+            ${formatPortalHtml(portal, '#2b5c8f')}
           </div>
         `;
         const cleanName = name.replace(/["\\]/g, '');
@@ -3549,14 +3549,14 @@ print("NHD Features found:", len(res.get("features", [])))`;
     const gaugeId = p.gauge_id;
     const portal = getPortalInfo({ id: gaugeId, name: p.name });
     const catBadge = isCanalAlimentador
-      ? '<span style="font-size:9.5px;font-weight:700;color:#0369a1;background:#e0f2fe;border:1px solid #bae6fd;padding:1px 5px;border-radius:2px;">Conveyance Canal (1944 Treaty)</span>'
+      ? '<span style="font-size:9.5px;font-weight:700;color:#2b5c8f;background:#ebe4d6;border:1px solid #cfc8ba;padding:1px 5px;border-radius:2px;">Conveyance Canal (1944 Treaty)</span>'
       : (p.category === 'mainstem'
-          ? '<span style="font-size:9.5px;font-weight:700;color:#0284c7;background:#e0f2fe;padding:1px 5px;border-radius:2px;">Mainstem Reach</span>'
+          ? '<span style="font-size:9.5px;font-weight:700;color:#2b5c8f;background:#ebe4d6;padding:1px 5px;border-radius:2px;">Mainstem Reach</span>'
           : (p.category === 'major_tributary'
-              ? '<span style="font-size:9.5px;font-weight:700;color:#0284c7;background:#f0f9ff;padding:1px 5px;border-radius:2px;">Major Tributary</span>'
-              : '<span style="font-size:9.5px;font-weight:600;color:#0284c7;background:#f1f5f9;padding:1px 5px;border-radius:2px;">Tributary Stream</span>'));
+              ? '<span style="font-size:9.5px;font-weight:700;color:#2b5c8f;background:#ebe4d6;padding:1px 5px;border-radius:2px;">Major Tributary</span>'
+              : '<span style="font-size:9.5px;font-weight:600;color:#2b5c8f;background:#f2ede2;padding:1px 5px;border-radius:2px;">Tributary Stream</span>'));
 
-    const timeHtml = p.timestamp ? `<div style="font-size:10px;color:#64748b;margin-top:3px;">Measured: ${formatTimestamp(p.timestamp)}</div>` : '';
+    const timeHtml = p.timestamp ? `<div style="font-size:10px;color:#5c5346;margin-top:3px;">Measured: ${formatTimestamp(p.timestamp)}</div>` : '';
     
     // Concise descriptive note (at most 1 sentence)
     let singleSentenceNote = '';
@@ -3564,7 +3564,7 @@ print("NHD Features found:", len(res.get("features", [])))`;
       singleSentenceNote = p.notes.split('. ')[0];
       if (!singleSentenceNote.endsWith('.')) singleSentenceNote += '.';
     }
-    const notesHtml = singleSentenceNote ? `<div style="font-size:10.5px;color:#64748b;margin-top:4px;line-height:1.35;">${singleSentenceNote}</div>` : '';
+    const notesHtml = singleSentenceNote ? `<div style="font-size:10.5px;color:#5c5346;margin-top:4px;line-height:1.35;">${singleSentenceNote}</div>` : '';
 
     const norm = p.hist_normal_cfs ? Number(p.hist_normal_cfs) : (gaugeId ? getHistoricalNormal(gaugeId) : null);
     let healthHtml = '';
@@ -3573,11 +3573,11 @@ print("NHD Features found:", len(res.get("features", [])))`;
       const color = p.health_color || flowHealthColor(pct);
       const label = p.health_label || flowHealthLabel(pct);
       healthHtml = `
-        <div style="margin-top:5px; padding:4px 8px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:3px; display:flex; justify-content:space-between; align-items:center;">
-          <span style="font-size:10px; color:#64748b; font-weight:600;">vs. Hist. Daily Avg</span>
+        <div style="margin-top:5px; padding:4px 8px; background:#f2ede2; border:1px solid #cfc8ba; border-radius:3px; display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:10px; color:#5c5346; font-weight:600;">vs. Hist. Daily Avg</span>
           <span style="font-size:12px; font-weight:800; color:${color}; font-variant-numeric:tabular-nums;">${pct}% <span style="font-size:10px; font-weight:600;">(${label})</span></span>
         </div>
-        <div style="margin-top:2px; font-size:9.5px; color:#94a3b8;">Avg today: ${Math.round(norm).toLocaleString()} cfs</div>
+        <div style="margin-top:2px; font-size:9.5px; color:#786e60;">Avg today: ${Math.round(norm).toLocaleString()} cfs</div>
       `;
     }
 
@@ -3607,14 +3607,14 @@ print("NHD Features found:", len(res.get("features", [])))`;
       let deltaRow = '';
       if (delta > 0) {
         deltaRow = `
-          <div style="display:flex; justify-content:space-between; font-size:10px; color:#475569; margin-bottom:2px;" title="Additional water picked up via unmeasured lateral tributaries, springs, groundwater accretion, or diurnal wave travel lag between the confluence and downstream gage">
+          <div style="display:flex; justify-content:space-between; font-size:10px; color:#4f463a; margin-bottom:2px;" title="Additional water picked up via unmeasured lateral tributaries, springs, groundwater accretion, or diurnal wave travel lag between the confluence and downstream gage">
             <span>+ Additional Inflow to Downstream Gage:</span>
             <strong style="color:#059669; font-variant-numeric:tabular-nums;">+${delta.toLocaleString()} cfs</strong>
           </div>
         `;
       } else if (delta < 0) {
         deltaRow = `
-          <div style="display:flex; justify-content:space-between; font-size:10px; color:#475569; margin-bottom:2px;" title="Channel seepage, irrigation/canal diversions, evaporation, or diurnal wave travel lag between the confluence and downstream gage">
+          <div style="display:flex; justify-content:space-between; font-size:10px; color:#4f463a; margin-bottom:2px;" title="Channel seepage, irrigation/canal diversions, evaporation, or diurnal wave travel lag between the confluence and downstream gage">
             <span>- Diversions & Losses to Downstream Gage:</span>
             <strong style="color:#d97706; font-variant-numeric:tabular-nums;">-${Math.abs(delta).toLocaleString()} cfs</strong>
           </div>
@@ -3624,25 +3624,25 @@ print("NHD Features found:", len(res.get("features", [])))`;
       const downstreamLabel = conf.downstream_gage ? ` (${conf.downstream_gage})` : '';
 
       confluenceHtml = `
-        <div style="margin-top:6px; padding:6px 8px; background:#f0f9ff; border:1px solid #bae6fd; border-radius:3px;">
-          <div style="font-size:9px; font-weight:800; color:#0369a1; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:2px;">
+        <div style="margin-top:6px; padding:6px 8px; background:#ebe4d6; border:1px solid #cfc8ba; border-radius:3px;">
+          <div style="font-size:9px; font-weight:800; color:#2b5c8f; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:2px;">
             Confluence Mass Balance
           </div>
           <div style="font-size:10.5px; font-weight:700; color:#0f172a; margin-bottom:3px;">
             ${conf.confluence_name}
           </div>
-          <div style="display:flex; justify-content:space-between; font-size:10px; color:#475569; margin-bottom:2px;">
+          <div style="display:flex; justify-content:space-between; font-size:10px; color:#4f463a; margin-bottom:2px;">
             <span>↑ Upstream Mainstem:</span>
-            <strong style="color:#0369a1; font-variant-numeric:tabular-nums;">${qUp.toLocaleString()} cfs</strong>
+            <strong style="color:#2b5c8f; font-variant-numeric:tabular-nums;">${qUp.toLocaleString()} cfs</strong>
           </div>
-          <div style="display:flex; justify-content:space-between; font-size:10px; color:#475569; margin-bottom:3px;">
+          <div style="display:flex; justify-content:space-between; font-size:10px; color:#4f463a; margin-bottom:3px;">
             <span>${isDiversion ? '- Diversion' : '+ Inflow'} (${conf.tributary.name}):</span>
-            <strong style="color:${isDiversion ? '#d97706' : '#0284c7'}; font-variant-numeric:tabular-nums;">${isDiversion ? '-' : ''}${Math.abs(rawTrib).toLocaleString()} cfs</strong>
+            <strong style="color:${isDiversion ? '#d97706' : '#2b5c8f'}; font-variant-numeric:tabular-nums;">${isDiversion ? '-' : ''}${Math.abs(rawTrib).toLocaleString()} cfs</strong>
           </div>
           ${deltaRow}
-          <div style="border-top:1px dashed #93c5fd; padding-top:2px; margin-top:2px; display:flex; justify-content:space-between; font-size:10.5px; font-weight:800; color:#0f172a;">
+          <div style="border-top:1px dashed #b8ae9c; padding-top:2px; margin-top:2px; display:flex; justify-content:space-between; font-size:10.5px; font-weight:800; color:#0f172a;">
             <span>= Reach Discharge${downstreamLabel}:</span>
-            <span style="color:#0284c7; font-variant-numeric:tabular-nums;">${qReach.toLocaleString()} cfs</span>
+            <span style="color:#2b5c8f; font-variant-numeric:tabular-nums;">${qReach.toLocaleString()} cfs</span>
           </div>
         </div>
       `;
@@ -3670,9 +3670,9 @@ print("NHD Features found:", len(res.get("features", [])))`;
       <div style="padding:2px;">
         <div style="margin-bottom:3px;">${catBadge}</div>
         <strong style="font-size:13px; color:#0f172a; line-height:1.3; display:block;">${p.name}</strong>
-        <div style="margin:5px 0; padding:5px 8px; background:#f8fafc; border-radius:3px; border:1px solid #cbd5e1; display:flex; justify-content:space-between; align-items:baseline;">
-          <span style="font-size:11px; color:#64748b; font-weight:600;">Discharge:</span>
-          <span style="font-size:15px; font-weight:800; color:#0284c7; font-variant-numeric:tabular-nums;">${Number(p.flow_cfs).toLocaleString()} <span style="font-size:10px; font-weight:600; color:#64748b;">cfs</span></span>
+        <div style="margin:5px 0; padding:5px 8px; background:#f2ede2; border-radius:3px; border:1px solid #cfc8ba; display:flex; justify-content:space-between; align-items:baseline;">
+          <span style="font-size:11px; color:#5c5346; font-weight:600;">Discharge:</span>
+          <span style="font-size:15px; font-weight:800; color:#2b5c8f; font-variant-numeric:tabular-nums;">${Number(p.flow_cfs).toLocaleString()} <span style="font-size:10px; font-weight:600; color:#5c5346;">cfs</span></span>
         </div>
         ${healthHtml}
         ${confluenceHtml}
@@ -3680,10 +3680,10 @@ print("NHD Features found:", len(res.get("features", [])))`;
         ${timeHtml}
         ${notesHtml}
         ${isCanalAlimentador ? `
-        <div style="font-size:10.5px; color:#334155; margin-top:5px; line-height:1.35; border-top:1px solid #e2e8f0; padding-top:4px;">
+        <div style="font-size:10.5px; color:#3e3226; margin-top:5px; line-height:1.35; border-top:1px solid #cfc8ba; padding-top:4px;">
           <strong>Legal Allocation:</strong> 1.50 MAF/yr (~2,072 cfs) under the 1944 Treaty (Morelos Dam). Verified at border via USGS #09522000.
         </div>` : ''}
-        ${formatPortalHtml(portal, '#0284c7')}
+        ${formatPortalHtml(portal, '#2b5c8f')}
       </div>
     `;
 
@@ -4008,20 +4008,20 @@ print(f"${cleanReachName} Calculated Flow: {reach_flow_cfs:,.0f} cfs")`;
 
         const dataHtml = `
           <div style="padding: 2px;">
-            <div style="font-size:9.5px; font-weight:700; color:#0369a1; background:#e0f2fe; border:1px solid #bae6fd; padding:1px 5px; border-radius:2px; display:inline-block; margin-bottom:3px;">Trans-Mountain Diversion Tunnel</div>
+            <div style="font-size:9.5px; font-weight:700; color:#2b5c8f; background:#ebe4d6; border:1px solid #cfc8ba; padding:1px 5px; border-radius:2px; display:inline-block; margin-bottom:3px;">Trans-Mountain Diversion Tunnel</div>
             <strong style="font-size:13.5px; color:#0f172a; display:block;">${t.name}</strong>
-            <span style="font-size:11px; color:#0284c7; font-weight:600;">${t.operator || ''}</span>
-            <div style="margin: 5px 0; padding: 5px 8px; background:#f8fafc; border-radius:3px; border:1px solid #cbd5e1; display:flex; justify-content:space-between; align-items:baseline;">
-              <span style="font-size:11px; color:#64748b; font-weight:600;">Current Diversion:</span>
-              <span style="font-size:15px; font-weight:800; color:#0284c7; font-variant-numeric:tabular-nums;">${flowVal.toLocaleString()} cfs</span>
+            <span style="font-size:11px; color:#2b5c8f; font-weight:600;">${t.operator || ''}</span>
+            <div style="margin: 5px 0; padding: 5px 8px; background:#f2ede2; border-radius:3px; border:1px solid #cfc8ba; display:flex; justify-content:space-between; align-items:baseline;">
+              <span style="font-size:11px; color:#5c5346; font-weight:600;">Current Diversion:</span>
+              <span style="font-size:15px; font-weight:800; color:#2b5c8f; font-variant-numeric:tabular-nums;">${flowVal.toLocaleString()} cfs</span>
             </div>
-            <div style="font-size:11px; line-height:1.4; color:#334155;">
+            <div style="font-size:11px; line-height:1.4; color:#3e3226;">
               <strong>Destination:</strong> ${t.destination || t.to}<br>
               <strong>Length:</strong> ${t.length_miles ? t.length_miles + ' miles under Divide' : 'Trans-Continental Divide'}<br>
               <strong>Capacity:</strong> ${capDisplay}
-              ${singleSentenceNote ? `<div style="margin-top:4px; font-size:10.5px; color:#64748b;">${singleSentenceNote}</div>` : ''}
+              ${singleSentenceNote ? `<div style="margin-top:4px; font-size:10.5px; color:#5c5346;">${singleSentenceNote}</div>` : ''}
             </div>
-            ${formatPortalHtml(portal, '#0284c7')}
+            ${formatPortalHtml(portal, '#2b5c8f')}
           </div>
         `;
         const cleanTName = (t.name || '').replace(/["\\]/g, '');
@@ -4210,24 +4210,24 @@ print(f"${cleanTName}: {flow_cfs:,.1f} cfs")`;
                <span style="font-size:11px; color:#991b1b; font-weight:700;">Status:</span>
                <span style="font-size:12px; font-weight:700; color:#dc2626;">Offline (Discontinued USGS Station)</span>
              </div>`
-          : `<div style="margin: 5px 0; padding: 5px 8px; background:#f8fafc; border-radius:3px; border:1px solid #cbd5e1; display:flex; justify-content:space-between; align-items:baseline;">
-               <span style="font-size:11px; color:#64748b; font-weight:600;">Current Diversion:</span>
-               <span style="font-size:15px; font-weight:800; color:#0284c7; font-variant-numeric:tabular-nums;">${flowVal.toLocaleString()} cfs ${(t.data_status === 'delayed' || t.status === 'delayed') ? '<span style="font-size:9.5px; color:#b45309;">(Delayed)</span>' : ''}</span>
+          : `<div style="margin: 5px 0; padding: 5px 8px; background:#f2ede2; border-radius:3px; border:1px solid #cfc8ba; display:flex; justify-content:space-between; align-items:baseline;">
+               <span style="font-size:11px; color:#5c5346; font-weight:600;">Current Diversion:</span>
+               <span style="font-size:15px; font-weight:800; color:#2b5c8f; font-variant-numeric:tabular-nums;">${flowVal.toLocaleString()} cfs ${(t.data_status === 'delayed' || t.status === 'delayed') ? '<span style="font-size:9.5px; color:#b45309;">(Delayed)</span>' : ''}</span>
              </div>`;
 
         const dataHtml = `
           <div style="padding: 2px;">
-            <div style="font-size:9.5px; font-weight:700; color:#0369a1; background:#e0f2fe; border:1px solid #bae6fd; padding:1px 5px; border-radius:2px; display:inline-block; margin-bottom:3px;">Major Conveyance Canal</div>
+            <div style="font-size:9.5px; font-weight:700; color:#2b5c8f; background:#ebe4d6; border:1px solid #cfc8ba; padding:1px 5px; border-radius:2px; display:inline-block; margin-bottom:3px;">Major Conveyance Canal</div>
             <strong style="font-size:13.5px; color:#0f172a; display:block;">${t.name}</strong>
-            <span style="font-size:11px; color:#0284c7; font-weight:600;">${t.operator || ''}</span>
+            <span style="font-size:11px; color:#2b5c8f; font-weight:600;">${t.operator || ''}</span>
             ${statusFlowBox}
-            <div style="font-size:11px; line-height:1.4; color:#334155; margin-top:4px;">
+            <div style="font-size:11px; line-height:1.4; color:#3e3226; margin-top:4px;">
               <strong>Destination:</strong> ${t.destination || t.to}<br>
               <strong>Length:</strong> ${t.length_miles} miles<br>
               ${t.timestamp ? `<strong>Measured:</strong> ${formatTimestamp(t.timestamp)}<br>` : ''}
-              ${singleSentenceNote ? `<div style="margin-top:4px; font-size:10.5px; color:#64748b;">${singleSentenceNote}</div>` : ''}
+              ${singleSentenceNote ? `<div style="margin-top:4px; font-size:10.5px; color:#5c5346;">${singleSentenceNote}</div>` : ''}
             </div>
-            ${formatPortalHtml(portal, '#0284c7')}
+            ${formatPortalHtml(portal, '#2b5c8f')}
           </div>
         `;
         const cleanCName = (t.name || '').replace(/["\\]/g, '');
@@ -4333,16 +4333,16 @@ except Exception as e:
 
       const dataHtml = `
         <div style="padding:2px;">
-          <div style="font-size:9.5px; font-weight:700; color:#0369a1; background:#e0f2fe; padding:1px 5px; border-radius:2px; display:inline-block; margin-bottom:3px;">Federal Dam</div>
+          <div style="font-size:9.5px; font-weight:700; color:#2b5c8f; background:#ebe4d6; padding:1px 5px; border-radius:2px; display:inline-block; margin-bottom:3px;">Federal Dam</div>
           <strong style="font-size:13.5px; color:#0f172a; display:block;">${d.name}</strong>
-          <span style="font-size:11px; color:#64748b; font-weight:600;">${d.operator}</span>
-          <div style="margin:5px 0; padding:5px 8px; background:#f8fafc; border-radius:3px; border:1px solid #cbd5e1; font-size:11px; line-height:1.4; color:#334155;">
+          <span style="font-size:11px; color:#5c5346; font-weight:600;">${d.operator}</span>
+          <div style="margin:5px 0; padding:5px 8px; background:#f2ede2; border-radius:3px; border:1px solid #cfc8ba; font-size:11px; line-height:1.4; color:#3e3226;">
             <strong>Impounds:</strong> ${d.impounds}<br>
             <strong>Height:</strong> ${d.height_ft} ft | <strong>Built:</strong> ${d.year}<br>
             <strong>Purpose:</strong> ${d.purpose}
-            ${singleSentenceNote ? `<div style="margin-top:3px; color:#64748b; font-size:10.5px;">${singleSentenceNote}</div>` : ''}
+            ${singleSentenceNote ? `<div style="margin-top:3px; color:#5c5346; font-size:10.5px;">${singleSentenceNote}</div>` : ''}
           </div>
-          ${formatPortalHtml(portal, '#0284c7')}
+          ${formatPortalHtml(portal, '#2b5c8f')}
         </div>
       `;
       const cleanDamName = (d.name || 'Dam').replace(/["\\]/g, '');
@@ -4528,11 +4528,11 @@ function formatGaugePopup(s) {
     const color = flowHealthColor(pct);
     const label = flowHealthLabel(pct);
     healthBadgeHtml = `
-      <div style="margin: 5px 0; padding: 4px 8px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:3px; display:flex; justify-content:space-between; align-items:center;">
-        <span style="font-size:10px; color:#64748b; font-weight:600;">vs. Hist. Daily Avg:</span>
+      <div style="margin: 5px 0; padding: 4px 8px; background:#f2ede2; border:1px solid #cfc8ba; border-radius:3px; display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:10px; color:#5c5346; font-weight:600;">vs. Hist. Daily Avg:</span>
         <span style="font-size:12px; font-weight:800; color:${color}; font-variant-numeric:tabular-nums;">${pct}% <span style="font-size:10px; font-weight:600;">(${label})</span></span>
       </div>
-      <div style="font-size:9.5px; color:#94a3b8; margin-bottom:5px;">Avg today: ${Math.round(norm).toLocaleString()} cfs</div>
+      <div style="font-size:9.5px; color:#786e60; margin-bottom:5px;">Avg today: ${Math.round(norm).toLocaleString()} cfs</div>
     `;
   }
 
@@ -4557,28 +4557,28 @@ function formatGaugePopup(s) {
     ? '<span style="font-size:9.5px; font-weight:700; color:#065f46; background:#d1fae5; border:1px solid #a7f3d0; padding:1px 5px; border-radius:2px;">USBR Dam Release</span>'
     : (isCdss
         ? '<span style="font-size:9.5px; font-weight:700; color:#9a3412; background:#ffedd5; border:1px solid #fed7aa; padding:1px 5px; border-radius:2px;">CDSS Diversion Tunnel</span>'
-        : '<span style="font-size:9.5px; font-weight:700; color:#0369a1; background:#e0f2fe; padding:1px 5px; border-radius:2px;">USGS Gage</span>');
+        : '<span style="font-size:9.5px; font-weight:700; color:#2b5c8f; background:#ebe4d6; padding:1px 5px; border-radius:2px;">USGS Gage</span>');
 
   const dataHtml = `
     <div style="padding: 2px;">
       <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
         ${typeBadge}
-        ${isLeesFerry ? '<span style="font-size:9.5px; font-weight:700; color:#0369a1; background:#e0f2fe; border: 1px solid #bae6fd; padding:1px 5px; border-radius:2px;">1922 Compact Divide</span>' : ''}
+        ${isLeesFerry ? '<span style="font-size:9.5px; font-weight:700; color:#2b5c8f; background:#ebe4d6; border: 1px solid #cfc8ba; padding:1px 5px; border-radius:2px;">1922 Compact Divide</span>' : ''}
       </div>
       <strong style="font-size:13px; color:#0f172a; line-height:1.3; display:block;">${s.name}</strong>
-      <div style="margin: 5px 0; padding: 5px 8px; background:#f8fafc; border-radius:3px; border:1px solid #cbd5e1; display:flex; justify-content:space-between; align-items:baseline;">
-        <span style="font-size:11px; color:#64748b; font-weight:600;">Discharge:</span>
-        <span style="font-size:15px; font-weight:800; color:#0284c7; font-variant-numeric:tabular-nums;">${(s.flow_cfs || 0).toLocaleString()} <span style="font-size:10.5px; font-weight:600; color:#64748b;">cfs</span></span>
+      <div style="margin: 5px 0; padding: 5px 8px; background:#f2ede2; border-radius:3px; border:1px solid #cfc8ba; display:flex; justify-content:space-between; align-items:baseline;">
+        <span style="font-size:11px; color:#5c5346; font-weight:600;">Discharge:</span>
+        <span style="font-size:15px; font-weight:800; color:#2b5c8f; font-variant-numeric:tabular-nums;">${(s.flow_cfs || 0).toLocaleString()} <span style="font-size:10.5px; font-weight:600; color:#5c5346;">cfs</span></span>
       </div>
       ${healthBadgeHtml}
-      <div style="font-size:11px; color:#475569; line-height:1.45;">
-        <strong>Station ID:</strong> <a href="${portalUrl}" target="_blank" rel="noopener" style="color:#0284c7; text-decoration:none; font-weight:600;">#${s.id} ↗</a><br>
+      <div style="font-size:11px; color:#4f463a; line-height:1.45;">
+        <strong>Station ID:</strong> <a href="${portalUrl}" target="_blank" rel="noopener" style="color:#2b5c8f; text-decoration:none; font-weight:600;">#${s.id} ↗</a><br>
         <strong>Measured:</strong> ${formatTimestamp(s.timestamp)}
       </div>
       ${portal ? `
-      <div style="margin-top:6px; padding-top:4px; border-top:1px solid #e2e8f0; font-size:10.5px;">
-        <span style="color:#64748b;">Authoritative Source:</span> 
-        <a href="${portalUrl}" target="_blank" rel="noopener" style="color:#0284c7; text-decoration:none; font-weight:600;">${portal.name} ↗</a>
+      <div style="margin-top:6px; padding-top:4px; border-top:1px solid #cfc8ba; font-size:10.5px;">
+        <span style="color:#5c5346;">Authoritative Source:</span> 
+        <a href="${portalUrl}" target="_blank" rel="noopener" style="color:#2b5c8f; text-decoration:none; font-weight:600;">${portal.name} ↗</a>
       </div>` : ''}
     </div>
   `;
@@ -4646,7 +4646,7 @@ print(f"Discharge: {flow_cfs:,.0f} cfs at {val['dateTime']}")`;
 function formatReservoirStationPopup(r) {
   const cleanResName = (r.name || 'Reservoir').replace(/["\\]/g, '');
   const portal = getPortalInfo(r);
-  const portalLink = portal ? `<a href="${portal.url}" target="_blank" rel="noopener" style="color:#0284c7; text-decoration:none; font-weight:700; margin-left:4px;">↗</a>` : '';
+  const portalLink = portal ? `<a href="${portal.url}" target="_blank" rel="noopener" style="color:#2b5c8f; text-decoration:none; font-weight:700; margin-left:4px;">↗</a>` : '';
   const isFrontRange = r.category === 'front_range' || (r.id && ['lake_granby', 'dillon_reservoir', 'green_mountain', 'homestake_reservoir'].includes(r.id));
   const capacityPct = (r.capacity_pct !== undefined && r.capacity_pct !== null) ? r.capacity_pct : Math.round(((r.storage_af || 0) / (r.capacity_af || 1)) * 100);
   const elevText = r.elevation_ft ? `${Number(r.elevation_ft).toLocaleString()} ft` : 'USBR Records';
@@ -4659,17 +4659,17 @@ function formatReservoirStationPopup(r) {
         Major Storage Reservoir Station
       </span>
       <strong style="font-size:13.5px; color:#0f172a; display:block;">${cleanResName} ${portalLink}</strong>
-      <div style="font-size:11px; color:#64748b; font-weight:600; margin-bottom:6px;">${r.river || 'Colorado River Basin'} &bull; ${r.operator || (isFrontRange ? 'Denver Water / Northern' : 'USBR')}</div>
-      <div style="margin: 6px 0; padding: 6px 8px; background:#f8fafc; border-radius:6px; border:1px solid #e2e8f0;">
+      <div style="font-size:11px; color:#5c5346; font-weight:600; margin-bottom:6px;">${r.river || 'Colorado River Basin'} &bull; ${r.operator || (isFrontRange ? 'Denver Water / Northern' : 'USBR')}</div>
+      <div style="margin: 6px 0; padding: 6px 8px; background:#f2ede2; border-radius:6px; border:1px solid #cfc8ba;">
         <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
-          <span style="font-size:11px; color:#475569; font-weight:600;">Current Storage:</span>
-          <span style="font-size:15px; font-weight:800; color:#0284c7;">${capacityPct}% <span style="font-size:11px; font-weight:600; color:#64748b;">Full</span></span>
+          <span style="font-size:11px; color:#4f463a; font-weight:600;">Current Storage:</span>
+          <span style="font-size:15px; font-weight:800; color:#2b5c8f;">${capacityPct}% <span style="font-size:11px; font-weight:600; color:#5c5346;">Full</span></span>
         </div>
-        <div style="height:6px; background:#e2e8f0; border-radius:3px; overflow:hidden;">
+        <div style="height:6px; background:#cfc8ba; border-radius:3px; overflow:hidden;">
           <div style="width:${Math.min(100, capacityPct)}%; height:100%; background:${capacityPct < 25 ? '#ef4444' : (capacityPct < 50 ? '#f59e0b' : '#0891b2')};"></div>
         </div>
       </div>
-      <div style="font-size:11px; color:#475569; line-height:1.5;">
+      <div style="font-size:11px; color:#4f463a; line-height:1.5;">
         <strong>Surface Elevation:</strong> ${elevText}<br>
         <strong>Volume Stored:</strong> ${storageAfText}<br>
         <strong>Active Capacity:</strong> ${capAfText}<br>
@@ -4757,12 +4757,12 @@ function renderMetrics(metrics) {
       }
       showHoverTooltip(`
         <div style="font-family:'Inter',sans-serif; min-width: 190px; line-height:1.4;">
-          <div style="font-size:9.5px; font-weight:700; color:#0369a1; text-transform:uppercase; letter-spacing:0.04em;">USGS GAGE</div>
+          <div style="font-size:9.5px; font-weight:700; color:#2b5c8f; text-transform:uppercase; letter-spacing:0.04em;">USGS GAGE</div>
           <strong style="font-size:13px; color:#0f172a; display:block; margin-top:1px;">${s.name}</strong>
-          <div style="font-size:15px; font-weight:800; color:#0284c7; font-variant-numeric:tabular-nums; margin:3px 0;">
-            ${(s.flow_cfs || 0).toLocaleString()} <span style="font-size:10.5px; font-weight:600; color:#64748b;">cfs</span> ${healthText}
+          <div style="font-size:15px; font-weight:800; color:#2b5c8f; font-variant-numeric:tabular-nums; margin:3px 0;">
+            ${(s.flow_cfs || 0).toLocaleString()} <span style="font-size:10.5px; font-weight:600; color:#5c5346;">cfs</span> ${healthText}
           </div>
-          <div style="font-size:10.5px; color:#64748b;">Station ID: #${s.id}</div>
+          <div style="font-size:10.5px; color:#5c5346;">Station ID: #${s.id}</div>
         </div>
       `, [s.lon, s.lat], 'gauge-badge');
     });
@@ -4827,8 +4827,8 @@ function renderMetrics(metrics) {
     const flowVal = Number(t.flow_cfs || 0);
     const flowText = (t.flow_cfs != null && !isNaN(t.flow_cfs)) ? Number(t.flow_cfs).toLocaleString() : 'Offline';
     const flowDisplayHtml = (t.flow_cfs != null && !isNaN(t.flow_cfs))
-      ? `${Number(t.flow_cfs).toLocaleString()} <span style="font-size:11px; font-weight:600; color:#64748b;">cfs</span>`
-      : `<span style="font-size:13px; font-weight:700; color:#64748b;">Offline (Maintenance)</span>`;
+      ? `${Number(t.flow_cfs).toLocaleString()} <span style="font-size:11px; font-weight:600; color:#5c5346;">cfs</span>`
+      : `<span style="font-size:13px; font-weight:700; color:#5c5346;">Offline (Maintenance)</span>`;
 
     const el = document.createElement('div');
     el.className = 'cfs-marker-wrap';
@@ -4838,22 +4838,22 @@ function renderMetrics(metrics) {
     const dataHtml = `
       <div style="padding: 2px;">
         <div style="display:flex; align-items:center; gap:6px; margin-bottom:6px;">
-          <span style="font-size:10px; font-weight:700; color:#0369a1; background:#e0f2fe; border:1px solid #bae6fd; padding:2px 6px; border-radius:4px;">${diversionBadge}</span>
+          <span style="font-size:10px; font-weight:700; color:#2b5c8f; background:#ebe4d6; border:1px solid #cfc8ba; padding:2px 6px; border-radius:4px;">${diversionBadge}</span>
         </div>
         <strong style="font-size:13px; color:#0f172a; line-height:1.35; display:block;">${t.name}</strong>
-        <div style="font-size:11px; color:#64748b; font-weight:600; margin-bottom:6px;">${t.operator || ''}</div>
-        <div style="margin: 6px 0; padding: 8px 10px; background:#f8fafc; border-radius:6px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:baseline;">
-          <span style="font-size:11px; color:#475569; font-weight:600;">Diverted Flow:</span>
-          <span style="font-size:16px; font-weight:800; color:#0284c7;">${flowDisplayHtml}</span>
+        <div style="font-size:11px; color:#5c5346; font-weight:600; margin-bottom:6px;">${t.operator || ''}</div>
+        <div style="margin: 6px 0; padding: 8px 10px; background:#f2ede2; border-radius:6px; border:1px solid #cfc8ba; display:flex; justify-content:space-between; align-items:baseline;">
+          <span style="font-size:11px; color:#4f463a; font-weight:600;">Diverted Flow:</span>
+          <span style="font-size:16px; font-weight:800; color:#2b5c8f;">${flowDisplayHtml}</span>
         </div>
-        <div style="font-size:11px; color:#475569; line-height:1.5;">
+        <div style="font-size:11px; color:#4f463a; line-height:1.5;">
           <strong>Destination:</strong> ${t.destination}<br>
           <strong>Length:</strong> ${lengthText}<br>
           ${fromText}<br>
           ${toText}<br>
           <strong>Last Measured:</strong> ${formatTimestamp(t.timestamp)}
         </div>
-        ${formatPortalHtml(portal, '#0284c7')}
+        ${formatPortalHtml(portal, '#2b5c8f')}
       </div>
     `;
 
@@ -4916,13 +4916,13 @@ print(f"${cleanTName}: {flow_cfs:,.0f} cfs")`;
       const flowVal = Number(t.flow_cfs || 0);
       showHoverTooltip(`
         <div style="font-family:'Inter',sans-serif; min-width: 220px; max-width: 290px;">
-          <span style="font-size:10px;font-weight:700;color:#0369a1;background:#e0f2fe;padding:2px 6px;border-radius:4px;display:inline-block;margin-bottom:4px;">${diversionBadge}</span>
+          <span style="font-size:10px;font-weight:700;color:#2b5c8f;background:#ebe4d6;padding:2px 6px;border-radius:4px;display:inline-block;margin-bottom:4px;">${diversionBadge}</span>
           <strong style="font-size:13.5px;color:#0f172a;display:block;">${t.name}</strong>
-          <div style="margin: 6px 0; padding: 6px 10px; background:#f8fafc; border-radius:6px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:baseline;">
-            <span style="font-size:11px; color:#64748b; font-weight:600;">Discharge:</span>
-            <span style="font-size:16px; font-weight:800; color:#0284c7;">${flowVal.toLocaleString()} cfs</span>
+          <div style="margin: 6px 0; padding: 6px 10px; background:#f2ede2; border-radius:6px; border:1px solid #cfc8ba; display:flex; justify-content:space-between; align-items:baseline;">
+            <span style="font-size:11px; color:#5c5346; font-weight:600;">Discharge:</span>
+            <span style="font-size:16px; font-weight:800; color:#2b5c8f;">${flowVal.toLocaleString()} cfs</span>
           </div>
-          <div style="font-size:11px;color:#475569;">${isFrontRange ? 'Front Range Trans-Divide' : (t.operator || '')}</div>
+          <div style="font-size:11px;color:#4f463a;">${isFrontRange ? 'Front Range Trans-Divide' : (t.operator || '')}</div>
         </div>
       `, [t.lon, t.lat], badgeClass);
     });
@@ -5474,7 +5474,7 @@ function getTraySentinelTier(node) {
   }
   const basinSentinels = ['09095500', '09070500', '09163500', '09180500', '09234500', '09260050', '09261000', '09315000', '09152500', '09180000', '09379500', '09421500', 'USBR_HOOVER', 'USBR-HOOVER', '09423000', 'USBR_DAVIS', 'USBR-DAVIS', '09427520', 'USBR_PARKER', 'USBR-PARKER', '09429100', '09429500'];
   if (basinSentinels.includes(node.id)) {
-    return { label: "Key Reference Gage", isSentinel: true, badge: "background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd; font-weight:700;" };
+    return { label: "Key Reference Gage", isSentinel: true, badge: "background:#ebe4d6; color:#2b5c8f; border:1px solid #cfc8ba; font-weight:700;" };
   }
   if (node.type === 'diversion_tunnel') {
     return { label: "Export Tunnel", isSentinel: false, badge: "background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0; font-weight:700;" };
@@ -5485,7 +5485,7 @@ function getTraySentinelTier(node) {
   if (node.type === 'reservoir') {
     return { label: "Storage Reservoir", isSentinel: false, badge: "background:#faf5ff; color:#6b21a8; border:1px solid #e9d5ff; font-weight:700;" };
   }
-  return { label: "Tributary Gage", isSentinel: false, badge: "background:#f1f5f9; color:#475569; border:1px solid #e2e8f0; font-weight:500;" };
+  return { label: "Tributary Gage", isSentinel: false, badge: "background:#f2ede2; color:#4f463a; border:1px solid #cfc8ba; font-weight:500;" };
 }
 
 function renderTrayRows() {
@@ -5911,26 +5911,26 @@ function formatCanalPopupHtml(t) {
 
   const dataHtml = `
     <div style="padding: 2px;">
-      <div style="font-size:9.5px; font-weight:700; color:#0369a1; background:#e0f2fe; border:1px solid #bae6fd; padding:1px 5px; border-radius:2px; display:inline-block; margin-bottom:3px;">Major Conveyance Canal</div>
+      <div style="font-size:9.5px; font-weight:700; color:#2b5c8f; background:#ebe4d6; border:1px solid #cfc8ba; padding:1px 5px; border-radius:2px; display:inline-block; margin-bottom:3px;">Major Conveyance Canal</div>
       <strong style="font-size:13.5px; color:#0f172a; display:block;">${t.name}</strong>
-      <span style="font-size:11px; color:#0284c7; font-weight:600;">${t.operator || ''}</span>
+      <span style="font-size:11px; color:#2b5c8f; font-weight:600;">${t.operator || ''}</span>
       ${isOffline 
         ? `<div style="margin: 5px 0; padding: 5px 8px; background:#fef2f2; border-radius:3px; border:1px solid #fecaca; display:flex; justify-content:space-between; align-items:baseline;">
              <span style="font-size:11px; color:#991b1b; font-weight:600;">Status:</span>
              <span style="font-size:12px; font-weight:700; color:#dc2626;">Offline (Gage Discontinued)</span>
            </div>`
-        : `<div style="margin: 5px 0; padding: 5px 8px; background:#f8fafc; border-radius:3px; border:1px solid #cbd5e1; display:flex; justify-content:space-between; align-items:baseline;">
-             <span style="font-size:11px; color:#64748b; font-weight:600;">Current Diversion:</span>
-             <span style="font-size:15px; font-weight:800; color:#0284c7; font-variant-numeric:tabular-nums;">${flowVal.toLocaleString()} cfs ${isDelayed ? '<span style="font-size:9.5px; color:#b45309;">(Delayed)</span>' : ''}</span>
+        : `<div style="margin: 5px 0; padding: 5px 8px; background:#f2ede2; border-radius:3px; border:1px solid #cfc8ba; display:flex; justify-content:space-between; align-items:baseline;">
+             <span style="font-size:11px; color:#5c5346; font-weight:600;">Current Diversion:</span>
+             <span style="font-size:15px; font-weight:800; color:#2b5c8f; font-variant-numeric:tabular-nums;">${flowVal.toLocaleString()} cfs ${isDelayed ? '<span style="font-size:9.5px; color:#b45309;">(Delayed)</span>' : ''}</span>
            </div>`
       }
-      <div style="font-size:11px; line-height:1.4; color:#334155; margin-top:4px;">
+      <div style="font-size:11px; line-height:1.4; color:#3e3226; margin-top:4px;">
         <strong>Destination:</strong> ${t.destination || t.to}<br>
         <strong>Length:</strong> ${t.length_miles} miles<br>
         ${t.timestamp ? `<strong>Measured:</strong> ${formatTimestamp(t.timestamp)}<br>` : ''}
-        ${singleSentenceNote ? `<div style="margin-top:4px; font-size:10.5px; color:#64748b;">${singleSentenceNote}</div>` : ''}
+        ${singleSentenceNote ? `<div style="margin-top:4px; font-size:10.5px; color:#5c5346;">${singleSentenceNote}</div>` : ''}
       </div>
-      ${formatPortalHtml(portal, '#0284c7')}
+      ${formatPortalHtml(portal, '#2b5c8f')}
     </div>
   `;
   const cleanCName = (t.name || '').replace(/["\\]/g, '');
@@ -5968,25 +5968,25 @@ function formatReservoirDetailPopup(matchRes, cleanName) {
   const portal = getPortalInfo(matchRes || { name: cleanName });
   const dataHtml = `
     <div style="padding:2px;">
-      <div style="font-size:9.5px; font-weight:700; color:#0369a1; background:#e0f2fe; padding:1px 5px; border-radius:2px; display:inline-block; margin-bottom:3px;">Major Storage Reservoir</div>
+      <div style="font-size:9.5px; font-weight:700; color:#2b5c8f; background:#ebe4d6; padding:1px 5px; border-radius:2px; display:inline-block; margin-bottom:3px;">Major Storage Reservoir</div>
       <strong style="font-size:13.5px; color:#0f172a; display:block;">${matchRes.name}</strong>
-      <span style="font-size:11px; color:#64748b; font-weight:600;">${matchRes.river || ''}</span>
-      <div style="margin: 5px 0; padding: 6px 8px; background:#f8fafc; border-radius:3px; border:1px solid #cbd5e1;">
+      <span style="font-size:11px; color:#5c5346; font-weight:600;">${matchRes.river || ''}</span>
+      <div style="margin: 5px 0; padding: 6px 8px; background:#f2ede2; border-radius:3px; border:1px solid #cfc8ba;">
         <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:3px;">
-          <span style="font-size:11px; color:#64748b; font-weight:600;">Current Storage:</span>
-          <span style="font-size:15px; font-weight:800; color:#0284c7; font-variant-numeric:tabular-nums;">${matchRes.capacity_pct}% <span style="font-size:10.5px; font-weight:600; color:#64748b;">Full</span></span>
+          <span style="font-size:11px; color:#5c5346; font-weight:600;">Current Storage:</span>
+          <span style="font-size:15px; font-weight:800; color:#2b5c8f; font-variant-numeric:tabular-nums;">${matchRes.capacity_pct}% <span style="font-size:10.5px; font-weight:600; color:#5c5346;">Full</span></span>
         </div>
-        <div style="height:5px; background:#e2e8f0; border-radius:2px; overflow:hidden;">
+        <div style="height:5px; background:#cfc8ba; border-radius:2px; overflow:hidden;">
           <div style="width:${Math.min(100, matchRes.capacity_pct)}%; height:100%; background:${matchRes.capacity_pct < 25 ? '#ef4444' : (matchRes.capacity_pct < 50 ? '#f59e0b' : '#0891b2')};"></div>
         </div>
       </div>
-      <div style="font-size:11px; color:#334155; line-height:1.45;">
+      <div style="font-size:11px; color:#3e3226; line-height:1.45;">
         <strong>Elevation:</strong> ${matchRes.elevation_ft ? matchRes.elevation_ft.toLocaleString() + ' ft' : 'USBR'}<br>
         <strong>Volume Stored:</strong> ${Math.round(matchRes.storage_af).toLocaleString()} Acre-Feet<br>
         <strong>Active Capacity:</strong> ${Math.round(matchRes.capacity_af || 0).toLocaleString()} Acre-Feet<br>
         <strong>Operational Role:</strong> ${matchRes.role || 'Basin Storage'}
       </div>
-      ${formatPortalHtml(portal, '#0284c7')}
+      ${formatPortalHtml(portal, '#2b5c8f')}
     </div>
   `;
   const isFrontRange = matchRes.category === 'front_range';
