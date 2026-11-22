@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-11-22T10:48:53.256423",
+  "fetched_at": "2026-11-22T10:50:58.905971",
   "dam_releases": {
     "hoover_dam": {
       "id": "USBR_HOOVER",
@@ -117,8 +117,8 @@
       "provider": "USGS",
       "type": "streamflow",
       "flow_cfs": 63.0,
-      "timestamp": "2026-11-22T10:15:00.000-07:00",
-      "age_hours": 0.6,
+      "timestamp": "2026-11-22T10:30:00.000-07:00",
+      "age_hours": 0.3,
       "data_status": "live",
       "lat": 39.625556,
       "lon": -106.065833
@@ -730,7 +730,7 @@
       "type": "streamflow",
       "flow_cfs": 462.0,
       "timestamp": "2026-11-22T09:05:00.000-08:00",
-      "age_hours": 0.7,
+      "age_hours": 0.8,
       "data_status": "live",
       "lat": 36.8916437,
       "lon": -113.9244098
@@ -742,7 +742,7 @@
       "type": "streamflow",
       "flow_cfs": 43.7,
       "timestamp": "2026-11-22T09:40:00.000-08:00",
-      "age_hours": 0.1,
+      "age_hours": 0.2,
       "data_status": "live",
       "lat": 36.64302844,
       "lon": -114.5397075
@@ -1044,15 +1044,15 @@
       "type": "reservoir",
       "category": "system",
       "operator": null,
-      "elevation_ft": 3518.9,
+      "elevation_ft": 3540.6,
       "feet_below_full": null,
       "storage_af": 6488104.0,
       "capacity_af": 24322000.0,
       "capacity_pct": 26.7,
       "role": "Upper Basin Bank & Compact Delivery to Lower Basin",
-      "timestamp": "2026-11-19",
+      "timestamp": "2026-11-22T09:45:00.000-07:00",
       "age_hours": 0.0,
-      "data_status": "delayed",
+      "data_status": "live",
       "lat": 36.9367,
       "lon": -111.4839,
       "provider": "USBR / USGS"
@@ -1086,11 +1086,11 @@
       "operator": null,
       "elevation_ft": 639.3,
       "feet_below_full": null,
-      "storage_af": 1593000.0,
+      "storage_af": 1655200.0,
       "capacity_af": 1810000.0,
-      "capacity_pct": 88.0,
+      "capacity_pct": 91.4,
       "role": "Downstream Regulation & Mexican Treaty Deliveries",
-      "timestamp": "2026-11-22T09:45:00.000-07:00",
+      "timestamp": "2026-11-22T10:00:00-07:00",
       "age_hours": 0.0,
       "data_status": "live",
       "lat": 35.1989,
@@ -1239,7 +1239,7 @@
     }
   ],
   "validation": {
-    "timestamp": "2026-11-22T10:48:53.242591",
+    "timestamp": "2026-11-22T10:50:58.891777",
     "overall_status": "VALID",
     "stale_stations": [
       {
