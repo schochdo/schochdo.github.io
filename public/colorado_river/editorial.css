@@ -442,9 +442,9 @@ input:checked + .slider:before {
 
 /* Subtle single-line label for Legal Hierarchy */
 .law-tag-hierarchy {
-  background: #f1f5f9;
+  background: #f5f2eb;
   color: #475569;
-  border: 1px solid #cbd5e1;
+  border: 1px solid #cfc8ba;
   white-space: nowrap;
   border-radius: var(--radius-tag);
   padding: 2.5px 8px;
@@ -500,7 +500,7 @@ input:checked + .slider:before {
 
 .law-stat-card {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #dfd9ce;
   border-radius: 3px;
   padding: 10px 12px;
   text-align: center;
@@ -532,7 +532,7 @@ input:checked + .slider:before {
 /* Priority list items (unboxed with hairlines) */
 .law-item-box {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #dfd9ce;
   border-radius: 3px;
   padding: 12px 14px;
   font-size: 12px;
@@ -543,7 +543,7 @@ input:checked + .slider:before {
 /* Chapter 5 Italic Quote Box */
 .law-quote-editorial {
   border-left: 3px solid #0072B2;
-  background: #f8fafc;
+  background: #f7f4ee;
   padding: 12px 16px;
   border-radius: 0;
   font-style: italic;
@@ -848,8 +848,8 @@ svg text.tabular-nums, svg .maf-badge, svg .axis-label {
 /* Universal Light Code Box Aesthetic */
 .popup-code-box,
 .code-snippet-box {
-  background: #f8fafc !important;
-  border: 1px solid #cbd5e1 !important;
+  background: #f7f4ee !important;
+  border: 1px solid #cfc8ba !important;
   border-radius: 2px !important;
 }
 
@@ -863,15 +863,15 @@ svg text.tabular-nums, svg .maf-badge, svg .axis-label {
 .popup-code-box button,
 .code-snippet-copy-btn {
   background: #ffffff !important;
-  border: 1px solid #cbd5e1 !important;
+  border: 1px solid #cfc8ba !important;
   color: #475569 !important;
   border-radius: 2px !important;
 }
 
 .popup-code-box button:hover,
 .code-snippet-copy-btn:hover {
-  background: #f1f5f9 !important;
-  border-color: #94a3b8 !important;
+  background: #ede8df !important;
+  border-color: #a89f8e !important;
   color: #0f172a !important;
 }
 

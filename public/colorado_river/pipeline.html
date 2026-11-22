@@ -159,7 +159,7 @@
     #flow-tooltip {
       position: fixed;
       background: #ffffff;
-      border: 1.5px solid #94a3b8;
+      border: 1px solid #cfc8ba;
       border-radius: 2px;
       padding: 9px 11px;
       font-size: 11.5px;
@@ -227,12 +227,12 @@
       </div>
 
       <!-- Two View Sub-Tabs (Schematic vs Elevation) -->
-      <div class="flex items-center gap-1.5 p-1 bg-slate-200/90 rounded-xs border border-slate-300">
-        <button id="subtab-btn-schematic" onclick="switchPipelineSubtab('schematic')" class="px-3.5 py-1.5 rounded-xs text-xs font-bold transition shadow-sm bg-white text-sky-800 border border-slate-200 flex items-center gap-1.5">
+      <div class="flex items-center gap-1.5 p-1 bg-stone-200/90 rounded-[2px] border border-stone-300">
+        <button id="subtab-btn-schematic" onclick="switchPipelineSubtab('schematic')" class="px-3.5 py-1.5 rounded-[2px] text-xs font-bold transition shadow-xs bg-white text-sky-900 border border-stone-200 flex items-center gap-1.5 cursor-pointer">
           <span>⬡</span>
           <span>Topological River Reach Network</span>
         </button>
-        <button id="subtab-btn-elevation" onclick="switchPipelineSubtab('elevation')" class="px-3.5 py-1.5 rounded-xs text-xs font-semibold transition text-slate-600 hover:text-slate-900 flex items-center gap-1.5">
+        <button id="subtab-btn-elevation" onclick="switchPipelineSubtab('elevation')" class="px-3.5 py-1.5 rounded-[2px] text-xs font-semibold transition text-stone-600 hover:text-stone-900 flex items-center gap-1.5 cursor-pointer">
           <span>◬</span>
           <span>Longitudinal Elevation Profile</span>
         </button>
@@ -244,7 +244,7 @@
     <!-- ================================================================= -->
     <div id="view-schematic" class="space-y-2.5">
       <!-- River Network Schematic SVG Container (Full Viewport Height) -->
-      <div class="relative bg-white rounded-xs border border-slate-300 shadow-md overflow-hidden flex items-center justify-center h-[calc(100vh-155px)] min-h-[600px]">
+      <div class="relative bg-white rounded-xs border border-stone-300 shadow-md overflow-hidden flex items-center justify-center h-[calc(100vh-155px)] min-h-[600px]">
         <svg id="canvas" viewBox="0 0 1280 750" class="w-full h-full block select-none">
           <defs>
             <!-- Gradients -->
@@ -632,7 +632,7 @@
       </div>
 
       <!-- Schematic Data Sources Provenance Strip -->
-      <div class="flex flex-wrap items-center justify-between text-[11px] text-slate-500 bg-white border border-slate-300 rounded-xs px-3.5 py-2 shadow-xs gap-2">
+      <div class="flex flex-wrap items-center justify-between text-[11px] text-stone-500 bg-white border border-stone-300 rounded-xs px-3.5 py-2 shadow-xs gap-2">
         <div class="flex items-center gap-1.5 flex-wrap">
           <span class="font-bold text-slate-700">Data Sources:</span>
           <a href="https://waterdata.usgs.gov/nwis" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 underline font-semibold">USGS NWIS Real-Time Streamflow ↗</a>,
@@ -647,7 +647,7 @@
     <!-- ================================================================= -->
     <div id="view-elevation" class="hidden space-y-2.5">
       <!-- Main Profile SVG Canvas Container -->
-      <div class="relative bg-white border border-slate-300 rounded-xs p-3 shadow-md overflow-hidden flex items-center justify-center h-[calc(100vh-155px)] min-h-[550px]">
+      <div class="relative bg-white border border-stone-300 rounded-xs p-3 shadow-md overflow-hidden flex items-center justify-center h-[calc(100vh-155px)] min-h-[550px]">
         <svg id="profile-svg" viewBox="0 0 1200 650" class="w-full h-full max-h-[calc(100vh-185px)] select-none block">
           <defs>
             <linearGradient id="sky-grid-grad" x1="0" y1="0" x2="0" y2="1">
@@ -1050,7 +1050,7 @@
       </div>
 
       <!-- Elevation Profile Data Sources Provenance Strip -->
-      <div class="flex flex-wrap items-center justify-between text-[11px] text-slate-500 bg-white border border-slate-300 rounded-xs px-3.5 py-2 shadow-xs gap-2">
+      <div class="flex flex-wrap items-center justify-between text-[11px] text-stone-500 bg-white border border-stone-300 rounded-xs px-3.5 py-2 shadow-xs gap-2">
         <div class="flex items-center gap-1.5 flex-wrap">
           <span class="font-bold text-slate-700">Data Sources:</span>
           <a href="https://www.usgs.gov/3d-elevation-program" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 underline font-semibold">USGS 3D Elevation Program (3DEP) / NED ↗</a>,
@@ -1078,13 +1078,13 @@
       if (tab === 'schematic') {
         viewSchematic.classList.remove('hidden');
         viewElevation.classList.add('hidden');
-        btnSchematic.className = 'px-3.5 py-1.5 rounded-xs text-xs font-bold transition shadow-sm bg-white text-sky-800 border border-slate-200 flex items-center gap-1.5';
-        btnElevation.className = 'px-3.5 py-1.5 rounded-xs text-xs font-semibold transition text-slate-600 hover:text-slate-900 flex items-center gap-1.5';
+        btnSchematic.className = 'px-3.5 py-1.5 rounded-[2px] text-xs font-bold transition shadow-xs bg-white text-sky-900 border border-stone-200 flex items-center gap-1.5 cursor-pointer';
+        btnElevation.className = 'px-3.5 py-1.5 rounded-[2px] text-xs font-semibold transition text-stone-600 hover:text-stone-900 flex items-center gap-1.5 cursor-pointer';
       } else {
         viewSchematic.classList.add('hidden');
         viewElevation.classList.remove('hidden');
-        btnElevation.className = 'px-3.5 py-1.5 rounded-xs text-xs font-bold transition shadow-sm bg-white text-sky-800 border border-slate-200 flex items-center gap-1.5';
-        btnSchematic.className = 'px-3.5 py-1.5 rounded-xs text-xs font-semibold transition text-slate-600 hover:text-slate-900 flex items-center gap-1.5';
+        btnElevation.className = 'px-3.5 py-1.5 rounded-[2px] text-xs font-bold transition shadow-xs bg-white text-sky-900 border border-stone-200 flex items-center gap-1.5 cursor-pointer';
+        btnSchematic.className = 'px-3.5 py-1.5 rounded-[2px] text-xs font-semibold transition text-stone-600 hover:text-stone-900 flex items-center gap-1.5 cursor-pointer';
       }
     }
 
@@ -1108,29 +1108,29 @@
 
       let metricsHtml = '<div class="grid grid-cols-2 gap-1 my-1.5 text-[11px]">';
       if (elev && elev !== 'N/A') {
-        metricsHtml += `<div class="p-1 rounded-xs bg-slate-50 border border-slate-200">
+        metricsHtml += `<div class="p-1 rounded-xs bg-stone-50 border border-stone-200">
           <div class="text-[9px] text-slate-500 uppercase font-bold tracking-wide">Elevation</div>
           <div class="font-bold text-sky-800 tabular-numbers mt-0.5">${elev}</div>
         </div>`;
       }
       if (flow && flow !== 'N/A') {
-        metricsHtml += `<div class="p-1 rounded-xs bg-slate-50 border border-slate-200">
+        metricsHtml += `<div class="p-1 rounded-xs bg-stone-50 border border-stone-200">
           <div class="text-[9px] text-slate-500 uppercase font-bold tracking-wide">Flow / Volume</div>
           <div class="font-bold text-slate-900 tabular-numbers mt-0.5">${flow}</div>
         </div>`;
       }
       if (drop && drop !== 'N/A' && drop !== 'None') {
-        metricsHtml += `<div class="col-span-2 p-1 rounded-xs bg-slate-50 border border-slate-200">
+        metricsHtml += `<div class="col-span-2 p-1 rounded-xs bg-stone-50 border border-stone-200">
           <div class="text-[9px] text-slate-500 uppercase font-bold tracking-wide">Hydraulic Head / Drop</div>
           <div class="font-bold text-slate-700 text-[10.5px] mt-0.5">${drop}</div>
         </div>`;
       }
       metricsHtml += '</div>';
 
-      const notesHtml = notes ? `<div class="text-[10.5px] text-slate-600 leading-snug pt-1 border-t border-slate-200">${notes}</div>` : '';
+      const notesHtml = notes ? `<div class="text-[10.5px] text-slate-600 leading-snug pt-1 border-t border-stone-200">${notes}</div>` : '';
 
       tooltip.innerHTML = `
-        <div class="flex items-center justify-between gap-2 pb-1 border-b border-slate-200">
+        <div class="flex items-center justify-between gap-2 pb-1 border-b border-stone-200">
           ${typeHtml}
           ${mileHtml}
         </div>
@@ -1199,19 +1199,19 @@
       let rowsHtml = '';
       for (const r of rows) {
         rowsHtml += `
-          <div class="flex justify-between items-baseline gap-2 ${r.border ? 'pt-1 border-t border-slate-200 mt-0.5' : ''}">
+          <div class="flex justify-between items-baseline gap-2 ${r.border ? 'pt-1 border-t border-stone-200 mt-0.5' : ''}">
             <span class="text-slate-600 shrink-0">${r.label}:</span>
             <span class="text-right ${r.highlight ? r.highlight : 'font-bold text-slate-900'}">${r.value}</span>
           </div>
         `;
       }
       return `
-        <div class="mt-2 pt-2 border-t border-slate-200">
+        <div class="mt-2 pt-2 border-t border-stone-200">
           <div class="flex items-center justify-between gap-2 mb-1 text-[9.5px] uppercase tracking-wider font-bold text-slate-500">
             <span class="truncate">${title}</span>
             <span class="tabular-nums text-slate-400 font-normal shrink-0">${badgeLabel || '1 MAF/yr ≈ 1,381 cfs'}</span>
           </div>
-          <div class="bg-slate-50 border border-slate-200 rounded p-1.5 text-[10.5px] space-y-0.5">
+          <div class="bg-stone-50 border border-stone-200 rounded p-1.5 text-[10.5px] space-y-0.5">
             ${rowsHtml}
           </div>
         </div>
@@ -1380,7 +1380,7 @@
       ` : '';
 
       const portalHtml = portal ? `
-        <div class="mt-2 pt-1.5 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2 text-[10.5px]">
+        <div class="mt-2 pt-1.5 border-t border-stone-200 flex flex-wrap items-center justify-between gap-2 text-[10.5px]">
           <div class="flex items-center gap-1 min-w-0">
             <span class="text-slate-500 font-medium">Portal:</span>
             <a href="${portal.url}" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 font-bold truncate underline underline-offset-2" onclick="event.stopPropagation();">${portal.label} ↗</a>
@@ -1413,7 +1413,7 @@
         e.stopPropagation();
         selectElement(elemId);
         tooltip.innerHTML = `
-          <div class="flex items-center justify-between border-b border-slate-200 pb-1 mb-1.5">
+          <div class="flex items-center justify-between border-b border-stone-200 pb-1 mb-1.5">
             <span class="text-[9.5px] font-bold uppercase tracking-wider text-slate-400">Selected Feature</span>
             <span class="text-[10px] text-slate-500 cursor-pointer font-bold hover:text-slate-800" onclick="clearSelection(); tooltip.classList.remove('visible');">✕ Close</span>
           </div>

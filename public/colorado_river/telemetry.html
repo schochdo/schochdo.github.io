@@ -27,7 +27,7 @@
       position: sticky;
       top: 0;
       z-index: 10;
-      background: #f1f5f9;
+      background: #ede8df;
     }
     .type-pill {
       display: inline-block;
@@ -94,7 +94,7 @@
     <div class="bg-white rounded-[2px] border border-stone-300 shadow-xs flex flex-col divide-y divide-stone-200">
       
       <!-- Tier 1: Search & Global Utility Bar (View Mode & Data Exports) -->
-      <div class="p-3 flex flex-wrap items-center justify-between gap-3 bg-slate-50/60">
+      <div class="p-3 flex flex-wrap items-center justify-between gap-3 bg-stone-100/70">
         <!-- Search Input with Live Result Count -->
         <div class="flex items-center gap-3 flex-1 min-w-[280px]">
           <div class="relative flex-1 max-w-md">
@@ -102,7 +102,7 @@
               type="text" 
               id="search-input" 
               placeholder="Search station name, USGS ID, river reach, notes..." 
-              class="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-slate-300 rounded-[2px] focus:outline-none focus:ring-1 focus:ring-sky-600 focus:border-sky-600 transition"
+              class="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-stone-300 rounded-[2px] focus:outline-none focus:ring-1 focus:ring-sky-600 focus:border-sky-600 transition"
               oninput="handleSearchChange()"
             />
             <svg class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -118,7 +118,7 @@
         <!-- Table View & Export Actions -->
         <div class="flex items-center gap-2.5 flex-wrap">
           <!-- View Switcher -->
-          <div class="inline-flex rounded-[2px] bg-slate-100 p-0.5 border border-slate-300">
+          <div class="inline-flex rounded-[2px] bg-stone-200/80 p-0.5 border border-stone-300">
             <button onclick="setViewMode('grouped')" id="btn-view-grouped" class="px-2.5 py-1 text-xs font-bold rounded-[2px] bg-white text-slate-900 shadow-xs transition">
               Grouped by Reach
             </button>
@@ -127,15 +127,15 @@
             </button>
           </div>
 
-          <div class="h-4 w-px bg-slate-300 hidden sm:block"></div>
+          <div class="h-4 w-px bg-stone-300 hidden sm:block"></div>
 
           <!-- Data Tools -->
           <div class="flex items-center gap-1.5">
-            <button onclick="exportDatabaseCsv()" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-[2px] bg-white text-slate-800 border border-slate-300 hover:bg-slate-50 transition" title="Export full database to CSV">
+            <button onclick="exportDatabaseCsv()" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-[2px] bg-white text-slate-800 border border-stone-300 hover:bg-stone-100 transition" title="Export full database to CSV">
               <svg class="w-3.5 h-3.5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
               <span>Export CSV</span>
             </button>
-            <button onclick="exportDatabaseJson()" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-[2px] bg-white text-slate-800 border border-slate-300 hover:bg-slate-50 transition" title="Export full database to JSON">
+            <button onclick="exportDatabaseJson()" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-[2px] bg-white text-slate-800 border border-stone-300 hover:bg-stone-100 transition" title="Export full database to JSON">
               <span>Export JSON</span>
             </button>
             <button onclick="openSchemaModal()" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-[2px] bg-sky-50 text-sky-800 border border-sky-200 hover:bg-sky-100 transition" title="View Data Dictionary & Database Schema">
@@ -149,38 +149,38 @@
       <div class="px-3 py-2 flex items-center gap-2 overflow-x-auto bg-white">
         <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 shrink-0 select-none">Scope:</span>
         <div class="flex items-center gap-1.5 shrink-0" id="category-pills">
-          <button onclick="setCategoryFilter('all')" id="pill-all" class="px-2.5 py-1 text-xs font-bold rounded-[2px] bg-slate-900 text-white transition">
+          <button onclick="setCategoryFilter('all')" id="pill-all" class="px-2.5 py-1 text-xs font-bold rounded-[2px] bg-stone-900 text-white transition">
             All Facilities (<span id="count-all">0</span>)
           </button>
-          <button onclick="setCategoryFilter('compact')" id="pill-compact" class="px-2.5 py-1 text-xs font-semibold rounded-[2px] bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200 transition">
+          <button onclick="setCategoryFilter('compact')" id="pill-compact" class="px-2.5 py-1 text-xs font-semibold rounded-[2px] bg-stone-100 text-stone-700 hover:bg-stone-200 border border-stone-300/80 transition">
             1922 Compact Divide (<span id="count-compact">1</span>)
           </button>
-          <button onclick="setCategoryFilter('sentinels')" id="pill-sentinels" class="px-2.5 py-1 text-xs font-semibold rounded-[2px] bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200 transition">
+          <button onclick="setCategoryFilter('sentinels')" id="pill-sentinels" class="px-2.5 py-1 text-xs font-semibold rounded-[2px] bg-stone-100 text-stone-700 hover:bg-stone-200 border border-stone-300/80 transition">
             Key Streamgages (<span id="count-sentinels">0</span>)
           </button>
-          <button onclick="setCategoryFilter('upper_mainstem')" id="pill-upper_mainstem" class="px-2.5 py-1 text-xs font-semibold rounded-[2px] bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200 transition">
+          <button onclick="setCategoryFilter('upper_mainstem')" id="pill-upper_mainstem" class="px-2.5 py-1 text-xs font-semibold rounded-[2px] bg-stone-100 text-stone-700 hover:bg-stone-200 border border-stone-300/80 transition">
             Upper Basin (<span id="count-upper">0</span>)
           </button>
-          <button onclick="setCategoryFilter('lower_mainstem')" id="pill-lower_mainstem" class="px-2.5 py-1 text-xs font-semibold rounded-[2px] bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200 transition">
+          <button onclick="setCategoryFilter('lower_mainstem')" id="pill-lower_mainstem" class="px-2.5 py-1 text-xs font-semibold rounded-[2px] bg-stone-100 text-stone-700 hover:bg-stone-200 border border-stone-300/80 transition">
             Lower Basin (<span id="count-lower">0</span>)
           </button>
-          <button onclick="setCategoryFilter('diversions')" id="pill-diversions" class="px-2.5 py-1 text-xs font-semibold rounded-[2px] bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200 transition">
+          <button onclick="setCategoryFilter('diversions')" id="pill-diversions" class="px-2.5 py-1 text-xs font-semibold rounded-[2px] bg-stone-100 text-stone-700 hover:bg-stone-200 border border-stone-300/80 transition">
             Tunnels &amp; Canals (<span id="count-div">0</span>)
           </button>
-          <button onclick="setCategoryFilter('reservoirs')" id="pill-reservoirs" class="px-2.5 py-1 text-xs font-semibold rounded-[2px] bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200 transition">
+          <button onclick="setCategoryFilter('reservoirs')" id="pill-reservoirs" class="px-2.5 py-1 text-xs font-semibold rounded-[2px] bg-stone-100 text-stone-700 hover:bg-stone-200 border border-stone-300/80 transition">
             Storage Reservoirs (<span id="count-res">0</span>)
           </button>
         </div>
       </div>
 
       <!-- Tier 3: Secondary Multi-Attribute Filters Strip -->
-      <div class="px-3 py-2 flex flex-wrap items-center justify-between gap-2.5 bg-slate-50/70">
+      <div class="px-3 py-2 flex flex-wrap items-center justify-between gap-2.5 bg-stone-100/60">
         <div class="flex flex-wrap items-center gap-2 flex-1">
           <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 shrink-0 select-none">Filter By:</span>
           
           <!-- Facility Type -->
           <div class="relative">
-            <select id="type-filter" onchange="applyFilters()" class="text-xs bg-white border border-slate-300 rounded-[2px] pl-2 pr-6 py-1 text-slate-700 focus:outline-none focus:ring-1 focus:ring-sky-600 font-medium cursor-pointer">
+            <select id="type-filter" onchange="applyFilters()" class="text-xs bg-white border border-stone-300 rounded-[2px] pl-2 pr-6 py-1 text-slate-700 focus:outline-none focus:ring-1 focus:ring-sky-600 font-medium cursor-pointer">
               <option value="all">Facility Type: All</option>
               <option value="streamflow">Streamflow (USGS NWIS)</option>
               <option value="diversion_tunnel">Trans-Mountain Tunnel (CDSS)</option>
@@ -191,7 +191,7 @@
 
           <!-- Gaging Priority Tier -->
           <div class="relative">
-            <select id="hierarchy-filter" onchange="applyFilters()" class="text-xs bg-white border border-slate-300 rounded-[2px] pl-2 pr-6 py-1 text-slate-700 focus:outline-none focus:ring-1 focus:ring-sky-600 font-medium cursor-pointer">
+            <select id="hierarchy-filter" onchange="applyFilters()" class="text-xs bg-white border border-stone-300 rounded-[2px] pl-2 pr-6 py-1 text-slate-700 focus:outline-none focus:ring-1 focus:ring-sky-600 font-medium cursor-pointer">
               <option value="all">Gaging Priority: All</option>
               <option value="compact_sentinel">1922 Compact Point (Lees Ferry)</option>
               <option value="basin_sentinel">Key Accounting Gages</option>
@@ -204,7 +204,7 @@
 
           <!-- Flashiness Regime -->
           <div class="relative">
-            <select id="flashiness-filter" onchange="applyFilters()" class="text-xs bg-white border border-slate-300 rounded-[2px] pl-2 pr-6 py-1 text-slate-700 focus:outline-none focus:ring-1 focus:ring-sky-600 font-medium cursor-pointer">
+            <select id="flashiness-filter" onchange="applyFilters()" class="text-xs bg-white border border-stone-300 rounded-[2px] pl-2 pr-6 py-1 text-slate-700 focus:outline-none focus:ring-1 focus:ring-sky-600 font-medium cursor-pointer">
               <option value="all">Flashiness (RBI): All</option>
               <option value="Regulated">Regulated (RBI &lt; 0.020)</option>
               <option value="Snowmelt">Snowmelt Baseflow (0.020–0.060)</option>
@@ -215,7 +215,7 @@
 
           <!-- Flow Health Status -->
           <div class="relative">
-            <select id="health-filter" onchange="applyFilters()" class="text-xs bg-white border border-slate-300 rounded-[2px] pl-2 pr-6 py-1 text-slate-700 focus:outline-none focus:ring-1 focus:ring-sky-600 font-medium cursor-pointer">
+            <select id="health-filter" onchange="applyFilters()" class="text-xs bg-white border border-stone-300 rounded-[2px] pl-2 pr-6 py-1 text-slate-700 focus:outline-none focus:ring-1 focus:ring-sky-600 font-medium cursor-pointer">
               <option value="all">Flow Status: All</option>
               <option value="abundant">Abundant (≥150% Normal)</option>
               <option value="normal">Normal (90–150% Normal)</option>
@@ -239,7 +239,7 @@
       <div class="overflow-x-auto flex-1">
         <table class="w-full text-left text-xs border-collapse data-table">
           <thead>
-            <tr class="border-b border-slate-200 text-slate-600 font-bold text-[10.5px] uppercase tracking-wider">
+            <tr class="border-b border-stone-200 text-slate-600 font-bold text-[10.5px] uppercase tracking-wider">
               <th class="px-2.5 py-2 cursor-pointer hover:text-slate-900" onclick="sortTable('name')">Station / Facility ↕</th>
               <th class="px-2 py-2 cursor-pointer hover:text-slate-900" onclick="sortTable('id')">Station ID ↕</th>
               <th class="px-2 py-2 cursor-pointer hover:text-slate-900" onclick="sortTable('tier_rank')">Hierarchy / Status ↕</th>
@@ -253,7 +253,7 @@
               <th class="px-2 py-2 text-center">Map</th>
             </tr>
           </thead>
-          <tbody id="telemetry-rows" class="divide-y divide-slate-100">
+          <tbody id="telemetry-rows" class="divide-y divide-stone-200/70">
             <tr>
               <td colspan="11" class="text-center py-12 text-slate-400">Loading hydrologic monitoring network...</td>
             </tr>
@@ -265,7 +265,7 @@
   </main>
 
   <!-- Sticky Footer Domain Note -->
-  <footer class="bg-white border-t border-slate-200 px-6 py-3 text-xs text-slate-500 text-center">
+  <footer class="bg-white border-t border-stone-200 px-6 py-3 text-xs text-slate-500 text-center">
     Data Sources: <a href="https://waterdata.usgs.gov/nwis" target="_blank" rel="noopener noreferrer" class="underline hover:text-slate-800">USGS National Water Information System (NWIS) ↗</a>, <a href="https://dwr.state.co.us/Tools/Stations" target="_blank" rel="noopener noreferrer" class="underline hover:text-slate-800">Colorado Division of Water Resources (CDSS) ↗</a>, and <a href="https://www.usbr.gov/lc/region/g4000/riverops/hourly7.html" target="_blank" rel="noopener noreferrer" class="underline hover:text-slate-800">USBR River Operations Teletype ↗</a>. Streamflow reported in cubic feet per second (cfs); reservoir storage reported in acre-feet (AF).
   </footer>
 
@@ -487,7 +487,7 @@
       }
 
       let regime = 'Storage Buffer';
-      let badge_class = 'bg-slate-100 text-slate-600 border-slate-300';
+      let badge_class = 'bg-stone-100 text-slate-600 border-stone-300';
       if (rbi !== null) {
         if (rbi < 0.020) {
           regime = 'Regulated';
@@ -543,7 +543,7 @@
         case 'basin_sentinel':
           return 'bg-sky-100 text-sky-900 border-sky-300 font-bold';
         case 'tributary_gage':
-          return 'bg-slate-100 text-slate-700 border-slate-200 font-medium';
+          return 'bg-stone-100 text-slate-700 border-stone-200 font-medium';
         case 'export_tunnel':
           return 'bg-emerald-100 text-emerald-900 border-emerald-300 font-bold';
         case 'conveyance_canal':
@@ -551,7 +551,7 @@
         case 'storage_reservoir':
           return 'bg-purple-100 text-purple-900 border-purple-300 font-bold';
         default:
-          return 'bg-slate-100 text-slate-700 border-slate-200 font-medium';
+          return 'bg-stone-100 text-slate-700 border-stone-200 font-medium';
       }
     }
 
@@ -830,9 +830,9 @@
         const btn = document.getElementById('pill-' + k);
         if (!btn) return;
         if (k === cat) {
-          btn.className = 'px-2.5 py-1 text-xs font-bold rounded-[2px] bg-slate-900 text-white transition';
+          btn.className = 'px-2.5 py-1 text-xs font-bold rounded-[2px] bg-stone-900 text-white transition';
         } else {
-          btn.className = 'px-2.5 py-1 text-xs font-semibold rounded-[2px] bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200 transition';
+          btn.className = 'px-2.5 py-1 text-xs font-semibold rounded-[2px] bg-stone-100 text-stone-700 hover:bg-stone-200 border border-stone-300/80 transition';
         }
       });
       applyFilters();
@@ -922,7 +922,7 @@
 
       let healthHtml = '<span class="text-slate-400 text-[11px]">—</span>';
       if (node.norm_cfs) {
-        let badgeColor = 'bg-slate-100 text-slate-700';
+        let badgeColor = 'bg-stone-100 text-slate-700';
         if (node.health_status === 'abundant') badgeColor = 'bg-blue-100 text-blue-800 font-bold';
         else if (node.health_status === 'normal') badgeColor = 'bg-sky-100 text-sky-800 font-semibold';
         else if (node.health_status === 'below') badgeColor = 'bg-amber-100 text-amber-800 font-semibold';
@@ -975,7 +975,7 @@
             ${formatTimestamp(node.timestamp)}
           </td>
           <td class="px-2 py-2 text-center whitespace-nowrap">
-            <button onclick="showStationOnMap('${node.id}')" class="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded bg-slate-100 hover:bg-sky-100 text-slate-700 hover:text-sky-800 font-semibold transition border border-slate-200 cursor-pointer shadow-2xs" title="Fly to this station on the interactive map">
+            <button onclick="showStationOnMap('${node.id}')" class="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded bg-stone-100 hover:bg-sky-100 text-slate-700 hover:text-sky-800 font-semibold transition border border-stone-200 cursor-pointer shadow-2xs" title="Fly to this station on the interactive map">
               <span>Map ↗</span>
             </button>
           </td>
@@ -1015,7 +1015,7 @@
         }
 
         html += `
-          <tr class="${group.bgColor} border-y border-slate-200">
+          <tr class="${group.bgColor} border-y border-stone-200">
             <td colspan="11" class="px-2.5 py-1.5">
               <div class="flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center gap-2">
@@ -1125,9 +1125,9 @@
     });
   </script>
   <!-- Data Dictionary & Database Schema Modal -->
-  <div id="schema-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs hidden">
-    <div class="bg-white rounded-xl shadow-2xl border border-slate-200 max-w-3xl w-full max-h-[85vh] flex flex-col overflow-hidden">
-      <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+  <div id="schema-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/60 backdrop-blur-xs hidden">
+    <div class="bg-white rounded-xl shadow-2xl border border-stone-200 max-w-3xl w-full max-h-[85vh] flex flex-col overflow-hidden">
+      <div class="px-6 py-4 border-b border-stone-200 flex items-center justify-between bg-stone-50">
         <div>
           <h2 class="text-base font-bold text-slate-900">Colorado River Basin Facility Database: Data Dictionary &amp; Schema</h2>
           <p class="text-xs text-slate-500">Technical entity specifications, measurement units, and authoritative data provenance</p>
@@ -1138,16 +1138,16 @@
         <div>
           <h3 class="font-bold text-slate-900 text-sm mb-1.5">1. Database Entity Types</h3>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11.5px]">
-            <div class="p-2.5 rounded bg-slate-50 border border-slate-200">
+            <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
               <strong class="text-sky-800">Streamflow Gage (79 facilities):</strong> Real-time river reaches monitoring instantaneous discharge rate ($Q$) in cubic feet per second (cfs) via USGS NWIS IV REST service (Parameter <code>00060</code>).
             </div>
-            <div class="p-2.5 rounded bg-slate-50 border border-slate-200">
+            <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
               <strong class="text-red-800">Storage Reservoir (11 impoundments):</strong> Major storage facilities tracking cumulative water volume ($V$) in Acre-Feet (AF) and surface elevation in feet MSL via USBR Upper/Lower Colorado APIs and CDSS.
             </div>
-            <div class="p-2.5 rounded bg-slate-50 border border-slate-200">
+            <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
               <strong class="text-cyan-800">Trans-Mountain Diversion (4 tunnels):</strong> Continental Divide acoustic meters (Adams, Moffat, Roberts, Boustead) exporting water from the Colorado River Basin to Front Range municipal water systems.
             </div>
-            <div class="p-2.5 rounded bg-slate-50 border border-slate-200">
+            <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
               <strong class="text-emerald-800">Conveyance Canal (4 major conduits):</strong> Interstate gravity canals (All-American, Central Arizona Project, Colorado River Aqueduct, Canal Alimentador) routing mainstream Lower Basin deliveries.
             </div>
           </div>
@@ -1155,9 +1155,9 @@
 
         <div>
           <h3 class="font-bold text-slate-900 text-sm mb-1.5">2. Field Dictionary &amp; Attribute Definitions</h3>
-          <div class="overflow-x-auto border border-slate-200 rounded">
+          <div class="overflow-x-auto border border-stone-200 rounded">
             <table class="w-full text-left text-[11px] border-collapse">
-              <thead class="bg-slate-100 text-slate-700 font-bold">
+              <thead class="bg-stone-100 text-slate-700 font-bold">
                 <tr>
                   <th class="p-2 border-b">Field Name</th>
                   <th class="p-2 border-b">Data Type</th>
@@ -1165,7 +1165,7 @@
                   <th class="p-2 border-b">Description &amp; Provenance</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-100 text-slate-700">
+              <tbody class="divide-y divide-stone-200/70 text-slate-700">
                 <tr>
                   <td class="p-2 font-bold font-mono text-slate-900">station_id</td>
                   <td class="p-2 font-mono text-xs text-slate-500">string</td>
