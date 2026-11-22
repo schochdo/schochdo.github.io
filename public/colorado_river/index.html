@@ -199,6 +199,10 @@
     body.workspace-fullscreen #btn-exit-fullscreen-floating {
       display: inline-flex !important;
     }
+    #reservoir-filter-bar button:focus,
+    #reservoir-filter-bar button:focus-visible {
+      outline: none !important;
+    }
   </style>
 </head>
 <body class="flex flex-col md:flex-row h-full h-[100dvh] max-h-[100dvh] overflow-hidden antialiased bg-[#f5f2eb]">
@@ -697,27 +701,30 @@
 
           <div id="view-res-elevations" class="space-y-4 hidden">
           <!-- SECTION 2: INDIVIDUAL RESERVOIR DEEP-DIVE -->
-          <div class="flex flex-wrap items-center justify-between gap-4 bg-white p-3.5 rounded-xl border border-stone-200 shadow-sm">
-            <div class="flex items-center gap-2">
-              <span class="text-xs font-bold text-stone-500 uppercase tracking-wider">Select Reservoir Elevation Record:</span>
-              <div class="inline-flex rounded-lg bg-stone-100 p-1 border border-stone-300">
-                <button id="tab-res-mead" onclick="switchReservoirRecord('mead')" class="px-3.5 py-1 text-xs font-bold rounded-md bg-white text-stone-900 shadow-sm transition">
+          <div id="reservoir-filter-bar" class="flex flex-wrap items-center justify-between gap-3 bg-white px-4 py-2.5 rounded-[2px] border border-[#cfc8ba] shadow-xs">
+            <div id="reservoir-filter-left" class="flex items-center gap-2 shrink-0">
+              <span class="text-[11px] font-extrabold text-stone-700 uppercase tracking-wider">Reservoir:</span>
+              <div class="inline-flex items-center gap-1 p-1 rounded-[2px] bg-[#ece8df] border border-[#cfc8ba]">
+                <button id="tab-res-mead" onclick="switchReservoirRecord('mead')" class="px-3 py-1 text-xs font-bold rounded-[2px] bg-white text-stone-900 border border-[#b8ae9c] shadow-xs transition outline-none focus:outline-none cursor-pointer whitespace-nowrap">
                   Lake Mead (1935–Today)
                 </button>
-                <button id="tab-res-powell" onclick="switchReservoirRecord('powell')" class="px-3.5 py-1 text-xs font-medium rounded-md text-stone-600 hover:text-stone-900 transition">
+                <button id="tab-res-powell" onclick="switchReservoirRecord('powell')" class="px-3 py-1 text-xs font-semibold rounded-[2px] text-stone-600 hover:text-stone-900 border border-transparent transition outline-none focus:outline-none cursor-pointer whitespace-nowrap">
                   Lake Powell (1963–Today)
                 </button>
               </div>
             </div>
 
             <!-- Visualization Mode Selector -->
-            <div class="flex items-center gap-2 bg-stone-100 p-1 rounded-lg border border-stone-300">
-              <button onclick="setReservoirView('envelope')" id="btn-view-envelope" class="px-3 py-1 text-xs font-bold rounded bg-white text-stone-900 shadow-sm border border-stone-300">
-                Seasonal Elevation Envelope
-              </button>
-              <button onclick="setReservoirView('heatmap')" id="btn-view-heatmap" class="px-3 py-1 text-xs font-medium rounded text-stone-600 hover:text-stone-900">
-                12-Month Water Level Matrix
-              </button>
+            <div id="reservoir-filter-right" class="flex items-center gap-2 shrink-0">
+              <span class="text-[11px] font-extrabold text-stone-700 uppercase tracking-wider">View:</span>
+              <div class="inline-flex items-center gap-1 p-1 rounded-[2px] bg-[#ece8df] border border-[#cfc8ba]">
+                <button onclick="setReservoirView('envelope')" id="btn-view-envelope" class="px-3 py-1 text-xs font-bold rounded-[2px] bg-white text-stone-900 border border-[#b8ae9c] shadow-xs transition outline-none focus:outline-none cursor-pointer whitespace-nowrap">
+                  Seasonal Elevation Envelope
+                </button>
+                <button onclick="setReservoirView('heatmap')" id="btn-view-heatmap" class="px-3 py-1 text-xs font-semibold rounded-[2px] text-stone-600 hover:text-stone-900 border border-transparent transition outline-none focus:outline-none cursor-pointer whitespace-nowrap">
+                  12-Month Water Level Matrix
+                </button>
+              </div>
             </div>
           </div>
 
@@ -1817,6 +1824,9 @@
       }
     };
 
+    const resFilterActiveCls = 'px-3 py-1 text-xs font-bold rounded-[2px] bg-white text-stone-900 border border-[#b8ae9c] shadow-xs transition outline-none focus:outline-none cursor-pointer whitespace-nowrap';
+    const resFilterInactiveCls = 'px-3 py-1 text-xs font-semibold rounded-[2px] text-stone-600 hover:text-stone-900 border border-transparent transition outline-none focus:outline-none cursor-pointer whitespace-nowrap';
+
     function switchReservoirRecord(reservoir) {
       currentReservoirRecord = reservoir;
       const tabMead = document.getElementById('tab-res-mead');
@@ -1825,8 +1835,8 @@
       const panelPowell = document.getElementById('panel-res-powell');
 
       if (reservoir === 'mead') {
-        tabMead.className = 'px-3.5 py-1 text-xs font-bold rounded-md bg-white text-stone-900 shadow-sm transition';
-        tabPowell.className = 'px-3.5 py-1 text-xs font-medium rounded-md text-stone-600 hover:text-stone-900 transition';
+        tabMead.className = resFilterActiveCls;
+        tabPowell.className = resFilterInactiveCls;
         panelMead.classList.remove('hidden');
         panelPowell.classList.add('hidden');
         setTimeout(() => {
@@ -1836,8 +1846,8 @@
           }
         }, 10);
       } else {
-        tabPowell.className = 'px-3.5 py-1 text-xs font-bold rounded-md bg-white text-stone-900 shadow-sm transition';
-        tabMead.className = 'px-3.5 py-1 text-xs font-medium rounded-md text-stone-600 hover:text-stone-900 transition';
+        tabPowell.className = resFilterActiveCls;
+        tabMead.className = resFilterInactiveCls;
         panelMead.classList.add('hidden');
         panelPowell.classList.remove('hidden');
         setTimeout(() => {
@@ -1861,15 +1871,15 @@
       const powellHeat = document.getElementById('container-powell-heatmap');
 
       if (mode === 'envelope') {
-        btnEnv.className = 'px-3 py-1 text-xs font-bold rounded bg-white text-stone-900 shadow-sm border border-stone-300';
-        btnHeat.className = 'px-3 py-1 text-xs font-medium rounded text-stone-600 hover:text-stone-900';
+        btnEnv.className = resFilterActiveCls;
+        btnHeat.className = resFilterInactiveCls;
         meadEnv.classList.remove('hidden');
         meadHeat.classList.add('hidden');
         powellEnv.classList.remove('hidden');
         powellHeat.classList.add('hidden');
       } else {
-        btnHeat.className = 'px-3 py-1 text-xs font-bold rounded bg-white text-stone-900 shadow-sm border border-stone-300';
-        btnEnv.className = 'px-3 py-1 text-xs font-medium rounded text-stone-600 hover:text-stone-900';
+        btnHeat.className = resFilterActiveCls;
+        btnEnv.className = resFilterInactiveCls;
         meadEnv.classList.add('hidden');
         meadHeat.classList.remove('hidden');
         powellEnv.classList.add('hidden');
