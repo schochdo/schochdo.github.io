@@ -950,7 +950,7 @@ async function fetchLiveUSGS() {
       "09010500": "Colorado River below Baker Gulch near Grand Lake, CO",
       "09034250": "Colorado River at Windy Gap near Granby, CO",
       "09058000": "Colorado River near Kremmling, CO",
-      "09070500": "Colorado River near Dotsero, CO",
+      "09070500": "Colorado River near Dotsero, CO (Shoshone Call Gage)",
       "09085100": "Colorado River below Glenwood Springs, CO",
       "09095500": "Colorado River near Cameo, CO",
       "09163500": "Colorado River near CO-UT State Line",
@@ -1404,7 +1404,7 @@ function applyLiveHydrology(riverNetwork, metrics) {
     } else if (r === "colorado_glenwood_canyon") {
       const res = resolveStation(dotsero);
       flow = res.flow_cfs; status = res.status; timestamp = res.timestamp; sourceLabel = res.source_label;
-      gaugeInfo = "USGS #09070500 near Dotsero, CO (Glenwood Canyon below Eagle River)";
+      gaugeInfo = "USGS #09070500 near Dotsero, CO (Shoshone Call Gage • 1,250 cfs 1902 senior right)";
       gaugeId = "09070500";
       if (flow != null && kremmling && kremmling.flow_cfs != null && eagle && eagle.flow_cfs != null) {
         confluenceInfo = {
@@ -4523,6 +4523,7 @@ function toggleFlowHealthLayer(show) {
 
 function formatGaugePopup(s) {
   const isLeesFerry = s.id === "09380000";
+  const isShoshone = s.id === "09070500";
   const norm = getHistoricalNormal(s.id);
   let healthBadgeHtml = '';
   if (norm && norm > 0) {
@@ -4566,6 +4567,7 @@ function formatGaugePopup(s) {
       <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
         ${typeBadge}
         ${isLeesFerry ? '<span style="font-size:9.5px; font-weight:700; color:#2b5c8f; background:#ebe4d6; border: 1px solid #cfc8ba; padding:1px 5px; border-radius:2px;">1922 Compact Divide</span>' : ''}
+        ${isShoshone ? '<span style="font-size:9.5px; font-weight:700; color:#9a3412; background:#f2ede2; border: 1px solid #cfc8ba; padding:1px 5px; border-radius:2px;">1902 Shoshone Call (1,250 cfs)</span>' : ''}
       </div>
       <strong style="font-size:13px; color:#0f172a; line-height:1.3; display:block;">${s.name}</strong>
       <div style="margin: 5px 0; padding: 5px 8px; background:#f2ede2; border-radius:3px; border:1px solid #cfc8ba; display:flex; justify-content:space-between; align-items:baseline;">
@@ -4573,6 +4575,10 @@ function formatGaugePopup(s) {
         <span style="font-size:15px; font-weight:800; color:#2b5c8f; font-variant-numeric:tabular-nums;">${(s.flow_cfs || 0).toLocaleString()} <span style="font-size:10.5px; font-weight:600; color:#5c5346;">cfs</span></span>
       </div>
       ${healthBadgeHtml}
+      ${isShoshone ? `
+      <div style="margin: 5px 0; padding: 5px 8px; background:#f5f2eb; border-left:2.5px solid #c26d2d; border-radius:2px; font-size:10.5px; color:#334155; line-height:1.4;">
+        <strong style="color:#0f172a;">Shoshone Power Plant Water Right:</strong> Benchmarks the non-consumptive <strong>1902 call (1,250 cfs senior / 1,408 cfs total)</strong> in Glenwood Canyon, regulating upstream Front Range trans-mountain tunnel diversions.
+      </div>` : ''}
       <div style="font-size:11px; color:#4f463a; line-height:1.45;">
         <strong>Station ID:</strong> <a href="${portalUrl}" target="_blank" rel="noopener" style="color:#2b5c8f; text-decoration:none; font-weight:600;">#${s.id} ↗</a><br>
         <strong>Measured:</strong> ${formatTimestamp(s.timestamp)}

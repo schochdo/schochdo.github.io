@@ -635,7 +635,12 @@
           ? `<span class="text-rose-600 font-semibold">Offline</span> <span class="text-[10px] text-slate-400 font-normal">(${s.data_status === 'delayed' ? 'Delayed' : 'Discontinued'})</span>`
           : `${s.flow_cfs.toLocaleString()} cfs${isDelayed ? ' <span class="text-[10px] text-amber-600 font-semibold">(Delayed)</span>' : ''}`;
 
-        let noteText = s.notes || (s.id === '09380000' ? "Statutory Lee Ferry Compact boundary (1922 Treaty)" : (s.provider === 'USBR' ? "USBR Lower Colorado Hourly Hydroelectric Release" : "USGS NWIS Real-Time Discharge"));
+        let noteText = s.notes || (
+          s.id === '09380000' ? "Statutory Lee Ferry Compact boundary (1922 Treaty)" :
+          s.id === '09070500' ? "Administers 1902 Shoshone Hydroelectric Plant call (1,250 cfs senior / 1,408 cfs total non-consumptive right) at Glenwood Canyon entrance" :
+          s.id === '09085100' ? "Mainstem below Shoshone Power Plant tailrace return & Roaring Fork confluence" :
+          (s.provider === 'USBR' ? "USBR Lower Colorado Hourly Hydroelectric Release" : "USGS NWIS Real-Time Discharge")
+        );
         if (isOffline) {
           noteText = `Station Offline (Last reported: ${formatTimestamp(s.timestamp)})`;
         }

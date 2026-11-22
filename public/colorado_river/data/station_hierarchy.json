@@ -124,7 +124,7 @@
     },
     "09070500": {
       "id": "09070500",
-      "name": "Colorado River near Dotsero, CO",
+      "name": "Colorado River near Dotsero, CO (Shoshone Call Gage)",
       "type": "streamflow",
       "tier_code": "basin_sentinel",
       "tier_label": "Key Reference Gage",

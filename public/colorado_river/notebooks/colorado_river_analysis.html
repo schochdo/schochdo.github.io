@@ -320,7 +320,10 @@ Little Colorado River - Headwaters through Cameron Gorge to Grand Canyon Conflue
                                                  Navajo Reservoir Submerged Channel      6000.0      6085.0 Re-emerged Rapids
 </pre></div></div></div>
 <div class="notebook-cell markdown-cell"><h2 id="3-live-usgs-nwis-telemetry-sequential-reach-deltas" class="notebook-h2">3. Live USGS NWIS Telemetry & Sequential Reach Deltas <a href="#3-live-usgs-nwis-telemetry-sequential-reach-deltas" class="anchor-link">#</a></h2>
-<p class="notebook-p">Queries live discharge (<code class="inline-code">00060</code>) at Lees Ferry (<code class="inline-code">09380000</code>) with automatic offline fallback, then computes sequential reach gains/losses (<code class="inline-code">cfs</code>) from the cached station snapshot (<code class="inline-code">web/data/latest_metrics.json</code>).</p></div>
+<p class="notebook-p">Queries live discharge (<code class="inline-code">00060</code>) at Lees Ferry (<code class="inline-code">09380000</code>) with automatic offline fallback, then computes sequential reach gains/losses (<code class="inline-code">cfs</code>) from the cached station snapshot (<code class="inline-code">web/data/latest_metrics.json</code>).</p>
+<ul class="notebook-ul">
+<li><strong>Shoshone Hydroelectric Plant Senior Call (<code class="inline-code">USGS #09070500</code> Dotsero):</strong> Entering Glenwood Canyon, the Shoshone Power Plant's <strong>1902 senior non-consumptive water right (<code class="inline-code">1,250 cfs</code> senior / <code class="inline-code">1,408 cfs</code> total)</strong> predates all major Front Range trans-mountain tunnels and legally compels upstream diverters to bypass native flows down the Colorado River mainstem.</li>
+</ul></div>
 
             <div class="notebook-cell code-cell">
               <div class="code-header">
@@ -366,14 +369,14 @@ Little Colorado River - Headwaters through Cameron Gorge to Grand Canyon Conflue
 <span class="nb">print</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">Mainstem Sequential Reach Snapshot:'</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
 </pre></div>
-            <div class="outputs-wrapper"><div class="output-item stream-output"><pre class="notebook-output">Lees Ferry (09380000): 5,640 cfs | Timestamp: 2026-11-22T10:00:00.000-07:00 | Source: LIVE USGS NWIS
+            <div class="outputs-wrapper"><div class="output-item stream-output"><pre class="notebook-output">Lees Ferry (09380000): 6,440 cfs | Timestamp: 2026-11-22T11:00:00.000-07:00 | Source: LIVE USGS NWIS
 
 Mainstem Sequential Reach Snapshot:
  site_id                                              station  flow_cfs  reach_delta_cfs
 09095500                        Colorado River near Cameo, CO    1180.0              NaN
 09180500                        Colorado River near Cisco, UT    2960.0           1780.0
-09380000                     Colorado River at Lees Ferry, AZ    5640.0           2680.0
-09402500 Colorado River near Grand Canyon, AZ (Phantom Ranch)    8940.0           3300.0
+09380000                     Colorado River at Lees Ferry, AZ    6440.0           3480.0
+09402500 Colorado River near Grand Canyon, AZ (Phantom Ranch)    8940.0           2500.0
 </pre></div></div></div>
 <div class="notebook-cell markdown-cell"><h2 id="4-relational-sqlite-schema-compliance-queries" class="notebook-h2">4. Relational SQLite Schema & Compliance Queries <a href="#4-relational-sqlite-schema-compliance-queries" class="anchor-link">#</a></h2>
 <p class="notebook-p">Connects to <code class="inline-code">data/colorado_river_basin.db</code> and queries <code class="inline-code">view_reservoir_system_summary</code> and rolling 10-year Compact delivery totals at Lees Ferry.</p></div>
@@ -546,11 +549,11 @@ Alpine Snowmelt    (15,000 cfs x 60 days):    1,785,123 AF (360x greater volume)
             <div class="outputs-wrapper"><div class="output-item stream-output"><pre class="notebook-output">  web/data/geography.json                    236.8 KB
   web/data/historical_normals.json           578.4 KB
   web/data/latest_conditions.json              9.1 KB
-  web/data/latest_metrics.json                45.4 KB
-  web/data/portal_historical.json            261.2 KB
+  web/data/latest_metrics.json                45.6 KB
+  web/data/portal_historical.json            262.0 KB
   web/data/replay_30d.json                   165.9 KB
   web/data/replay_7d.json                     81.3 KB
-  web/data/river_network.json               2074.6 KB
+  web/data/river_network.json               2074.7 KB
   web/data/seasonal_regimes.json              83.3 KB
   web/data/station_hierarchy.json             31.8 KB
 </pre></div></div></div>
@@ -594,9 +597,9 @@ Alpine Snowmelt    (15,000 cfs x 60 days):    1,785,123 AF (360x greater volume)
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Gemini Web Session PDFs:   </span><span class="si">{</span><span class="n">gemini_pdfs</span><span class="si">}</span><span class="s1"> archived transcripts in mockups/gemini_sessions/'</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'AI_LOG.md present:         </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ai_log_path</span><span class="p">)</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">sprint_rows</span><span class="si">}</span><span class="s1"> documented sprint entries)'</span><span class="p">)</span>
 </pre></div>
-            <div class="outputs-wrapper"><div class="output-item stream-output"><pre class="notebook-output">AI Prompt Archive present: True (5.63 MB HTML)
+            <div class="outputs-wrapper"><div class="output-item stream-output"><pre class="notebook-output">AI Prompt Archive present: True (5.69 MB HTML)
 Gemini Web Session PDFs:   10 archived transcripts in mockups/gemini_sessions/
-AI_LOG.md present:         True (118 documented sprint entries)
+AI_LOG.md present:         True (123 documented sprint entries)
 </pre></div></div></div>
       </div>
     </main>
