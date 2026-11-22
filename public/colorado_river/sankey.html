@@ -331,19 +331,19 @@
             </div>
 
             <!-- COLUMN 1: PHYSICAL NATURAL RUNOFF (SUPPLY) -->
-            <div class="flex-1 flex flex-col items-center">
-              <div class="w-full text-center pb-2">
-                <span class="text-xs font-bold text-sky-900 uppercase tracking-wide flex items-center justify-center gap-1.5">
-                  <span class="w-2 h-2 rounded-xs bg-sky-600"></span>
-                  Physical Runoff (Supply)
-                </span>
-                <span class="text-[11px] text-stone-500 block tabular-nums">15.20 MAF/yr Natural Historical Inflow</span>
-              </div>
+            <div class="flex-1 flex items-end justify-center gap-1.5">
+              <!-- Heading + Bar Track (Centered strictly together over the 230px column) -->
+              <div class="flex-1 max-w-[230px] flex flex-col items-center">
+                <div id="stacked-heading-supply" class="w-full text-center pb-2 whitespace-nowrap">
+                  <span class="text-xs font-bold text-sky-900 uppercase tracking-wide flex items-center justify-center gap-1.5">
+                    <span class="w-2 h-2 rounded-xs bg-sky-600"></span>
+                    Physical Runoff (Supply)
+                  </span>
+                  <span class="text-[11px] text-stone-500 block tabular-nums">15.20 MAF/yr Natural Historical Inflow</span>
+                </div>
 
-              <!-- Bar + Right Side Bracket -->
-              <div class="flex items-stretch justify-center gap-1.5 w-full">
                 <!-- Bar Track: Height 480px = 20 MAF (1 MAF = 24px) -->
-                <div class="relative flex-1 max-w-[230px] h-[480px] bg-stone-100 rounded-xs border border-stone-300 flex flex-col-reverse overflow-hidden shadow-inner">
+                <div id="stacked-bar-supply" class="relative w-full h-[480px] bg-stone-100 rounded-xs border border-stone-300 flex flex-col-reverse overflow-hidden shadow-inner">
                 <!-- Segments stacked from bottom (0 MAF) to top (15.20 MAF = 364.8px) -->
 
                 <!-- 1. Upper CO Mainstem: 4.00 MAF = 96px -->
@@ -418,6 +418,7 @@
 
                 <!-- Unallocated Buffer to 20 MAF (4.80 MAF = 115.2px) -->
                 <div class="w-full flex-1 bg-stone-100"></div>
+                </div>
               </div>
 
               <!-- Column 1 Side Brackets (Upper vs. Lower Basin Natural Runoff) -->
@@ -431,23 +432,22 @@
                 <path d="M 2 148 L 10 148 L 10 478 L 2 478" fill="none" stroke="#0284c7" stroke-width="2.2" />
                 <text x="23" y="313" text-anchor="middle" transform="rotate(-90 23 313)" font-size="9.5" font-weight="900" letter-spacing="0.07em" fill="#0284c7">UPPER BASIN (13.90 MAF)</text>
               </svg>
-              </div>
             </div>
 
             <!-- COLUMN 2: STATUTORY PAPER ALLOCATIONS (DEMAND) -->
-            <div class="flex-1 flex flex-col items-center">
-              <div class="w-full text-center pb-2">
-                <span class="text-xs font-bold text-orange-950 uppercase tracking-wide flex items-center justify-center gap-1.5">
-                  <span class="w-2 h-2 rounded-xs bg-orange-600"></span>
-                  Paper Claims (Demand)
-                </span>
-                <span class="text-[11px] text-stone-500 block tabular-nums">19.10 MAF/yr Total Legal Apportionments</span>
-              </div>
+            <div class="flex-1 flex items-end justify-center gap-1.5">
+              <!-- Heading + Bar Track (Centered strictly together over the 230px column) -->
+              <div class="flex-1 max-w-[230px] flex flex-col items-center">
+                <div id="stacked-heading-demand" class="w-full text-center pb-2 whitespace-nowrap">
+                  <span class="text-xs font-bold text-orange-950 uppercase tracking-wide flex items-center justify-center gap-1.5">
+                    <span class="w-2 h-2 rounded-xs bg-orange-600"></span>
+                    Paper Claims (Demand)
+                  </span>
+                  <span class="text-[11px] text-stone-500 block tabular-nums">19.10 MAF/yr Total Legal Apportionments</span>
+                </div>
 
-              <!-- Bar + Right Side Bracket -->
-              <div class="flex items-stretch justify-center gap-1.5 w-full">
                 <!-- Bar Track: Height 480px = 20 MAF -->
-                <div class="relative flex-1 max-w-[230px] h-[480px] bg-stone-100 rounded-xs border border-stone-300 flex flex-col-reverse overflow-hidden shadow-inner">
+                <div id="stacked-bar-demand" class="relative w-full h-[480px] bg-stone-100 rounded-xs border border-stone-300 flex flex-col-reverse overflow-hidden shadow-inner">
                 <!-- Segments stacked from bottom (0 MAF) to top (19.10 MAF = 458.4px) -->
 
                 <!-- 1. Colorado: 3.86 MAF = 92.6px -->
@@ -549,6 +549,7 @@
 
                 <!-- Unallocated Buffer to 20 MAF (0.90 MAF = 21.6px) -->
                 <div class="w-full flex-1 bg-stone-100"></div>
+                </div>
               </div>
 
               <!-- Column 2 Side Brackets (Upper vs. Lower Basin Paper Claims & Losses) -->
@@ -561,7 +562,6 @@
                 <path d="M 2 302 L 10 302 L 10 478 L 2 478" fill="none" stroke="#0284c7" stroke-width="2.2" />
                 <text x="23" y="390" text-anchor="middle" transform="rotate(-90 23 390)" font-size="9.5" font-weight="900" letter-spacing="0.07em" fill="#0284c7">UPPER BASIN (7.50 MAF)</text>
               </svg>
-              </div>
             </div>
           </div>
 
