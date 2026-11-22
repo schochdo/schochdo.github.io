@@ -734,7 +734,7 @@
             </div>
 
             <!-- Key Operational Threshold Reference Badges for Mead -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 my-4">
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5 my-4">
               <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
                 <span class="text-[10px] font-bold text-stone-500 uppercase block">Spillway Crest</span>
                 <span class="text-sm font-black text-stone-900 tabular-nums">1,221.4 ft</span>
@@ -754,6 +754,11 @@
                 <span class="text-[10px] font-bold text-red-600 uppercase block">Dead Pool (No Flow)</span>
                 <span class="text-sm font-black text-red-800 tabular-nums">895.0 ft</span>
                 <span class="text-[10px] text-stone-500 block">Intake sill limit (0 release)</span>
+              </div>
+              <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
+                <span class="text-[10px] font-bold text-purple-700 uppercase block">SNWA Intake No. 3</span>
+                <span class="text-sm font-black text-purple-900 tabular-nums">860.0 ft</span>
+                <span class="text-[10px] text-stone-500 block">Las Vegas "Third Straw" (L3PS)</span>
               </div>
             </div>
 
@@ -2501,7 +2506,7 @@
               const padY = line.padY !== undefined ? line.padY : 3.5;
               const pillW = textWidth + padX * 2;
               const pillH = fontSize + padY * 2;
-              const pillX = right - pillW - 10;
+              const pillX = (line.position === 'start') ? (left + 10) : (right - pillW - 10);
               
               let pillY = yPos - pillH - 4;
               if (line.yOffset !== undefined) {
@@ -2612,7 +2617,8 @@
                 { value: 1221.4, label: 'Spillway Crest', color: '#1e293b', dash: [6, 4] },
                 { value: 1075.0, label: 'Tier 1 Shortage', color: '#0072B2', dash: [5, 3] },
                 { value: 950.0, label: 'Min Power Pool', color: '#D55E00', dash: [5, 3] },
-                { value: 895.0, label: 'Dead Pool', color: '#dc2626', dash: [6, 3] }
+                { value: 895.0, label: 'Dead Pool', color: '#dc2626', dash: [6, 3] },
+                { value: 860.0, label: 'SNWA Intake No. 3 ("Third Straw")', color: '#6d28d9', dash: [3, 3], position: 'start' }
               ]
             },
             legend: {
@@ -2631,7 +2637,7 @@
               ticks: { font: { size: 10 }, maxTicksLimit: 15 }
             },
             y: {
-              min: 880,
+              min: 830,
               max: 1240,
               ticks: {
                 font: { size: 10 },
