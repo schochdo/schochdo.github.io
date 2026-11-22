@@ -180,35 +180,41 @@ input:checked + .slider:before {
 }
 
 .sidebar-expand-tab {
-  background: #faf8f4 !important;
-  border: 1.5px solid var(--hairline) !important;
+  background: #ede6d8 !important;
+  border: 1.5px solid #b8ae9c !important;
   border-right: none !important;
   border-radius: var(--radius-card) 0 0 var(--radius-card) !important;
 }
 
-.sidebar-expand-tab .tab-icon {
-  color: var(--river-blue) !important;
+.sidebar-expand-tab .tab-icon,
+.sidebar-expand-tab .tab-arrow-vertical {
+  color: #6b5744 !important;
+}
+
+.sidebar-expand-tab .tab-text-vertical {
+  color: #3e3226 !important;
 }
 
 .sidebar-expand-tab:hover {
-  background: #ffffff !important;
-  border-color: var(--hairline-dark) !important;
+  background: #e2d8c5 !important;
+  border-color: #8c7a66 !important;
 }
 
 .sidebar-expand-tab:hover .tab-text-vertical,
-.sidebar-expand-tab:hover .tab-icon {
-  color: var(--ink-heading) !important;
+.sidebar-expand-tab:hover .tab-icon,
+.sidebar-expand-tab:hover .tab-arrow-vertical {
+  color: #2f251b !important;
 }
 
 .sidebar-expand-tab.active {
-  background: var(--river-blue, #2b5c8f) !important;
-  border-color: var(--river-blue, #2b5c8f) !important;
+  background: #6b5744 !important;
+  border-color: #4f3f30 !important;
 }
 
 .sidebar-expand-tab.active .tab-icon,
 .sidebar-expand-tab.active .tab-text-vertical,
 .sidebar-expand-tab.active .tab-arrow-vertical {
-  color: #ffffff !important;
+  color: #faf8f4 !important;
 }
 
 /* Basin Metrics Square Cards (Lee's Ferry, Outflows & Reservoirs) */
@@ -818,13 +824,25 @@ svg text.tabular-nums, svg .maf-badge, svg .axis-label {
 }
 
 .tray-handle-bar {
-  background: #faf8f4 !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #ede6d8 !important;
   border: 1px solid #b8ae9c !important;
-  color: var(--river-blue, #2b5c8f) !important;
+  color: #4f3f30 !important;
+}
+
+.tray-handle-strip:hover .tray-handle-bar {
+  background: #6b5744 !important;
+  border-color: #4f3f30 !important;
 }
 
 .tray-handle-arrow {
-  color: var(--river-blue, #2b5c8f) !important;
+  color: #4f3f30 !important;
+}
+
+.tray-handle-strip:hover .tray-handle-arrow {
+  color: #faf8f4 !important;
 }
 
 /* Universal Light Code Box Aesthetic */
