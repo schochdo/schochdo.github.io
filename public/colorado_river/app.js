@@ -277,8 +277,8 @@ function switchPopupTab(tabName, btn) {
   });
   btn.classList.add('active');
   btn.style.fontWeight = '700';
-  btn.style.borderBottom = '2px solid #0284c7';
-  btn.style.color = '#0284c7';
+  btn.style.borderBottom = '2px solid #1d4ed8';
+  btn.style.color = '#1d4ed8';
   const dataPane = container.querySelector('.popup-pane-data');
   const codePane = container.querySelector('.popup-pane-code');
   if (dataPane) dataPane.style.display = tabName === 'data' ? 'block' : 'none';
@@ -295,10 +295,14 @@ function copyPopupCode(btn, ev) {
   navigator.clipboard.writeText(text).then(() => {
     const orig = btn.textContent;
     btn.textContent = '✓ Copied!';
-    btn.style.color = '#38bdf8';
+    btn.style.color = '#15803d';
+    btn.style.background = '#f0fdf4';
+    btn.style.borderColor = '#86efac';
     setTimeout(() => {
       btn.textContent = orig;
       btn.style.color = '';
+      btn.style.background = '';
+      btn.style.borderColor = '';
     }, 1800);
   });
 }
@@ -316,9 +320,9 @@ function formatTabbedPopup({ dataHtml, codeTitle, endpointUrl, pythonCode, notes
   }
   const cleanCode = pythonCode.replace(/</g, '&lt;').replace(/>/g, '&gt;');
   return `
-    <div class="custom-popup-body" onclick="event.stopPropagation()" onmousedown="event.stopPropagation()" style="font-family:'Inter',sans-serif; min-width:250px; max-width:320px; border-radius:3px;">
+    <div class="custom-popup-body" onclick="event.stopPropagation()" onmousedown="event.stopPropagation()" style="font-family:'Inter',sans-serif; min-width:250px; max-width:320px; border-radius:2px;">
       <div style="display:flex; border-bottom:1px solid #e2e8f0; margin-bottom:8px;">
-        <button class="popup-tab-btn active" onclick="switchPopupTab('data', this)" style="background:none; border:none; border-bottom:2px solid #0284c7; padding:4px 10px; font-size:11px; font-weight:700; color:#0284c7; cursor:pointer;">Data</button>
+        <button class="popup-tab-btn active" onclick="switchPopupTab('data', this)" style="background:none; border:none; border-bottom:2px solid #1d4ed8; padding:4px 10px; font-size:11px; font-weight:700; color:#1d4ed8; cursor:pointer;">Data</button>
         <button class="popup-tab-btn" onclick="switchPopupTab('code', this)" style="background:none; border:none; border-bottom:2px solid transparent; padding:4px 10px; font-size:11px; font-weight:500; color:#64748b; cursor:pointer;">API / Python</button>
       </div>
       <div class="popup-pane-data">
@@ -327,11 +331,11 @@ function formatTabbedPopup({ dataHtml, codeTitle, endpointUrl, pythonCode, notes
       <div class="popup-pane-code" style="display:none;">
         <div style="font-size:11px; font-weight:700; color:#0f172a; margin-bottom:4px;">${codeTitle || 'Python Query'}</div>
         ${notes ? `<div style="font-size:10.5px; color:#64748b; margin-bottom:6px; line-height:1.35;">${notes}</div>` : ''}
-        <div class="popup-code-box" style="position:relative; background:#0f172a; border-radius:3px; padding:8px; overflow:hidden;">
-          <button onclick="copyPopupCode(this, event)" style="position:absolute; top:4px; right:4px; background:#1e293b; border:1px solid #334155; color:#94a3b8; font-size:9.5px; border-radius:2px; padding:2px 6px; cursor:pointer;">Copy</button>
-          <pre style="margin:0; font-family:ui-monospace,Menlo,monospace; font-size:10px; color:#e2e8f0; line-height:1.35; max-height:160px; overflow-y:auto; white-space:pre-wrap;"><code>${cleanCode}</code></pre>
+        <div class="popup-code-box" style="position:relative; background:#f8fafc; border:1px solid #cbd5e1; border-radius:2px; padding:8px; overflow:hidden;">
+          <button onclick="copyPopupCode(this, event)" style="position:absolute; top:4px; right:4px; background:#ffffff; border:1px solid #cbd5e1; color:#475569; font-size:9.5px; border-radius:2px; padding:2px 6px; cursor:pointer; font-weight:600;">Copy</button>
+          <pre style="margin:0; font-family:ui-monospace,Menlo,monospace; font-size:10.5px; color:#0f172a; line-height:1.4; max-height:160px; overflow-y:auto; white-space:pre-wrap;"><code>${cleanCode}</code></pre>
         </div>
-        ${endpointUrl ? `<div style="margin-top:6px; font-size:10px; color:#64748b; word-break:break-all;"><strong style="color:#475569;">Endpoint:</strong> <a href="${endpointUrl}" target="_blank" rel="noopener" style="color:#0284c7; text-decoration:none;">REST API URL ↗</a></div>` : ''}
+        ${endpointUrl ? `<div style="margin-top:6px; font-size:10px; color:#64748b; word-break:break-all;"><strong style="color:#475569;">Endpoint:</strong> <a href="${endpointUrl}" target="_blank" rel="noopener" style="color:#1d4ed8; text-decoration:none; font-weight:600;">REST API URL ↗</a></div>` : ''}
       </div>
     </div>
   `;
@@ -1266,7 +1270,7 @@ function applyLiveHydrology(riverNetwork, metrics) {
   const salt = byId["09498500"];
   const verde = byId["09511300"];
 
-  // Sentinel Control Gauges
+  // Key Monitoring Gauges
   const windyGap = byId["09034250"];
   const williamsForkGage = byId["09037500"];
   const muddyCreekGage = byId["09041400"];
@@ -1328,7 +1332,7 @@ function applyLiveHydrology(riverNetwork, metrics) {
     if (f.properties.reach_type === "submerged_path" || r.endsWith("_submerged_path")) {
       flow = 0;
       status = "submerged";
-      sourceLabel = "Submerged Thalweg (Impounded Pool)";
+      sourceLabel = "Submerged River Channel (Impounded Pool)";
       gaugeInfo = f.properties.notes || "Submerged river canyon bed impounded behind reservoir dam";
       timestamp = null;
       gaugeId = null;
@@ -1906,7 +1910,7 @@ function applyLiveHydrology(riverNetwork, metrics) {
       f.properties.hist_normal_cfs = null;
       f.properties.health_pct = null;
       f.properties.health_color = '#0369a1';
-      f.properties.health_label = 'Submerged Reservoir Thalweg';
+      f.properties.health_label = 'Submerged River Channel';
     } else if (f.properties.reach_type === "canal" || r === "div_canal_alimentador_central") {
       f.properties.weight = computeCanalWeight(flow);
       f.properties.hist_normal_cfs = null;
@@ -3705,8 +3709,33 @@ flow_cfs = float(val["value"])
 print(f"Canal Diversion: {flow_cfs:,.0f} cfs at {val['dateTime']}")`;
       notes = "Verified at border via USGS #09522000 above Morelos Dam.";
     } else if (gaugeId) {
-      endpointUrl = `https://waterservices.usgs.gov/nwis/iv/?sites=${gaugeId}&parameterCd=00060&format=json`;
-      pyCode = `import requests
+      const isUsbrReach = gaugeId.startsWith('USBR') || (p.name && p.name.includes('USBR'));
+      const isCdssReach = gaugeId.endsWith('CO') || gaugeId.endsWith('TUNCO') || gaugeId.endsWith('DIVCO');
+      if (isUsbrReach) {
+        endpointUrl = "https://www.usbr.gov/lc/region/g4000/hourly/hourly.html";
+        pyCode = `import requests
+
+# USBR Lower Colorado River Operations Teletype
+url = "https://www.usbr.gov/lc/region/g4000/hourly/hourly.html"
+res = requests.get(url, timeout=10)
+# Managed hydroelectric release parsed from USBR RiverOps teletype
+print(f"${cleanReachName}: Hydroelectric release from USBR Lower Colorado Operations")`;
+        notes = "Managed dam release parsed from USBR Lower Colorado River Operations hourly teletype.";
+      } else if (isCdssReach) {
+        endpointUrl = `https://dwr.state.co.us/Tools/Stations?station=${encodeURIComponent(gaugeId)}`;
+        pyCode = `import requests
+
+# Colorado DWR / CDSS Surface Water REST API
+url = "https://dwr.state.co.us/Rest/GET/api/v2/surfacewater/surfacewatertsday/"
+params = {
+    "format": "json",
+    "stationNum": "${gaugeId}"
+}
+res = requests.get(url, params=params, timeout=10).json()`;
+        notes = "Colorado Division of Water Resources instantaneous surface water telemetry.";
+      } else {
+        endpointUrl = `https://waterservices.usgs.gov/nwis/iv/?sites=${gaugeId}&parameterCd=00060&format=json`;
+        pyCode = `import requests
 
 # USGS NWIS Instantaneous Values (IV) API
 url = "https://waterservices.usgs.gov/nwis/iv/"
@@ -3719,7 +3748,8 @@ res = requests.get(url, params=params, timeout=10).json()
 val = res["value"]["timeSeries"][0]["values"][0]["value"][-1]
 flow_cfs = float(val["value"])
 print(f"${cleanReachName}: {flow_cfs:,.0f} cfs at {val['dateTime']}")`;
-      notes = `Discharge indexed from USGS gage #${gaugeId}.`;
+        notes = `Discharge indexed from USGS gage #${gaugeId}.`;
+      }
     } else {
       pyCode = `# Reach Hydrology: Mass-Balance Network Routing
 reach_flow_cfs = ${Number(p.flow_cfs || 0)}
@@ -3729,7 +3759,7 @@ print(f"${cleanReachName} Calculated Flow: {reach_flow_cfs:,.0f} cfs")`;
 
     const popupHtml = formatTabbedPopup({
       dataHtml,
-      codeTitle: gaugeId ? `USGS Reach #${gaugeId}` : cleanReachName,
+      codeTitle: gaugeId ? (gaugeId.startsWith('USBR') ? `USBR Reach #${gaugeId}` : (gaugeId.endsWith('CO') ? `CDSS Reach #${gaugeId}` : `USGS Reach #${gaugeId}`)) : cleanReachName,
       endpointUrl,
       pythonCode: pyCode,
       notes
@@ -4506,10 +4536,33 @@ function formatGaugePopup(s) {
     `;
   }
 
+  const portal = getPortalInfo(s);
+  const isUsbr = s.id.startsWith('USBR') || s.provider === 'USBR' || (s.name && s.name.includes('USBR'));
+  const isCdss = s.id.endsWith('CO') || s.id.endsWith('TUNCO') || s.id.endsWith('DIVCO') || s.provider === 'CDWR';
+  
+  let portalUrl = portal ? portal.url : null;
+  if (!portalUrl) {
+    if (/^\d{8}$/.test(s.id)) {
+      portalUrl = `https://waterdata.usgs.gov/monitoring-location/${s.id}/#parameterCode=00060`;
+    } else if (isUsbr) {
+      portalUrl = 'https://www.usbr.gov/lc/region/g4000/hourly/hourly.html';
+    } else if (isCdss) {
+      portalUrl = `https://dwr.state.co.us/Tools/Stations?station=${encodeURIComponent(s.id)}`;
+    } else {
+      portalUrl = 'https://waterdata.usgs.gov/nwis';
+    }
+  }
+
+  const typeBadge = isUsbr
+    ? '<span style="font-size:9.5px; font-weight:700; color:#065f46; background:#d1fae5; border:1px solid #a7f3d0; padding:1px 5px; border-radius:2px;">USBR Dam Release</span>'
+    : (isCdss
+        ? '<span style="font-size:9.5px; font-weight:700; color:#9a3412; background:#ffedd5; border:1px solid #fed7aa; padding:1px 5px; border-radius:2px;">CDSS Diversion Tunnel</span>'
+        : '<span style="font-size:9.5px; font-weight:700; color:#0369a1; background:#e0f2fe; padding:1px 5px; border-radius:2px;">USGS Gage</span>');
+
   const dataHtml = `
     <div style="padding: 2px;">
       <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
-        <span style="font-size:9.5px; font-weight:700; color:#0369a1; background:#e0f2fe; padding:1px 5px; border-radius:2px;">USGS Gage</span>
+        ${typeBadge}
         ${isLeesFerry ? '<span style="font-size:9.5px; font-weight:700; color:#0369a1; background:#e0f2fe; border: 1px solid #bae6fd; padding:1px 5px; border-radius:2px;">1922 Compact Divide</span>' : ''}
       </div>
       <strong style="font-size:13px; color:#0f172a; line-height:1.3; display:block;">${s.name}</strong>
@@ -4519,14 +4572,52 @@ function formatGaugePopup(s) {
       </div>
       ${healthBadgeHtml}
       <div style="font-size:11px; color:#475569; line-height:1.45;">
-        <strong>Station ID:</strong> <a href="https://waterdata.usgs.gov/monitoring-location/${s.id}/#parameterCode=00060" target="_blank" rel="noopener" style="color:#0284c7; text-decoration:none; font-weight:600;">#${s.id} ↗</a><br>
+        <strong>Station ID:</strong> <a href="${portalUrl}" target="_blank" rel="noopener" style="color:#0284c7; text-decoration:none; font-weight:600;">#${s.id} ↗</a><br>
         <strong>Measured:</strong> ${formatTimestamp(s.timestamp)}
       </div>
+      ${portal ? `
+      <div style="margin-top:6px; padding-top:4px; border-top:1px solid #e2e8f0; font-size:10.5px;">
+        <span style="color:#64748b;">Authoritative Source:</span> 
+        <a href="${portalUrl}" target="_blank" rel="noopener" style="color:#0284c7; text-decoration:none; font-weight:600;">${portal.name} ↗</a>
+      </div>` : ''}
     </div>
   `;
 
   const cleanName = (s.name || '').replace(/["\\]/g, '');
-  const pyCode = `import requests
+  let pyCode = '';
+  let codeTitle = '';
+  let endpointUrl = '';
+  let notes = '';
+
+  if (isUsbr) {
+    codeTitle = `USBR Operations #${s.id}`;
+    endpointUrl = "https://www.usbr.gov/lc/region/g4000/hourly/hourly.html";
+    pyCode = `import requests
+
+# USBR Lower Colorado River Operations Teletype
+url = "https://www.usbr.gov/lc/region/g4000/hourly/hourly.html"
+res = requests.get(url, timeout=10)
+# Managed hydroelectric release parsed hourly from the USBR RiverOps teletype table.
+print(f"Station: ${cleanName}")
+print(f"Authoritative Portal: {url}")`;
+    notes = "Hourly hydroelectric releases parsed from USBR Lower Colorado River Operations teletype table.";
+  } else if (isCdss) {
+    codeTitle = `CDSS Station #${s.id}`;
+    endpointUrl = `https://dwr.state.co.us/Tools/Stations?station=${encodeURIComponent(s.id)}`;
+    pyCode = `import requests
+
+# Colorado DWR / CDSS Surface Water REST API
+url = "https://dwr.state.co.us/Rest/GET/api/v2/surfacewater/surfacewatertsday/"
+params = {
+    "format": "json",
+    "stationNum": "${s.id}"
+}
+res = requests.get(url, params=params, timeout=10).json()`;
+    notes = "Colorado Division of Water Resources instantaneous surface water telemetry.";
+  } else {
+    codeTitle = `USGS Gauge #${s.id}`;
+    endpointUrl = `https://waterservices.usgs.gov/nwis/iv/?sites=${s.id}&parameterCd=00060&format=json`;
+    pyCode = `import requests
 
 # USGS Instantaneous Values (IV) REST API
 url = "https://waterservices.usgs.gov/nwis/iv/"
@@ -4540,13 +4631,15 @@ res = requests.get(url, params=params, timeout=10).json()
 val = res["value"]["timeSeries"][0]["values"][0]["value"][-1]
 flow_cfs = float(val["value"])
 print(f"Discharge: {flow_cfs:,.0f} cfs at {val['dateTime']}")`;
+    notes = "Parameter 00060 = Discharge (cfs). Data refreshed every 15–60 minutes.";
+  }
 
   return formatTabbedPopup({
     dataHtml,
-    codeTitle: `USGS Gauge #${s.id}`,
-    endpointUrl: `https://waterservices.usgs.gov/nwis/iv/?sites=${s.id}&parameterCd=00060&format=json`,
+    codeTitle,
+    endpointUrl,
     pythonCode: pyCode,
-    notes: "Parameter 00060 = Discharge (cfs). Data refreshed every 15–60 minutes."
+    notes
   });
 }
 
@@ -5208,8 +5301,8 @@ function updateSidebar(metrics) {
   }
 
   // Front Range Summary
-  const frTotalCap = frontRangeRes.reduce((sum, r) => sum + (r.capacity_af || 0), 0);
-  const frTotalStorage = frontRangeRes.reduce((sum, r) => sum + (r.storage_af || 0), 0);
+  const frTotalCap = frontRangeRes.reduce((sum, r) => sum + (Number(r.capacity_af) || (r.storage_af && r.capacity_pct ? (r.storage_af / (r.capacity_pct / 100)) : 0) || 0), 0);
+  const frTotalStorage = frontRangeRes.reduce((sum, r) => sum + (Number(r.storage_af) || 0), 0);
   const frPct = frTotalCap > 0 ? ((frTotalStorage / frTotalCap) * 100).toFixed(1) : "45.0";
 
   const frBadgeElem = document.getElementById("fr-storage-badge");
@@ -5222,7 +5315,11 @@ function updateSidebar(metrics) {
 
   const frSummaryElem = document.getElementById("fr-storage-summary");
   if (frSummaryElem) {
-    frSummaryElem.innerHTML = `Total West Slope Storage: <strong>${Math.round(frTotalStorage / 1e3).toLocaleString()}k AF</strong> of ${Math.round(frTotalCap / 1e3).toLocaleString()}k AF Capacity`;
+    if (frTotalCap > 0) {
+      frSummaryElem.innerHTML = `Total West Slope Storage: <strong>${Math.round(frTotalStorage / 1e3).toLocaleString()}k AF</strong> of ${Math.round(frTotalCap / 1e3).toLocaleString()}k AF Capacity`;
+    } else {
+      frSummaryElem.innerHTML = `Headwater Storage &bull; West Slope Trans-Mountain Sources`;
+    }
   }
 
   const renderResCardList = (containerId, list) => {
@@ -5373,11 +5470,11 @@ window.openDedicatedLedger = function() {
 
 function getTraySentinelTier(node) {
   if (node.id === "09380000") {
-    return { label: "Compact Sentinel", isSentinel: true, badge: "background:#e0e7ff; color:#3730a3; border:1px solid #c7d2fe; font-weight:800;" };
+    return { label: "1922 Compact Point", isSentinel: true, badge: "background:#e0e7ff; color:#3730a3; border:1px solid #c7d2fe; font-weight:800;" };
   }
   const basinSentinels = ['09095500', '09070500', '09163500', '09180500', '09234500', '09260050', '09261000', '09315000', '09152500', '09180000', '09379500', '09421500', 'USBR_HOOVER', 'USBR-HOOVER', '09423000', 'USBR_DAVIS', 'USBR-DAVIS', '09427520', 'USBR_PARKER', 'USBR-PARKER', '09429100', '09429500'];
   if (basinSentinels.includes(node.id)) {
-    return { label: "Basin Sentinel", isSentinel: true, badge: "background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd; font-weight:700;" };
+    return { label: "Key Reference Gage", isSentinel: true, badge: "background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd; font-weight:700;" };
   }
   if (node.type === 'diversion_tunnel') {
     return { label: "Export Tunnel", isSentinel: false, badge: "background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0; font-weight:700;" };
@@ -6336,7 +6433,15 @@ function toggleCardCollapse(cardId, bodyId, iconId) {
     body.style.display = isHidden ? "flex" : "none";
   }
   if (card) card.classList.toggle("collapsed", !isHidden);
-  if (icon) icon.style.transform = isHidden ? "rotate(0deg)" : "rotate(-90deg)";
+  if (icon) {
+    icon.style.transform = "none";
+    const svg = icon.querySelector("svg");
+    if (svg) {
+      // isHidden: true means it was collapsed and is now OPEN -> Up arrow to close
+      // isHidden: false means it was open and is now CLOSED -> Down arrow to expand
+      svg.style.transform = isHidden ? "rotate(180deg)" : "rotate(0deg)";
+    }
+  }
 }
 
 function toggleLayerPanelCollapse() {
@@ -6628,7 +6733,7 @@ function initTrackballNavigation() {
       map.setPitch(newPitch);
 
       // Horizontal drag orbits camera bearing
-      const newBearing = (startBearing + deltaX * 0.55) % 360;
+      const newBearing = (startBearing - deltaX * 0.55) % 360;
       map.setBearing(newBearing);
 
       window.updateTrackball();
@@ -6640,7 +6745,7 @@ function initTrackballNavigation() {
         hasMoved = true;
       }
 
-      map.setBearing((startBearing + delta) % 360);
+      map.setBearing((startBearing - delta) % 360);
       window.updateTrackball();
     }
   });

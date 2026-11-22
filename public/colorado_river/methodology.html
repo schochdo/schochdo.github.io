@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Architecture & Computational Methodology — Colorado River Basin Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Editorial Design Standard (Edward Tufte / NYT Restrained Palette) -->
+  <link rel="stylesheet" href="editorial.css">
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #f5f2eb;
+      color: #0f172a;
+    }
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum";
+    }
+    code, pre {
+      font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+    .method-card {
+      background: #ffffff;
+      border: 1px solid #d6d3d1;
+      border-radius: 2px;
+      transition: border-color 0.15s ease;
+    }
+    .method-card:hover {
+      border-color: #64748b;
+    }
+    .anchor-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 2px;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      color: #334155;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .anchor-pill:hover {
+      background: #ffffff;
+      border-color: #64748b;
+      color: #0f172a;
+    }
+    .flow-badge {
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 2px;
+    }
+    body.in-iframe #btn-back-dashboard {
+      display: none !important;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col p-3 md:p-6">
+  <script>
+    if (window.self !== window.top) {
+      document.body.classList.add('in-iframe');
+    }
+  </script>
+
+  <!-- Compact Standard Header -->
+  <header class="flex flex-wrap items-center justify-between gap-2 pb-2 mb-4 border-b border-stone-300">
+    <div>
+      <h1 class="text-lg md:text-xl font-black text-slate-900 tracking-tight leading-none">Architecture &amp; Methodology</h1>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-1.5">
+      <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mr-1">Contents:</span>
+      <a href="#sec-tech-stack" class="anchor-pill">1. Tech Stack</a>
+      <a href="#sec-serverless-architecture" class="anchor-pill">2. Serverless</a>
+      <a href="#sec-sqlite-database" class="anchor-pill">3. SQLite</a>
+      <a href="#sec-hybrid-hydrology" class="anchor-pill">4. Live Feeds</a>
+      <a href="#sec-notebooks" class="anchor-pill">5. Notebooks</a>
+      <a id="btn-back-dashboard" href="index.html" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold rounded-[2px] bg-slate-900 hover:bg-slate-800 text-white transition ml-1">
+        <span>← Back</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Content Grid -->
+  <main class="space-y-6 flex-1">
+
+    <!-- ================================================================ -->
+    <!-- SECTION 1: ZERO-FRAMEWORK TECH STACK                            -->
+    <!-- ================================================================ -->
+    <section id="sec-tech-stack" class="method-card p-5 md:p-6 scroll-mt-6">
+      <div class="border-b border-slate-200 pb-3 mb-4">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-[1px] bg-sky-700"></span>
+          <h2 class="text-base md:text-lg font-black text-slate-900 tracking-tight">1. Modern Zero-Framework Tech Stack</h2>
+        </div>
+        <p class="text-xs text-slate-500 mt-0.5">Zero node runtimes, zero bundlers, and zero framework overhead in production</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+        <!-- Client Architecture -->
+        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-[2px] space-y-2">
+          <div class="flex items-center justify-between">
+            <h3 class="font-bold text-slate-900 text-sm">Frontend Architecture</h3>
+            <span class="flow-badge bg-blue-100 text-blue-800 border border-blue-200">100% Vanilla</span>
+          </div>
+          <p class="text-slate-600 leading-relaxed">
+            Built entirely in <strong>Vanilla JavaScript (ES6+)</strong>, semantic HTML5, and Tailwind CSS. The platform deliberately avoids monolithic frameworks (React, Angular, Vue) and production bundlers (Webpack, Vite), eliminating dependency drift, breaking ecosystem updates, and bloat.
+          </p>
+          <ul class="space-y-1 text-slate-700 font-mono text-[11px] pt-1 border-t border-slate-200">
+            <li>• Bundle Size: 0 KB (Zero npm runtime)</li>
+            <li>• DOM Execution: Native browser API</li>
+            <li>• Performance: 60 FPS WebGL &amp; Canvas</li>
+          </ul>
+        </div>
+
+        <!-- Specialized Visualization Engines -->
+        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-[2px] space-y-2">
+          <div class="flex items-center justify-between">
+            <h3 class="font-bold text-slate-900 text-sm">Visualization Engines</h3>
+            <span class="flow-badge bg-emerald-100 text-emerald-800 border border-emerald-200">Multi-Engine</span>
+          </div>
+          <p class="text-slate-600 leading-relaxed">
+            Each interface view uses the optimal specialized rendering engine matched to its domain physics:
+          </p>
+          <ul class="space-y-1.5 text-slate-700 text-[11px] pt-1 border-t border-slate-200">
+            <li><strong class="text-sky-800">MapLibre GL JS v4.7.1:</strong> WebGL 3D terrain elevation, USGS 3DEP topography, and 83 streamflow reaches.</li>
+            <li><strong class="text-emerald-800">D3.js v7:</strong> Flow-proportional mass-balance Sankey network closing at exact 14.90 MAF.</li>
+            <li><strong class="text-indigo-800">Chart.js v4:</strong> Responsive 365-day hydrographs, seasonal heartbeats, and 104-year Compact timelines.</li>
+          </ul>
+        </div>
+
+        <!-- Ingestion & Data Pipelines -->
+        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-[2px] space-y-2">
+          <div class="flex items-center justify-between">
+            <h3 class="font-bold text-slate-900 text-sm">Data Pipeline &amp; Storage</h3>
+            <span class="flow-badge bg-purple-100 text-purple-800 border border-purple-200">Python + SQLite</span>
+          </div>
+          <p class="text-slate-600 leading-relaxed">
+            Data extraction, geospatial network topology, and numerical aggregations are powered by standard scientific Python libraries (<code class="inline-code">requests</code>, <code class="inline-code">sqlite3</code>, <code class="inline-code">pandas</code>, <code class="inline-code">scipy</code>). All data resides in a local ACID-compliant relational SQLite database.
+          </p>
+          <ul class="space-y-1 text-slate-700 font-mono text-[11px] pt-1 border-t border-slate-200">
+            <li>• Database: SQLite 3 (<code class="inline-code">colorado_river_basin.db</code>)</li>
+            <li>• Automation: Scheduled GitHub Actions</li>
+            <li>• Verification: Headless Chrome CDP tests</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- SECTION 2: SERVERLESS STRATEGY & GITHUB ACTIONS                 -->
+    <!-- ================================================================ -->
+    <section id="sec-serverless-architecture" class="method-card p-5 md:p-6 scroll-mt-6">
+      <div class="border-b border-slate-200 pb-3 mb-4">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-[1px] bg-emerald-700"></span>
+          <h2 class="text-base md:text-lg font-black text-slate-900 tracking-tight">2. Serverless Strategy &amp; GitHub Actions (Why No 24/7 Server?)</h2>
+        </div>
+        <p class="text-xs text-slate-500 mt-0.5">Eliminating fragile sleeping containers and infrastructure overhead via static edge distribution</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs">
+        <div class="space-y-3">
+          <h3 class="font-bold text-slate-900 text-sm">The 24/7 Server Dilemma vs. Static Edge Architecture</h3>
+          <p class="text-slate-600 leading-relaxed">
+            Traditional hydrologic portals run 24/7 server processes (Flask, Django, Node.js) on virtual machines or containers (e.g. AWS EC2, Heroku). In practice, this architectural choice creates four severe engineering failure modes:
+          </p>
+          <div class="space-y-2 text-slate-700">
+            <div class="p-2.5 bg-red-50/70 border border-red-200 rounded-[2px]">
+              <strong class="text-red-900 block font-bold">1. Cold-Start Latency &amp; Sleeping Dynos:</strong>
+              When traffic pauses, cloud containers spin down. The next visitor experiences 15–30 second cold starts while the operating system and Python environment boot.
+            </div>
+            <div class="p-2.5 bg-red-50/70 border border-red-200 rounded-[2px]">
+              <strong class="text-red-900 block font-bold">2. Security Attack Surface:</strong>
+              Exposing a live Python web server to the public internet requires continuous security patching, SSL certificate rotation, SSH hardening, and DDoS mitigation.
+            </div>
+            <div class="p-2.5 bg-red-50/70 border border-red-200 rounded-[2px]">
+              <strong class="text-red-900 block font-bold">3. Hosting Costs &amp; Downtime:</strong>
+              A 24/7 dedicated server generates recurring monthly bills even when zero users are viewing data, and crashes immediately if background memory leaks occur.
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <h3 class="font-bold text-slate-900 text-sm">The Decoupled Static Edge Solution</h3>
+          <p class="text-slate-600 leading-relaxed">
+            Instead of running a live server, this platform compiles all hydrologic records into versioned, static JSON contracts distributed via <strong>GitHub Pages</strong>. This provides:
+          </p>
+          <div class="space-y-2 text-slate-700">
+            <div class="p-2.5 bg-emerald-50/70 border border-emerald-200 rounded-[2px]">
+              <strong class="text-emerald-900 block font-bold">1. Instant Sub-50ms Global Loading:</strong>
+              Static assets are cached at Fastly CDN edge nodes across the world. Zero cold starts, zero backend query latency, and 100% uptime.
+            </div>
+            <div class="p-2.5 bg-emerald-50/70 border border-emerald-200 rounded-[2px]">
+              <strong class="text-emerald-900 block font-bold">2. Twice-Daily Scheduled GitHub Action (06:00 &amp; 18:00 UTC):</strong>
+              An automated CI/CD workflow (<code class="inline-code">.github/workflows/update_data.yml</code>) triggers twice every day. It spins up an ephemeral Ubuntu runner, executes the Python ingestion scripts, queries USGS/USBR/CDSS APIs, refreshes the SQLite database, validates mass-balance invariants, updates the static JSON files, and commits the updates directly to GitHub, triggering instant zero-downtime redeployment.
+            </div>
+            <div class="p-2.5 bg-emerald-50/70 border border-emerald-200 rounded-[2px]">
+              <strong class="text-emerald-900 block font-bold">3. Zero Operating Cost &amp; Infinite Scaling:</strong>
+              Because only static files are served, the dashboard can handle 10 simultaneous visitors or 100,000 visitors without incurring a dime in hosting expenses or slowing down.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- SECTION 3: RELATIONAL SQLITE BASIN DATABASE                      -->
+    <!-- ================================================================ -->
+    <section id="sec-sqlite-database" class="method-card p-5 md:p-6 scroll-mt-6">
+      <div class="border-b border-slate-200 pb-3 mb-4">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-[1px] bg-purple-700"></span>
+          <h2 class="text-base md:text-lg font-black text-slate-900 tracking-tight">3. The Relational SQLite Basin Database (<code class="text-sm font-mono text-purple-900">colorado_river_basin.db</code>)</h2>
+        </div>
+        <p class="text-xs text-slate-500 mt-0.5">Structured relational persistence bridging messy raw government feeds with lightweight client JSON contracts</p>
+      </div>
+
+      <div class="space-y-4 text-xs">
+        <p class="text-slate-600 leading-relaxed">
+          The project utilizes an embedded relational <strong>SQLite database</strong> (<code class="inline-code">data/colorado_river_basin.db</code>). Flat files alone cannot enforce data types, maintain foreign key integrity across multiple federal agencies, or calculate multi-year rolling aggregates efficiently. SQLite delivers full ACID compliance, zero setup, and millisecond query execution within a single 2.5 MB portable file.
+        </p>
+
+        <!-- Database Schema Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div class="p-3 bg-slate-50 border border-slate-200 rounded-[2px] space-y-1.5">
+            <div class="flex items-center justify-between">
+              <strong class="text-slate-900 font-mono text-xs">stations</strong>
+              <span class="flow-badge bg-sky-100 text-sky-800">92 Records</span>
+            </div>
+            <p class="text-[11px] text-slate-600">
+              Metadata and current readings for all 92 basin monitoring facilities (79 streamflow gages, 4 export tunnels, 4 conveyance canals, 11 storage reservoirs).
+            </p>
+            <div class="text-[10px] text-slate-500 font-mono pt-1 border-t border-slate-200">
+              Columns: station_id, name, type, reach_id, live_flow_cfs, normal_flow_cfs, health_pct, rbi_index, lat, lon
+            </div>
+          </div>
+
+          <div class="p-3 bg-slate-50 border border-slate-200 rounded-[2px] space-y-1.5">
+            <div class="flex items-center justify-between">
+              <strong class="text-slate-900 font-mono text-xs">reservoirs</strong>
+              <span class="flow-badge bg-blue-100 text-blue-800">11 Facilities</span>
+            </div>
+            <p class="text-[11px] text-slate-600">
+              Live storage volumes, full structural capacity, active water surface elevation, and capacity percentage across all 11 reservoirs (System + Front Range).
+            </p>
+            <div class="text-[10px] text-slate-500 font-mono pt-1 border-t border-slate-200">
+              Columns: reservoir_id, name, current_storage_af, total_capacity_af, elevation_ft, capacity_pct, category, operator
+            </div>
+          </div>
+
+          <div class="p-3 bg-slate-50 border border-slate-200 rounded-[2px] space-y-1.5">
+            <div class="flex items-center justify-between">
+              <strong class="text-slate-900 font-mono text-xs">annual_lees_ferry</strong>
+              <span class="flow-badge bg-amber-100 text-amber-800">104 Years</span>
+            </div>
+            <p class="text-[11px] text-slate-600">
+              Annual historical records (1922–2026) documenting natural virgin runoff, actual physical delivery past Lees Ferry, and statutory 10-year rolling Compact compliance.
+            </p>
+            <div class="text-[10px] text-slate-500 font-mono pt-1 border-t border-slate-200">
+              Columns: water_year, natural_flow_maf, actual_delivery_maf, rolling_10yr_maf, deficit_surplus_maf
+            </div>
+          </div>
+
+          <div class="p-3 bg-slate-50 border border-slate-200 rounded-[2px] space-y-1.5">
+            <div class="flex items-center justify-between">
+              <strong class="text-slate-900 font-mono text-xs">rbi_flashiness</strong>
+              <span class="flow-badge bg-emerald-100 text-emerald-800">Tributaries</span>
+            </div>
+            <p class="text-[11px] text-slate-600">
+              Mathematical Richards-Baker Flashiness Index computations measuring day-to-day hydrograph volatility relative to total cumulative discharge across all major rivers.
+            </p>
+            <div class="text-[10px] text-slate-500 font-mono pt-1 border-t border-slate-200">
+              Columns: station_id, river_name, rbi_index, regime_cluster, drainage_sqmi, annual_volume_maf
+            </div>
+          </div>
+        </div>
+
+        <!-- Static JSON Export Contracts -->
+        <div class="mt-4 pt-3 border-t border-slate-200">
+          <h4 class="font-bold text-slate-900 mb-2">The 4 Static JSON Export Contracts</h4>
+          <p class="text-slate-600 mb-3">
+            Python scripts compile SQL query views from SQLite into four decoupled, static JSON payloads placed in <code class="inline-code">web/data/</code>:
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-2 text-[11px]">
+            <div class="p-2 bg-white border border-slate-200 rounded-[2px]">
+              <strong class="text-slate-900 block font-mono">latest_metrics.json</strong>
+              <span class="text-slate-500">~45 KB • Live flow rates, storage volumes, and flow health tiers for all 92 stations.</span>
+            </div>
+            <div class="p-2 bg-white border border-slate-200 rounded-[2px]">
+              <strong class="text-slate-900 block font-mono">river_network.json</strong>
+              <span class="text-slate-500">~120 KB • Topological DAG connecting 83 reaches with flow scaling weights.</span>
+            </div>
+            <div class="p-2 bg-white border border-slate-200 rounded-[2px]">
+              <strong class="text-slate-900 block font-mono">station_hierarchy.json</strong>
+              <span class="text-slate-500">~35 KB • Sentinel classifications, priority gaging tiers, and coordinates.</span>
+            </div>
+            <div class="p-2 bg-white border border-slate-200 rounded-[2px]">
+              <strong class="text-slate-900 block font-mono">seasonal_regimes.json</strong>
+              <span class="text-slate-500">~180 KB • 365-day hydrograph curves and 104-year Compact balance timelines.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- SECTION 4: HYBRID REAL-TIME HYDROLOGY                           -->
+    <!-- ================================================================ -->
+    <section id="sec-hybrid-hydrology" class="method-card p-5 md:p-6 scroll-mt-6">
+      <div class="border-b border-slate-200 pb-3 mb-4">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-[1px] bg-sky-600"></span>
+          <h2 class="text-base md:text-lg font-black text-slate-900 tracking-tight">4. Hybrid Real-Time Hydrology: How Live Data Works Without a 24/7 Server</h2>
+        </div>
+        <p class="text-xs text-slate-500 mt-0.5">Two-tier client-side fetch architecture ensuring live telemetry with zero-failure fallback</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs">
+        <div class="space-y-3">
+          <h3 class="font-bold text-slate-900 text-sm">Tier 1: Client-Side Direct REST Queries (CORS-Enabled)</h3>
+          <p class="text-slate-600 leading-relaxed">
+            When a user visits the interactive map or facility ledger, the browser executes a direct client-side fetch (<code class="inline-code">fetch()</code> in <code class="inline-code">web/app.js</code>) against the official USGS NWIS REST API (<code class="inline-code">waterservices.usgs.gov</code>):
+          </p>
+          <div class="p-3 bg-slate-50 border border-slate-300 rounded-[2px] font-mono text-[11px] space-y-1">
+            <div class="text-slate-500">// Direct client-side browser query (No backend proxy required)</div>
+            <div class="text-sky-800">const url = `https://waterservices.usgs.gov/nwis/iv/?sites=${sites}&amp;parameterCd=00060,00065&amp;format=json`;</div>
+            <div class="text-slate-700">const response = await fetch(url);</div>
+            <div class="text-slate-700">const nwisJson = await response.json();</div>
+          </div>
+          <p class="text-slate-600 leading-relaxed">
+            Because the USGS NWIS REST service officially supports Cross-Origin Resource Sharing (CORS), the user's web browser receives live 15-minute telemetry directly from government servers without routing through any intermediary backend server.
+          </p>
+        </div>
+
+        <div class="space-y-3">
+          <h3 class="font-bold text-slate-900 text-sm">Tier 2: Graceful Static Fallback (Zero-Break Resilience)</h3>
+          <p class="text-slate-600 leading-relaxed">
+            What happens if the user is offline, the federal API has scheduled maintenance, or strict government rate-limiting blocks the client?
+          </p>
+          <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-[2px] space-y-2">
+            <strong class="text-emerald-950 font-bold block">The Resilient Fallback Cascade:</strong>
+            <p class="text-emerald-900 leading-relaxed">
+              In <code class="inline-code">web/app.js</code>, if the live USGS fetch encounters a network timeout, HTTP error, or CORS rejection, the app silently and seamlessly falls back to loading <code class="inline-code">web/data/latest_metrics.json</code> (the snapshot updated twice daily by GitHub Actions).
+            </p>
+            <p class="text-emerald-900 leading-relaxed font-semibold">
+              The user interface never crashes, displays zero broken error banners, and always provides a 100% operational hydrologic dataset.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- SECTION 5: REPRODUCIBLE RESEARCH NOTEBOOKS                       -->
+    <!-- ================================================================ -->
+    <section id="sec-notebooks" class="method-card p-5 md:p-6 scroll-mt-6">
+      <div class="border-b border-slate-200 pb-3 mb-4">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-[1px] bg-indigo-700"></span>
+            <h2 class="text-base md:text-lg font-black text-slate-900 tracking-tight">5. Reproducible Research Notebook (Jupyter)</h2>
+          </div>
+          <span class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-indigo-50 text-indigo-800 border border-indigo-200 rounded-[2px]">End-to-End Python</span>
+        </div>
+        <p class="text-xs text-slate-500 mt-0.5">Complete analytical workflow in a single executable notebook</p>
+      </div>
+
+      <div class="space-y-4 text-xs">
+        <div class="p-4 bg-[#f7f4ee] border border-[#cfc8ba] rounded-[2px] flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="flow-badge bg-[#2b5c8f] text-white font-bold">Unified Notebook</span>
+              <strong class="text-sm font-black text-slate-900">colorado_river_analysis.ipynb</strong>
+            </div>
+            <p class="text-slate-600 max-w-3xl leading-relaxed">
+              Single self-contained notebook covering geospatial topology, live USGS telemetry, SQLite analytics, 104-year Compact accounting, reservoir storage depletion, tributary travel times, and Richards-Baker Flashiness / K-Means flow regimes.
+            </p>
+          </div>
+          <div class="flex items-center gap-2 shrink-0 flex-wrap">
+            <a href="notebooks/colorado_river_analysis.html" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 bg-[#2b5c8f] hover:bg-[#1e436a] text-white font-bold rounded-[2px] transition shadow-xs">
+              View Rendered HTML ↗
+            </a>
+            <a href="notebooks/colorado_river_analysis.ipynb" download class="px-2.5 py-1.5 bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 font-semibold rounded-[2px] transition">
+              Download .ipynb
+            </a>
+            <a href="ai_complete_prompt_archive.html" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1.5 bg-stone-100 hover:bg-stone-200 text-stone-800 border border-[#b8ae9c] font-semibold rounded-[2px] transition">
+              AI Prompt Archive ↗
+            </a>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div class="p-3 bg-[#faf8f4] border border-[#e2dcd0] rounded-[2px]">
+            <div class="font-bold text-slate-900 mb-1">Sections 1–4: Topology, Live Telemetry &amp; SQLite</div>
+            <ul class="text-[11px] text-slate-600 space-y-1 list-disc list-inside">
+              <li>Dimensional framework (<code class="inline-code">cfs</code> vs. <code class="inline-code">MAF/yr</code>) &amp; confluence rules</li>
+              <li><code class="inline-code">river_network.json</code> topology &amp; Cataract Canyon re-emergence</li>
+              <li>Live USGS NWIS Lees Ferry ingestion &amp; mainstem reach deltas</li>
+              <li>SQLite schema (<code class="inline-code">data/colorado_river_basin.db</code>) &amp; Compact era queries</li>
+            </ul>
+          </div>
+          <div class="p-3 bg-[#faf8f4] border border-[#e2dcd0] rounded-[2px]">
+            <div class="font-bold text-slate-900 mb-1">Sections 5–7: Deficits, Regimes &amp; JSON Contracts</div>
+            <ul class="text-[11px] text-slate-600 space-y-1 list-disc list-inside">
+              <li>1922–2025 Compact natural flow vs. 16.5 MAF statutory claims</li>
+              <li>Major reservoir storage capacity vs. current active pool buffer</li>
+              <li>Tributary travel lag times, RBI flashiness, &amp; K-Means (<span class="font-mono">k=4</span>)</li>
+              <li>360&times; volumetric proof (flash flood vs. sustained alpine snowmelt)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="mt-8 pt-4 border-t border-slate-300 text-xs text-slate-500 flex flex-wrap items-center justify-between gap-2">
+    <div>
+      Colorado River Basin • DAT1001
+    </div>
+  </footer>
+
+</body>
+</html>

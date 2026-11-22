@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Colorado River Basin: Gage & Facility Registry</title>
+  <title>Colorado River Basin: Monitoring Gages</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
   <style>
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background-color: #f8fafc;
+      background-color: #f5f2eb;
       color: #0f172a;
     }
     .tabular-nums {
@@ -59,26 +59,23 @@
 </head>
 <body class="min-h-screen flex flex-col">
 
-  <!-- Top Navigation Bar -->
-  <header class="bg-white border-b border-slate-200 px-4 sm:px-6 py-2.5 shadow-sm sticky top-0 z-20">
+  <!-- Compact Standard Header -->
+  <header class="bg-[#f5f2eb] border-b border-stone-300 px-4 sm:px-6 py-2.5 sticky top-0 z-20">
     <div class="w-full flex flex-wrap items-center justify-between gap-3">
       <div class="flex items-center gap-3">
-        <a id="btn-back-workspace" href="./" onclick="backToWorkspace(event)" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition border border-slate-300">
+        <a id="btn-back-workspace" href="./" onclick="backToWorkspace(event)" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[2px] bg-white hover:bg-stone-100 text-slate-700 text-xs font-semibold transition border border-stone-300">
           <span>← Back to Colorado River Basin</span>
         </a>
-        <div id="divider-workspace" class="h-4 w-px bg-slate-300"></div>
+        <div id="divider-workspace" class="h-4 w-px bg-stone-300"></div>
         <div>
-          <h1 class="text-sm sm:text-base font-bold text-slate-900 leading-tight">
-            Hydrologic Gage & Facility Registry
+          <h1 class="text-lg md:text-xl font-black text-slate-900 tracking-tight leading-none">
+            Gages
           </h1>
-          <p class="text-[11px] text-slate-500">
-            Real-time streamflow gages, trans-mountain diversion acoustic meters, and reservoir elevation sensors
-          </p>
         </div>
       </div>
 
       <div class="flex items-center gap-2">
-        <button id="refresh-btn" onclick="fetchData()" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[2px] bg-[#f1f5f9] hover:bg-white text-slate-800 text-xs font-semibold border border-[#94a3b8] transition">
+        <button id="refresh-btn" onclick="fetchData()" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[2px] bg-white hover:bg-stone-100 text-slate-800 text-xs font-semibold border border-stone-300 transition">
           <svg id="refresh-icon" class="w-3.5 h-3.5 text-slate-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <polyline points="23 4 23 10 17 10"></polyline>
             <polyline points="1 20 1 14 7 14"></polyline>
@@ -91,120 +88,154 @@
   </header>
 
   <!-- Main Body Content -->
-  <main class="w-full px-3 sm:px-5 py-3.5 flex-1 flex flex-col gap-3.5">
+  <main class="w-full px-3 sm:px-5 py-3.5 flex-1 flex flex-col gap-3">
 
-    <!-- Troubleshooting Controls: Search, Filters & View Mode -->
-    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-3.5">
-      <!-- Top Row: Hydrologic Category Pills & View Switcher -->
-      <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100">
-        <div class="flex flex-wrap items-center gap-1.5" id="category-pills">
-          <button onclick="setCategoryFilter('all')" id="pill-all" class="px-3 py-1 text-xs font-bold rounded-md bg-slate-900 text-white transition">
-            All Facilities (<span id="count-all">0</span>)
-          </button>
-          <button onclick="setCategoryFilter('compact')" id="pill-compact" class="px-3 py-1 text-xs font-semibold rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
-            1922 Compact Divide (<span id="count-compact">1</span>)
-          </button>
-          <button onclick="setCategoryFilter('sentinels')" id="pill-sentinels" class="px-3 py-1 text-xs font-semibold rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
-            Basin Sentinels (<span id="count-sentinels">0</span>)
-          </button>
-          <button onclick="setCategoryFilter('upper_mainstem')" id="pill-upper_mainstem" class="px-3 py-1 text-xs font-semibold rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
-            Upper Basin Mainstem &amp; Tributaries (<span id="count-upper">0</span>)
-          </button>
-          <button onclick="setCategoryFilter('lower_mainstem')" id="pill-lower_mainstem" class="px-3 py-1 text-xs font-semibold rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
-            Lower Basin Regulated Reaches (<span id="count-lower">0</span>)
-          </button>
-          <button onclick="setCategoryFilter('diversions')" id="pill-diversions" class="px-3 py-1 text-xs font-semibold rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
-            Tunnels &amp; Conveyance Canals (<span id="count-div">0</span>)
-          </button>
-          <button onclick="setCategoryFilter('reservoirs')" id="pill-reservoirs" class="px-3 py-1 text-xs font-semibold rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
-            Storage Reservoirs (<span id="count-res">0</span>)
-          </button>
-        </div>
-
-        <!-- View Mode & Database Export Controls -->
-        <div class="flex items-center gap-2 flex-wrap">
-          <div class="inline-flex rounded-[2px] bg-slate-100 p-0.5 border border-slate-300">
-            <button onclick="setViewMode('grouped')" id="btn-view-grouped" class="px-3 py-1 text-xs font-bold rounded-[2px] bg-white text-slate-900 transition">
-              Grouped by Reach
-            </button>
-            <button onclick="setViewMode('flat')" id="btn-view-flat" class="px-3 py-1 text-xs font-semibold rounded-[2px] text-slate-600 hover:text-slate-900 transition">
-              Flat Sortable
-            </button>
-          </div>
-          <button onclick="exportDatabaseCsv()" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-[2px] bg-white text-slate-800 border border-slate-300 hover:bg-slate-50 transition" title="Export full 98-facility database to CSV">
-            <svg class="w-3.5 h-3.5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-            <span>Export CSV</span>
-          </button>
-          <button onclick="exportDatabaseJson()" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-[2px] bg-white text-slate-800 border border-slate-300 hover:bg-slate-50 transition" title="Export full 98-facility database to JSON">
-            <span>Export JSON</span>
-          </button>
-          <button onclick="openSchemaModal()" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-[2px] bg-sky-50 text-sky-800 border border-sky-200 hover:bg-sky-100 transition" title="View Data Dictionary & Database Schema">
-            <span>Schema &amp; Dictionary</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Second Row: Search & Specific Attribute Filters -->
-      <div class="flex flex-wrap items-center justify-between gap-4">
-        <div class="flex flex-wrap items-center gap-3 flex-1 min-w-[280px]">
-          <div class="relative flex-1 min-w-[240px]">
+    <!-- Structured Telemetry Controls: 3-Tier Visual Hierarchy -->
+    <div class="bg-white rounded-[2px] border border-stone-300 shadow-xs flex flex-col divide-y divide-stone-200">
+      
+      <!-- Tier 1: Search & Global Utility Bar (View Mode & Data Exports) -->
+      <div class="p-3 flex flex-wrap items-center justify-between gap-3 bg-slate-50/60">
+        <!-- Search Input with Live Result Count -->
+        <div class="flex items-center gap-3 flex-1 min-w-[280px]">
+          <div class="relative flex-1 max-w-md">
             <input 
               type="text" 
               id="search-input" 
               placeholder="Search station name, USGS ID, river reach, notes..." 
-              class="w-full pl-9 pr-4 py-2 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:bg-white transition"
+              class="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-slate-300 rounded-[2px] focus:outline-none focus:ring-1 focus:ring-sky-600 focus:border-sky-600 transition"
               oninput="handleSearchChange()"
             />
-            <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
           </div>
-
-          <select id="type-filter" onchange="applyFilters()" class="text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500 font-medium">
-            <option value="all">All Facility Types</option>
-            <option value="streamflow">Streamflow (USGS NWIS)</option>
-            <option value="diversion_tunnel">Trans-Mountain Tunnel (CDSS)</option>
-            <option value="diversion_canal">Conveyance Canal (USGS/USBR)</option>
-            <option value="reservoir">Storage Reservoir (USBR/CDSS)</option>
-          </select>
-
-          <select id="hierarchy-filter" onchange="applyFilters()" class="text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500 font-medium">
-            <option value="all">All Sentinel Tiers</option>
-            <option value="compact_sentinel">Compact Sentinel (Lee Ferry)</option>
-            <option value="basin_sentinel">Basin Sentinels (Accounting Nodes)</option>
-            <option value="tributary_gage">Tributary Gages</option>
-            <option value="export_tunnel">Trans-Divide Tunnels</option>
-            <option value="conveyance_canal">Conveyance Canals</option>
-            <option value="storage_reservoir">Storage Reservoirs</option>
-          </select>
-
-          <select id="flashiness-filter" onchange="applyFilters()" class="text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500 font-medium">
-            <option value="all">All Flashiness Regimes</option>
-            <option value="Regulated">Regulated / Attenuated (RBI &lt; 0.020)</option>
-            <option value="Snowmelt">Snowmelt Baseflow (0.020–0.060)</option>
-            <option value="Flashy">Flash-Prone / Monsoon (≥ 0.060)</option>
-            <option value="Storage Buffer">Storage Buffers (Dams)</option>
-          </select>
-
-          <select id="health-filter" onchange="applyFilters()" class="text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500 font-medium">
-            <option value="all">All Flow Health Statuses</option>
-            <option value="abundant">Abundant (≥150% of Normal)</option>
-            <option value="normal">Normal (90–150% of Normal)</option>
-            <option value="below">Below Normal (50–90% of Normal)</option>
-            <option value="low">Low Flow (25–50% of Normal)</option>
-            <option value="critical">Critically Low (&lt;25% of Normal)</option>
-          </select>
+          <div class="text-[11px] text-slate-500 font-medium whitespace-nowrap">
+            Showing <span id="visible-count" class="font-bold text-slate-800">0</span> of <span id="total-count" class="font-bold text-slate-800">0</span> facilities
+          </div>
         </div>
 
-        <div class="text-xs text-slate-500 font-medium whitespace-nowrap">
-          Showing <span id="visible-count" class="font-bold text-slate-800">0</span> of <span id="total-count" class="font-bold text-slate-800">0</span> nodes
+        <!-- Table View & Export Actions -->
+        <div class="flex items-center gap-2.5 flex-wrap">
+          <!-- View Switcher -->
+          <div class="inline-flex rounded-[2px] bg-slate-100 p-0.5 border border-slate-300">
+            <button onclick="setViewMode('grouped')" id="btn-view-grouped" class="px-2.5 py-1 text-xs font-bold rounded-[2px] bg-white text-slate-900 shadow-xs transition">
+              Grouped by Reach
+            </button>
+            <button onclick="setViewMode('flat')" id="btn-view-flat" class="px-2.5 py-1 text-xs font-semibold rounded-[2px] text-slate-600 hover:text-slate-900 transition">
+              Flat Sortable
+            </button>
+          </div>
+
+          <div class="h-4 w-px bg-slate-300 hidden sm:block"></div>
+
+          <!-- Data Tools -->
+          <div class="flex items-center gap-1.5">
+            <button onclick="exportDatabaseCsv()" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-[2px] bg-white text-slate-800 border border-slate-300 hover:bg-slate-50 transition" title="Export full database to CSV">
+              <svg class="w-3.5 h-3.5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+              <span>Export CSV</span>
+            </button>
+            <button onclick="exportDatabaseJson()" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-[2px] bg-white text-slate-800 border border-slate-300 hover:bg-slate-50 transition" title="Export full database to JSON">
+              <span>Export JSON</span>
+            </button>
+            <button onclick="openSchemaModal()" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-[2px] bg-sky-50 text-sky-800 border border-sky-200 hover:bg-sky-100 transition" title="View Data Dictionary & Database Schema">
+              <span>Schema &amp; Dictionary</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tier 2: Primary Scope Ribbon (River Basins & Key Gauges) -->
+      <div class="px-3 py-2 flex items-center gap-2 overflow-x-auto bg-white">
+        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 shrink-0 select-none">Scope:</span>
+        <div class="flex items-center gap-1.5 shrink-0" id="category-pills">
+          <button onclick="setCategoryFilter('all')" id="pill-all" class="px-2.5 py-1 text-xs font-bold rounded-[2px] bg-slate-900 text-white transition">
+            All Facilities (<span id="count-all">0</span>)
+          </button>
+          <button onclick="setCategoryFilter('compact')" id="pill-compact" class="px-2.5 py-1 text-xs font-semibold rounded-[2px] bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200 transition">
+            1922 Compact Divide (<span id="count-compact">1</span>)
+          </button>
+          <button onclick="setCategoryFilter('sentinels')" id="pill-sentinels" class="px-2.5 py-1 text-xs font-semibold rounded-[2px] bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200 transition">
+            Key Streamgages (<span id="count-sentinels">0</span>)
+          </button>
+          <button onclick="setCategoryFilter('upper_mainstem')" id="pill-upper_mainstem" class="px-2.5 py-1 text-xs font-semibold rounded-[2px] bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200 transition">
+            Upper Basin (<span id="count-upper">0</span>)
+          </button>
+          <button onclick="setCategoryFilter('lower_mainstem')" id="pill-lower_mainstem" class="px-2.5 py-1 text-xs font-semibold rounded-[2px] bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200 transition">
+            Lower Basin (<span id="count-lower">0</span>)
+          </button>
+          <button onclick="setCategoryFilter('diversions')" id="pill-diversions" class="px-2.5 py-1 text-xs font-semibold rounded-[2px] bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200 transition">
+            Tunnels &amp; Canals (<span id="count-div">0</span>)
+          </button>
+          <button onclick="setCategoryFilter('reservoirs')" id="pill-reservoirs" class="px-2.5 py-1 text-xs font-semibold rounded-[2px] bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200 transition">
+            Storage Reservoirs (<span id="count-res">0</span>)
+          </button>
+        </div>
+      </div>
+
+      <!-- Tier 3: Secondary Multi-Attribute Filters Strip -->
+      <div class="px-3 py-2 flex flex-wrap items-center justify-between gap-2.5 bg-slate-50/70">
+        <div class="flex flex-wrap items-center gap-2 flex-1">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 shrink-0 select-none">Filter By:</span>
+          
+          <!-- Facility Type -->
+          <div class="relative">
+            <select id="type-filter" onchange="applyFilters()" class="text-xs bg-white border border-slate-300 rounded-[2px] pl-2 pr-6 py-1 text-slate-700 focus:outline-none focus:ring-1 focus:ring-sky-600 font-medium cursor-pointer">
+              <option value="all">Facility Type: All</option>
+              <option value="streamflow">Streamflow (USGS NWIS)</option>
+              <option value="diversion_tunnel">Trans-Mountain Tunnel (CDSS)</option>
+              <option value="diversion_canal">Conveyance Canal (USGS/USBR)</option>
+              <option value="reservoir">Storage Reservoir (USBR/CDSS)</option>
+            </select>
+          </div>
+
+          <!-- Gaging Priority Tier -->
+          <div class="relative">
+            <select id="hierarchy-filter" onchange="applyFilters()" class="text-xs bg-white border border-slate-300 rounded-[2px] pl-2 pr-6 py-1 text-slate-700 focus:outline-none focus:ring-1 focus:ring-sky-600 font-medium cursor-pointer">
+              <option value="all">Gaging Priority: All</option>
+              <option value="compact_sentinel">1922 Compact Point (Lees Ferry)</option>
+              <option value="basin_sentinel">Key Accounting Gages</option>
+              <option value="tributary_gage">Tributary Gages</option>
+              <option value="export_tunnel">Trans-Divide Tunnels</option>
+              <option value="conveyance_canal">Conveyance Canals</option>
+              <option value="storage_reservoir">Storage Reservoirs</option>
+            </select>
+          </div>
+
+          <!-- Flashiness Regime -->
+          <div class="relative">
+            <select id="flashiness-filter" onchange="applyFilters()" class="text-xs bg-white border border-slate-300 rounded-[2px] pl-2 pr-6 py-1 text-slate-700 focus:outline-none focus:ring-1 focus:ring-sky-600 font-medium cursor-pointer">
+              <option value="all">Flashiness (RBI): All</option>
+              <option value="Regulated">Regulated (RBI &lt; 0.020)</option>
+              <option value="Snowmelt">Snowmelt Baseflow (0.020–0.060)</option>
+              <option value="Flashy">Flashy / Monsoon (≥ 0.060)</option>
+              <option value="Storage Buffer">Storage Buffers (Dams)</option>
+            </select>
+          </div>
+
+          <!-- Flow Health Status -->
+          <div class="relative">
+            <select id="health-filter" onchange="applyFilters()" class="text-xs bg-white border border-slate-300 rounded-[2px] pl-2 pr-6 py-1 text-slate-700 focus:outline-none focus:ring-1 focus:ring-sky-600 font-medium cursor-pointer">
+              <option value="all">Flow Status: All</option>
+              <option value="abundant">Abundant (≥150% Normal)</option>
+              <option value="normal">Normal (90–150% Normal)</option>
+              <option value="below">Below Normal (50–90%)</option>
+              <option value="low">Low Flow (25–50%)</option>
+              <option value="critical">Critical (&lt;25%)</option>
+            </select>
+          </div>
+
+          <!-- Reset Button -->
+          <button onclick="resetAllFilters()" id="btn-reset-filters" style="display:none;" class="text-xs text-sky-700 hover:text-sky-900 font-bold hover:underline cursor-pointer pl-1 inline-flex items-center gap-1">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            <span>Clear Filters</span>
+          </button>
         </div>
       </div>
     </div>
 
     <!-- Gage & Facility Table Card -->
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex-1 flex flex-col">
+    <div class="bg-white rounded-[2px] border border-stone-300 shadow-xs overflow-hidden flex-1 flex flex-col">
       <div class="overflow-x-auto flex-1">
         <table class="w-full text-left text-xs border-collapse data-table">
           <thead>
@@ -251,7 +282,7 @@
       {
         id: 'compact',
         title: '1922 Compact Divide Reach (Lee Ferry)',
-        subtitle: 'The statutory legal fulcrum dividing Upper and Lower Basin allocations (USGS #09380000)',
+        subtitle: 'Legal division point between Upper and Lower Basin allocations (USGS #09380000)',
         dotColor: 'bg-sky-500',
         textColor: 'text-sky-900',
         bgColor: 'bg-sky-50/70 border-sky-200'
@@ -475,11 +506,11 @@
       let tier_rank = 3;
       if (nodeId === '09380000') {
         tier_code = 'compact_sentinel';
-        tier_label = 'Compact Sentinel';
+        tier_label = '1922 Compact Point';
         tier_rank = 1;
       } else if (['09095500', '09070500', '09163500', '09180500', '09234500', '09260050', '09261000', '09315000', '09152500', '09180000', '09379500', '09421500', 'USBR_HOOVER', 'USBR-HOOVER', '09423000', 'USBR_DAVIS', 'USBR-DAVIS', '09427520', 'USBR_PARKER', 'USBR-PARKER', '09429100', '09429500'].includes(nodeId)) {
         tier_code = 'basin_sentinel';
-        tier_label = 'Basin Sentinel';
+        tier_label = 'Key Reference Gage';
         tier_rank = 2;
       } else if (defaultType === 'diversion_tunnel') {
         tier_code = 'export_tunnel';
@@ -777,11 +808,11 @@
       const btnFlat = document.getElementById('btn-view-flat');
       if (btnGrouped && btnFlat) {
         if (mode === 'grouped') {
-          btnGrouped.className = 'px-3 py-1 text-xs font-bold rounded-md bg-white text-slate-900 shadow-xs transition';
-          btnFlat.className = 'px-3 py-1 text-xs font-semibold rounded-md text-slate-600 hover:text-slate-900 transition';
+          btnGrouped.className = 'px-2.5 py-1 text-xs font-bold rounded-[2px] bg-white text-slate-900 shadow-xs transition';
+          btnFlat.className = 'px-2.5 py-1 text-xs font-semibold rounded-[2px] text-slate-600 hover:text-slate-900 transition';
         } else {
-          btnGrouped.className = 'px-3 py-1 text-xs font-semibold rounded-md text-slate-600 hover:text-slate-900 transition';
-          btnFlat.className = 'px-3 py-1 text-xs font-bold rounded-md bg-white text-slate-900 shadow-xs transition';
+          btnGrouped.className = 'px-2.5 py-1 text-xs font-semibold rounded-[2px] text-slate-600 hover:text-slate-900 transition';
+          btnFlat.className = 'px-2.5 py-1 text-xs font-bold rounded-[2px] bg-white text-slate-900 shadow-xs transition';
         }
       }
       applyFilters();
@@ -794,12 +825,26 @@
         const btn = document.getElementById('pill-' + k);
         if (!btn) return;
         if (k === cat) {
-          btn.className = 'px-3 py-1 text-xs font-bold rounded-md bg-slate-900 text-white transition';
+          btn.className = 'px-2.5 py-1 text-xs font-bold rounded-[2px] bg-slate-900 text-white transition';
         } else {
-          btn.className = 'px-3 py-1 text-xs font-semibold rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200 transition';
+          btn.className = 'px-2.5 py-1 text-xs font-semibold rounded-[2px] bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200 transition';
         }
       });
       applyFilters();
+    }
+
+    function resetAllFilters() {
+      const searchEl = document.getElementById('search-input');
+      if (searchEl) searchEl.value = '';
+      const typeEl = document.getElementById('type-filter');
+      if (typeEl) typeEl.value = 'all';
+      const hierEl = document.getElementById('hierarchy-filter');
+      if (hierEl) hierEl.value = 'all';
+      const flashEl = document.getElementById('flashiness-filter');
+      if (flashEl) flashEl.value = 'all';
+      const healthEl = document.getElementById('health-filter');
+      if (healthEl) healthEl.value = 'all';
+      setCategoryFilter('all');
     }
 
     function handleSearchChange() {
@@ -812,6 +857,10 @@
       const hierarchyFilter = document.getElementById('hierarchy-filter')?.value || 'all';
       const flashinessFilter = document.getElementById('flashiness-filter')?.value || 'all';
       const healthFilter = document.getElementById('health-filter').value;
+
+      const isFiltered = q !== '' || typeFilter !== 'all' || hierarchyFilter !== 'all' || flashinessFilter !== 'all' || healthFilter !== 'all' || activeCategory !== 'all';
+      const resetBtn = document.getElementById('btn-reset-filters');
+      if (resetBtn) resetBtn.style.display = isFiltered ? 'inline-flex' : 'none';
 
       let filtered = allNodes.filter(node => {
         if (activeCategory === 'sentinels') {
@@ -1004,7 +1053,7 @@
 
     function exportDatabaseCsv() {
       if (!allNodes || allNodes.length === 0) return;
-      const headers = ['Station ID', 'Station Name', 'Type', 'Group / Reach', 'Current Value', 'Normal Flow (cfs)', 'Health Pct (%)', 'Health Status', 'Sentinel Tier Rank', 'Sentinel Tier', 'RBI Score', 'Flashiness Regime', 'Latitude', 'Longitude', 'Official Portal URL'];
+      const headers = ['Station ID', 'Station Name', 'Type', 'Group / Reach', 'Current Value', 'Normal Flow (cfs)', 'Health Pct (%)', 'Health Status', 'Gaging Priority Rank', 'Gaging Category', 'RBI Score', 'Flashiness Regime', 'Latitude', 'Longitude', 'Official Portal URL'];
       const rows = allNodes.map(n => {
         const portal = getPortalInfo(n);
         return [
@@ -1111,42 +1160,42 @@
                   <th class="p-2 border-b">Description &amp; Provenance</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-100 text-slate-600 font-mono">
+              <tbody class="divide-y divide-slate-100 text-slate-700">
                 <tr>
-                  <td class="p-2 font-bold text-slate-900">station_id</td>
-                  <td class="p-2">string</td>
+                  <td class="p-2 font-bold font-mono text-slate-900">station_id</td>
+                  <td class="p-2 font-mono text-xs text-slate-500">string</td>
                   <td class="p-2">—</td>
-                  <td class="p-2 font-sans">Official 8-digit USGS gage number (e.g. <code>09380000</code>) or state station code.</td>
+                  <td class="p-2">Official 8-digit USGS gage number (e.g. <code>09380000</code>) or state station code.</td>
                 </tr>
                 <tr>
-                  <td class="p-2 font-bold text-slate-900">reading_num</td>
-                  <td class="p-2">float</td>
-                  <td class="p-2">cfs / AF</td>
-                  <td class="p-2 font-sans">Current instantaneous streamflow rate (cfs) or reservoir active storage (AF).</td>
+                  <td class="p-2 font-bold font-mono text-slate-900">reading_num</td>
+                  <td class="p-2 font-mono text-xs text-slate-500">float</td>
+                  <td class="p-2 tabular-nums">cfs / AF</td>
+                  <td class="p-2">Current instantaneous streamflow rate (cfs) or reservoir active storage (AF).</td>
                 </tr>
                 <tr>
-                  <td class="p-2 font-bold text-slate-900">norm_cfs</td>
-                  <td class="p-2">float</td>
-                  <td class="p-2">cfs</td>
-                  <td class="p-2 font-sans">Historical 366-day daily mean streamflow benchmark derived from 50+ year USGS records.</td>
+                  <td class="p-2 font-bold font-mono text-slate-900">norm_cfs</td>
+                  <td class="p-2 font-mono text-xs text-slate-500">float</td>
+                  <td class="p-2 tabular-nums">cfs</td>
+                  <td class="p-2">Historical 366-day daily mean streamflow benchmark derived from 50+ year USGS records.</td>
                 </tr>
                 <tr>
-                  <td class="p-2 font-bold text-slate-900">tier_rank</td>
-                  <td class="p-2">integer</td>
-                  <td class="p-2">1 – 6</td>
-                  <td class="p-2 font-sans">Hydrologic Sentinel Tier: 1 (Compact Sentinel), 2 (Basin Sentinel), 3 (Tributary), 4 (Tunnel), 5 (Canal), 6 (Reservoir).</td>
+                  <td class="p-2 font-bold font-mono text-slate-900">tier_rank</td>
+                  <td class="p-2 font-mono text-xs text-slate-500">integer</td>
+                  <td class="p-2 tabular-nums">1 – 6</td>
+                  <td class="p-2">Hydrologic Sentinel Tier: 1 (Compact Sentinel), 2 (Basin Sentinel), 3 (Tributary), 4 (Tunnel), 5 (Canal), 6 (Reservoir).</td>
                 </tr>
                 <tr>
-                  <td class="p-2 font-bold text-slate-900">rbi</td>
-                  <td class="p-2">float</td>
+                  <td class="p-2 font-bold font-mono text-slate-900">rbi</td>
+                  <td class="p-2 font-mono text-xs text-slate-500">float</td>
                   <td class="p-2">—</td>
-                  <td class="p-2 font-sans">Richards-Baker Flashiness Index ($\sum |\Delta q| / \sum q$). Quantifies hydrograph volatility.</td>
+                  <td class="p-2">Richards-Baker Flashiness Index ($\sum |\Delta q| / \sum q$). Quantifies hydrograph volatility.</td>
                 </tr>
                 <tr>
-                  <td class="p-2 font-bold text-slate-900">lat / lon</td>
-                  <td class="p-2">float</td>
+                  <td class="p-2 font-bold font-mono text-slate-900">lat / lon</td>
+                  <td class="p-2 font-mono text-xs text-slate-500">float</td>
                   <td class="p-2">degrees</td>
-                  <td class="p-2 font-sans">World Geodetic System 1984 (WGS84) geographic coordinates.</td>
+                  <td class="p-2">World Geodetic System 1984 (WGS84) geographic coordinates.</td>
                 </tr>
               </tbody>
             </table>
@@ -1159,18 +1208,13 @@
             The platform maintains pre-compiled, downsampled JSON matrices for instant static querying without backend database overhead:
           </p>
           <ul class="list-disc list-inside space-y-1 text-slate-700 text-xs font-mono ml-1">
-            <li><code>web/data/live_water_data.json</code>: Real-time observation snapshot for all 98 facilities.</li>
+            <li><code>web/data/live_water_data.json</code>: Real-time observation snapshot for all 92 facilities.</li>
             <li><code>web/data/river_network.geojson</code>: 83 continuous river reaches snapped to 0.00m tolerance.</li>
             <li><code>web/data/station_hierarchy.json</code>: Sentinel classifications, RBI scores, and coordinates.</li>
             <li><code>web/data/replay_7d.json</code>: 170-hour temporal flow replay matrix (81.9 KB).</li>
             <li><code>web/data/replay_30d.json</code>: 362-step temporal flow replay matrix (166.4 KB).</li>
           </ul>
         </div>
-      </div>
-      <div class="px-6 py-3 border-t border-slate-200 bg-slate-50 flex items-center justify-end">
-        <button onclick="closeSchemaModal()" class="px-4 py-1.5 rounded bg-slate-900 text-white font-semibold text-xs hover:bg-slate-800 transition">
-          Close
-        </button>
       </div>
     </div>
   </div>

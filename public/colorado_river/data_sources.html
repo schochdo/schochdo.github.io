@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Sources &amp; Legal Authorities — Colorado River Basin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Editorial Design Standard (Edward Tufte / NYT Restrained Palette) -->
+  <link rel="stylesheet" href="editorial.css">
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #cbd5e1;
+      color: #0f172a;
+    }
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum";
+    }
+    code, pre {
+      font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+    .data-table th {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: #f1f5f9;
+    }
+    .source-card {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 2px;
+      transition: all 0.15s ease;
+    }
+    .source-card:hover {
+      border-color: #64748b;
+      box-shadow: 0 2px 4px rgba(15, 23, 42, 0.05);
+    }
+    .anchor-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 2px;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      color: #334155;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .anchor-pill:hover {
+      background: #ffffff;
+      border-color: #64748b;
+      color: #0f172a;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col p-3 md:p-6">
+  <div class="max-w-6xl w-full mx-auto bg-white border border-[#94a3b8] rounded-[2px] shadow-sm flex flex-col overflow-hidden">
+    
+    <!-- Top Academic Header -->
+    <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 px-6 py-4 border-b border-[#94a3b8] bg-[#e2e8f0]">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-[2px] bg-sky-100 text-sky-900 border border-sky-300">Authoritative Provenance</span>
+          <span class="text-[10px] font-bold text-stone-500">Law of the River • Federal Decree Accounting • State Water Rights</span>
+        </div>
+        <h1 class="text-xl md:text-2xl font-black text-stone-900 tracking-tight mt-1">
+          Data Sources &amp; Legal Authorities
+        </h1>
+        <p class="text-xs text-stone-600 mt-0.5 max-w-4xl">
+          Complete provenance registry connecting every volumetric flow, trans-basin export, and storage depletion on the platform to governing federal compacts, Supreme Court decrees, and official real-time APIs.
+        </p>
+      </div>
+
+      <div class="flex items-center gap-2 self-start md:self-auto flex-wrap">
+        <a href="./" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[2px] bg-white hover:bg-stone-100 text-stone-800 font-bold text-xs border border-stone-300 shadow-2xs transition">
+          <span>← System Dashboard</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Quick Section Anchor Bar -->
+    <nav class="flex flex-wrap items-center gap-2 px-6 py-2.5 border-b border-stone-200 bg-stone-50 text-[11px]">
+      <span class="text-stone-400 text-[10px] uppercase font-bold tracking-wider">Sections:</span>
+      <a href="#sec-compacts" class="anchor-pill">1. Statutory Compacts &amp; Treaties (Paper Water)</a>
+      <a href="#sec-accounting" class="anchor-pill">2. Macro Accounting &amp; Regional Conduits (Physical Water)</a>
+      <a href="#sec-apis" class="anchor-pill">3. Real-Time Operational Monitoring Feeds &amp; APIs</a>
+    </nav>
+
+    <!-- Main Content Body -->
+    <main class="p-6 space-y-8 text-xs text-stone-700">
+
+      <!-- SECTION 1: STATUTORY COMPACTS & TREATIES (PAPER WATER) -->
+      <section id="sec-compacts" class="space-y-3 scroll-mt-6">
+        <div class="flex items-baseline justify-between border-b border-stone-200 pb-2">
+          <div>
+            <h2 class="text-sm font-black text-stone-900 tracking-tight flex items-center gap-2">
+              <span class="w-2 h-2 rounded-[1px] bg-sky-700"></span>
+              <span>1. Statutory Compacts &amp; International Treaties (Paper Water Allocations)</span>
+            </h2>
+            <p class="text-[11px] text-stone-500">The foundational legal compacts dividing interstate entitlements across the seven basin states and the Republic of Mexico</p>
+          </div>
+          <span class="text-[11px] font-mono text-stone-500 tabular-nums">Rate Bridge: 1 MAF/yr ≈ 1,381.16 cfs</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+          <!-- 1922 Compact -->
+          <div class="source-card p-3.5 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between gap-1 mb-1">
+                <span class="font-bold text-stone-900 text-xs">1922 Colorado River Compact</span>
+                <span class="text-[10px] font-mono font-bold px-1.5 py-0.2 bg-stone-100 text-stone-700 rounded-[2px] border border-stone-200">42 Stat. 171</span>
+              </div>
+              <div class="text-[11px] font-semibold text-sky-800 mb-1.5">7.50 MAF Upper • 7.50 MAF Lower</div>
+              <p class="text-[11px] text-stone-600 leading-relaxed mb-2.5">
+                Article III(a) apportioned exclusive beneficial consumptive use of 7.50 MAF/yr each in perpetuity. Art. III(d) mandates the Upper Division states shall not cause the flow at Lees Ferry to be depleted below 75.0 MAF over any consecutive 10-year period.
+              </p>
+            </div>
+            <a href="https://www.usbr.gov/lc/region/pao/laws-regs/synopses/crc.html" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 font-bold text-[11px] inline-flex items-center gap-1 mt-auto pt-2 border-t border-stone-100">
+              USBR Compact Text &amp; Synopsis <span class="text-[9px]">↗</span>
+            </a>
+          </div>
+
+          <!-- 1948 Upper Compact -->
+          <div class="source-card p-3.5 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between gap-1 mb-1">
+                <span class="font-bold text-stone-900 text-xs">1948 Upper Basin Compact</span>
+                <span class="text-[10px] font-mono font-bold px-1.5 py-0.2 bg-stone-100 text-stone-700 rounded-[2px] border border-stone-200">63 Stat. 31</span>
+              </div>
+              <div class="text-[11px] font-semibold text-sky-800 mb-1.5">CO 51.75% • UT 23% • WY 14% • NM 11.25%</div>
+              <p class="text-[11px] text-stone-600 leading-relaxed mb-2.5">
+                Article III apportions the variable Upper Basin water pool after Arizona's fixed 50,000 AF apportionment: Colorado diverts 51.75% (2.33 MAF), Utah 23.0% (1.04 MAF), Wyoming 14.0% (0.63 MAF), and New Mexico 11.25% (0.50 MAF) based on current ~4.50 MAF consumption.
+              </p>
+            </div>
+            <a href="http://www.ucrcommission.com/" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 font-bold text-[11px] inline-flex items-center gap-1 mt-auto pt-2 border-t border-stone-100">
+              Upper CO River Commission (UCRC) <span class="text-[9px]">↗</span>
+            </a>
+          </div>
+
+          <!-- 1928 BCPA & Arizona v. California -->
+          <div class="source-card p-3.5 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between gap-1 mb-1">
+                <span class="font-bold text-stone-900 text-xs">1928 BCPA &amp; Decree</span>
+                <span class="text-[10px] font-mono font-bold px-1.5 py-0.2 bg-stone-100 text-stone-700 rounded-[2px] border border-stone-200">373 U.S. 546</span>
+              </div>
+              <div class="text-[11px] font-semibold text-sky-800 mb-1.5">CA 4.40 MAF • AZ 2.80 MAF • NV 0.30 MAF</div>
+              <p class="text-[11px] text-stone-600 leading-relaxed mb-2.5">
+                Boulder Canyon Project Act § 4(a) and the landmark 1964 Supreme Court Decree in <em>Arizona v. California</em> divide the normal 7.50 MAF Lower Basin mainstream entitlement among California (4.40 MAF), Arizona (2.80 MAF), and Nevada (0.30 MAF).
+              </p>
+            </div>
+            <a href="https://www.usbr.gov/lc/region/g4000/wtracct.html" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 font-bold text-[11px] inline-flex items-center gap-1 mt-auto pt-2 border-t border-stone-100">
+              USBR Decree Accounting Office <span class="text-[9px]">↗</span>
+            </a>
+          </div>
+
+          <!-- 1944 Mexico Treaty -->
+          <div class="source-card p-3.5 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between gap-1 mb-1">
+                <span class="font-bold text-stone-900 text-xs">1944 US-Mexico Treaty</span>
+                <span class="text-[10px] font-mono font-bold px-1.5 py-0.2 bg-stone-100 text-stone-700 rounded-[2px] border border-stone-200">TS 994</span>
+              </div>
+              <div class="text-[11px] font-semibold text-indigo-800 mb-1.5">1.50 MAF/yr Guaranteed Delivery</div>
+              <p class="text-[11px] text-stone-600 leading-relaxed mb-2.5">
+                Treaty Series 994 commits the United States to deliver 1.50 MAF annually to Mexico at the international boundary. Diverted at Morelos Dam into the Canal Alimentador Central: Mexicali Valley agriculture receives 1.25 MAF, and Baja California cities receive 0.25 MAF.
+              </p>
+            </div>
+            <a href="https://www.ibwc.gov/" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 font-bold text-[11px] inline-flex items-center gap-1 mt-auto pt-2 border-t border-stone-100">
+              IBWC / CILA Treaty Portal <span class="text-[9px]">↗</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 2: MACRO ACCOUNTING & REGIONAL CONDUITS (PHYSICAL WATER) -->
+      <section id="sec-accounting" class="space-y-3 scroll-mt-6">
+        <div class="border-b border-stone-200 pb-2">
+          <h2 class="text-sm font-black text-stone-900 tracking-tight flex items-center gap-2">
+            <span class="w-2 h-2 rounded-[1px] bg-emerald-700"></span>
+            <span>2. Macro Accounting Datasets &amp; Regional Conduits (Physical Water Accounting)</span>
+          </h2>
+          <p class="text-[11px] text-stone-500">Official annual accounting ledgers and regional infrastructure authorities measuring physical diversions, return flows, and evaporative losses</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          <!-- Lower Basin Decree Accounting -->
+          <div class="source-card p-3.5 flex flex-col justify-between">
+            <div>
+              <div class="font-bold text-stone-900 text-xs mb-0.5">Lower Basin Article V Decree Accounting</div>
+              <div class="text-[10.5px] font-semibold text-stone-500 mb-1.5">USBR Boulder Canyon Operations • Annual Water Accounting</div>
+              <p class="text-[11px] text-stone-600 leading-relaxed mb-2.5">
+                Published annually under Article V of the Supreme Court Decree. Provides exact metered diversion records, return flow credits, and net consumptive use for every entitlement holder across California (4.40 MAF), Arizona (2.80 MAF), and Nevada (0.30 MAF).
+              </p>
+            </div>
+            <div class="pt-2 border-t border-stone-100 flex items-center justify-between text-[11px]">
+              <span class="text-stone-500">Repository:</span>
+              <a href="https://www.usbr.gov/lc/region/g4000/wtracct.html" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 font-bold inline-flex items-center gap-1">
+                USBR Decree Accounting <span class="text-[9px]">↗</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Upper Basin CULR -->
+          <div class="source-card p-3.5 flex flex-col justify-between">
+            <div>
+              <div class="font-bold text-stone-900 text-xs mb-0.5">Upper Basin Consumptive Uses &amp; Losses (CULR)</div>
+              <div class="text-[10.5px] font-semibold text-stone-500 mb-1.5">USBR Upper Colorado Region &amp; UCRC</div>
+              <p class="text-[11px] text-stone-600 leading-relaxed mb-2.5">
+                Official federal accounting of agricultural evapotranspiration, municipal trans-basin exports, and reservoir evaporation across Colorado (2.33 MAF), Utah (1.04 MAF), Wyoming (0.63 MAF), and New Mexico (0.50 MAF), totaling current ~4.50 MAF consumptive depletions.
+              </p>
+            </div>
+            <div class="pt-2 border-t border-stone-100 flex items-center justify-between text-[11px]">
+              <span class="text-stone-500">Repository:</span>
+              <a href="https://www.usbr.gov/uc/envproc/culr/" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 font-bold inline-flex items-center gap-1">
+                USBR CULR Portal <span class="text-[9px]">↗</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Natural Virgin Runoff & Storage Overdraft -->
+          <div class="source-card p-3.5 flex flex-col justify-between">
+            <div>
+              <div class="font-bold text-stone-900 text-xs mb-0.5">Natural Virgin Flow &amp; Storage Overdraft</div>
+              <div class="text-[10.5px] font-semibold text-stone-500 mb-1.5">USBR Natural Flow Database (1906–Present)</div>
+              <p class="text-[11px] text-stone-600 leading-relaxed mb-2.5">
+                Unimpaired virgin runoff modeled across 29 natural flow nodes: 12.40 MAF Upper Basin + 0.45 MAF Lower tributaries = 12.85 MAF basin total. Total depletions (14.90 MAF) exceed natural supply, actively bridging the 2.05 MAF deficit via multi-year storage drawdown from Lake Mead and Lake Powell.
+              </p>
+            </div>
+            <div class="pt-2 border-t border-stone-100 flex items-center justify-between text-[11px]">
+              <span class="text-stone-500">Datasets:</span>
+              <a href="https://www.usbr.gov/lc/region/g4000/NaturalFlow/" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 font-bold inline-flex items-center gap-1">
+                USBR Natural Flow <span class="text-[9px]">↗</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- California Conduits -->
+          <div class="source-card p-3.5 flex flex-col justify-between">
+            <div>
+              <div class="font-bold text-stone-900 text-xs mb-0.5">California Conduits: All-American Canal &amp; CRA (4.40 MAF)</div>
+              <div class="text-[10.5px] font-semibold text-stone-500 mb-1.5">Imperial Irrigation District (IID) • MWD of SoCal</div>
+              <p class="text-[11px] text-stone-600 leading-relaxed mb-2.5">
+                All-American Canal diverts 3.40 MAF at Imperial Dam to irrigate 500,000 acres in Imperial and Coachella valleys. Colorado River Aqueduct lifts 1.00 MAF 1,617 ft across 242 miles of desert to serve 19 million coastal Southern California residents.
+              </p>
+            </div>
+            <div class="pt-2 border-t border-stone-100 flex items-center justify-between text-[11px]">
+              <span class="text-stone-500">Agencies:</span>
+              <span class="flex items-center gap-2">
+                <a href="https://www.iid.com/water" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 font-bold">IID ↗</a>
+                <span class="text-stone-300">•</span>
+                <a href="https://www.mwdh2o.com/" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 font-bold">MWD ↗</a>
+              </span>
+            </div>
+          </div>
+
+          <!-- Arizona Conduits -->
+          <div class="source-card p-3.5 flex flex-col justify-between">
+            <div>
+              <div class="font-bold text-stone-900 text-xs mb-0.5">Arizona Conduits: CAP &amp; Mainstem Canals (2.80 MAF)</div>
+              <div class="text-[10.5px] font-semibold text-stone-500 mb-1.5">Central Arizona Project (CAP) • USBR Yuma Area Office</div>
+              <p class="text-[11px] text-stone-600 leading-relaxed mb-2.5">
+                Central Arizona Project canal lifts 1.38 MAF across 336 miles to Phoenix, Tucson, and tribal nations. Senior on-river gravity canals in Yuma and Wellton-Mohawk divert 1.42 MAF for year-round agricultural production.
+              </p>
+            </div>
+            <div class="pt-2 border-t border-stone-100 flex items-center justify-between text-[11px]">
+              <span class="text-stone-500">Authorities:</span>
+              <span class="flex items-center gap-2">
+                <a href="https://www.cap-az.com/" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 font-bold">CAP ↗</a>
+                <span class="text-stone-300">•</span>
+                <a href="https://www.usbr.gov/lc/yuma/" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 font-bold">USBR Yuma ↗</a>
+              </span>
+            </div>
+          </div>
+
+          <!-- Nevada SNWA & Trans-Mountain Tunnels -->
+          <div class="source-card p-3.5 flex flex-col justify-between">
+            <div>
+              <div class="font-bold text-stone-900 text-xs mb-0.5">Nevada SNWA &amp; Trans-Mountain Exports (0.90 MAF)</div>
+              <div class="text-[10.5px] font-semibold text-stone-500 mb-1.5">SNWA Intakes • Colorado DWR HydroBase • Utah CUP</div>
+              <p class="text-[11px] text-stone-600 leading-relaxed mb-2.5">
+                SNWA diverts 0.50 MAF from Lake Mead, returning 0.20 MAF via Las Vegas Wash for 0.30 MAF net municipal consumption. Colorado Front Range tunnels export 0.48 MAF under the Continental Divide, and Utah CUP exports 0.12 MAF to the Wasatch Front.
+              </p>
+            </div>
+            <div class="pt-2 border-t border-stone-100 flex items-center justify-between text-[11px]">
+              <span class="text-stone-500">Portals:</span>
+              <span class="flex items-center gap-2">
+                <a href="https://www.snwa.com/" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 font-bold">SNWA ↗</a>
+                <span class="text-stone-300">•</span>
+                <a href="https://dwr.state.co.us/Tools/Stations" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 font-bold">HydroBase ↗</a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3: REAL-TIME OPERATIONAL APIS & FEEDS -->
+      <section id="sec-apis" class="space-y-3 scroll-mt-6">
+        <div class="border-b border-stone-200 pb-2">
+          <h2 class="text-sm font-black text-stone-900 tracking-tight flex items-center gap-2">
+            <span class="w-2 h-2 rounded-[1px] bg-slate-700"></span>
+            <span>3. Real-Time Operational Monitoring Feeds &amp; REST APIs</span>
+          </h2>
+          <p class="text-[11px] text-stone-500">Automated ingestion interfaces delivering live streamflow discharge, reservoir elevations, and snowpack telemetry</p>
+        </div>
+
+        <div class="overflow-x-auto border border-stone-200 rounded-[2px]">
+          <table class="w-full text-left border-collapse text-[11px]">
+            <thead>
+              <tr class="bg-stone-100 border-b border-stone-200 text-stone-800 font-bold">
+                <th class="p-2.5">Source &amp; Agency</th>
+                <th class="p-2.5">API / Endpoint Service</th>
+                <th class="p-2.5">Parameters &amp; Identifiers</th>
+                <th class="p-2.5">Cadence</th>
+                <th class="p-2.5">Official Documentation Links</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-stone-200 bg-white">
+              
+              <!-- USGS NWIS -->
+              <tr class="hover:bg-stone-50/80 transition">
+                <td class="p-2.5 align-top">
+                  <span class="font-bold text-stone-900 block">USGS Water Services</span>
+                  <span class="text-[10px] text-stone-500">U.S. Geological Survey (NWIS)</span>
+                </td>
+                <td class="p-2.5 align-top">
+                  <code class="text-[10px] text-sky-800 bg-sky-50 px-1 py-0.5 rounded border border-sky-200 font-mono">/nwis/iv/</code> (Instantaneous)<br>
+                  <code class="text-[10px] text-stone-600 bg-stone-100 px-1 py-0.5 rounded border border-stone-200 font-mono mt-1 inline-block">/nwis/dv/</code> (Daily Values)
+                </td>
+                <td class="p-2.5 align-top">
+                  <strong>00060:</strong> Discharge (cfs)<br>
+                  <strong>00065:</strong> Gage height (ft)<br>
+                  <strong>62614:</strong> Lake elevation (ft)
+                </td>
+                <td class="p-2.5 align-top whitespace-nowrap">
+                  <span class="px-1.5 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded font-bold text-[10px]">15–60 min</span>
+                </td>
+                <td class="p-2.5 align-top space-y-1">
+                  <a href="https://waterservices.usgs.gov/rest/IV-Service.html" target="_blank" rel="noopener noreferrer" class="text-sky-700 hover:text-sky-900 hover:underline font-bold block">
+                    USGS Instantaneous Values (IV) Docs ↗
+                  </a>
+                  <a href="https://waterservices.usgs.gov/rest/DV-Service.html" target="_blank" rel="noopener noreferrer" class="text-stone-600 hover:text-stone-900 hover:underline block text-[10px]">
+                    Daily Values (DV) REST API Docs ↗
+                  </a>
+                </td>
+              </tr>
+
+              <!-- USBR Upper Colorado HDB -->
+              <tr class="hover:bg-stone-50/80 transition">
+                <td class="p-2.5 align-top">
+                  <span class="font-bold text-stone-900 block">USBR Upper Colorado</span>
+                  <span class="text-[10px] text-stone-500">Bureau of Reclamation (HDB)</span>
+                </td>
+                <td class="p-2.5 align-top">
+                  <code class="text-[10px] text-sky-800 bg-sky-50 px-1 py-0.5 rounded border border-sky-200 font-mono">/hydrodata/reservoir_data/</code><br>
+                  <span class="text-[10px] text-stone-500">IDs: 919 (Powell), 917 (F. Gorge)</span>
+                </td>
+                <td class="p-2.5 align-top">
+                  <strong>17.csv:</strong> Storage (Acre-Feet)<br>
+                  <strong>49.csv:</strong> Surface Elevation (ft)<br>
+                  Inflows, releases, &amp; evaporation
+                </td>
+                <td class="p-2.5 align-top whitespace-nowrap">
+                  <span class="px-1.5 py-0.5 bg-blue-50 text-blue-800 border border-blue-200 rounded font-bold text-[10px]">Daily (06:00 MST)</span>
+                </td>
+                <td class="p-2.5 align-top space-y-1">
+                  <a href="https://www.usbr.gov/uc/water/hydrodata/reservoir_data/919/dashboard.html" target="_blank" rel="noopener noreferrer" class="text-sky-700 hover:text-sky-900 hover:underline font-bold block">
+                    Glen Canyon HydroData Dashboard ↗
+                  </a>
+                  <a href="https://www.usbr.gov/uc/water/crsp/cs/gcd.html" target="_blank" rel="noopener noreferrer" class="text-stone-600 hover:text-stone-900 hover:underline block text-[10px]">
+                    Glen Canyon / Lake Powell Data Center ↗
+                  </a>
+                </td>
+              </tr>
+
+              <!-- USBR Lower Colorado RiverOps -->
+              <tr class="hover:bg-stone-50/80 transition">
+                <td class="p-2.5 align-top">
+                  <span class="font-bold text-stone-900 block">USBR Lower Colorado</span>
+                  <span class="text-[10px] text-stone-500">River Operations (RiverOps)</span>
+                </td>
+                <td class="p-2.5 align-top">
+                  <code class="text-[10px] text-sky-800 bg-sky-50 px-1 py-0.5 rounded border border-sky-200 font-mono">/hourly/hourly.html</code><br>
+                  <code class="text-[10px] text-stone-600 bg-stone-100 px-1 py-0.5 rounded border border-stone-200 font-mono mt-1 inline-block">/wtracct.html</code> (Decrees)
+                </td>
+                <td class="p-2.5 align-top">
+                  Hoover, Davis, Parker releases (cfs)<br>
+                  Lake Mead elevation &amp; AF<br>
+                  Imperial Dam diversions (AAC)
+                </td>
+                <td class="p-2.5 align-top whitespace-nowrap">
+                  <span class="px-1.5 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded font-bold text-[10px]">Hourly Teletype</span>
+                </td>
+                <td class="p-2.5 align-top space-y-1">
+                  <a href="https://www.usbr.gov/lc/region/g4000/hourly/hourly.html" target="_blank" rel="noopener noreferrer" class="text-sky-700 hover:text-sky-900 hover:underline font-bold block">
+                    USBR Lower Colorado Hourly RiverOps Feed ↗
+                  </a>
+                  <a href="https://www.usbr.gov/lc/region/g4000/wtracct.html" target="_blank" rel="noopener noreferrer" class="text-stone-600 hover:text-stone-900 hover:underline block text-[10px]">
+                    Daily Water Accounting Reports &amp; Decrees ↗
+                  </a>
+                </td>
+              </tr>
+
+              <!-- Colorado DWR HydroBase -->
+              <tr class="hover:bg-stone-50/80 transition">
+                <td class="p-2.5 align-top">
+                  <span class="font-bold text-stone-900 block">Colorado DWR (CDSS)</span>
+                  <span class="text-[10px] text-stone-500">Division of Water Resources</span>
+                </td>
+                <td class="p-2.5 align-top">
+                  <code class="text-[10px] text-sky-800 bg-sky-50 px-1 py-0.5 rounded border border-sky-200 font-mono">/Rest/GET/api/v2/</code><br>
+                  <span class="text-[10px] text-stone-500 font-mono">telemetrytimeserieshour</span>
+                </td>
+                <td class="p-2.5 align-top">
+                  Trans-mountain exports:<br>
+                  <code>ADATUNCO</code>, <code>MOFTUNCO</code>,<br>
+                  <code>ROBTUNCO</code>, <code>BOUTUNCO</code> (cfs)
+                </td>
+                <td class="p-2.5 align-top whitespace-nowrap">
+                  <span class="px-1.5 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded font-bold text-[10px]">Hourly</span>
+                </td>
+                <td class="p-2.5 align-top space-y-1">
+                  <a href="https://dwr.state.co.us/Rest/GET/Help" target="_blank" rel="noopener noreferrer" class="text-sky-700 hover:text-sky-900 hover:underline font-bold block">
+                    Colorado DWR REST API Reference ↗
+                  </a>
+                  <a href="https://cdss.colorado.gov/" target="_blank" rel="noopener noreferrer" class="text-stone-600 hover:text-stone-900 hover:underline block text-[10px]">
+                    Colorado Decision Support Systems (CDSS) ↗
+                  </a>
+                </td>
+              </tr>
+
+              <!-- USDA NRCS SNOTEL -->
+              <tr class="hover:bg-stone-50/80 transition">
+                <td class="p-2.5 align-top">
+                  <span class="font-bold text-stone-900 block">USDA NRCS SNOTEL</span>
+                  <span class="text-[10px] text-stone-500">Nat. Water &amp; Climate Center</span>
+                </td>
+                <td class="p-2.5 align-top">
+                  <code class="text-[10px] text-sky-800 bg-sky-50 px-1 py-0.5 rounded border border-sky-200 font-mono">AWDB Web Service</code><br>
+                  <span class="text-[10px] text-stone-500">Report Generator / SOAP</span>
+                </td>
+                <td class="p-2.5 align-top">
+                  <strong>SWE:</strong> Snow Water Equivalent (in)<br>
+                  Basin SWE % of Median (1991–2020)<br>
+                  Water Year Precip Accumulation
+                </td>
+                <td class="p-2.5 align-top whitespace-nowrap">
+                  <span class="px-1.5 py-0.5 bg-blue-50 text-blue-800 border border-blue-200 rounded font-bold text-[10px]">Daily (Midnight)</span>
+                </td>
+                <td class="p-2.5 align-top space-y-1">
+                  <a href="https://www.nrcs.usda.gov/wps/portal/wcc/home/aboutUs/monitoringPrograms/automatedSnowMonitoring/" target="_blank" rel="noopener noreferrer" class="text-sky-700 hover:text-sky-900 hover:underline font-bold block">
+                    NRCS SNOTEL Network Overview ↗
+                  </a>
+                  <a href="https://www.nrcs.usda.gov/wps/portal/wcc/home/dataAccessServices/webServices/awdbWebServiceReference/" target="_blank" rel="noopener noreferrer" class="text-stone-600 hover:text-stone-900 hover:underline block text-[10px]">
+                    AWDB Web Service Technical Reference ↗
+                  </a>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <!-- Page Footer -->
+    <footer class="px-6 py-3 border-t border-[#94a3b8] bg-[#e2e8f0] flex flex-wrap items-center justify-between gap-3 text-[11px] text-stone-600">
+      <span>All data retrieved under Open Government Data principles (USGS, USBR, CDWR, NRCS).</span>
+      <a href="./" class="font-bold text-stone-800 hover:text-stone-950">
+        ← Return to System Dashboard
+      </a>
+    </footer>
+
+  </div>
+</body>
+</html>

@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="style.css?v=4.4">
+  <link rel="stylesheet" href="style.css">
   <!-- Editorial Design Standard (Edward Tufte / NYT Restrained Palette) -->
   <link rel="stylesheet" href="editorial.css">
 </head>
@@ -44,17 +44,10 @@
       <button class="nav-header-btn budget-btn" onclick="window.open('./sankey.html','_blank')" title="Annual Water Budget &amp; Allocations">
         <span class="btn-text">Water Budget</span>
       </button>
-      <button class="nav-header-btn portal-btn" onclick="window.open('./portal.html','_blank')" title="Open Academic Data Portal &amp; Historical Reservoirs">
-        <span class="btn-text">Data Portal</span>
-      </button>
       <button class="nav-header-btn telemetry-btn" onclick="window.open('./telemetry.html','_blank')" title="Open Gage &amp; Facility Registry Table">
         <span class="btn-text">Gage Registry</span>
       </button>
 
-      <div class="sync-badge">
-        <span class="status-dot"></span>
-        <span id="sync-time">Loading live feeds...</span>
-      </div>
       <button class="icon-btn" onclick="refreshData()" title="Reload live data">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="23 4 23 10 17 10"></polyline>
@@ -146,7 +139,7 @@
                 <span class="slider"></span>
               </label>
               <label class="toggle-label">
-                <span>Major Storage Dams (16)</span>
+                <span>Major Storage Dams</span>
                 <input type="checkbox" id="toggle-dams" checked onchange="toggleLayer('dams')">
                 <span class="slider"></span>
               </label>
@@ -168,8 +161,8 @@
               <label class="toggle-label" style="padding-left: 14px; font-size: 11px; color: var(--text-muted);">
                 <span>↳ % of Daily Average</span>
               </label>
-              <label class="toggle-label" title="Show all 98 monitoring stations: 79 streamflows, 4 tunnels, 4 canals, 11 reservoirs">
-                <span>Active Stations (98 Gages &amp; Facilities)</span>
+              <label class="toggle-label" title="Show all monitoring stations: streamflows, tunnels, canals, and reservoirs">
+                <span>Active Gages &amp; Facilities</span>
                 <input type="checkbox" id="toggle-streamflow-gauges" checked onchange="toggleLayer('streamflow-gauges')">
                 <span class="slider"></span>
               </label>
@@ -184,7 +177,7 @@
                 <span class="slider"></span>
               </label>
               <label class="toggle-label">
-                <span>Conveyance Canals (AAC/CAP/CRA)</span>
+                <span>Conveyance Canals</span>
                 <input type="checkbox" id="toggle-canals" checked onchange="toggleLayer('canals')">
                 <span class="slider"></span>
               </label>
@@ -269,19 +262,19 @@
           <div id="legend-sec-infrastructure" style="margin-top: 8px;">
             <div class="legend-section-title">WATER INFRASTRUCTURE</div>
             <div class="legend-item" id="legend-item-reservoirs"><span class="legend-box" style="background:#0284c7; width:14px; height:10px; border-radius:2px;"></span> Storage Reservoirs &amp; Lakes</div>
-            <div class="legend-item" id="legend-item-dams"><span style="display:inline-block; width:11px; height:11px; background:#1e293b; border:1px solid #fff; border-radius:2px; margin-right:6px; vertical-align:middle;"></span> Major Storage Dams (16)</div>
+            <div class="legend-item" id="legend-item-dams"><span style="display:inline-block; width:11px; height:11px; background:#1e293b; border:1px solid #fff; border-radius:2px; margin-right:6px; vertical-align:middle;"></span> Major Storage Dams</div>
             <div class="legend-item" id="legend-item-divide"><span class="legend-line divide"></span> Continental Divide</div>
             <div class="legend-item" id="legend-item-basin"><span class="legend-line" style="display:inline-block; width:22px; height:0px; border-top: 2px dashed #94a3b8; margin-right:6px; vertical-align:middle;"></span> Basin Boundaries</div>
-            <div class="legend-item" id="legend-item-tunnels"><span style="display:inline-flex; align-items:center; width:22px; height:8px; margin-right:6px; vertical-align:middle;"><span style="width:6px; height:6px; border-radius:50%; background:#0284c7; border:1.5px solid #0f172a; flex-shrink:0;"></span><span style="flex:1; height:3px; background:#0284c7; border-top:0.5px solid #0f172a; border-bottom:0.5px solid #0f172a;"></span><span style="width:6px; height:6px; border-radius:50%; background:#0284c7; border:1.5px solid #0f172a; flex-shrink:0;"></span></span> Trans-Mountain Tunnels (Front Range)</div>
-            <div class="legend-item" id="legend-item-canals"><span class="legend-line" style="display:inline-block; width:22px; height:3.5px; background:repeating-linear-gradient(90deg, #0284c7, #0284c7 3px, transparent 3px, transparent 6px); margin-right:6px; vertical-align:middle;"></span> Conveyance Canals (AAC / CAP / CRA)</div>
+            <div class="legend-item" id="legend-item-tunnels"><span style="display:inline-flex; align-items:center; width:22px; height:8px; margin-right:6px; vertical-align:middle;"><span style="width:6px; height:6px; border-radius:50%; background:#0284c7; border:1.5px solid #0f172a; flex-shrink:0;"></span><span style="flex:1; height:3px; background:#0284c7; border-top:0.5px solid #0f172a; border-bottom:0.5px solid #0f172a;"></span><span style="width:6px; height:6px; border-radius:50%; background:#0284c7; border:1.5px solid #0f172a; flex-shrink:0;"></span></span> Trans-Mountain Tunnels</div>
+            <div class="legend-item" id="legend-item-canals"><span class="legend-line" style="display:inline-block; width:22px; height:3.5px; background:repeating-linear-gradient(90deg, #0284c7, #0284c7 3px, transparent 3px, transparent 6px); margin-right:6px; vertical-align:middle;"></span> Conveyance Canals</div>
           </div>
           
           <!-- Compact 2-Column Station Grid -->
           <div id="legend-stations-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 3px 6px; margin: 8px 0 6px 0;">
-            <div class="legend-item" id="legend-item-station-streamflow" style="margin: 0;"><span class="legend-dot gauge" style="background:#0284c7;"></span> Streamflow (79)</div>
-            <div class="legend-item" id="legend-item-station-reservoirs" style="margin: 0;"><span class="legend-dot gauge" style="background:#dc2626;"></span> Reservoirs (11)</div>
-            <div class="legend-item" id="legend-item-station-tunnels" style="margin: 0;"><span class="legend-dot gauge" style="background:#0891b2;"></span> Tunnels (4)</div>
-            <div class="legend-item" id="legend-item-station-canals" style="margin: 0;"><span class="legend-dot gauge" style="background:#059669;"></span> Canals (4)</div>
+            <div class="legend-item" id="legend-item-station-streamflow" style="margin: 0;"><span class="legend-dot gauge" style="background:#0284c7;"></span> Streamflow Gages</div>
+            <div class="legend-item" id="legend-item-station-reservoirs" style="margin: 0;"><span class="legend-dot gauge" style="background:#dc2626;"></span> Reservoirs</div>
+            <div class="legend-item" id="legend-item-station-tunnels" style="margin: 0;"><span class="legend-dot gauge" style="background:#0891b2;"></span> Tunnels</div>
+            <div class="legend-item" id="legend-item-station-canals" style="margin: 0;"><span class="legend-dot gauge" style="background:#059669;"></span> Canals</div>
           </div>
           <div class="legend-item" id="legend-item-flow-badge" style="display: none;"><span class="legend-cfs-badge">7,800 cfs</span> Live Flow Badge</div>
 
@@ -322,14 +315,11 @@
             </div>
           </details>
 
-          <!-- Footer with Attribution and Explicit Close Button -->
-          <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
-            <div class="legend-attribution" id="legend-attribution" style="margin: 0; padding: 0; border: none; font-size: 10px;">
-              Tiles &copy; Esri, USGS
+          <!-- Footer with Attribution -->
+          <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border-color); font-size: 10px; color: var(--text-muted); line-height: 1.4;">
+            <div class="legend-attribution" id="legend-attribution" style="margin: 0; padding: 0; border: none;">
+              Data: <a href="https://waterdata.usgs.gov/nwis" target="_blank" rel="noopener" style="color: var(--color-primary); text-decoration: underline; font-weight: 600;">USGS NWIS</a> &amp; <a href="https://www.usbr.gov/" target="_blank" rel="noopener" style="color: var(--color-primary); text-decoration: underline; font-weight: 600;">USBR Operations</a> • Tiles &copy; Esri, USGS
             </div>
-            <button type="button" onclick="toggleLegend()" style="font-size: 10px; font-weight: 700; color: var(--text-muted); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 4px; padding: 2px 7px; cursor: pointer; transition: all 0.15s ease;" title="Collapse map legend">
-              Collapse ▲
-            </button>
           </div>
         </div>
       </div>
@@ -339,34 +329,34 @@
         <div class="trackball-wrapper" id="trackball-wrapper" title="Drag center to orbit & tilt • Drag ring to rotate • Click to reset North • Double-click for 2D">
           <svg class="trackball-svg" id="trackball-svg" width="72" height="72" viewBox="-36 -36 72 72">
             <!-- Subtle outer bezel ring strictly concentric with wrapper -->
-            <circle cx="0" cy="0" r="34.5" fill="none" stroke="#94a3b8" stroke-width="0.8" stroke-opacity="0.45" />
+            <circle cx="0" cy="0" r="34.5" fill="none" stroke="#8c7a66" stroke-width="0.9" stroke-opacity="0.55" />
 
             <!-- Rotating Outer Compass Group (North Arrow & Cardinals) -->
             <g id="trackball-compass-ring" class="trackball-compass-ring">
-              <!-- North Red Arrow Indicator (tip touches r=34.5, base at r=25.5) -->
-              <polygon points="0,-34.5 3.6,-25.5 -3.6,-25.5" fill="#dc2626" />
+              <!-- North Canyon Red Arrow Indicator (tip touches r=34.5, base at r=25.5) -->
+              <polygon points="0,-34.5 3.6,-25.5 -3.6,-25.5" fill="#9e3f32" />
               <!-- Cardinal Degree Ticks (E, S, W all touch r=34.5 inward to r=27.5) -->
-              <line x1="34.5" y1="0" x2="27.5" y2="0" stroke="#64748b" stroke-width="1.5" stroke-linecap="round" />
-              <line x1="0" y1="34.5" x2="0" y2="27.5" stroke="#64748b" stroke-width="1.5" stroke-linecap="round" />
-              <line x1="-34.5" y1="0" x2="-27.5" y2="0" stroke="#64748b" stroke-width="1.5" stroke-linecap="round" />
+              <line x1="34.5" y1="0" x2="27.5" y2="0" stroke="#5c4a38" stroke-width="1.5" stroke-linecap="round" />
+              <line x1="0" y1="34.5" x2="0" y2="27.5" stroke="#5c4a38" stroke-width="1.5" stroke-linecap="round" />
+              <line x1="-34.5" y1="0" x2="-27.5" y2="0" stroke="#5c4a38" stroke-width="1.5" stroke-linecap="round" />
 
               <!-- Cardinal Labels (All bold 900 weight with uniform font size and deep contrast) -->
-              <text x="0" y="-18.8" fill="#dc2626" font-family="'Inter', -apple-system, sans-serif" font-size="8" font-weight="900" text-anchor="middle" dominant-baseline="central">N</text>
-              <text x="19.2" y="0" fill="#1e293b" font-family="'Inter', -apple-system, sans-serif" font-size="8" font-weight="900" text-anchor="middle" dominant-baseline="central">E</text>
-              <text x="0" y="18.8" fill="#1e293b" font-family="'Inter', -apple-system, sans-serif" font-size="8" font-weight="900" text-anchor="middle" dominant-baseline="central">S</text>
-              <text x="-19.5" y="0" fill="#1e293b" font-family="'Inter', -apple-system, sans-serif" font-size="8" font-weight="900" text-anchor="middle" dominant-baseline="central">W</text>
+              <text x="0" y="-18.8" fill="#9e3f32" font-family="'Inter', -apple-system, sans-serif" font-size="8" font-weight="900" text-anchor="middle" dominant-baseline="central">N</text>
+              <text x="19.2" y="0" fill="#3e3226" font-family="'Inter', -apple-system, sans-serif" font-size="8" font-weight="900" text-anchor="middle" dominant-baseline="central">E</text>
+              <text x="0" y="18.8" fill="#3e3226" font-family="'Inter', -apple-system, sans-serif" font-size="8" font-weight="900" text-anchor="middle" dominant-baseline="central">S</text>
+              <text x="-19.5" y="0" fill="#3e3226" font-family="'Inter', -apple-system, sans-serif" font-size="8" font-weight="900" text-anchor="middle" dominant-baseline="central">W</text>
             </g>
 
             <!-- Inner Interactive 3D Trackball Gimbal (Tilt & Orbit) -->
             <g id="trackball-inner-orb" class="trackball-inner-orb">
-              <!-- Inner Ball Surface (Sky Blue Ice theme, centered at 0, 0) -->
-              <circle cx="0" cy="0" r="13" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.2" stroke-dasharray="2,2" stroke-opacity="0.85" />
+              <!-- Inner Ball Surface (Warm Sandstone Tan theme, centered at 0, 0) -->
+              <circle cx="0" cy="0" r="13" fill="#f7f2e7" stroke="#8c6d4f" stroke-width="1.2" stroke-dasharray="2,2" stroke-opacity="0.85" />
               <!-- Horizon Bar -->
-              <line x1="-10.5" y1="0" x2="10.5" y2="0" stroke="rgba(2, 132, 199, 0.5)" stroke-width="1" />
+              <line x1="-10.5" y1="0" x2="10.5" y2="0" stroke="rgba(107, 87, 68, 0.45)" stroke-width="1" />
               <!-- Perspective Gimbal Ellipse (squashes with pitch) -->
-              <ellipse id="trackball-pitch-ellipse" cx="0" cy="0" rx="10.5" ry="10.5" fill="none" stroke="#0284c7" stroke-width="1.5" stroke-opacity="0.9" />
+              <ellipse id="trackball-pitch-ellipse" cx="0" cy="0" rx="10.5" ry="10.5" fill="none" stroke="#8c6d4f" stroke-width="1.5" stroke-opacity="0.9" />
               <!-- Center Trackball Pivot Dot -->
-              <circle id="trackball-center-pivot" cx="0" cy="0" r="3" fill="#0284c7" stroke="#ffffff" stroke-width="1.2" />
+              <circle id="trackball-center-pivot" cx="0" cy="0" r="3" fill="#6b5744" stroke="#ffffff" stroke-width="1.2" />
             </g>
           </svg>
         </div>
@@ -384,9 +374,8 @@
         <!-- Tray Toolbar / Controls Bar -->
         <div class="map-tray-header-bar" id="map-tray-header" onclick="toggleMapGageTray()">
           <div class="tray-header-left">
-            <span class="tray-indicator-dot"></span>
             <span class="tray-title-text">Gages &amp; Monitoring Facilities</span>
-            <span class="tray-badge" id="tray-node-count">98</span>
+            <span class="tray-badge" id="tray-node-count">92</span>
             <span class="tray-sub-hint hidden sm:inline">&bull; Click row to fly</span>
           </div>
 
@@ -398,7 +387,7 @@
             </div>
             <div class="tray-filter-pills">
               <button class="tray-pill active" id="tpill-all" onclick="filterTrayCategory('all')">All</button>
-              <button class="tray-pill" id="tpill-sentinel" onclick="filterTrayCategory('sentinel')">Sentinels</button>
+              <button class="tray-pill" id="tpill-sentinel" onclick="filterTrayCategory('sentinel')">Key Gages</button>
               <button class="tray-pill" id="tpill-streamflow" onclick="filterTrayCategory('streamflow')">Tributaries</button>
               <button class="tray-pill" id="tpill-diversion" onclick="filterTrayCategory('diversion')">Exports</button>
               <button class="tray-pill" id="tpill-reservoir" onclick="filterTrayCategory('reservoir')">Reservoirs</button>
@@ -451,18 +440,23 @@
 
         <!-- Middle Row: Hydrologic Storytelling / Sentinel Pulse Strip (Full Width, Never Clipped) -->
         <div class="replay-sentinel-strip" id="replay-sentinel-strip">
-          <div class="sentinel-pill" title="San Juan River entering Lake Powell (Mexican Hat, UT)">
-            <span class="sentinel-label">San Juan</span>
+          <div class="sentinel-pill" title="San Juan River entering Lake Powell (Bluff, UT)">
+            <span class="sentinel-label">San Juan:</span>
             <span class="sentinel-val"><strong id="replay-sanjuan-flow">--</strong> <span class="sentinel-unit">cfs</span></span>
           </div>
           <span class="sentinel-divider">→ Lake Powell →</span>
-          <div class="sentinel-pill" title="Controlled release from Glen Canyon Dam below Lake Powell (Lees Ferry, AZ)">
-            <span class="sentinel-label">Lees Ferry</span>
+          <div class="sentinel-pill" title="Regulated Glen Canyon Dam release (Lees Ferry, AZ)">
+            <span class="sentinel-label">Lees Ferry:</span>
             <span class="sentinel-val"><strong id="replay-lees-flow">--</strong> <span class="sentinel-unit">cfs</span></span>
           </div>
           <span class="sentinel-divider">→ Lake Mead →</span>
-          <div class="sentinel-pill" title="Gila River confluence near Dome / Yuma, AZ (Lower Basin Inflow)">
-            <span class="sentinel-label">Gila River</span>
+          <div class="sentinel-pill" title="Residual mainstem flow below Imperial Dam after All-American Canal diversion (AZ-CA)">
+            <span class="sentinel-label">Below Imperial:</span>
+            <span class="sentinel-val"><strong id="replay-imperial-flow">--</strong> <span class="sentinel-unit">cfs</span></span>
+          </div>
+          <span class="sentinel-divider">+ Inflow:</span>
+          <div class="sentinel-pill" title="Gila River confluence near Dome / Yuma, AZ (Lower Basin Inflow entering near Mexican Border)">
+            <span class="sentinel-label">Gila River:</span>
             <span class="sentinel-val"><strong id="replay-gila-flow">--</strong> <span class="sentinel-unit">cfs</span></span>
           </div>
         </div>
@@ -1027,48 +1021,20 @@ print("Hydrologic monitoring pipeline synced successfully.")</code></pre>
             <span class="api-tag pipeline" style="background:#e0e7ff; color:#3730a3; border-color:#c7d2fe;">Jupyter Notebooks (DAT 1001)</span>
           </div>
           <p class="law-text">
-            For academic inspection and reproducible research, all data engineering, topological network routing, and machine learning models are organized into three standalone Jupyter notebooks in <code>notebooks/</code>. Static pre-rendered HTML copies and direct raw downloads are available:
+            For academic inspection and reproducible research, the full hydrologic accounting, network topology, and flow regime analysis is consolidated in a single executable notebook in <code>notebooks/</code>:
           </p>
           <div style="display:flex; flex-direction:column; gap:10px; margin: 12px 0;">
-            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:3px; padding:10px 14px;">
+            <div style="background:#f7f4ee; border:1px solid #cfc8ba; border-radius:2px; padding:10px 14px;">
               <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
-                <strong style="color:#0f172a; font-size:12px;">01_build_river_network.ipynb</strong>
+                <strong style="color:#0f172a; font-size:12px;">colorado_river_analysis.ipynb</strong>
                 <div style="display:flex; gap:6px;">
-                  <a href="notebooks/01_build_river_network.html" target="_blank" rel="noopener noreferrer" style="font-size:11px; font-weight:700; color:#0284c7; text-decoration:underline;">View Rendered HTML ↗</a>
-                  <span style="color:#cbd5e1;">•</span>
-                  <a href="notebooks/01_build_river_network.ipynb" download style="font-size:11px; color:#475569;">Download .ipynb</a>
+                  <a href="notebooks/colorado_river_analysis.html" target="_blank" rel="noopener noreferrer" style="font-size:11px; font-weight:700; color:#2b5c8f; text-decoration:underline;">View Rendered HTML ↗</a>
+                  <span style="color:#cfc8ba;">•</span>
+                  <a href="notebooks/colorado_river_analysis.ipynb" download style="font-size:11px; color:#475569;">Download .ipynb</a>
                 </div>
               </div>
               <div style="font-size:11px; color:#475569; margin-top:4px;">
-                <strong>Spatial Topology &amp; Dynamic Shoreline Engine:</strong> Uses <code>pynhd.NLDI</code> and <code>WaterData</code> to disaggregate NHDPlus artificial paths from free-flowing rivers, calculates smoothed bed elevations, enforces the dynamic Cataract Canyon re-emergence rule, and synthesizes the Lake Powell topobathymetric contour deck from 3,490' to 3,700'.
-              </div>
-            </div>
-
-            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:3px; padding:10px 14px;">
-              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
-                <strong style="color:#0f172a; font-size:12px;">02_analyze_flow_and_export.ipynb</strong>
-                <div style="display:flex; gap:6px;">
-                  <a href="notebooks/02_analyze_flow_and_export.html" target="_blank" rel="noopener noreferrer" style="font-size:11px; font-weight:700; color:#0284c7; text-decoration:underline;">View Rendered HTML ↗</a>
-                  <span style="color:#cbd5e1;">•</span>
-                  <a href="notebooks/02_analyze_flow_and_export.ipynb" download style="font-size:11px; color:#475569;">Download .ipynb</a>
-                </div>
-              </div>
-              <div style="font-size:11px; color:#475569; margin-top:4px;">
-                <strong>Real-Time Streamflow Observations &amp; Hydrological Metrics:</strong> Uses official USGS <code>dataretrieval</code> to ingest live discharge (<code>00060</code>), 50-year daily p50 statistics, sequential reach mass-balance deltas (&Delta;Q), and reservoir elevations (<code>62614</code>). Exports static contract <code>latest_conditions.json</code>.
-              </div>
-            </div>
-
-            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:3px; padding:10px 14px;">
-              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
-                <strong style="color:#0f172a; font-size:12px;">03_tributary_ml_analysis.ipynb</strong>
-                <div style="display:flex; gap:6px;">
-                  <a href="notebooks/03_tributary_ml_analysis.html" target="_blank" rel="noopener noreferrer" style="font-size:11px; font-weight:700; color:#0284c7; text-decoration:underline;">View Rendered HTML ↗</a>
-                  <span style="color:#cbd5e1;">•</span>
-                  <a href="notebooks/03_tributary_ml_analysis.ipynb" download style="font-size:11px; color:#475569;">Download .ipynb</a>
-                </div>
-              </div>
-              <div style="font-size:11px; color:#475569; margin-top:4px;">
-                <strong>Multi-Tributary Regimes, Hydraulic Lag &amp; Deficit ML:</strong> Unsupervised K-Means clustering (Yield vs. Flashiness), cross-correlation hydraulic travel time curves to Lake Powell (San Juan 1–2d vs Cameo/Yampa 7–9d), time-lagged multiple regression, and statutory allocation deficit analysis.
+                Unified Jupyter notebook covering geospatial river topology, Cataract Canyon re-emergence, live USGS NWIS telemetry, SQLite analytics, 104-year Compact deficit accounting, reservoir buffer depletion, tributary travel lag times, and Richards-Baker Flashiness / K-Means flow regimes.
               </div>
             </div>
           </div>

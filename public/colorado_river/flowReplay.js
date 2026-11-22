@@ -45,11 +45,12 @@
 
     // Sentinel Station IDs for pulse tracking
     SENTINELS: {
-      SAN_JUAN: '09379500',   // San Juan River at Mexican Hat, UT (Inflow to Powell)
+      SAN_JUAN: '09379500',   // San Juan River at Bluff, UT (Inflow to Powell)
       CISCO: '09180500',      // Colorado River nr Cisco, UT (Upper Mainstem to Powell)
       LEES_FERRY: '09380000', // Colorado River at Lees Ferry, AZ (Powell Outflow)
       LITTLE_CO: '09402000',  // Little Colorado River at Cameron, AZ (Grand Canyon Inflow)
-      GILA_DOME: '09520500'   // Gila River near Dome, AZ (Lower Basin / Border)
+      IMPERIAL: '09429500',   // Colorado River below Imperial Dam, AZ-CA (Lower Basin Mainstem)
+      GILA_DOME: '09520500'   // Gila River near Dome, AZ (Lower Basin / Border Confluence)
     },
 
     init(mapInstance, metricsData, normalsData) {
@@ -458,7 +459,14 @@
         lfEl.textContent = val != null ? Math.round(val).toLocaleString() : '--';
       }
 
-      // Gila River at Dome (Lower Basin)
+      // Below Imperial Dam (Lower Basin mainstem post-All-American Canal)
+      const impEl = document.getElementById('replay-imperial-flow');
+      if (impEl && stations[this.SENTINELS.IMPERIAL]) {
+        const val = stations[this.SENTINELS.IMPERIAL][index];
+        impEl.textContent = val != null ? Math.round(val).toLocaleString() : '--';
+      }
+
+      // Gila River at Dome (Lower Basin tributary confluence)
       const gilaEl = document.getElementById('replay-gila-flow');
       if (gilaEl && stations[this.SENTINELS.GILA_DOME]) {
         const val = stations[this.SENTINELS.GILA_DOME][index];
@@ -574,7 +582,7 @@
           if (rType === 'submerged_path' || rName.endsWith('_submerged_path')) {
             weight = 1.8;
             healthColor = '#0369a1';
-            healthLabel = 'Submerged Reservoir Thalweg';
+            healthLabel = 'Submerged River Channel';
           } else if (rType === 'canal' || rName === 'div_canal_alimentador_central') {
             healthColor = '#0284c7';
             healthLabel = '1944 Treaty Delivery';

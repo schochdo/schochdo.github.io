@@ -3,17 +3,27 @@
    ============================================================== */
 
 :root {
-  --canvas-bg: #fafaf9;
-  --surface-bg: #ffffff;
-  --ink-heading: #0f172a;
-  --ink-body: #334155;
-  --ink-muted: #64748b;
-  --ink-subtle: #94a3b8;
-  --hairline: #e2e8f0;
-  --hairline-dark: #d6d3d1;
-  --radius-card: 3px;
-  --radius-button: 2px;
-  --radius-tag: 2px;
+  --canvas-bg: #f5f2eb;          /* Warm sandstone parchment panel canvas */
+  --sidebar-bg: #ece8df;         /* Muted sandstone-gray navigation panel */
+  --sidebar-hover: #e2ddd1;      /* Subtle sandstone hover fill */
+  --surface-bg: #ece8df;         /* Secondary surface panel */
+  --card-bg: #ffffff;            /* Crisp card surface */
+  --card-bg-subtle: #f5f2eb;     /* Subtle parchment inner container */
+  --ink-heading: #0f172a;        /* Deep slate-900 primary text */
+  --ink-body: #1e293b;           /* Slate-800 body text */
+  --ink-muted: #475569;          /* Balanced slate-600 */
+  --ink-subtle: #64748b;         /* Slate-500 dim text */
+  --hairline: #cfc8ba;           /* Warm muted stone border */
+  --hairline-dark: #8c8476;      /* Darker muted stone border */
+  --radius-card: 2px;            /* Square corner look */
+  --radius-button: 2px;          /* Square corner look */
+  --radius-tag: 2px;             /* Square corner look */
+  --river-blue: #2b5c8f;         /* Muted river blue */
+  --riparian-green: #3f6f58;     /* Muted riparian sage */
+  --canyon-red: #9e3f32;         /* Muted red-rock terracotta */
+  --color-primary: #2b5c8f;
+  --color-primary-hover: #21476e;
+  --color-primary-light: #eef4fa;
 }
 
 /* 1. Canvas & Ink Foundations */
@@ -34,19 +44,260 @@ h1, h2, h3, h4, h5, h6 {
   font-feature-settings: "tnum" 1;
 }
 
-/* 3. Kill "Bubble-Wrap" Rounded Borders across UI Cards & Containers */
+/* 3. Universal Square Corner Look (Zero Bubble-Wrap) */
 .card, .card-academic, .stat-card, .editorial-card,
-.modal-card, .rounded-xl, .rounded-2xl, .rounded-3xl, .rounded-lg {
+.modal-card, .rounded-xl, .rounded-2xl, .rounded-3xl, .rounded-lg, .rounded-md, .rounded, .rounded-sm,
+.sidebar-panel, .map-legend, .map-menu-dropdown, .dialog-box, .leaflet-popup-content-wrapper, .maplibregl-popup-content,
+.dashboard-card, .law-stat-card, .law-item-box {
   border-radius: var(--radius-card) !important;
 }
 
-/* Restrained radii for buttons, badges, and tags */
-button:not(.circle-btn):not(#compass-container button),
-.tag, .badge, .law-tag, .api-tag {
+/* Restrained square radii for buttons, badges, pills, tabs, and inputs */
+button:not(.circle-btn):not(#compass-container button):not(#trackball-wrapper button):not(.compass-btn),
+.tag, .badge, .law-tag, .api-tag, .type-pill, .stat-badge, .tab-btn, .nav-btn, .map-menu-btn,
+input, select, textarea, .slider, .sidebar-link, .sidebar-expand-tab, .custom-select, .nav-header-btn {
   border-radius: var(--radius-button) !important;
 }
 
-/* 4. Hairlines Instead of Drop Shadows */
+/* 3b. Square Precision Map & Card Controls */
+.collapse-icon, .legend-toggle-chevron, .tray-handle-bar {
+  border-radius: 2px !important;
+  transform: none !important;
+  transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+.collapse-icon svg, .legend-toggle-chevron svg {
+  transition: none !important;
+}
+
+.maplibregl-ctrl-group, .maplibregl-ctrl-tilt, .maplibregl-ctrl-group button, .ctrl-tilt-btn {
+  border-radius: 2px !important;
+}
+
+.storage-bar-bg, .storage-bar-fill, .progress-bar-bg, .progress-bar-fill {
+  border-radius: 0px !important;
+}
+
+/* High-density compact precision slider switches */
+.slider {
+  width: 22px !important;
+  height: 12px !important;
+  border-radius: 2px !important;
+  background-color: #d6cfc2 !important;
+  flex-shrink: 0 !important;
+  position: relative !important;
+  transition: 0.15s ease !important;
+}
+.slider:before {
+  content: "" !important;
+  position: absolute !important;
+  height: 8px !important;
+  width: 8px !important;
+  left: 2px !important;
+  bottom: 2px !important;
+  background-color: #ffffff !important;
+  border-radius: 1px !important;
+  transition: 0.15s ease !important;
+}
+input:checked + .slider {
+  background-color: var(--river-blue, #2b5c8f) !important;
+}
+input:checked + .slider:before {
+  transform: translateX(10px) !important;
+}
+
+.status-dot, .legend-dot, .reservoir-dot, .station-dot {
+  border-radius: 1px !important;
+}
+
+/* 4. Unified Palette & Square Architecture */
+.sidebar-academic {
+  background-color: var(--sidebar-bg) !important;
+  color: var(--ink-heading) !important;
+  border-right: 1px solid var(--hairline) !important;
+}
+
+.sidebar-category-header {
+  color: #1e293b !important;
+  font-size: 11.5px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.05em !important;
+  padding: 10px 6px 3px 6px !important;
+  margin-bottom: 3px !important;
+  border-bottom: 1.5px solid #b8ae9c !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+.sidebar-link {
+  color: var(--ink-body) !important;
+  background-color: rgba(255, 255, 255, 0.52) !important;
+  border-radius: var(--radius-button) !important;
+  box-sizing: border-box !important;
+  padding: 6px 10px !important;
+  line-height: 1.25 !important;
+  justify-content: center !important;
+  text-align: center !important;
+  border: 1.5px solid rgba(207, 200, 186, 0.55) !important;
+  border-left: 3.5px solid transparent !important;
+  outline: none !important;
+  transition: background-color 0.12s ease, border-color 0.12s ease, color 0.12s ease !important;
+}
+
+.sidebar-link:hover {
+  background-color: #ffffff !important;
+  border-color: #b8ae9c !important;
+  border-left-color: transparent !important;
+  color: var(--ink-heading) !important;
+}
+
+.sidebar-link.active {
+  background-color: #ffffff !important;
+  color: var(--ink-heading) !important;
+  font-weight: 700 !important;
+  border-color: #b8ae9c !important;
+  border-left-color: var(--river-blue) !important;
+  border-radius: var(--radius-button) !important;
+  box-shadow: none !important;
+}
+
+.sidebar-link.active svg {
+  color: var(--river-blue) !important;
+}
+
+#academic-top-header {
+  background-color: var(--canvas-bg) !important;
+  border-bottom: 1px solid var(--hairline) !important;
+}
+
+/* Floating map elements & Basin Metrics panel */
+.sidebar-panel {
+  background: var(--canvas-bg) !important;
+  border-left: 1.5px solid var(--hairline) !important;
+  border-radius: 0 !important;
+  overflow-y: scroll !important;
+  scrollbar-gutter: stable !important;
+}
+
+.sidebar-expand-tab {
+  background: #faf8f4 !important;
+  border: 1.5px solid var(--hairline) !important;
+  border-right: none !important;
+  border-radius: var(--radius-card) 0 0 var(--radius-card) !important;
+}
+
+.sidebar-expand-tab .tab-icon {
+  color: var(--river-blue) !important;
+}
+
+.sidebar-expand-tab:hover {
+  background: #ffffff !important;
+  border-color: var(--hairline-dark) !important;
+}
+
+.sidebar-expand-tab:hover .tab-text-vertical,
+.sidebar-expand-tab:hover .tab-icon {
+  color: var(--ink-heading) !important;
+}
+
+.sidebar-expand-tab.active {
+  background: var(--river-blue, #2b5c8f) !important;
+  border-color: var(--river-blue, #2b5c8f) !important;
+}
+
+.sidebar-expand-tab.active .tab-icon,
+.sidebar-expand-tab.active .tab-text-vertical,
+.sidebar-expand-tab.active .tab-arrow-vertical {
+  color: #ffffff !important;
+}
+
+/* Basin Metrics Square Cards (Lee's Ferry, Outflows & Reservoirs) */
+.flow-bar-row,
+.flow-bar-row.interactive,
+.res-row,
+.flow-dest-item {
+  border-radius: var(--radius-card, 2px) !important;
+  border: 1px solid #d6cfc2 !important;
+  background: #faf8f4 !important;
+  padding: 6px 10px !important;
+  transition: all 0.15s ease !important;
+}
+
+.flow-bar-row.interactive:hover,
+.res-row:hover,
+.flow-dest-item:hover {
+  background: #ffffff !important;
+  border-color: var(--hairline-dark, #8c8476) !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.flow-bar-track,
+.flow-bar-fill,
+.res-bar-track,
+.res-bar-fill,
+.storage-bar-bg,
+.storage-bar-fill {
+  border-radius: 0px !important;
+}
+
+/* Muted River Blue for Basin Metrics elements */
+.flow-bar-fill[style*="var(--color-primary)"],
+.flow-bar-fill[style*="#0284c7"],
+.flow-bar-fill[style*="#0ea5e9"] {
+  background-color: #2b5c8f !important;
+}
+
+.flow-bar-val[style*="var(--color-primary)"],
+.flow-bar-val[style*="#0284c7"],
+.flow-bar-val[style*="#0ea5e9"] {
+  color: #2b5c8f !important;
+}
+
+.sidebar-header-bar svg {
+  stroke: #2b5c8f !important;
+}
+
+.map-menu-dropdown {
+  background: var(--canvas-bg) !important;
+  border: 1.5px solid var(--hairline) !important;
+  border-radius: var(--radius-card) !important;
+}
+
+.map-menu-btn {
+  background: #faf8f4 !important;
+  border: 1.5px solid var(--hairline) !important;
+  border-radius: var(--radius-button) !important;
+}
+
+.map-menu-btn:hover {
+  background: #ffffff !important;
+  border-color: var(--hairline-dark) !important;
+}
+
+.map-menu-btn.active {
+  background: var(--river-blue, #2b5c8f) !important;
+  border-color: var(--river-blue, #2b5c8f) !important;
+  color: #ffffff !important;
+}
+
+.map-menu-btn.active svg {
+  stroke: #ffffff !important;
+}
+
+.card.layer-card,
+.card.outflows-card,
+.card.reservoirs-card,
+.card.front-range-card,
+.card.sectors-card,
+.card-academic,
+.dashboard-card {
+  background: #ffffff !important;
+  border: 1.5px solid var(--hairline) !important;
+  border-radius: var(--radius-card) !important;
+}
+
+/* 5. Hairlines Instead of Drop Shadows */
 .shadow-2xl, .shadow-xl, .shadow-lg, .shadow-md, .shadow-sm, .shadow-xs, .shadow {
   box-shadow: none !important;
 }
@@ -320,3 +571,457 @@ svg text.tabular-nums, svg .maf-badge, svg .axis-label {
   font-feature-settings: "tnum" 1;
 }
 
+
+/* 4b. Map Controls (Layers & Basemaps) High-Density Space-Efficient Layout */
+.map-menu-dropdown {
+  padding: 12px 12px 10px 12px !important;
+  gap: 8px !important;
+  width: 310px !important;
+}
+
+.map-menu-dropdown .map-tray-header {
+  padding-bottom: 8px !important;
+  margin-bottom: 0px !important;
+}
+
+.map-menu-dropdown .map-menu-nav-tabs {
+  padding: 2px !important;
+  gap: 2px !important;
+  border-radius: 2px !important;
+  border: 1px solid #d6cfc2 !important;
+  background: #ece8df !important;
+}
+
+.map-menu-dropdown .map-menu-tab-btn {
+  padding: 5px 10px !important;
+  font-size: 11.5px !important;
+  border-radius: 2px !important;
+}
+
+.map-menu-dropdown .map-menu-tab-btn.active {
+  background: #ffffff !important;
+  border: 1px solid #d6cfc2 !important;
+  border-bottom: 2px solid var(--river-blue, #2b5c8f) !important;
+  border-radius: 2px !important;
+  color: var(--ink-heading) !important;
+  font-weight: 700 !important;
+}
+
+.map-menu-dropdown .map-menu-tab-pane {
+  background: #ffffff !important;
+  border: 1.5px solid var(--hairline) !important;
+  border-radius: var(--radius-card) !important;
+  padding: 6px 8px !important;
+  gap: 2px !important;
+  box-sizing: border-box !important;
+}
+
+.map-menu-dropdown .toggle-group {
+  gap: 2px !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Layer Items - Warm river-corridor card */
+.map-menu-dropdown .map-menu-tab-pane .toggle-label {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  background: #f5f2eb !important;
+  border: 1px solid #d6cfc2 !important;
+  border-radius: var(--radius-button) !important;
+  padding: 3.5px 8px !important;
+  margin-bottom: 2px !important;
+  min-height: 22px !important;
+  font-size: 11px !important;
+  line-height: 1.25 !important;
+  font-weight: 500 !important;
+  color: var(--ink-heading) !important;
+  cursor: pointer !important;
+  box-sizing: border-box !important;
+  transition: all 0.15s ease !important;
+}
+
+.map-menu-dropdown .map-menu-tab-pane .toggle-label:hover {
+  background: #ffffff !important;
+  border-color: var(--hairline-dark) !important;
+}
+
+/* Sub-layer Indented Items */
+.map-menu-dropdown .map-menu-tab-pane .toggle-label[style*="padding-left"] {
+  background: #faf8f4 !important;
+  border: 1px solid #e2dcd0 !important;
+  margin-left: 8px !important;
+  width: calc(100% - 8px) !important;
+  padding: 2.5px 6px !important;
+  min-height: 20px !important;
+  font-size: 10.5px !important;
+}
+
+.map-menu-dropdown .map-menu-tab-pane .toggle-label[style*="padding-left"]:hover {
+  background: #ffffff !important;
+  border-color: var(--hairline) !important;
+}
+
+/* Topology Diagnostics Box */
+.map-menu-dropdown .map-menu-tab-pane .topology-diagnostics-group {
+  margin-top: 6px !important;
+  padding-top: 5px !important;
+  border-top: 1px solid var(--hairline) !important;
+  gap: 2px !important;
+}
+
+.map-menu-dropdown .map-menu-tab-pane .topology-diagnostics-group > div:first-child {
+  font-size: 9.5px !important;
+  margin-bottom: 2px !important;
+}
+
+/* Basemap Items - Warm corridor cards */
+.map-menu-dropdown .map-menu-tab-pane .basemap-list {
+  gap: 2px !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.map-menu-dropdown .map-menu-tab-pane .basemap-item-btn {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  width: 100% !important;
+  padding: 5px 8px !important;
+  background: #f5f2eb !important;
+  border: 1px solid #d6cfc2 !important;
+  border-radius: var(--radius-button) !important;
+  color: var(--ink-heading) !important;
+  font-family: inherit !important;
+  font-size: 11.5px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  text-align: left !important;
+  margin-bottom: 2px !important;
+  box-sizing: border-box !important;
+  transition: all 0.15s ease !important;
+}
+
+.map-menu-dropdown .map-menu-tab-pane .basemap-item-btn:hover {
+  background: #ffffff !important;
+  border-color: var(--hairline-dark) !important;
+}
+
+.map-menu-dropdown .map-menu-tab-pane .basemap-item-btn.active {
+  background: #ffffff !important;
+  border: 1.5px solid var(--river-blue, #2b5c8f) !important;
+  color: var(--ink-heading) !important;
+  font-weight: 700 !important;
+}
+
+/* 4c. Map Legend - Warm Sandstone Parchment & River Blue Accent */
+.map-legend {
+  background: #faf8f4 !important;
+  border: 1.5px solid var(--hairline) !important;
+  border-radius: var(--radius-card) !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.12) !important;
+}
+
+.map-legend .legend-header-toggle {
+  background: #f5f2eb !important;
+  border-bottom: 1.5px solid var(--hairline) !important;
+  padding: 7px 12px !important;
+}
+
+.map-legend h4 {
+  color: var(--river-blue, #2b5c8f) !important;
+  font-size: 11.5px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  margin: 0 !important;
+}
+
+.map-legend .legend-toggle-chevron {
+  background: #ffffff !important;
+  border: 1px solid var(--hairline) !important;
+  color: var(--river-blue, #2b5c8f) !important;
+}
+
+.map-legend .legend-content {
+  background: #faf8f4 !important;
+  color: var(--ink-body) !important;
+  padding: 8px 12px 10px 12px !important;
+}
+
+.map-legend .legend-section-title {
+  color: var(--ink-muted) !important;
+  font-size: 9.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  margin: 8px 0 4px 0 !important;
+}
+
+.map-legend .legend-item {
+  font-size: 11px !important;
+  margin-bottom: 3.5px !important;
+  color: var(--ink-body) !important;
+}
+
+/* Collapsed State: Warm parchment pill with river-blue accent */
+.map-legend.collapsed {
+  background: #faf8f4 !important;
+  border: 1.5px solid var(--hairline) !important;
+  border-radius: var(--radius-card) !important;
+  padding: 0 !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08) !important;
+}
+
+.map-legend.collapsed .legend-header-toggle {
+  background: transparent !important;
+  border-bottom: none !important;
+  padding: 6px 10px !important;
+}
+
+.map-legend.collapsed h4 {
+  color: var(--river-blue, #2b5c8f) !important;
+  font-size: 11.5px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.06em !important;
+}
+
+.map-legend.collapsed:hover {
+  background: #ffffff !important;
+  border-color: var(--hairline-dark) !important;
+}
+
+.map-legend.collapsed:hover h4 {
+  color: var(--ink-heading) !important;
+}
+
+.map-legend.collapsed .legend-toggle-chevron {
+  background: #ffffff !important;
+  border: 1px solid var(--hairline) !important;
+  color: var(--river-blue, #2b5c8f) !important;
+}
+
+/* Map Bottom Gage Tray Handle Warm Corridor Overrides */
+.map-gage-tray {
+  background: rgba(250, 248, 244, 0.98) !important;
+  border-top: 1.5px solid var(--hairline) !important;
+}
+
+.tray-handle-strip {
+  background: #f5f2eb !important;
+  border-bottom: 1px solid var(--hairline) !important;
+}
+
+.tray-handle-strip:hover {
+  background: #ece8df !important;
+}
+
+.tray-handle-bar {
+  background: #faf8f4 !important;
+  border: 1px solid #b8ae9c !important;
+  color: var(--river-blue, #2b5c8f) !important;
+}
+
+.tray-handle-arrow {
+  color: var(--river-blue, #2b5c8f) !important;
+}
+
+/* Universal Light Code Box Aesthetic */
+.popup-code-box,
+.code-snippet-box {
+  background: #f8fafc !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 2px !important;
+}
+
+.popup-code-box pre,
+.popup-code-box code,
+.code-snippet-box pre,
+.code-snippet-box code {
+  color: #0f172a !important;
+}
+
+.popup-code-box button,
+.code-snippet-copy-btn {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #475569 !important;
+  border-radius: 2px !important;
+}
+
+.popup-code-box button:hover,
+.code-snippet-copy-btn:hover {
+  background: #f1f5f9 !important;
+  border-color: #94a3b8 !important;
+  color: #0f172a !important;
+}
+
+/* Warm Dark-Brown Corridor Scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #6b5744 #ece8df;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: #ece8df;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #6b5744;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4f3f30;
+}
+
+.legend-content {
+  scrollbar-color: #6b5744 #ece8df !important;
+}
+
+.legend-content::-webkit-scrollbar {
+  width: 6px !important;
+}
+
+.legend-content::-webkit-scrollbar-track {
+  background: #ece8df !important;
+}
+
+.legend-content::-webkit-scrollbar-thumb {
+  background: #6b5744 !important;
+  border-radius: 2px !important;
+}
+
+.legend-content::-webkit-scrollbar-thumb:hover {
+  background: #4f3f30 !important;
+}
+
+/* Warm Tan Gyroscope & MapLibre Zoom / Compass / Tilt Controls (+ - N) */
+.trackball-wrapper {
+  background: #ede6d8 !important;
+  border: 1.5px solid #b8ae9c !important;
+  box-shadow: 0 3px 10px rgba(79, 63, 48, 0.14) !important;
+}
+
+.trackball-wrapper:hover {
+  background: #f7f4ee !important;
+  border-color: #8c7a66 !important;
+  box-shadow: 0 4px 14px rgba(79, 63, 48, 0.18) !important;
+}
+
+.trackball-wrapper.grabbing {
+  background: #f7f4ee !important;
+  border-color: #6b5744 !important;
+  box-shadow: 0 2px 8px rgba(79, 63, 48, 0.25) !important;
+}
+
+.maplibregl-ctrl-group {
+  background: #ede6d8 !important;
+  border: 1.5px solid #b8ae9c !important;
+  border-radius: 2px !important;
+  box-shadow: 0 2px 8px rgba(79, 63, 48, 0.14) !important;
+}
+
+.maplibregl-ctrl-group button {
+  background: transparent !important;
+  border-bottom: 1px solid #d6cfc2 !important;
+  color: #4f3f30 !important;
+}
+
+.maplibregl-ctrl-group button:last-child {
+  border-bottom: none !important;
+}
+
+.maplibregl-ctrl-group button:hover {
+  background-color: #f7f4ee !important;
+}
+
+.maplibregl-ctrl-group button:not(.maplibregl-ctrl-compass) .maplibregl-ctrl-icon {
+  filter: brightness(0) saturate(100%) invert(24%) sepia(24%) saturate(650%) hue-rotate(350deg) brightness(90%) contrast(92%) !important;
+}
+
+.maplibregl-ctrl-group button:not(.maplibregl-ctrl-compass):hover .maplibregl-ctrl-icon {
+  filter: brightness(0) saturate(100%) invert(16%) sepia(28%) saturate(750%) hue-rotate(350deg) brightness(82%) contrast(96%) !important;
+}
+
+.maplibregl-ctrl-group button.maplibregl-ctrl-compass .maplibregl-ctrl-icon {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2034%2034%22%3E%0A%20%20%3Cpath%20d%3D%22M17%204.5%20L26.5%2027%20L17%2021.5%20L7.5%2027%20Z%22%20fill%3D%22%235c4a38%22%20stroke%3D%22%233e3226%22%20stroke-width%3D%220.8%22%20stroke-linejoin%3D%22round%22/%3E%0A%3C/svg%3E") !important;
+}
+
+.maplibregl-ctrl-group button.maplibregl-ctrl-compass:hover .maplibregl-ctrl-icon {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2034%2034%22%3E%0A%20%20%3Cpath%20d%3D%22M17%204.5%20L26.5%2027%20L17%2021.5%20L7.5%2027%20Z%22%20fill%3D%22%233e3226%22%20stroke%3D%22%233e3226%22%20stroke-width%3D%220.8%22%20stroke-linejoin%3D%22round%22/%3E%0A%3C/svg%3E") !important;
+}
+
+.maplibregl-ctrl-tilt .ctrl-tilt-btn {
+  color: #4f3f30 !important;
+}
+
+.maplibregl-ctrl-tilt .ctrl-tilt-btn:hover {
+  background-color: #f7f4ee !important;
+  color: #3e3226 !important;
+}
+
+.maplibregl-ctrl-tilt .ctrl-tilt-btn.active {
+  background: #e2d8c5 !important;
+  color: #3e3226 !important;
+}
+
+.maplibregl-ctrl-tilt .ctrl-tilt-btn.active:hover {
+  background: #ede6d8 !important;
+}
+
+/* Flow Replay Bar — Warm Sandstone Tan Theme */
+.flow-replay-bar {
+  background: rgba(237, 230, 216, 0.96) !important;
+  border: 1px solid #b8ae9c !important;
+  color: #3e3226 !important;
+  box-shadow: 0 2px 10px rgba(62, 50, 38, 0.14) !important;
+  border-radius: 2px !important;
+}
+.flow-replay-bar .replay-kicker {
+  color: #4f3f30 !important;
+}
+.flow-replay-bar .replay-time-display {
+  color: #2f251b !important;
+}
+.flow-replay-bar .replay-rel-time,
+.flow-replay-bar .replay-speed-label,
+.flow-replay-bar .replay-slider-ticks {
+  color: #6b5744 !important;
+}
+.flow-replay-bar .replay-period-pills,
+.flow-replay-bar .replay-speed-group {
+  background: #e2d8c5 !important;
+  border: 1px solid #cfc8ba !important;
+}
+.flow-replay-bar .period-pill,
+.flow-replay-bar .speed-pill,
+.flow-replay-bar .replay-ctrl-btn,
+.flow-replay-bar .replay-close-btn {
+  background: #f7f4ee !important;
+  color: #4f3f30 !important;
+  border-color: #b8ae9c !important;
+}
+.flow-replay-bar .period-pill.active,
+.flow-replay-bar .speed-pill.active,
+.flow-replay-bar .replay-ctrl-btn.play-btn {
+  background: #6b5744 !important;
+  color: #faf8f4 !important;
+  border-color: #4f3f30 !important;
+}
+.flow-replay-bar .replay-sentinel-strip {
+  background: #f7f4ee !important;
+  border-color: #cfc8ba !important;
+}
+.flow-replay-bar .sentinel-val strong {
+  color: #2f251b !important;
+}
+.flow-replay-bar .replay-slider {
+  accent-color: #6b5744 !important;
+}

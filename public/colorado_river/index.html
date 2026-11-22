@@ -14,7 +14,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   
   <!-- Editorial Design Standard (Edward Tufte / NYT Restrained Palette) -->
-  <link rel="stylesheet" href="editorial.css">
+  <link rel="stylesheet" href="editorial.css?v=20261121d">
   
   <!-- Chart.js CDN for responsive, publication-quality academic charts -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
@@ -27,7 +27,7 @@
     }
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background-color: #f8fafc;
+      background-color: #cbd5e1;
       height: 100%;
       height: -webkit-fill-available;
       height: 100dvh;
@@ -41,9 +41,9 @@
       box-sizing: border-box;
     }
     .sidebar-academic {
-      background-color: #f8fafc;
-      color: #334155;
-      border-right: 1px solid #e2e8f0;
+      background-color: #e2e8f0;
+      color: #0f172a;
+      border-right: 1.5px solid #94a3b8;
       height: 100%;
       height: -webkit-fill-available;
       height: 100dvh;
@@ -73,79 +73,99 @@
     
     /* Academic editorial palette matching Tufte / data science presentation */
     .portal-bg {
-      background-color: #f8fafc;
+      background-color: #cbd5e1;
     }
     .card-academic {
       background-color: #ffffff;
-      border: 1px solid #e2e8f0;
+      border: 1.5px solid #94a3b8;
+      border-radius: 2px;
     }
     .sidebar-academic {
-      background-color: #f8fafc;
-      color: #334155;
-      border-right: 1px solid #e2e8f0;
+      background-color: #ece8df;
+      color: #0f172a;
+      border-right: 1px solid #cfc8ba;
+      scrollbar-gutter: stable;
     }
     .sidebar-category-header {
-      color: #64748b;
-      font-size: 10.5px;
-      font-weight: 700;
-      letter-spacing: 0.06em;
+      color: #1e293b;
+      font-size: 11.5px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
-      padding: 10px 10px 3px 10px;
+      padding: 10px 6px 3px 6px;
+      margin-bottom: 3px;
+      border-bottom: 1.5px solid #b8ae9c;
       display: flex;
       align-items: center;
+      justify-content: center;
+      text-align: center;
     }
     .sidebar-link {
-      color: #334155;
-      font-weight: 500;
+      color: #1e293b;
+      font-weight: 600;
       font-size: 12px;
-      padding: 6.5px 10px;
-      border-radius: 6px;
+      line-height: 1.25;
+      padding: 6px 10px;
+      border-radius: 2px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      justify-content: center;
+      gap: 8px;
       width: 100%;
-      text-align: left;
-      border: 1px solid transparent;
-      border-left: 3px solid transparent;
+      text-align: center;
+      box-sizing: border-box;
+      border: 1.5px solid rgba(207, 200, 186, 0.55);
+      border-left: 3.5px solid transparent;
       cursor: pointer;
-      transition: all 0.15s ease;
-      background: transparent;
+      outline: none;
+      transition: background-color 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+      background-color: rgba(255, 255, 255, 0.52);
     }
     .sidebar-link svg {
       color: #64748b;
       flex-shrink: 0;
-      transition: color 0.15s ease;
+      transition: color 0.12s ease;
     }
     .sidebar-link:hover {
-      background-color: #f1f5f9;
+      background-color: #ffffff;
+      border-color: #b8ae9c;
+      border-left-color: transparent;
       color: #0f172a;
     }
     .sidebar-link:hover svg {
-      color: #334155;
+      color: #0f172a;
     }
     .sidebar-link.active {
       background-color: #ffffff;
       color: #0f172a;
       font-weight: 700;
-      border: 1px solid #cbd5e1;
-      border-left: 3px solid #0072B2;
-      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+      border-color: #b8ae9c;
+      border-left-color: #2b5c8f;
+      border-radius: 2px;
+      box-shadow: none;
     }
     .sidebar-link.active svg {
-      color: #0072B2 !important;
+      color: #2b5c8f !important;
     }
 
     /* Custom scrollbars */
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: #6b5744 #ece8df;
+    }
     ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
+      width: 7px;
+      height: 7px;
     }
     ::-webkit-scrollbar-track {
-      background: #e2e8f0;
+      background: #ece8df;
     }
     ::-webkit-scrollbar-thumb {
-      background: #94a3b8;
-      border-radius: 3px;
+      background: #6b5744;
+      border-radius: 2px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #4f3f30;
     }
 
     /* Heatmap grid styles */
@@ -173,18 +193,18 @@
     }
   </style>
 </head>
-<body class="flex flex-col md:flex-row h-full h-[100dvh] max-h-[100dvh] overflow-hidden antialiased bg-[#f8fafc]">
+<body class="flex flex-col md:flex-row h-full h-[100dvh] max-h-[100dvh] overflow-hidden antialiased bg-[#f5f2eb]">
 
   <!-- Left Light Academic Sidebar Navigation -->
-  <aside class="sidebar-academic w-full md:w-64 flex-shrink-0 flex flex-col justify-between p-3.5 border-r border-[#e2e8f0] select-none z-30 h-auto md:h-full md:h-[100dvh] md:max-h-[100dvh] overflow-y-auto">
+  <aside class="sidebar-academic w-full md:w-64 flex-shrink-0 flex flex-col justify-between p-3.5 border-r border-stone-300 select-none z-30 h-auto md:h-full md:h-[100dvh] md:max-h-[100dvh] overflow-y-auto">
     
     <!-- Top Brand & Navigation Menu -->
     <div class="space-y-4">
-      <!-- Identity / Header -->
-      <div class="cursor-pointer pb-3 border-b border-[#e2e8f0]" onclick="setTab('overview')">
-        <div class="text-base font-black text-[#0f172a] tracking-tight leading-tight">COLORADO RIVER BASIN</div>
-        <div class="text-[11px] font-bold text-stone-800 leading-tight mt-1">Douglas Schoch</div>
-        <div class="text-[10px] text-[#64748b] font-medium leading-tight mt-0.5">Colorado Mountain College • DAT1001 • Fall 2026</div>
+      <!-- Identity / Header (Full Width) -->
+      <div class="-mx-3.5 -mt-3.5 px-4 py-3.5 bg-[#f7f4ee] border-t-[3px] border-t-[#2b5c8f] border-b border-[#cfc8ba] text-center cursor-pointer" onclick="setTab('overview')">
+        <div class="text-lg font-black text-[#0f172a] tracking-tight leading-tight">COLORADO RIVER BASIN</div>
+        <div class="text-xs font-bold text-stone-800 leading-tight mt-1">Douglas Schoch</div>
+        <div class="text-[10.5px] text-[#64748b] font-medium leading-tight mt-0.5">Colorado Mountain College • DAT1001 • Fall 2026</div>
       </div>
 
       <!-- Navigation Links Grouped by Time Scale & Data Source -->
@@ -207,11 +227,11 @@
           </svg>
           <span>System Map</span>
         </button>
-        <button onclick="setTab('telemetry')" id="tab-btn-telemetry" class="sidebar-link" title="Master Facility Database & Station Ledger (98 Stations)">
+        <button onclick="setTab('telemetry')" id="tab-btn-telemetry" class="sidebar-link" title="Monitoring Gages &amp; Station List">
           <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
           </svg>
-          <span>Facility Database (98)</span>
+          <span>Gages</span>
         </button>
 
         <!-- Group 2: Annual Water Budget -->
@@ -235,11 +255,11 @@
         <div class="sidebar-category-header pt-3">
           <span>Decadal &amp; Regimes</span>
         </div>
-        <button onclick="setTab('reservoirs')" id="tab-btn-reservoirs" class="sidebar-link" title="91-Year Powell &amp; Mead Storage Records">
+        <button onclick="setTab('reservoirs')" id="tab-btn-reservoirs" class="sidebar-link" title="Powell &amp; Mead Historical Storage Records">
           <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
           </svg>
-          <span>Reservoirs (1935–Today)</span>
+          <span>Reservoir Storage</span>
         </button>
         <button onclick="setTab('ml')" id="tab-btn-ml" class="sidebar-link" title="Upper Basin Tributaries &amp; Powell Deficit">
           <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -251,19 +271,26 @@
     </div>
 
     <!-- Bottom Pinned Utilities -->
-    <div class="pt-3 border-t border-[#e2e8f0] space-y-1">
-      <button onclick="openLawModal()" class="sidebar-link" title="Water Wars, Court Cases &amp; Law of the River">
+    <div class="pt-3 border-t border-[#94a3b8] space-y-1">
+      <button onclick="setTab('law')" id="tab-btn-law" class="sidebar-link" title="Water Wars, Court Cases &amp; Law of the River">
         <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/>
         </svg>
         <span>Law of the River</span>
       </button>
 
-      <button onclick="openApiModal()" class="sidebar-link" title="Official Data Sources, Hydrologic APIs &amp; Jupyter Research Notebooks">
+      <button onclick="setTab('sources')" id="tab-btn-sources" class="sidebar-link" title="Official Data Sources, Statutory Compacts &amp; Legal Authorities">
         <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
         </svg>
-        <span>Data Sources &amp; Notebooks</span>
+        <span>Data Sources</span>
+      </button>
+
+      <button onclick="setTab('methodology')" id="tab-btn-methodology" class="sidebar-link" title="System Architecture, Serverless Ingestion &amp; Research Notebooks">
+        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
+        </svg>
+        <span>Architecture &amp; Methodology</span>
       </button>
 
       <a href="https://github.com/schochdo/CO_River" target="_blank" rel="noopener noreferrer" class="sidebar-link" title="View Source Code &amp; Research Notebooks on GitHub">
@@ -272,46 +299,30 @@
         </svg>
         <span>GitHub Repository ↗</span>
       </a>
+
+      <div class="pt-2 mt-1 border-t border-[#cfc8ba]">
+        <button onclick="toggleFullScreen()" id="btn-fullscreen" class="sidebar-link w-full" title="Toggle Fullscreen" aria-label="Toggle Fullscreen">
+          <svg id="icon-enter-fullscreen" class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
+          </svg>
+          <svg id="icon-exit-fullscreen" class="w-4 h-4 hidden flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 10h6V4 M10 10L3 3 M20 10h-6V4 M14 10L21 3 M4 14h6v6 M10 14L3 21 M20 14h-6v6 M14 14L21 21"/>
+          </svg>
+          <span id="fullscreen-label">Fullscreen</span>
+        </button>
+      </div>
     </div>
   </aside>
 
   <!-- Main Content Area (Full Bleed Viewport) -->
-  <main class="flex-1 flex flex-col h-full h-[100dvh] max-h-[100dvh] overflow-hidden bg-[#f8fafc] relative">
+  <main class="flex-1 flex flex-col h-full h-[100dvh] max-h-[100dvh] overflow-hidden bg-[#f5f2eb] relative">
       
       <!-- Top Academic Header Banner (Overview Tab) -->
-      <header id="academic-top-header" class="flex-shrink-0 border-b border-[#e2e8f0] bg-white z-10 px-4 md:px-6 py-2.5 flex flex-wrap items-center justify-between gap-3">
+      <header id="academic-top-header" class="flex-shrink-0 border-b border-stone-300 bg-[#f5f2eb] z-10 px-4 md:px-6 py-2.5 flex items-center justify-between">
         <div>
-          <h1 class="text-base md:text-lg font-black text-[#0f172a] tracking-tight leading-none">
+          <h1 class="text-lg md:text-xl font-black text-slate-900 tracking-tight leading-none">
             Basin Overview
           </h1>
-        </div>
-
-        <!-- Basin Core Accounting Ticker (Canonical Mathematical Ladder) -->
-        <div id="storyboard-nav" class="flex items-center gap-2 sm:gap-3 md:gap-4 tabular-nums text-xs whitespace-nowrap overflow-x-auto">
-          <div class="flex items-center gap-1.5" title="Modern natural river supply (2000–2026 average)">
-            <span class="text-[10px] uppercase font-bold text-[#64748b] tracking-wider">River Supply:</span>
-            <span class="font-black text-[#0284c7]">12.50 MAF</span>
-          </div>
-          <div class="text-[#cbd5e1] hidden sm:inline">|</div>
-          <div class="flex items-center gap-1.5" title="1922 Colorado River Compact base statutory allocation (7.5 Upper + 7.5 Lower)">
-            <span class="text-[10px] uppercase font-bold text-[#64748b] tracking-wider">1922 Compact:</span>
-            <span class="font-black text-[#0f172a]">15.00 MAF</span>
-          </div>
-          <div class="text-[#cbd5e1] hidden sm:inline">|</div>
-          <div class="flex items-center gap-1.5" title="Expanded statutory paper rights (+1.0 Lower III.b + 1.5 1944 Mexico Treaty)">
-            <span class="text-[10px] uppercase font-bold text-[#64748b] tracking-wider">Statutory Paper:</span>
-            <span class="font-black text-[#0f172a]">17.50 MAF</span>
-          </div>
-          <div class="text-[#cbd5e1] hidden sm:inline">|</div>
-          <div class="flex items-center gap-1.5" title="Structural Paper Over-Allocation: 19.10 MAF total paper claims & reservoir evaporation vs 12.50 MAF modern river supply">
-            <span class="text-[10px] uppercase font-bold text-[#ea580c] tracking-wider">Paper Over-Allocation:</span>
-            <span class="font-black text-[#ea580c] bg-orange-50 border border-orange-200 px-1.5 py-0.5 rounded text-[11px]">+6.60 MAF/yr</span>
-          </div>
-          <div class="text-[#cbd5e1] hidden sm:inline">|</div>
-          <div class="flex items-center gap-1.5" title="Active Reservoir Storage Drawdown: 14.45 MAF actual modern depletions vs 12.40 MAF natural runoff (Mead and Powell storage loss)">
-            <span class="text-[10px] uppercase font-bold text-[#b2182b] tracking-wider">Active Storage Drawdown:</span>
-            <span class="font-black text-[#b2182b] bg-[#fee2e2] border border-red-200 px-1.5 py-0.5 rounded text-[11px]">-2.05 MAF/yr</span>
-          </div>
         </div>
       </header>
 
@@ -327,12 +338,12 @@
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
 
             <!-- CARD 1: THE ALLOCATION GAP -->
-            <div id="act-1" class="card-academic bg-white rounded-[3px] border border-[#cbd5e1] p-3 md:p-3.5 flex flex-col justify-between shadow-none space-y-2">
+            <div id="act-1" class="card-academic bg-white rounded-[2px] border border-[#cfc8ba] p-3 md:p-3.5 flex flex-col justify-between shadow-none space-y-2">
               <div>
-                <div class="border-b border-[#e2e8f0] pb-1.5">
-                  <span class="text-[9.5px] font-bold text-[#0072B2] uppercase tracking-wider block">1. Mass Balance</span>
+                <div class="border-b border-[#e6e0d5] pb-1.5">
+                  <span class="text-[9.5px] font-bold text-[#5c6773] uppercase tracking-wider block">1. Mass Balance</span>
                   <h2 class="text-sm md:text-base font-black text-[#0f172a] tracking-tight">
-                    The Allocation Gap: Statutory Rights vs. River Reality
+                    Statutory Rights vs. River Reality
                   </h2>
                 </div>
 
@@ -341,11 +352,11 @@
                   <!-- Bar 1: Wet Water Inflows -->
                   <div>
                     <div class="flex justify-between text-[11px] mb-0.5">
-                      <span class="font-semibold text-[#0369a1]">Modern Natural Inflow (2000–2026 Mean)</span>
-                      <span class="font-black text-[#0284c7]">12.50 MAF/yr</span>
+                      <span class="font-semibold text-[#2b5c8f]">Modern Natural Inflow (2000–2026 Mean)</span>
+                      <span class="font-black text-[#2b5c8f]">12.50 MAF/yr</span>
                     </div>
-                    <div class="w-full bg-[#f1f5f9] border border-[#e2e8f0] rounded-[2px] h-4.5 overflow-hidden">
-                      <div class="bg-[#0284c7] h-full flex items-center px-2 text-[10px] text-white font-bold" style="width: 65.4%;">
+                    <div class="w-full bg-[#f5f2eb] border border-[#cfc8ba] rounded-[2px] h-4.5 overflow-hidden">
+                      <div class="bg-[#2b5c8f] h-full flex items-center px-2 text-[10px] text-white font-bold" style="width: 65.4%;">
                         12.50 MAF Physical Runoff
                       </div>
                     </div>
@@ -357,8 +368,8 @@
                       <span class="font-semibold text-[#0f172a]">1922 Compact Allocation (Art. III.a)</span>
                       <span class="font-black text-[#0f172a]">15.00 MAF/yr</span>
                     </div>
-                    <div class="w-full bg-[#f1f5f9] border border-[#e2e8f0] rounded-[2px] h-4.5 overflow-hidden">
-                      <div class="bg-[#334155] h-full flex items-center px-2 text-[10px] text-white font-bold" style="width: 78.5%;">
+                    <div class="w-full bg-[#f5f2eb] border border-[#cfc8ba] rounded-[2px] h-4.5 overflow-hidden">
+                      <div class="bg-[#475569] h-full flex items-center px-2 text-[10px] text-white font-bold" style="width: 78.5%;">
                         15.00 MAF (7.5 Upper + 7.5 Lower)
                       </div>
                     </div>
@@ -370,8 +381,8 @@
                       <span class="font-semibold text-[#0f172a]">Statutory Paper Entitlements (+III.b &amp; Mexico Treaty)</span>
                       <span class="font-black text-[#0f172a]">17.50 MAF/yr</span>
                     </div>
-                    <div class="w-full bg-[#f1f5f9] border border-[#e2e8f0] rounded-[2px] h-4.5 overflow-hidden">
-                      <div class="bg-[#1e293b] h-full flex items-center px-2 text-[10px] text-white font-bold" style="width: 91.6%;">
+                    <div class="w-full bg-[#f5f2eb] border border-[#cfc8ba] rounded-[2px] h-4.5 overflow-hidden">
+                      <div class="bg-[#334155] h-full flex items-center px-2 text-[10px] text-white font-bold" style="width: 91.6%;">
                         17.50 MAF (+1.0 Lower III.b + 1.5 Mexico)
                       </div>
                     </div>
@@ -380,11 +391,11 @@
                   <!-- Bar 4: Total Pull With Evaporation -->
                   <div>
                     <div class="flex justify-between text-[11px] mb-0.5">
-                      <span class="font-semibold text-[#b2182b]">Total System Pull (Paper Claims + Reservoir Evaporation)</span>
-                      <span class="font-black text-[#b2182b]">19.10 MAF/yr</span>
+                      <span class="font-semibold text-[#9e3f32]">Total System Pull (Paper Claims + Reservoir Evaporation)</span>
+                      <span class="font-black text-[#9e3f32]">19.10 MAF/yr</span>
                     </div>
-                    <div class="w-full bg-[#f1f5f9] border border-[#e2e8f0] rounded-[2px] h-4.5 overflow-hidden">
-                      <div class="bg-[#b2182b] h-full flex items-center px-2 text-[10px] text-white font-bold" style="width: 100%;">
+                    <div class="w-full bg-[#f5f2eb] border border-[#cfc8ba] rounded-[2px] h-4.5 overflow-hidden">
+                      <div class="bg-[#9e3f32] h-full flex items-center px-2 text-[10px] text-white font-bold" style="width: 100%;">
                         19.10 MAF Total Demand (+1.60 MAF Evap/Seepage)
                       </div>
                     </div>
@@ -392,158 +403,177 @@
                 </div>
 
                 <!-- Callout Strip: Paper Deficit & Physical Overdraft -->
-                <div class="grid grid-cols-2 gap-2 mt-2 pt-1.5 border-t border-[#e2e8f0] text-xs">
-                  <div class="p-1.5 rounded bg-[#f8fafc] border border-[#cbd5e1]">
+                <div class="grid grid-cols-2 gap-2 mt-2 pt-1.5 border-t border-[#e6e0d5] text-xs">
+                  <div class="p-1.5 rounded-[2px] bg-[#f5f2eb] border border-[#cfc8ba]">
                     <span class="text-[9px] uppercase font-bold text-[#64748b] block">Statutory Paper Deficit</span>
                     <span class="text-sm font-black text-[#0f172a] tabular-nums block mt-0.5">+5.00 MAF/yr</span>
                     <span class="text-[9.5px] text-[#64748b] block">17.50 statutory - 12.50 inflow</span>
                   </div>
-                  <div class="p-1.5 rounded bg-[#fef2f2] border border-[#fecaca]">
-                    <span class="text-[9px] uppercase font-bold text-[#b2182b] block">Full Paper Over-Allocation</span>
-                    <span class="text-sm font-black text-[#b2182b] tabular-nums block mt-0.5">+6.60 MAF/yr</span>
-                    <span class="text-[9.5px] text-[#b2182b] block">19.10 total pull - 12.50 inflow • Active Drawdown: -2.05 MAF</span>
+                  <div class="p-1.5 rounded-[2px] bg-[#f9f1ef] border border-[#dfc5be]">
+                    <span class="text-[9px] uppercase font-bold text-[#9e3f32] block">Full Paper Over-Allocation</span>
+                    <span class="text-sm font-black text-[#9e3f32] tabular-nums block mt-0.5">+6.60 MAF/yr</span>
+                    <span class="text-[9.5px] text-[#9e3f32] block">19.10 total pull - 12.50 inflow • Active Drawdown: -2.05 MAF</span>
                   </div>
                 </div>
               </div>
 
               <!-- Single Editorial Takeaway Sentence -->
-              <div class="p-2 bg-[#f0f9ff] border-l-2 border-[#0284c7] rounded-r-[2px] text-[10.5px] text-[#0f172a] font-medium leading-relaxed">
+              <div class="p-2 bg-[#f5f2eb] border-l-2 border-[#2b5c8f] rounded-r-[2px] text-[10.5px] text-[#0f172a] font-medium leading-relaxed">
                 Legal paper claims exceed river flow by 5.00 MAF/yr (+6.60 MAF/yr with uncounted evaporation). Because current Upper Basin use is ~4.5 MAF, active physical reservoir drawdown is -2.05 MAF/yr.
               </div>
             </div>
 
             <!-- CARD 2: THE SEASONAL ENGINE -->
-            <div id="act-2" class="card-academic bg-white rounded-[3px] border border-[#cbd5e1] p-3 md:p-3.5 flex flex-col justify-between shadow-none space-y-2">
-              <div>
-                <div class="border-b border-[#e2e8f0] pb-1.5 flex items-center justify-between gap-2">
+            <div id="act-2" class="card-academic bg-white rounded-[2px] border border-[#cfc8ba] p-3 md:p-3.5 flex flex-col justify-between shadow-none space-y-2">
+              <div class="flex-1 flex flex-col min-h-0">
+                <div class="border-b border-[#e6e0d5] pb-1.5 flex items-center justify-between gap-2">
                   <div>
-                    <span class="text-[9.5px] font-bold text-[#0072B2] uppercase tracking-wider block">2. Seasonal Engine</span>
+                    <span class="text-[9.5px] font-bold text-[#5c6773] uppercase tracking-wider block">2. Seasonal Engine</span>
                     <h2 class="text-sm md:text-base font-black text-[#0f172a] tracking-tight">
-                      Seasonality vs. Demand: Why Reservoirs Exist
+                      Seasonal Supply vs. Demand
                     </h2>
-                  </div>
-                  <div class="flex items-center gap-1">
-                    <button onclick="setSeasonalView('regimes')" id="btn-seasonal-regimes" class="px-2 py-0.5 text-[10px] font-bold rounded bg-[#0f172a] text-white border border-[#0f172a] transition cursor-pointer">
-                      5 Regimes
-                    </button>
-                    <button onclick="setSeasonalView('mismatch')" id="btn-seasonal-mismatch" class="px-2 py-0.5 text-[10px] font-medium rounded bg-[#f1f5f9] text-[#64748b] border border-[#cbd5e1] hover:text-[#0f172a] transition cursor-pointer">
-                      Inflow vs Demand
-                    </button>
                   </div>
                 </div>
 
-                <!-- Chart Canvas -->
-                <div class="h-36 w-full relative mt-1.5">
+                <!-- Chart Canvas (Flex-1 expands into available white space) -->
+                <div class="flex-1 min-h-[190px] w-full relative mt-1.5">
                   <canvas id="chart-seasonal-engine"></canvas>
                 </div>
 
                 <!-- Reference Hydrologic Benchmarks Grid -->
-                <div class="grid grid-cols-4 gap-1.5 py-1.5 border-t border-[#e2e8f0] text-[10px] tabular-nums mt-1">
+                <div class="grid grid-cols-4 gap-1.5 py-1.5 border-t border-[#e6e0d5] text-[10px] tabular-nums mt-1">
                   <div>
                     <span class="text-[#64748b] block text-[9px]">Spring Peak (Jun):</span>
-                    <strong class="text-[#0072B2] text-[10.5px]">~48,000 cfs</strong>
+                    <strong class="text-[#2b5c8f] text-[10.5px]">~48,000 cfs</strong>
                   </div>
                   <div>
                     <span class="text-[#64748b] block text-[9px]">Winter Base (Jan):</span>
-                    <strong class="text-[#334155] text-[10.5px]">~6,100 cfs</strong>
+                    <strong class="text-[#475569] text-[10.5px]">~6,100 cfs</strong>
                   </div>
                   <div>
                     <span class="text-[#64748b] block text-[9px]">Canal Demand:</span>
-                    <strong class="text-[#b45309] text-[10.5px]">~15,000 cfs</strong>
+                    <strong class="text-[#c26d2d] text-[10.5px]">~15,000 cfs</strong>
                   </div>
                   <div>
                     <span class="text-[#64748b] block text-[9px]">Mass Balance:</span>
-                    <strong class="text-[#b2182b] text-[10.5px]">96d Refill / 269d Drain</strong>
+                    <strong class="text-[#9e3f32] text-[10.5px]">96d Refill / 269d Drain</strong>
+                  </div>
+                </div>
+
+                <!-- Provenance -->
+                <div class="flex items-center justify-between text-[9px] text-[#64748b] pt-1.5 border-t border-[#e6e0d5] mt-1">
+                  <div class="truncate">
+                    <span class="font-bold text-[#334155]">Source:</span> <a href="https://waterdata.usgs.gov/nwis" target="_blank" rel="noopener" class="text-[#2b5c8f] hover:underline font-semibold">USGS NWIS Records ↗</a> &amp; <a href="https://www.cbrfc.noaa.gov/" target="_blank" rel="noopener" class="text-[#2b5c8f] hover:underline font-semibold">NOAA CBRFC ↗</a>
                   </div>
                 </div>
               </div>
 
               <!-- Single Editorial Takeaway Sentence -->
-              <div class="p-2 bg-[#f8fafc] border-l-2 border-[#0f172a] rounded-r-[2px] text-[10.5px] text-[#334155] font-medium leading-relaxed">
+              <div class="p-2 bg-[#f5f2eb] border-l-2 border-[#475569] rounded-r-[2px] text-[10.5px] text-[#1e293b] font-medium leading-relaxed">
                 80% of natural runoff rushes downstream during a 90-day spring snowmelt window, requiring massive multi-year storage to sustain flat year-round societal demand.
               </div>
             </div>
 
             <!-- CARD 3: 90-YEAR RESERVOIR BUFFER DEPLETION -->
-            <div id="act-3" class="card-academic bg-white rounded-[3px] border border-[#cbd5e1] p-3 md:p-3.5 flex flex-col justify-between shadow-none space-y-2">
-              <div>
-                <div class="border-b border-[#e2e8f0] pb-1.5">
-                  <span class="text-[9.5px] font-bold text-[#0072B2] uppercase tracking-wider block">3. Storage Trajectory</span>
+            <div id="act-3" class="card-academic bg-white rounded-[2px] border border-[#cfc8ba] p-3 md:p-3.5 flex flex-col justify-between shadow-none space-y-2">
+              <div class="flex-1 flex flex-col min-h-0">
+                <div class="border-b border-[#e6e0d5] pb-1.5">
+                  <span class="text-[9.5px] font-bold text-[#5c6773] uppercase tracking-wider block">3. Storage Trajectory</span>
                   <h2 class="text-sm md:text-base font-black text-[#0f172a] tracking-tight">
-                    90-Year Reservoir Buffer Depletion (1935–2026)
+                    Basin Storage Trajectory (1935–2026)
                   </h2>
                 </div>
 
                 <!-- Chart Canvas -->
-                <div class="h-36 w-full relative mt-1.5">
+                <div class="flex-1 min-h-[175px] w-full relative mt-1.5">
                   <canvas id="chart-macro-overview-timeline"></canvas>
                 </div>
 
                 <!-- Reference Benchmarks Grid -->
-                <div class="grid grid-cols-4 gap-1.5 py-1.5 border-t border-[#e2e8f0] text-[10px] tabular-nums mt-1">
+                <div class="grid grid-cols-4 gap-1.5 py-1.5 border-t border-[#e6e0d5] text-[10px] tabular-nums mt-1">
                   <div>
                     <span class="text-[#64748b] block text-[9px]">Full Capacity:</span>
                     <strong class="text-[#0f172a] text-[10.5px]">~60.0 MAF</strong>
                   </div>
                   <div>
                     <span class="text-[#64748b] block text-[9px]">1984 Peak:</span>
-                    <strong class="text-[#0072B2] text-[10.5px]">56.2 MAF (94%)</strong>
+                    <strong class="text-[#2b5c8f] text-[10.5px]">56.2 MAF (94%)</strong>
                   </div>
                   <div>
                     <span class="text-[#64748b] block text-[9px]">Today (2026):</span>
-                    <strong class="text-[#b2182b] text-[10.5px]">~17.7 MAF (29.5%)</strong>
+                    <strong class="text-[#9e3f32] text-[10.5px]">~17.7 MAF (29.5%)</strong>
                   </div>
                   <div>
                     <span class="text-[#64748b] block text-[9px]">Min Power Limit:</span>
-                    <strong class="text-[#d97706] text-[10.5px]">~6.0 MAF</strong>
+                    <strong class="text-[#c26d2d] text-[10.5px]">~6.0 MAF</strong>
+                  </div>
+                </div>
+
+                <!-- Provenance -->
+                <div class="flex items-center justify-between text-[9px] text-[#64748b] pt-1.5 border-t border-[#e6e0d5] mt-1">
+                  <div class="truncate">
+                    <span class="font-bold text-[#334155]">Source:</span> <a href="https://www.usbr.gov/uc/water/hydrodata/" target="_blank" rel="noopener" class="text-[#2b5c8f] hover:underline font-semibold">USBR Glen Canyon HydroData ↗</a> &amp; <a href="https://www.usbr.gov/lc/region/g4000/hourly/mead-elv.html" target="_blank" rel="noopener" class="text-[#2b5c8f] hover:underline font-semibold">Hoover Operations ↗</a>
                   </div>
                 </div>
               </div>
 
               <!-- Single Editorial Takeaway Sentence -->
-              <div class="p-2 bg-[#fffbeb] border-l-2 border-[#b45309] rounded-r-[2px] text-[10.5px] text-[#0f172a] font-medium leading-relaxed">
+              <div class="p-2 bg-[#f5f2eb] border-l-2 border-[#c26d2d] rounded-r-[2px] text-[10.5px] text-[#0f172a] font-medium leading-relaxed">
                 Lake Mead and Lake Powell cushioned the arithmetic overdraft for two decades, but 25 years of deficit have depleted system storage from 94% to 29.5% capacity.
               </div>
             </div>
 
             <!-- CARD 4: CONSUMPTIVE USE & THE LEGAL CLIFF -->
-            <div id="act-4" class="card-academic bg-white rounded-[3px] border border-[#cbd5e1] p-3 md:p-3.5 flex flex-col justify-between shadow-none space-y-2">
-              <div>
-                <div class="border-b border-[#e2e8f0] pb-1.5">
-                  <span class="text-[9.5px] font-bold text-[#0072B2] uppercase tracking-wider block">4. Depletions &amp; Law</span>
-                  <h2 class="text-sm md:text-base font-black text-[#0f172a] tracking-tight">
-                    Consumptive Use by State &amp; Sector
-                  </h2>
+            <div id="act-4" class="card-academic bg-white rounded-[2px] border border-[#cfc8ba] p-3 md:p-3.5 flex flex-col justify-between shadow-none space-y-2">
+              <div class="flex-1 flex flex-col min-h-0">
+                <div class="border-b border-[#e6e0d5] pb-1.5 flex items-end justify-between gap-2">
+                  <div>
+                    <span class="text-[9.5px] font-bold text-[#5c6773] uppercase tracking-wider block">4. Depletions &amp; Law</span>
+                    <h2 class="text-sm md:text-base font-black text-[#0f172a] tracking-tight">
+                      Consumptive Use by State
+                    </h2>
+                  </div>
+                  <div class="flex items-center gap-3 text-[10px] font-semibold text-[#475569] shrink-0">
+                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-[1px] bg-[#c26d2d]"></span>Lower Basin</span>
+                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-[1px] bg-[#2b5c8f]"></span>Upper Basin</span>
+                  </div>
                 </div>
 
                 <!-- Chart Canvas -->
-                <div class="h-36 w-full relative mt-1.5">
+                <div class="flex-1 min-h-[175px] w-full relative mt-1.5">
                   <canvas id="chart-state-use"></canvas>
                 </div>
 
                 <!-- Reference Sector & Priority Grid -->
-                <div class="grid grid-cols-4 gap-1.5 py-1.5 border-t border-[#e2e8f0] text-[10px] tabular-nums mt-1">
+                <div class="grid grid-cols-4 gap-1.5 py-1.5 border-t border-[#e6e0d5] text-[10px] tabular-nums mt-1">
                   <div>
                     <span class="text-[#64748b] block text-[9px]">Agriculture:</span>
                     <strong class="text-[#0f172a] text-[10.5px]">&gt;80% (Alfalfa/Hay)</strong>
                   </div>
                   <div>
                     <span class="text-[#64748b] block text-[9px]">Municipal:</span>
-                    <strong class="text-[#0072B2] text-[10.5px]">~15% (40M People)</strong>
+                    <strong class="text-[#2b5c8f] text-[10.5px]">~15% (40M People)</strong>
                   </div>
                   <div>
                     <span class="text-[#64748b] block text-[9px]">Senior Rights:</span>
-                    <strong class="text-[#009E73] text-[10.5px]">1901 (CA Priority)</strong>
+                    <strong class="text-[#3f6f58] text-[10.5px]">1901 (CA Priority)</strong>
                   </div>
                   <div>
                     <span class="text-[#64748b] block text-[9px]">Junior Priority:</span>
-                    <strong class="text-[#D55E00] text-[10.5px]">1968 (AZ CAP Cuts)</strong>
+                    <strong class="text-[#c26d2d] text-[10.5px]">1968 (AZ CAP Cuts)</strong>
+                  </div>
+                </div>
+
+                <!-- Provenance -->
+                <div class="flex items-center justify-between text-[9px] text-[#64748b] pt-1.5 border-t border-[#e6e0d5] mt-1">
+                  <div class="truncate">
+                    <span class="font-bold text-[#334155]">Source:</span> <a href="https://www.usbr.gov/lc/region/g4000/wtracct.html" target="_blank" rel="noopener" class="text-[#2b5c8f] hover:underline font-semibold">USBR Article V Decree Accounting ↗</a> &amp; <a href="http://www.ucrcommission.com/" target="_blank" rel="noopener" class="text-[#2b5c8f] hover:underline font-semibold">UCRC Reports ↗</a>
                   </div>
                 </div>
               </div>
 
               <!-- Single Editorial Takeaway Sentence -->
-              <div class="p-2 bg-[#f0fdf4] border-l-2 border-[#009E73] rounded-r-[2px] text-[10.5px] text-[#0f172a] font-medium leading-relaxed">
+              <div class="p-2 bg-[#f5f2eb] border-l-2 border-[#3f6f58] rounded-r-[2px] text-[10.5px] text-[#0f172a] font-medium leading-relaxed">
                 Agriculture consumes over 80% of diverted flow, with 1901 senior rights legally protecting California while junior upstream cities in Arizona absorb first-tier cuts.
               </div>
             </div>
@@ -556,7 +586,7 @@
         <!-- TAB 2: SYSTEM MAP (Clean Embed)     -->
         <!-- ========================================== -->
         <div id="section-map" class="hidden flex-1 w-full h-full min-h-0 relative">
-          <iframe id="iframe-map" src="./map_embed.html" class="w-full h-full border-none"></iframe>
+          <iframe id="iframe-map" src="./map_embed.html?v=20261121d" class="w-full h-full border-none"></iframe>
         </div>
 
         <!-- ========================================== -->
@@ -576,28 +606,35 @@
         <!-- ========================================== -->
         <!-- TAB 5: RESERVOIRS (1935 - TODAY)           -->
         <!-- ========================================== -->
-        <div id="section-reservoirs" class="flex-1 overflow-y-auto w-full p-4 md:p-6 lg:p-7 max-w-7xl mx-auto space-y-6 hidden">
+        <div id="section-reservoirs" class="flex-1 overflow-y-auto w-full bg-[#f5f2eb] p-3 md:p-5 hidden">
+          <div class="max-w-7xl mx-auto space-y-4">
+            <header class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-stone-300">
+              <div>
+                <h1 class="text-lg md:text-xl font-black text-slate-900 tracking-tight leading-none">Reservoir Storage</h1>
+              </div>
+
+              <!-- Two View Sub-Tabs -->
+              <div class="flex items-center gap-1.5 p-1 bg-stone-200/90 rounded-[2px] border border-stone-300">
+                <button id="subtab-btn-res-timeline" onclick="switchReservoirsSubtab('timeline')" class="px-3.5 py-1.5 rounded-[2px] text-xs font-bold transition shadow-xs bg-white text-sky-900 border border-stone-200 cursor-pointer">
+                  Basin Storage Timeline
+                </button>
+                <button id="subtab-btn-res-elevations" onclick="switchReservoirsSubtab('elevations')" class="px-3.5 py-1.5 rounded-[2px] text-xs font-semibold transition text-stone-600 hover:text-stone-900 cursor-pointer">
+                  Mead &amp; Powell Elevations
+                </button>
+              </div>
+            </header>
           
+          <div id="view-res-timeline" class="space-y-4">
           <!-- FEATURED 1: MACRO BASIN MULTI-RESERVOIR STORAGE TIMELINE (MAF) -->
-          <div class="card-academic rounded-xl p-5 shadow-sm bg-white">
+          <div class="card-academic rounded-[2px] border border-stone-300 p-5 shadow-xs bg-white">
             <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-stone-200">
-              <div class="max-w-2xl">
-                <div class="flex items-center gap-2">
-                  <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
-                  <span class="text-xs font-bold text-blue-900 uppercase tracking-wider">Macro Basin Water Bank</span>
-                </div>
-                <h2 class="text-xl font-black text-stone-900 tracking-tight mt-0.5">
+              <div class="max-w-3xl">
+                <h2 class="text-xl font-black text-stone-900 tracking-tight">
                   Macro Basin Storage Timeline (1935–Present)
                 </h2>
                 <p class="text-xs text-stone-600 mt-1">
                   Continuous annual storage volume in <strong>Million Acre-Feet (MAF)</strong> across all major Colorado River reservoirs simultaneously, documenting the 1935 Hoover fill, 1963–1980 Glen Canyon expansion, 1983–1986 system spill, and two decades of post-2000 reservoir drawdowns.
                 </p>
-              </div>
-
-              <!-- Unified Palette Badge -->
-              <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-stone-50 border border-stone-200 text-xs text-stone-600">
-                <span class="w-2 h-2 rounded-full bg-[#0f172a]"></span>
-                <span class="font-semibold text-stone-800">Unified Stacked Breakdown &amp; Total Basin Trajectory</span>
               </div>
             </div>
 
@@ -637,7 +674,9 @@
               <strong>Note:</strong> Because Lake Mead and Lake Powell sit in V-shaped desert canyons, the bottom 100 feet hold roughly 5× less water per vertical foot (~28,000 AF/ft) than the top (~160,000 AF/ft)—causing water levels to drop faster the lower the reservoirs get.
             </div>
           </div>
+          </div>
 
+          <div id="view-res-elevations" class="space-y-4 hidden">
           <!-- SECTION 2: INDIVIDUAL RESERVOIR DEEP-DIVE -->
           <div class="flex flex-wrap items-center justify-between gap-4 bg-white p-3.5 rounded-xl border border-stone-200 shadow-sm">
             <div class="flex items-center gap-2">
@@ -734,7 +773,7 @@
                 </div>
                 <div class="flex items-center gap-3 text-[10px]">
                   <span>Hover any cell to inspect exact monthly elevation</span>
-                  <span class="font-bold text-stone-700">Source: <a href="https://www.usbr.gov/lc/region/g4000/hourly/mead-elv.html" target="_blank" rel="noopener noreferrer" class="underline decoration-stone-300 hover:decoration-stone-700 hover:text-stone-900 transition">USBR Hoover Teletype ↗</a></span>
+                  <span class="font-bold text-stone-700">Source: <a href="https://www.usbr.gov/lc/region/g4000/hourly/mead-elv.html" target="_blank" rel="noopener noreferrer" class="underline decoration-stone-300 hover:decoration-stone-700 hover:text-stone-900 transition">USBR Hoover Teletype ↗</a> • <span class="font-mono text-[10px] text-stone-400 font-normal">Custom DOM Heatmap Matrix</span></span>
                 </div>
               </div>
             </div>
@@ -811,12 +850,14 @@
                 </div>
                 <div class="flex items-center gap-3 text-[10px]">
                   <span>Hover any cell to inspect exact monthly elevation</span>
-                  <span class="font-bold text-stone-700">Source: <a href="https://www.usbr.gov/uc/water/hydrodata/reservoir_data/919/charts/pool_elevation.html" target="_blank" rel="noopener noreferrer" class="underline decoration-stone-300 hover:decoration-stone-700 hover:text-stone-900 transition">USBR Glen Canyon HydroData</a> &amp; <a href="https://www.usbr.gov/uc/water/hydrodata/reservoir_data/919/csv/49.csv" target="_blank" rel="noopener noreferrer" class="underline decoration-stone-300 hover:decoration-stone-700 hover:text-stone-900 transition">Daily Elevation CSV ↗</a></span>
+                  <span class="font-bold text-stone-700">Source: <a href="https://www.usbr.gov/uc/water/hydrodata/reservoir_data/919/charts/pool_elevation.html" target="_blank" rel="noopener noreferrer" class="underline decoration-stone-300 hover:decoration-stone-700 hover:text-stone-900 transition">USBR Glen Canyon HydroData</a> &amp; <a href="https://www.usbr.gov/uc/water/hydrodata/reservoir_data/919/csv/49.csv" target="_blank" rel="noopener noreferrer" class="underline decoration-stone-300 hover:decoration-stone-700 hover:text-stone-900 transition">Daily Elevation CSV ↗</a> • <span class="font-mono text-[10px] text-stone-400 font-normal">Custom DOM Heatmap Matrix</span></span>
                 </div>
               </div>
             </div>
           </div>
+          </div>
 
+          </div>
         </div>
 
         <!-- ========================================== -->
@@ -833,48 +874,35 @@
           <iframe id="iframe-ml" src="./ml_analysis.html" class="w-full h-full border-none"></iframe>
         </div>
 
-      </div>
-    </main>
-
-  <!-- ======================================================= -->
-  <!-- MODAL 1: LAW OF THE RIVER (Full Master Historical Text) -->
-  <!-- ======================================================= -->
-  <div id="law-modal" onclick="if(event.target === this) closeModals()" class="fixed inset-0 academic-modal-backdrop hidden z-50 flex items-center justify-center p-3 md:p-6">
-    <div class="bg-white rounded-[3px] max-w-5xl w-full max-h-[90vh] flex flex-col border border-[#d6d3d1] overflow-hidden">
-      
-      <!-- Modal Header -->
-      <div class="flex justify-between items-start px-6 py-4 border-b border-[#d6d3d1] bg-[#fafaf9]">
-        <div>
-          <div class="text-[11px] font-bold tracking-[0.08em] uppercase text-[#475569] mb-1">
-            Legal &amp; Historical Foundation <span class="mx-1.5 text-slate-400">•</span> 1922–2026 Statutory Framework
-          </div>
-          <h2 class="text-xl font-black text-[#0f172a] tracking-tight">The Law of the River: Paper Water vs. Wet Water</h2>
-          <p class="text-xs text-slate-600 mt-1 max-w-3xl leading-relaxed">How the 1922 Compact's overestimate of river flow, the senior priority system, and two decades of reservoir drawdowns led to the post-2026 negotiations.</p>
+        <!-- ========================================== -->
+        <!-- TAB 7: ARCHITECTURE & METHODOLOGY          -->
+        <!-- ========================================== -->
+        <div id="section-methodology" class="hidden flex-1 w-full h-full min-h-0 relative">
+          <iframe id="iframe-methodology" src="./methodology.html" class="w-full h-full border-none"></iframe>
         </div>
-        <button onclick="closeModals()" class="text-slate-400 hover:text-slate-700 p-1.5 rounded-[2px] hover:bg-slate-200/60 transition" title="Close dialog (Esc)">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-        </button>
-      </div>
 
-      <!-- Quick Jump Navigation Bar -->
-      <div class="sticky top-0 z-20 bg-[#fafaf9] border-b border-[#e2e8f0] px-6 py-2.5 flex items-center gap-3 sm:gap-4 flex-wrap text-xs font-medium">
-        <span class="text-[10px] uppercase font-bold tracking-[0.08em] text-[#64748b]">Jump To:</span>
-        <a href="#law-sec-ch1" class="text-slate-700 hover:text-[#0072B2] hover:underline">1. 1922 Baseline</a>
-        <span class="text-slate-300">•</span>
-        <a href="#law-sec-ch2" class="text-slate-700 hover:text-[#0072B2] hover:underline">2. Seniority &amp; Cuts</a>
-        <span class="text-slate-300">•</span>
-        <a href="#law-sec-ch3" class="text-slate-700 hover:text-[#0072B2] hover:underline">3. Reservoir Drawdown</a>
-        <span class="text-slate-300">•</span>
-        <a href="#law-sec-ch4" class="text-slate-700 hover:text-[#0072B2] hover:underline">4. Low-Storage Triggers</a>
-        <span class="text-slate-300">•</span>
-        <a href="#law-sec-ch5" class="text-slate-700 hover:text-[#0072B2] hover:underline">5. Post-2026 Rules</a>
-      </div>
+        <!-- ========================================== -->
+        <!-- TAB 8: LAW OF THE RIVER                    -->
+        <!-- ========================================== -->
+        <div id="section-law" class="hidden flex-1 overflow-y-auto bg-[#f5f2eb] p-3 md:p-5">
+          <div class="max-w-5xl mx-auto space-y-4">
+            <header class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-stone-300">
+              <div>
+                <h1 class="text-lg md:text-xl font-black text-slate-900 tracking-tight leading-none">Law of the River</h1>
+              </div>
+              <div class="flex flex-wrap items-center gap-1.5 text-[11px] font-semibold">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mr-1">Contents:</span>
+                <a href="#law-sec-ch1" class="px-2 py-0.5 rounded-[2px] bg-white border border-stone-300 text-slate-700 hover:border-slate-500 transition">1. 1922 Baseline</a>
+                <a href="#law-sec-ch2" class="px-2 py-0.5 rounded-[2px] bg-white border border-stone-300 text-slate-700 hover:border-slate-500 transition">2. Seniority</a>
+                <a href="#law-sec-ch3" class="px-2 py-0.5 rounded-[2px] bg-white border border-stone-300 text-slate-700 hover:border-slate-500 transition">3. Drawdown</a>
+                <a href="#law-sec-ch4" class="px-2 py-0.5 rounded-[2px] bg-white border border-stone-300 text-slate-700 hover:border-slate-500 transition">4. Shortage Cuts</a>
+                <a href="#law-sec-ch5" class="px-2 py-0.5 rounded-[2px] bg-white border border-stone-300 text-slate-700 hover:border-slate-500 transition">5. Post-2026</a>
+              </div>
+            </header>
 
-      <!-- Modal Body (Scrollable Master Legal Chapters) -->
-      <div class="p-6 overflow-y-auto space-y-8 text-xs text-slate-700 leading-relaxed bg-[#fafaf9]">
-
+            <div class="space-y-4 text-xs text-slate-700 leading-relaxed">
         <!-- Chapter 1: The 1922 Compact Baseline -->
-        <section id="law-sec-ch1" class="pt-2">
+        <section id="law-sec-ch1" class="bg-white border border-stone-300 rounded-[2px] p-5 scroll-mt-4">
           <div class="flex items-baseline justify-between gap-3 mb-1">
             <h3 class="text-base font-black text-[#0f172a] tracking-tight">1. The 1922 Compact Baseline</h3>
             <span class="text-[10px] font-semibold text-slate-600 bg-slate-100 border border-slate-300 px-2 py-0.5 rounded-[2px] whitespace-nowrap">Historic Foundation</span>
@@ -883,7 +911,7 @@
           <p>
             Delegates from the seven basin states and Herbert Hoover signed the 1922 Colorado River Compact in Santa Fe, New Mexico, splitting the watershed at Lees Ferry, Arizona. The compact apportioned 7.5 million acre-feet (MAF) per year to the Upper Basin and 7.5 MAF per year to the Lower Basin in perpetuity (Art. III.a), plus authorized an additional 1.0 MAF of Lower Basin consumptive use (Art. III.b). In 1944, the Mexican Water Treaty committed another 1.5 MAF per year at Morelos Dam (Art. 10), bringing statutory paper water apportionments to 17.5 MAF per year—without setting aside water for reservoir evaporation and transit losses (~1.60 MAF/yr, totaling 19.10 MAF/yr).
           </p>
-          <div class="my-4 p-4 bg-[#f5f5f4] border-l-[3px] border-l-[#334155] rounded-none">
+          <div class="my-4 p-4 bg-[#f5f2eb] border-l-[3px] border-l-[#334155] rounded-none">
             <div class="font-bold text-xs text-[#0f172a] mb-1">Baseline Hydrology: Paper Allocations vs. Physical Wet Water</div>
             <p class="text-xs leading-relaxed text-slate-700 m-0">
               Negotiators based their allocations on gage records from the unusually wet period between 1905 and 1922, estimating average annual river runoff above 17 MAF. Early USGS field warnings from hydrologist E.C. LaRue showed that long-term flows were significantly lower, but commissioners prioritized state unanimity over hydrology. A century of USGS records and tree-ring data show that natural inflow averages closer to 12.50 MAF per year (2000–2026). Because reservoir evaporation and transit losses consume another ~1.60 MAF per year, total basin demand reaches 19.10 MAF/yr, creating a 6.60 MAF/yr structural overdraft against physical inflows.
@@ -919,7 +947,7 @@
         </section>
 
         <!-- Chapter 2: Senior Rights and Priority Cuts -->
-        <section id="law-sec-ch2" class="border-t border-[#d6d3d1] pt-7 mt-8">
+        <section id="law-sec-ch2" class="bg-white border border-stone-300 rounded-[2px] p-5 scroll-mt-4">
           <div class="flex items-baseline justify-between gap-3 mb-1">
             <h3 class="text-base font-black text-[#0f172a] tracking-tight">2. Senior Rights and Priority Cuts</h3>
             <span class="text-[10px] font-semibold text-slate-600 bg-slate-100 border border-slate-300 px-2 py-0.5 rounded-[2px] whitespace-nowrap">Legal Hierarchy</span>
@@ -942,7 +970,7 @@
         </section>
 
         <!-- Chapter 3: Draining Storage to Cover the Deficit -->
-        <section id="law-sec-ch3" class="border-t border-[#d6d3d1] pt-7 mt-8">
+        <section id="law-sec-ch3" class="bg-white border border-stone-300 rounded-[2px] p-5 scroll-mt-4">
           <div class="flex items-baseline justify-between gap-3 mb-1">
             <h3 class="text-base font-black text-[#0f172a] tracking-tight">3. Draining Storage to Cover the Deficit</h3>
             <span class="text-[10px] font-semibold text-slate-600 bg-slate-100 border border-slate-300 px-2 py-0.5 rounded-[2px] whitespace-nowrap">Storage Depletion</span>
@@ -974,7 +1002,7 @@
         </section>
 
         <!-- Chapter 4: Critical Reservoir Levels and Paid Conservation -->
-        <section id="law-sec-ch4" class="border-t border-[#d6d3d1] pt-7 mt-8">
+        <section id="law-sec-ch4" class="bg-white border border-stone-300 rounded-[2px] p-5 scroll-mt-4">
           <div class="flex items-baseline justify-between gap-3 mb-1">
             <h3 class="text-base font-black text-[#0f172a] tracking-tight">4. Critical Reservoir Levels and Paid Conservation</h3>
             <span class="text-[10px] font-semibold text-slate-600 bg-slate-100 border border-slate-300 px-2 py-0.5 rounded-[2px] whitespace-nowrap">Shortage Tiers &amp; Conservation</span>
@@ -994,7 +1022,7 @@
         </section>
 
         <!-- Chapter 5: Post-2026 Operating Rules -->
-        <section id="law-sec-ch5" class="border-t border-[#d6d3d1] pt-7 mt-8">
+        <section id="law-sec-ch5" class="bg-white border border-stone-300 rounded-[2px] p-5 scroll-mt-4">
           <div class="flex items-baseline justify-between gap-3 mb-1">
             <h3 class="text-base font-black text-[#0f172a] tracking-tight">5. Post-2026 Operating Rules</h3>
             <span class="text-[10px] font-semibold text-slate-600 bg-slate-100 border border-slate-300 px-2 py-0.5 rounded-[2px] whitespace-nowrap">Post-2026 Framework</span>
@@ -1008,169 +1036,250 @@
           </p>
         </section>
 
-      </div>
 
-      <!-- Modal Footer -->
-      <div class="p-4 border-t border-[#d6d3d1] bg-[#fafaf9] flex items-center justify-between">
-        <span class="text-[11px] text-slate-500 font-medium">Source: <a href="https://www.usbr.gov/lc/region/g4000/lawofrvr.html" target="_blank" rel="noopener noreferrer" class="underline decoration-slate-400 hover:text-slate-800 transition">U.S. Bureau of Reclamation Law of the River Compendium ↗</a> (1922 Compact &amp; Consolidated Supreme Court Decrees)</span>
-        <button onclick="closeModals()" class="px-5 py-2 text-xs font-bold rounded-[2px] bg-slate-800 text-white hover:bg-slate-900 transition">Close Legal Review</button>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ========================================== -->
-  <!-- MODAL 2: DATA SOURCES & NOTEBOOKS REGISTRY -->
-  <!-- ========================================== -->
-  <div id="api-modal" onclick="if(event.target === this) closeModals()" class="fixed inset-0 academic-modal-backdrop hidden z-50 flex items-center justify-center p-3 md:p-6">
-    <div class="bg-white rounded-xl shadow-2xl max-w-5xl w-full max-h-[90vh] flex flex-col border border-stone-300 overflow-hidden">
-      
-      <!-- Modal Header -->
-      <div class="flex justify-between items-center px-6 py-4 border-b border-stone-200 bg-[#faf9f5]">
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-sky-100 text-sky-800 border border-sky-200">Open Science Registry</span>
-            <span class="text-[10px] font-bold text-stone-500">Colorado River Basin Hydrology</span>
+            <div class="pt-2 text-[11px] text-slate-500 font-medium">
+              Source: <a href="https://www.usbr.gov/lc/region/g4000/lawofrvr.html" target="_blank" rel="noopener noreferrer" class="underline decoration-slate-400 hover:text-slate-800 transition">U.S. Bureau of Reclamation Law of the River Compendium ↗</a> (1922 Compact &amp; Consolidated Supreme Court Decrees)
+            </div>
+            </div>
           </div>
-          <h2 class="text-lg font-black text-stone-900 tracking-tight mt-1">Data Sources and Research Notebooks</h2>
-          <p class="text-xs text-stone-600">Authoritative federal &amp; state monitoring feeds, mass-balance models, and reproducible Jupyter workflows</p>
         </div>
-        <button onclick="closeModals()" class="text-stone-400 hover:text-stone-700 p-1.5 rounded-lg hover:bg-stone-200/60 transition" title="Close dialog (Esc)">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-        </button>
-      </div>
 
-      <!-- Quick Section Anchor Pills -->
-      <div class="flex flex-wrap items-center gap-2 px-6 py-2.5 border-b border-stone-200 bg-stone-50 text-[11px] font-semibold text-stone-700">
-        <span class="text-stone-400 text-[10px] uppercase font-bold tracking-wider">Jump To:</span>
-        <a href="#modal-sec-notebooks" class="px-2.5 py-0.5 rounded-full bg-white border border-stone-300 hover:bg-stone-100 text-sky-800 transition">1. Reproducible Research Notebooks</a>
-        <a href="#modal-sec-apis" class="px-2.5 py-0.5 rounded-full bg-white border border-stone-300 hover:bg-stone-100 text-sky-800 transition">2. Official Hydrologic Data Sources</a>
-        <a href="#modal-sec-hosting" class="px-2.5 py-0.5 rounded-full bg-white border border-stone-300 hover:bg-stone-100 text-sky-800 transition">3. Notebook Execution and Distribution</a>
-        <a href="#modal-sec-scripts" class="px-2.5 py-0.5 rounded-full bg-white border border-stone-300 hover:bg-stone-100 text-sky-800 transition">4. Data Ingestion Pipeline</a>
-      </div>
+        <!-- ========================================== -->
+        <!-- TAB 9: DATA SOURCES & LEGAL AUTHORITIES    -->
+        <!-- ========================================== -->
+        <div id="section-sources" class="hidden flex-1 overflow-y-auto bg-[#f5f2eb] p-3 md:p-5">
+          <div class="max-w-6xl mx-auto space-y-4">
+            <header class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-stone-300">
+              <div>
+                <h1 class="text-lg md:text-xl font-black text-slate-900 tracking-tight leading-none">Data Sources &amp; Legal Authorities</h1>
+              </div>
+              <div class="flex flex-wrap items-center gap-1.5 text-[11px] font-semibold">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mr-1">Contents:</span>
+                <a href="#modal-sec-compacts" class="px-2 py-0.5 rounded-[2px] bg-white border border-stone-300 text-slate-700 hover:border-slate-500 transition">1. Statutory Compacts</a>
+                <a href="#modal-sec-accounting" class="px-2 py-0.5 rounded-[2px] bg-white border border-stone-300 text-slate-700 hover:border-slate-500 transition">2. Accounting &amp; Conduits</a>
+                <a href="#modal-sec-apis" class="px-2 py-0.5 rounded-[2px] bg-white border border-stone-300 text-slate-700 hover:border-slate-500 transition">3. Operational APIs</a>
+              </div>
+            </header>
 
-      <!-- Modal Body (Scrollable) -->
-      <div class="p-6 overflow-y-auto space-y-6 text-xs text-stone-700">
-
-        <!-- SECTION 1: RESEARCH NOTEBOOKS -->
-        <section id="modal-sec-notebooks" class="space-y-3">
-          <div class="flex items-center justify-between border-b border-stone-200 pb-2">
+            <div class="space-y-4 text-xs text-stone-700">
+        <!-- SECTION 1: STATUTORY COMPACTS & TREATIES (PAPER WATER) -->
+        <section id="modal-sec-compacts" class="bg-white border border-stone-300 rounded-[2px] p-5 space-y-3 scroll-mt-4">
+          <div class="flex items-baseline justify-between border-b border-stone-200 pb-2">
             <div>
               <h3 class="text-sm font-black text-stone-900 tracking-tight flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-sky-600"></span>
-                <span>1. Reproducible Research Notebooks</span>
+                <span class="w-2 h-2 rounded-[1px] bg-sky-700"></span>
+                <span>1. Statutory Compacts &amp; Treaties</span>
               </h3>
-              <p class="text-[11px] text-stone-500">Fully documented Jupyter notebooks detailing geospatial routing, reach streamflow, and tributary ML models</p>
             </div>
-            <span class="text-[10px] font-mono text-stone-500 bg-stone-100 px-2 py-0.5 rounded border border-stone-200">notebooks/*.ipynb</span>
+            <span class="text-[10.5px] font-mono text-stone-500 tabular-nums">1 MAF/yr ≈ 1,381.16 cfs</span>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-1">
-            
-            <!-- Card Notebook 1 -->
-            <div class="p-4 bg-stone-50 rounded-lg border border-stone-200 flex flex-col justify-between hover:border-sky-300 transition">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+            <!-- 1922 Compact -->
+            <div class="p-3 bg-stone-50 border border-stone-200 rounded-[2px] flex flex-col justify-between">
               <div>
-                <div class="flex items-center justify-between text-[10px] text-stone-500 mb-1">
-                  <span class="font-bold text-sky-700 uppercase">Notebook 01</span>
-                  <span>Geospatial Engine</span>
+                <div class="flex items-center justify-between gap-1 mb-1">
+                  <span class="font-bold text-stone-900 text-xs">1922 Colorado River Compact</span>
+                  <span class="text-[9.5px] font-mono font-bold px-1.5 py-0.2 bg-stone-200/70 text-stone-700 rounded-[2px]">42 Stat. 171</span>
                 </div>
-                <h4 class="font-black text-stone-900 text-xs leading-snug">Geospatial River Network Model</h4>
-                <p class="text-[11px] text-stone-600 mt-1.5 leading-relaxed">
-                  USGS NLDI upstream hydrographic tracing, NHDPlus HR flowlines, Cataract Canyon re-emergence rules, and Lake Powell topobathymetric contour deck slices.
-                </p>
-                <div class="mt-2 text-[10px] font-mono text-stone-500">01_build_river_network.ipynb</div>
+                <div class="text-[11px] font-semibold text-sky-800 mb-1.5">7.50 MAF Upper • 7.50 MAF Lower</div>
+                <ul class="list-disc pl-4 space-y-0.5 text-[11px] text-stone-600 mb-2">
+                  <li><strong>Art. III(a):</strong> 7.50 MAF/yr each to Upper and Lower Basins</li>
+                  <li><strong>Art. III(d):</strong> 75.0 MAF rolling 10-yr floor at Lees Ferry</li>
+                </ul>
               </div>
-              <div class="mt-4 pt-3 border-t border-stone-200 flex flex-wrap gap-1.5">
-                <a href="notebooks/01_build_river_network.html" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2 py-1 rounded bg-sky-700 hover:bg-sky-800 text-white font-bold text-[10px] transition">
-                  <span>View HTML</span>
-                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                </a>
-                <a href="https://github.com/schochdo/CO_River/blob/main/notebooks/01_build_river_network.ipynb" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2 py-1 rounded bg-white hover:bg-stone-100 text-stone-700 font-semibold text-[10px] border border-stone-300 transition" title="View notebook on GitHub">
-                  <svg class="w-3 h-3 text-stone-700" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
-                  <span>GitHub ↗</span>
-                </a>
-                <a href="notebooks/01_build_river_network.ipynb" download class="inline-flex items-center gap-1 px-2 py-1 rounded bg-white hover:bg-stone-100 text-stone-700 font-semibold text-[10px] border border-stone-300 transition">
-                  <svg class="w-3 h-3 text-stone-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                  <span>.ipynb</span>
-                </a>
-                <a href="https://colab.research.google.com/github/schochdo/CO_River/blob/main/notebooks/01_build_river_network.ipynb" target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-1.5 py-1 rounded bg-amber-50 hover:bg-amber-100 text-amber-800 font-semibold text-[10px] border border-amber-200 transition" title="Open in Google Colab">Colab ↗</a>
-              </div>
+              <a href="https://www.usbr.gov/lc/region/pao/laws-regs/synopses/crc.html" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 font-bold text-[10.5px] inline-flex items-center gap-1 mt-auto pt-1.5 border-t border-stone-200">
+                USBR Compact Text <span class="text-[9px]">↗</span>
+              </a>
             </div>
 
-            <!-- Card Notebook 2 -->
-            <div class="p-4 bg-stone-50 rounded-lg border border-stone-200 flex flex-col justify-between hover:border-sky-300 transition">
+            <!-- 1948 Upper Compact -->
+            <div class="p-3 bg-stone-50 border border-stone-200 rounded-[2px] flex flex-col justify-between">
               <div>
-                <div class="flex items-center justify-between text-[10px] text-stone-500 mb-1">
-                  <span class="font-bold text-sky-700 uppercase">Notebook 02</span>
-                  <span>Hydrology Records</span>
+                <div class="flex items-center justify-between gap-1 mb-1">
+                  <span class="font-bold text-stone-900 text-xs">1948 Upper Basin Compact</span>
+                  <span class="text-[9.5px] font-mono font-bold px-1.5 py-0.2 bg-stone-200/70 text-stone-700 rounded-[2px]">63 Stat. 31</span>
                 </div>
-                <h4 class="font-black text-stone-900 text-xs leading-snug">Real-Time Streamflow Observations</h4>
-                <p class="text-[11px] text-stone-600 mt-1.5 leading-relaxed">
-                  Sentinel streamgage ingestion across 25 sequential reaches, historical medians comparison, flow health percentiles, and conservation reach deltas (ΔQ).
-                </p>
-                <div class="mt-2 text-[10px] font-mono text-stone-500">02_analyze_flow_and_export.ipynb</div>
+                <div class="text-[11px] font-semibold text-sky-800 mb-1.5">CO 51.75% • UT 23% • WY 14% • NM 11.25%</div>
+                <ul class="list-disc pl-4 space-y-0.5 text-[11px] text-stone-600 mb-2">
+                  <li><strong>AZ Fixed:</strong> 50,000 AF/yr Upper Basin carve-out</li>
+                  <li><strong>Current ~4.50 MAF:</strong> CO 2.33, UT 1.04, WY 0.63, NM 0.50 MAF</li>
+                </ul>
               </div>
-              <div class="mt-4 pt-3 border-t border-stone-200 flex flex-wrap gap-1.5">
-                <a href="notebooks/02_analyze_flow_and_export.html" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2 py-1 rounded bg-sky-700 hover:bg-sky-800 text-white font-bold text-[10px] transition">
-                  <span>View HTML</span>
-                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                </a>
-                <a href="https://github.com/schochdo/CO_River/blob/main/notebooks/02_analyze_flow_and_export.ipynb" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2 py-1 rounded bg-white hover:bg-stone-100 text-stone-700 font-semibold text-[10px] border border-stone-300 transition" title="View notebook on GitHub">
-                  <svg class="w-3 h-3 text-stone-700" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
-                  <span>GitHub ↗</span>
-                </a>
-                <a href="notebooks/02_analyze_flow_and_export.ipynb" download class="inline-flex items-center gap-1 px-2 py-1 rounded bg-white hover:bg-stone-100 text-stone-700 font-semibold text-[10px] border border-stone-300 transition">
-                  <svg class="w-3 h-3 text-stone-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                  <span>.ipynb</span>
-                </a>
-                <a href="https://colab.research.google.com/github/schochdo/CO_River/blob/main/notebooks/02_analyze_flow_and_export.ipynb" target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-1.5 py-1 rounded bg-amber-50 hover:bg-amber-100 text-amber-800 font-semibold text-[10px] border border-amber-200 transition" title="Open in Google Colab">Colab ↗</a>
-              </div>
+              <a href="http://www.ucrcommission.com/" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 font-bold text-[10.5px] inline-flex items-center gap-1 mt-auto pt-1.5 border-t border-stone-200">
+                Upper CO River Commission (UCRC) <span class="text-[9px]">↗</span>
+              </a>
             </div>
 
-            <!-- Card Notebook 3 -->
-            <div class="p-4 bg-stone-50 rounded-lg border border-stone-200 flex flex-col justify-between hover:border-sky-300 transition">
+            <!-- 1928 BCPA & Arizona v. California -->
+            <div class="p-3 bg-stone-50 border border-stone-200 rounded-[2px] flex flex-col justify-between">
               <div>
-                <div class="flex items-center justify-between text-[10px] text-stone-500 mb-1">
-                  <span class="font-bold text-purple-700 uppercase">Notebook 03</span>
-                  <span>Machine Learning</span>
+                <div class="flex items-center justify-between gap-1 mb-1">
+                  <span class="font-bold text-stone-900 text-xs">1928 BCPA &amp; Decree</span>
+                  <span class="text-[9.5px] font-mono font-bold px-1.5 py-0.2 bg-stone-200/70 text-stone-700 rounded-[2px]">373 U.S. 546</span>
                 </div>
-                <h4 class="font-black text-stone-900 text-xs leading-snug">Tributary Regimes and Hydraulic Lag</h4>
-                <p class="text-[11px] text-stone-600 mt-1.5 leading-relaxed">
-                  Dam buffering vs. wild snowmelt pulses, river transit times (1–9 days to Powell), 100-year Compact accounting (25.7% historical exceedance vs. 3.7% in 21st century), and 365-day seasonal supply-demand deficit.
-                </p>
-                <div class="mt-2 text-[10px] font-mono text-stone-500">03_tributary_ml_analysis.ipynb</div>
+                <div class="text-[11px] font-semibold text-sky-800 mb-1.5">CA 4.40 MAF • AZ 2.80 MAF • NV 0.30 MAF</div>
+                <ul class="list-disc pl-4 space-y-0.5 text-[11px] text-stone-600 mb-2">
+                  <li><strong>BCPA § 4(a) &amp; 1964 Decree:</strong> Divides 7.50 MAF Lower mainstream</li>
+                  <li><strong>Gila Exclusion:</strong> AZ tributaries excluded from Compact pool</li>
+                </ul>
               </div>
-              <div class="mt-4 pt-3 border-t border-stone-200 flex flex-wrap gap-1.5">
-                <a href="notebooks/03_tributary_ml_analysis.html" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2 py-1 rounded bg-purple-700 hover:bg-purple-800 text-white font-bold text-[10px] transition">
-                  <span>View HTML</span>
-                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                </a>
-                <a href="https://github.com/schochdo/CO_River/blob/main/notebooks/03_tributary_ml_analysis.ipynb" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2 py-1 rounded bg-white hover:bg-stone-100 text-stone-700 font-semibold text-[10px] border border-stone-300 transition" title="View notebook on GitHub">
-                  <svg class="w-3 h-3 text-stone-700" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
-                  <span>GitHub ↗</span>
-                </a>
-                <a href="notebooks/03_tributary_ml_analysis.ipynb" download class="inline-flex items-center gap-1 px-2 py-1 rounded bg-white hover:bg-stone-100 text-stone-700 font-semibold text-[10px] border border-stone-300 transition">
-                  <svg class="w-3 h-3 text-stone-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                  <span>.ipynb</span>
-                </a>
-                <a href="https://colab.research.google.com/github/schochdo/CO_River/blob/main/notebooks/03_tributary_ml_analysis.ipynb" target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-1.5 py-1 rounded bg-amber-50 hover:bg-amber-100 text-amber-800 font-semibold text-[10px] border border-amber-200 transition" title="Open in Google Colab">Colab ↗</a>
-              </div>
+              <a href="https://www.usbr.gov/lc/region/g4000/wtracct.html" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 font-bold text-[10.5px] inline-flex items-center gap-1 mt-auto pt-1.5 border-t border-stone-200">
+                USBR Decree Accounting <span class="text-[9px]">↗</span>
+              </a>
             </div>
 
+            <!-- 1944 Mexico Treaty -->
+            <div class="p-3 bg-stone-50 border border-stone-200 rounded-[2px] flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between gap-1 mb-1">
+                  <span class="font-bold text-stone-900 text-xs">1944 US-Mexico Treaty</span>
+                  <span class="text-[9.5px] font-mono font-bold px-1.5 py-0.2 bg-stone-200/70 text-stone-700 rounded-[2px]">TS 994</span>
+                </div>
+                <div class="text-[11px] font-semibold text-indigo-800 mb-1.5">1.50 MAF/yr Guaranteed Delivery</div>
+                <ul class="list-disc pl-4 space-y-0.5 text-[11px] text-stone-600 mb-2">
+                  <li><strong>Delivery Point:</strong> Morelos Dam (Northern International Boundary)</li>
+                  <li><strong>Uses:</strong> Mexicali Ag 1.25 MAF (Dist. 014) + Baja Cities 0.25 MAF</li>
+                </ul>
+              </div>
+              <a href="https://www.ibwc.gov/" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 font-bold text-[10.5px] inline-flex items-center gap-1 mt-auto pt-1.5 border-t border-stone-200">
+                IBWC / CILA Portal <span class="text-[9px]">↗</span>
+              </a>
+            </div>
           </div>
         </section>
 
-        <!-- SECTION 2: OFFICIAL DATA SOURCES & APIS REGISTRY -->
-        <section id="modal-sec-apis" class="space-y-3">
+        <!-- SECTION 2: MACRO ACCOUNTING & REGIONAL CONDUITS (PHYSICAL WATER) -->
+        <section id="modal-sec-accounting" class="bg-white border border-stone-300 rounded-[2px] p-5 space-y-3 scroll-mt-4">
           <div class="border-b border-stone-200 pb-2">
             <h3 class="text-sm font-black text-stone-900 tracking-tight flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-emerald-600"></span>
-              <span>2. Official Hydrologic Data Sources</span>
+              <span class="w-2 h-2 rounded-[1px] bg-emerald-700"></span>
+              <span>2. Accounting Datasets &amp; Regional Conduits</span>
             </h3>
-            <p class="text-[11px] text-stone-500">Direct links to official agency developer portals, REST parameter dictionaries, and data schemas</p>
           </div>
 
-          <div class="overflow-x-auto overflow-y-hidden border border-stone-200 rounded-lg">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            <!-- Lower Basin Decree Accounting -->
+            <div class="p-3 bg-stone-50 border border-stone-200 rounded-[2px] flex flex-col justify-between">
+              <div>
+                <div class="font-bold text-stone-900 text-xs mb-0.5">Lower Basin Decree Accounting</div>
+                <div class="text-[10px] font-semibold text-stone-500 mb-1.5">USBR Boulder Canyon Operations</div>
+                <ul class="list-disc pl-4 space-y-0.5 text-[11px] text-stone-600 mb-2">
+                  <li><strong>Scope:</strong> Audited annual Article V contractor records</li>
+                  <li><strong>Metrics:</strong> Diversions, returns, and net use (CA 4.40, AZ 2.80, NV 0.30 MAF)</li>
+                </ul>
+              </div>
+              <div class="pt-1.5 border-t border-stone-200 flex items-center justify-between text-[10.5px]">
+                <span class="text-stone-500">Repository:</span>
+                <a href="https://www.usbr.gov/lc/region/g4000/wtracct.html" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 font-bold inline-flex items-center gap-0.5">USBR Decree Accounting ↗</a>
+              </div>
+            </div>
+
+            <!-- Upper Basin CULR -->
+            <div class="p-3 bg-stone-50 border border-stone-200 rounded-[2px] flex flex-col justify-between">
+              <div>
+                <div class="font-bold text-stone-900 text-xs mb-0.5">Upper Basin Consumptive Uses (CULR)</div>
+                <div class="text-[10px] font-semibold text-stone-500 mb-1.5">USBR Upper Colorado Region &amp; UCRC</div>
+                <ul class="list-disc pl-4 space-y-0.5 text-[11px] text-stone-600 mb-2">
+                  <li><strong>Scope:</strong> Irrigated ET, municipal exports, reservoir evaporation</li>
+                  <li><strong>Breakdown (~4.50 MAF):</strong> CO 2.33, UT 1.04, WY 0.63, NM 0.50 MAF</li>
+                </ul>
+              </div>
+              <div class="pt-1.5 border-t border-stone-200 flex items-center justify-between text-[10.5px]">
+                <span class="text-stone-500">Repository:</span>
+                <a href="https://www.usbr.gov/uc/envproc/culr/" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 font-bold inline-flex items-center gap-0.5">USBR CULR Portal ↗</a>
+              </div>
+            </div>
+
+            <!-- Natural Runoff & Storage Overdraft -->
+            <div class="p-3 bg-stone-50 border border-stone-200 rounded-[2px] flex flex-col justify-between">
+              <div>
+                <div class="font-bold text-stone-900 text-xs mb-0.5">Natural Flow &amp; Storage Overdraft</div>
+                <div class="text-[10px] font-semibold text-stone-500 mb-1.5">USBR Natural Flow Database (1906–Present)</div>
+                <ul class="list-disc pl-4 space-y-0.5 text-[11px] text-stone-600 mb-2">
+                  <li><strong>Virgin Supply:</strong> 29 nodes totaling 12.85 MAF/yr (12.40 Upper + 0.45 Lower)</li>
+                  <li><strong>Overdraft:</strong> 14.90 MAF depletions require 2.05 MAF/yr drawdown</li>
+                </ul>
+              </div>
+              <div class="pt-1.5 border-t border-stone-200 flex items-center justify-between text-[10.5px]">
+                <span class="text-stone-500">Datasets:</span>
+                <a href="https://www.usbr.gov/lc/region/g4000/NaturalFlow/" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 font-bold inline-flex items-center gap-0.5">Natural Flow ↗</a>
+              </div>
+            </div>
+
+            <!-- California Conduits -->
+            <div class="p-3 bg-stone-50 border border-stone-200 rounded-[2px] flex flex-col justify-between">
+              <div>
+                <div class="font-bold text-stone-900 text-xs mb-0.5">California: All-American &amp; CRA (4.40 MAF)</div>
+                <div class="text-[10px] font-semibold text-stone-500 mb-1.5">Imperial Irrigation District • MWD of SoCal</div>
+                <ul class="list-disc pl-4 space-y-0.5 text-[11px] text-stone-600 mb-2">
+                  <li><strong>All-American Canal:</strong> 3.40 MAF/yr to Imperial &amp; Coachella Ag (500k acres)</li>
+                  <li><strong>CO River Aqueduct:</strong> 1.00 MAF/yr pumped 242 mi to 19M SoCal residents</li>
+                </ul>
+              </div>
+              <div class="pt-1.5 border-t border-stone-200 flex items-center justify-between text-[10.5px]">
+                <span class="text-stone-500">Agencies:</span>
+                <span class="flex items-center gap-2">
+                  <a href="https://www.iid.com/water" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 font-bold">IID ↗</a>
+                  <span class="text-stone-300">•</span>
+                  <a href="https://www.mwdh2o.com/" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 font-bold">MWD ↗</a>
+                </span>
+              </div>
+            </div>
+
+            <!-- Arizona Conduits -->
+            <div class="p-3 bg-stone-50 border border-stone-200 rounded-[2px] flex flex-col justify-between">
+              <div>
+                <div class="font-bold text-stone-900 text-xs mb-0.5">Arizona: CAP &amp; Mainstem Canals (2.80 MAF)</div>
+                <div class="text-[10px] font-semibold text-stone-500 mb-1.5">Central Arizona Project • USBR Yuma Office</div>
+                <ul class="list-disc pl-4 space-y-0.5 text-[11px] text-stone-600 mb-2">
+                  <li><strong>CAP Canal:</strong> 1.38 MAF lifted 2,900 ft to Phoenix &amp; Tucson (junior rights)</li>
+                  <li><strong>Mainstem Gravity:</strong> 1.42 MAF senior Yuma &amp; Wellton-Mohawk irrigation</li>
+                </ul>
+              </div>
+              <div class="pt-1.5 border-t border-stone-200 flex items-center justify-between text-[10.5px]">
+                <span class="text-stone-500">Authorities:</span>
+                <span class="flex items-center gap-2">
+                  <a href="https://www.cap-az.com/" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 font-bold">CAP ↗</a>
+                  <span class="text-stone-300">•</span>
+                  <a href="https://www.usbr.gov/lc/yuma/" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 font-bold">USBR Yuma ↗</a>
+                </span>
+              </div>
+            </div>
+
+            <!-- Nevada SNWA & Trans-Mountain Tunnels -->
+            <div class="p-3 bg-stone-50 border border-stone-200 rounded-[2px] flex flex-col justify-between">
+              <div>
+                <div class="font-bold text-stone-900 text-xs mb-0.5">SNWA Intakes &amp; Basin Exports (0.90 MAF)</div>
+                <div class="text-[10px] font-semibold text-stone-500 mb-1.5">SNWA • Colorado DWR HydroBase • Utah CUP</div>
+                <ul class="list-disc pl-4 space-y-0.5 text-[11px] text-stone-600 mb-2">
+                  <li><strong>Nevada (Mead):</strong> 0.50 MAF gross, 0.20 return = 0.30 MAF net consumption</li>
+                  <li><strong>Divide Exports:</strong> CO Front Range 0.48 MAF + UT Wasatch CUP 0.12 MAF</li>
+                </ul>
+              </div>
+              <div class="pt-1.5 border-t border-stone-200 flex items-center justify-between text-[10.5px]">
+                <span class="text-stone-500">Portals:</span>
+                <span class="flex items-center gap-2">
+                  <a href="https://www.snwa.com/" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 font-bold">SNWA ↗</a>
+                  <span class="text-stone-300">•</span>
+                  <a href="https://dwr.state.co.us/Tools/Stations" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 font-bold">HydroBase ↗</a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 3: REAL-TIME OPERATIONAL APIS & FEEDS -->
+        <section id="modal-sec-apis" class="bg-white border border-stone-300 rounded-[2px] p-5 space-y-3 scroll-mt-4">
+          <div class="border-b border-stone-200 pb-2">
+            <h3 class="text-sm font-black text-stone-900 tracking-tight flex items-center gap-2">
+              <span class="w-2 h-2 rounded-[1px] bg-slate-700"></span>
+              <span>3. Real-Time Operational Monitoring Feeds &amp; REST APIs</span>
+            </h3>
+            <p class="text-[11px] text-stone-500">Automated REST parameter dictionaries and official agency developer endpoints</p>
+          </div>
+
+          <div class="overflow-x-auto border border-stone-200 rounded-[2px]">
             <table class="w-full text-left border-collapse text-[11px]">
               <thead>
                 <tr class="bg-stone-100 border-b border-stone-200 text-stone-800 font-bold">
@@ -1182,8 +1291,6 @@
                 </tr>
               </thead>
               <tbody class="divide-y divide-stone-200 bg-white">
-                
-                <!-- 1. USGS NWIS -->
                 <tr class="hover:bg-stone-50/80 transition">
                   <td class="p-2.5 align-top">
                     <span class="font-bold text-stone-900 block">USGS Water Services</span>
@@ -1202,19 +1309,11 @@
                     <span class="px-1.5 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded font-bold text-[10px]">15–60 min</span>
                   </td>
                   <td class="p-2.5 align-top space-y-1">
-                    <a href="https://waterservices.usgs.gov/rest/IV-Service.html" target="_blank" rel="noopener noreferrer" class="text-sky-700 hover:text-sky-900 hover:underline font-bold block">
-                      USGS Instantaneous Values (IV) Docs ↗
-                    </a>
-                    <a href="https://waterservices.usgs.gov/rest/DV-Service.html" target="_blank" rel="noopener noreferrer" class="text-stone-600 hover:text-stone-900 hover:underline block text-[10px]">
-                      Daily Values (DV) REST API Docs ↗
-                    </a>
-                    <a href="https://help.waterdata.usgs.gov/parameter_cd?group_cd=PHY" target="_blank" rel="noopener noreferrer" class="text-stone-500 hover:text-stone-800 hover:underline block text-[10px]">
-                      Parameter Code Dictionary (00060) ↗
-                    </a>
+                    <a href="https://waterservices.usgs.gov/rest/IV-Service.html" target="_blank" rel="noopener noreferrer" class="text-sky-700 hover:text-sky-900 hover:underline font-bold block">USGS Instantaneous Values (IV) Docs ↗</a>
+                    <a href="https://waterservices.usgs.gov/rest/DV-Service.html" target="_blank" rel="noopener noreferrer" class="text-stone-600 hover:text-stone-900 hover:underline block text-[10px]">Daily Values (DV) REST API Docs ↗</a>
                   </td>
                 </tr>
 
-                <!-- 2. USBR Upper Colorado HydroData -->
                 <tr class="hover:bg-stone-50/80 transition">
                   <td class="p-2.5 align-top">
                     <span class="font-bold text-stone-900 block">USBR Upper Colorado</span>
@@ -1226,37 +1325,27 @@
                   </td>
                   <td class="p-2.5 align-top">
                     <strong>17.csv:</strong> Storage (Acre-Feet)<br>
-                    <strong>49.csv:</strong> Surface Elevation (ft)<br>
-                    Inflows, releases, &amp; evaporation
+                    <strong>49.csv:</strong> Surface Elevation (ft)
                   </td>
                   <td class="p-2.5 align-top whitespace-nowrap">
                     <span class="px-1.5 py-0.5 bg-blue-50 text-blue-800 border border-blue-200 rounded font-bold text-[10px]">Daily (06:00 MST)</span>
                   </td>
                   <td class="p-2.5 align-top space-y-1">
-                    <a href="https://www.usbr.gov/uc/water/hydrodata/reservoir_data/919/dashboard.html" target="_blank" rel="noopener noreferrer" class="text-sky-700 hover:text-sky-900 hover:underline font-bold block">
-                      Glen Canyon HydroData Dashboard ↗
-                    </a>
-                    <a href="https://www.usbr.gov/uc/water/crsp/cs/gcd.html" target="_blank" rel="noopener noreferrer" class="text-stone-600 hover:text-stone-900 hover:underline block text-[10px]">
-                      Glen Canyon / Lake Powell Data Center ↗
-                    </a>
-                    <a href="https://www.usbr.gov/uc/water/hydrodata/reservoir_data/" target="_blank" rel="noopener noreferrer" class="text-stone-500 hover:text-stone-800 hover:underline block text-[10px]">
-                      Reservoir Data CSV Catalog ↗
-                    </a>
+                    <a href="https://www.usbr.gov/uc/water/hydrodata/reservoir_data/919/dashboard.html" target="_blank" rel="noopener noreferrer" class="text-sky-700 hover:text-sky-900 hover:underline font-bold block">Glen Canyon HydroData Dashboard ↗</a>
+                    <a href="https://www.usbr.gov/uc/water/crsp/cs/gcd.html" target="_blank" rel="noopener noreferrer" class="text-stone-600 hover:text-stone-900 hover:underline block text-[10px]">Glen Canyon Data Center ↗</a>
                   </td>
                 </tr>
 
-                <!-- 3. USBR Lower Colorado RiverOps -->
                 <tr class="hover:bg-stone-50/80 transition">
                   <td class="p-2.5 align-top">
                     <span class="font-bold text-stone-900 block">USBR Lower Colorado</span>
                     <span class="text-[10px] text-stone-500">River Operations (RiverOps)</span>
                   </td>
                   <td class="p-2.5 align-top">
-                    <code class="text-[10px] text-sky-800 font-mono bg-sky-50 px-1 py-0.5 rounded border border-sky-200">/hourly/hourly.html</code><br>
-                    <code class="text-[10px] text-stone-600 font-mono bg-stone-100 px-1 py-0.5 rounded border border-stone-200 mt-1 inline-block">/wtracct.html</code> (Decrees)
+                    <code class="text-[10px] text-sky-800 font-mono bg-sky-50 px-1 py-0.5 rounded border border-sky-200">/hourly/hourly.html</code>
                   </td>
                   <td class="p-2.5 align-top">
-                    Hoover Dam release (cfs)<br>
+                    Hoover, Davis, Parker releases (cfs)<br>
                     Lake Mead elevation &amp; AF<br>
                     Imperial Dam diversions (AAC)
                   </td>
@@ -1264,30 +1353,21 @@
                     <span class="px-1.5 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded font-bold text-[10px]">Hourly Teletype</span>
                   </td>
                   <td class="p-2.5 align-top space-y-1">
-                    <a href="https://www.usbr.gov/lc/region/g4000/hourly/hourly.html" target="_blank" rel="noopener noreferrer" class="text-sky-700 hover:text-sky-900 hover:underline font-bold block">
-                      USBR Lower Colorado Hourly RiverOps Feed ↗
-                    </a>
-                    <a href="https://www.usbr.gov/lc/region/g4000/hourly/hourly.html" target="_blank" rel="noopener noreferrer" class="text-stone-600 hover:text-stone-900 hover:underline block text-[10px]">
-                      Hourly Teletype Operations Feed ↗
-                    </a>
-                    <a href="https://www.usbr.gov/lc/region/g4000/wtracct.html" target="_blank" rel="noopener noreferrer" class="text-stone-500 hover:text-stone-800 hover:underline block text-[10px]">
-                      Daily Water Accounting Reports &amp; Decrees ↗
-                    </a>
+                    <a href="https://www.usbr.gov/lc/region/g4000/hourly/hourly.html" target="_blank" rel="noopener noreferrer" class="text-sky-700 hover:text-sky-900 hover:underline font-bold block">USBR Lower Colorado Hourly RiverOps Feed ↗</a>
+                    <a href="https://www.usbr.gov/lc/region/g4000/wtracct.html" target="_blank" rel="noopener noreferrer" class="text-stone-600 hover:text-stone-900 hover:underline block text-[10px]">Daily Water Accounting Reports &amp; Decrees ↗</a>
                   </td>
                 </tr>
 
-                <!-- 4. Colorado DWR HydroBase -->
                 <tr class="hover:bg-stone-50/80 transition">
                   <td class="p-2.5 align-top">
                     <span class="font-bold text-stone-900 block">Colorado DWR (CDSS)</span>
                     <span class="text-[10px] text-stone-500">Division of Water Resources</span>
                   </td>
                   <td class="p-2.5 align-top">
-                    <code class="text-[10px] text-sky-800 font-mono bg-sky-50 px-1 py-0.5 rounded border border-sky-200">/Rest/GET/api/v2/</code><br>
-                    <span class="text-[10px] text-stone-500">telemetrytimeserieshour</span>
+                    <code class="text-[10px] text-sky-800 font-mono bg-sky-50 px-1 py-0.5 rounded border border-sky-200">/Rest/GET/api/v2/</code>
                   </td>
                   <td class="p-2.5 align-top">
-                    Trans-mountain diversion exports:<br>
+                    Trans-mountain exports:<br>
                     <code>ADATUNCO</code>, <code>MOFTUNCO</code>,<br>
                     <code>ROBTUNCO</code>, <code>BOUTUNCO</code> (cfs)
                   </td>
@@ -1295,27 +1375,18 @@
                     <span class="px-1.5 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded font-bold text-[10px]">Hourly</span>
                   </td>
                   <td class="p-2.5 align-top space-y-1">
-                    <a href="https://dwr.state.co.us/Rest/GET/Help" target="_blank" rel="noopener noreferrer" class="text-sky-700 hover:text-sky-900 hover:underline font-bold block">
-                      Colorado DWR REST API Reference ↗
-                    </a>
-                    <a href="https://cdss.colorado.gov/" target="_blank" rel="noopener noreferrer" class="text-stone-600 hover:text-stone-900 hover:underline block text-[10px]">
-                      Colorado Decision Support Systems (CDSS) ↗
-                    </a>
-                    <a href="https://dwr.state.co.us/Rest/GET/Help/Api/GET-api-v2-telemetrystations-telemetrystation" target="_blank" rel="noopener noreferrer" class="text-stone-500 hover:text-stone-800 hover:underline block text-[10px]">
-                      DWR Stations API Schema ↗
-                    </a>
+                    <a href="https://dwr.state.co.us/Rest/GET/Help" target="_blank" rel="noopener noreferrer" class="text-sky-700 hover:text-sky-900 hover:underline font-bold block">Colorado DWR REST API Reference ↗</a>
+                    <a href="https://cdss.colorado.gov/" target="_blank" rel="noopener noreferrer" class="text-stone-600 hover:text-stone-900 hover:underline block text-[10px]">Colorado Decision Support Systems (CDSS) ↗</a>
                   </td>
                 </tr>
 
-                <!-- 5. USDA NRCS SNOTEL -->
                 <tr class="hover:bg-stone-50/80 transition">
                   <td class="p-2.5 align-top">
                     <span class="font-bold text-stone-900 block">USDA NRCS SNOTEL</span>
                     <span class="text-[10px] text-stone-500">Nat. Water &amp; Climate Center</span>
                   </td>
                   <td class="p-2.5 align-top">
-                    <code class="text-[10px] text-sky-800 font-mono bg-sky-50 px-1 py-0.5 rounded border border-sky-200">AWDB Web Service</code><br>
-                    <span class="text-[10px] text-stone-500">Report Generator / SOAP</span>
+                    <code class="text-[10px] text-sky-800 font-mono bg-sky-50 px-1 py-0.5 rounded border border-sky-200">AWDB Web Service</code>
                   </td>
                   <td class="p-2.5 align-top">
                     <strong>SWE:</strong> Snow Water Equivalent (in)<br>
@@ -1326,193 +1397,27 @@
                     <span class="px-1.5 py-0.5 bg-blue-50 text-blue-800 border border-blue-200 rounded font-bold text-[10px]">Daily (Midnight)</span>
                   </td>
                   <td class="p-2.5 align-top space-y-1">
-                    <a href="https://www.nrcs.usda.gov/wps/portal/wcc/home/aboutUs/monitoringPrograms/automatedSnowMonitoring/" target="_blank" rel="noopener noreferrer" class="text-sky-700 hover:text-sky-900 hover:underline font-bold block">
-                      NRCS SNOTEL Network Overview ↗
-                    </a>
-                    <a href="https://www.nrcs.usda.gov/wps/portal/wcc/home/dataAccessServices/webServices/awdbWebServiceReference/" target="_blank" rel="noopener noreferrer" class="text-stone-600 hover:text-stone-900 hover:underline block text-[10px]">
-                      AWDB Web Service Technical Reference ↗
-                    </a>
-                    <a href="https://www.nrcs.usda.gov/wps/portal/wcc/home/quicklinks/states/colorado/" target="_blank" rel="noopener noreferrer" class="text-stone-500 hover:text-stone-800 hover:underline block text-[10px]">
-                      Colorado Basin Snowpack Reports ↗
-                    </a>
+                    <a href="https://www.nrcs.usda.gov/wps/portal/wcc/home/aboutUs/monitoringPrograms/automatedSnowMonitoring/" target="_blank" rel="noopener noreferrer" class="text-sky-700 hover:text-sky-900 hover:underline font-bold block">NRCS SNOTEL Network Overview ↗</a>
+                    <a href="https://www.nrcs.usda.gov/wps/portal/wcc/home/dataAccessServices/webServices/awdbWebServiceReference/" target="_blank" rel="noopener noreferrer" class="text-stone-600 hover:text-stone-900 hover:underline block text-[10px]">AWDB Web Service Reference ↗</a>
                   </td>
                 </tr>
-
-                <!-- 6. USBR Consumptive Uses & Losses -->
-                <tr class="hover:bg-stone-50/80 transition">
-                  <td class="p-2.5 align-top">
-                    <span class="font-bold text-stone-900 block">USBR CU&amp;L Reports</span>
-                    <span class="text-[10px] text-stone-500">Macro Water Accounting</span>
-                  </td>
-                  <td class="p-2.5 align-top">
-                    <code class="text-[10px] text-stone-700 font-mono bg-stone-100 px-1 py-0.5 rounded border border-stone-200">Statutory Audited PDF/CSV</code>
-                  </td>
-                  <td class="p-2.5 align-top">
-                    Consumptive depletions (MAF/yr)<br>
-                    Reservoir evaporation losses<br>
-                    Upper / Lower Division deliveries
-                  </td>
-                  <td class="p-2.5 align-top whitespace-nowrap">
-                    <span class="px-1.5 py-0.5 bg-stone-100 text-stone-700 border border-stone-200 rounded font-bold text-[10px]">Annual / Decadal</span>
-                  </td>
-                  <td class="p-2.5 align-top space-y-1">
-                    <a href="https://www.usbr.gov/uc/envproc/capp/reports.html" target="_blank" rel="noopener noreferrer" class="text-sky-700 hover:text-sky-900 hover:underline font-bold block">
-                      USBR Consumptive Uses &amp; Losses Reports ↗
-                    </a>
-                    <a href="https://www.usbr.gov/lc/region/g4000/24mo/index.html" target="_blank" rel="noopener noreferrer" class="text-stone-600 hover:text-stone-900 hover:underline block text-[10px]">
-                      USBR 24-Month Reservoir Projections ↗
-                    </a>
-                    <a href="https://www.usbr.gov/lc/region/g4000/lawofrvr.html" target="_blank" rel="noopener noreferrer" class="text-stone-500 hover:text-stone-800 hover:underline block text-[10px]">
-                      Law of the River Legal Framework ↗
-                    </a>
-                  </td>
-                </tr>
-
               </tbody>
             </table>
           </div>
         </section>
 
-        <!-- SECTION 3: NOTEBOOK HOSTING ARCHITECTURE -->
-        <section id="modal-sec-hosting" class="space-y-3">
-          <div class="border-b border-stone-200 pb-2">
-            <h3 class="text-sm font-black text-stone-900 tracking-tight flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-amber-600"></span>
-              <span>3. Notebook Execution and Distribution</span>
-            </h3>
-            <p class="text-[11px] text-stone-500">How research notebooks are rendered, distributed, and executed across web and cloud environments</p>
-          </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            
-            <div class="p-3.5 bg-stone-50 rounded-lg border border-stone-200 space-y-1.5">
-              <div class="flex items-center gap-1.5 font-bold text-stone-900 text-xs">
-                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                <span>Option A: Static HTML Web Hosting (Current Implementation)</span>
-              </div>
-              <p class="text-[11px] text-stone-600 leading-relaxed">
-                The portal pre-renders every Jupyter notebook into standalone, zero-dependency HTML files inside <code>web/notebooks/</code> using Pygments and KaTeX. This requires zero Python or Jupyter installation for portal visitors, loads instantly on mobile/desktop, and can be hosted statically on GitHub Pages, Netlify, or any web server.
-              </p>
+            <div class="pt-2 text-[11px] text-stone-500">
+              All data retrieved under Open Government Data principles (USGS, USBR, CDWR, NRCS).
             </div>
-
-            <div class="p-3.5 bg-stone-50 rounded-lg border border-stone-200 space-y-1.5">
-              <div class="flex items-center gap-1.5 font-bold text-stone-900 text-xs">
-                <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-                <span>Option B: Google Colab (Zero-Setup Interactive Execution)</span>
-              </div>
-              <p class="text-[11px] text-stone-600 leading-relaxed">
-                Researchers and students can open any <code>.ipynb</code> notebook directly in Google Colab with 1 click. Colab runs code in a free Google Cloud sandbox, allowing users to rerun live USGS API queries, retrain K-Means clusters, or test new lag parameters without configuring a local Python environment.
-              </p>
-            </div>
-
-            <div class="p-3.5 bg-stone-50 rounded-lg border border-stone-200 space-y-1.5">
-              <div class="flex items-center gap-1.5 font-bold text-stone-900 text-xs">
-                <span class="w-2 h-2 rounded-full bg-sky-500"></span>
-                <span>Option C: Project Jupyter nbviewer (Official Jupyter Service)</span>
-              </div>
-              <p class="text-[11px] text-stone-600 leading-relaxed">
-                Project Jupyter maintains <a href="https://nbviewer.org/github/schochdo/CO_River/tree/main/notebooks/" target="_blank" rel="noopener noreferrer" class="text-sky-700 hover:underline font-bold">nbviewer.org ↗</a>, an official, free cloud service. By entering the public GitHub repository URL, nbviewer dynamically compiles notebooks on demand with mathematical KaTeX formulas and high-resolution figures.
-              </p>
-            </div>
-
-            <div class="p-3.5 bg-stone-50 rounded-lg border border-stone-200 space-y-1.5">
-              <div class="flex items-center gap-1.5 font-bold text-stone-900 text-xs">
-                <span class="w-2 h-2 rounded-full bg-purple-500"></span>
-                <span>Option D: MyBinder (Interactive Cloud JupyterLab)</span>
-              </div>
-              <p class="text-[11px] text-stone-600 leading-relaxed">
-                <a href="https://mybinder.org/v2/gh/schochdo/CO_River/main" target="_blank" rel="noopener noreferrer" class="text-purple-700 hover:underline font-bold">mybinder.org ↗</a> builds reproducible Docker containers directly from a GitHub repository's <code>environment.yml</code> or <code>requirements.txt</code>, launching a full interactive JupyterLab environment in the user's browser.
-              </p>
-            </div>
-
-          </div>
-        </section>
-
-        <!-- SECTION 4: INGESTION PIPELINE SCRIPTS & CODE SNIPPET -->
-        <section id="modal-sec-scripts" class="space-y-3">
-          <div class="border-b border-stone-200 pb-2">
-            <h3 class="text-sm font-black text-stone-900 tracking-tight flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-slate-700"></span>
-              <span>4. Data Ingestion Pipeline</span>
-            </h3>
-            <p class="text-[11px] text-stone-500">Production ingestion scripts powering the real-time operational feeds and mass-balance accounting</p>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-[11px]">
-            <div class="p-2.5 bg-stone-50 rounded border border-stone-200">
-              <div class="font-mono font-bold text-stone-900">src/fetch_water_data.py</div>
-              <div class="text-[10px] text-stone-500 mt-0.5">Automated data fetcher for 25 USGS streamgages and USBR Lake Powell/Mead elevations.</div>
-            </div>
-            <div class="p-2.5 bg-stone-50 rounded border border-stone-200">
-              <div class="font-mono font-bold text-stone-900">src/fetch_historical_portal_data.py</div>
-              <div class="text-[10px] text-stone-500 mt-0.5">Decadal historical backfill engine aggregating 1935–2026 Lake Mead &amp; Powell storage envelopes.</div>
-            </div>
-            <div class="p-2.5 bg-stone-50 rounded border border-stone-200">
-              <div class="font-mono font-bold text-stone-900">src/build_reach_network.py</div>
-              <div class="text-[10px] text-stone-500 mt-0.5">Directed acyclic graph (DAG) mass-balance compiler for topological river routing.</div>
             </div>
           </div>
-
-          <!-- Code Snippet Box -->
-          <div class="bg-stone-900 text-stone-200 p-4 rounded-lg font-mono text-[11px] overflow-x-auto overflow-y-hidden relative">
-            <div class="flex items-center justify-between mb-2 pb-1.5 border-b border-stone-800">
-              <span class="text-emerald-400 font-bold"># Live Python Ingestion Example: USGS NWIS Instantaneous Streamflow (cfs)</span>
-              <button id="btn-copy-code" onclick="copyApiSnippet()" class="px-2 py-0.5 rounded text-[10px] font-bold bg-stone-800 hover:bg-stone-700 text-stone-300 border border-stone-600 transition cursor-pointer">Copy Code</button>
-            </div>
-            <code id="api-code-snippet">import requests
-
-# Base endpoint for USGS Instantaneous Values (IV) Web Service
-url = "https://waterservices.usgs.gov/nwis/iv/"
-
-# Query Sentinel Gauges across Upper Basin Headwaters & Lees Ferry Compact Divide:
-# 09380000 = Colorado River at Lees Ferry, AZ (Compact Dividing Point)
-# 09095500 = Colorado River near Cameo, CO (Upper Mainstem)
-# 09180500 = Colorado River near Cisco, UT (Pre-Powell Mainstem)
-# 09379500 = San Juan River near Bluff, UT (Monsoon Inflow Sentinel)
-params = {
-    "sites": "09380000,09095500,09180500,09379500",
-    "parameterCd": "00060",  # Streamflow Discharge (cfs)
-    "siteStatus": "all",
-    "format": "json"
-}
-
-response = requests.get(url, params=params, timeout=12)
-data = response.json()
-
-print(f"{'Station ID':<12} | {'Gage Name':<38} | {'Discharge (cfs)':>15}")
-print("-" * 70)
-
-for ts in data["value"]["timeSeries"]:
-    site_id = ts["sourceInfo"]["siteCode"][0]["value"]
-    site_name = ts["sourceInfo"]["siteName"]
-    readings = ts["values"][0]["value"]
-    if readings:
-        cfs_val = float(readings[-1]["value"]) if readings[-1]["value"] != "-999999" else 0.0
-        print(f"{site_id:<12} | {site_name[:38]:<38} | {cfs_val:>15,.1f}")</code>
-          </div>
-        </section>
-
-      </div>
-
-      <!-- Modal Footer -->
-      <div class="px-6 py-3 border-t border-stone-200 bg-stone-50 flex flex-wrap items-center justify-between gap-3">
-        <div class="flex flex-wrap items-center gap-3 text-[11px] text-stone-500">
-          <span>All data retrieved under Open Government Data principles (USGS, USBR, CDWR).</span>
-          <span class="text-stone-300">•</span>
-          <a href="https://github.com/schochdo/CO_River" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 font-semibold text-stone-700 hover:text-stone-900 transition">
-            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
-            <span>GitHub Repository ↗</span>
-          </a>
-          <span class="text-stone-300">•</span>
-          <a href="https://github.com/schochdo/CO_River/tree/main/notebooks" target="_blank" rel="noopener noreferrer" class="font-semibold text-stone-700 hover:text-stone-900 transition">
-            <span>notebooks/ ↗</span>
-          </a>
         </div>
-        <button onclick="closeModals()" class="px-4 py-1.5 text-xs font-bold rounded bg-stone-800 text-white hover:bg-stone-900 transition">Close</button>
-      </div>
 
-    </div>
-  </div>
+      </div>
+    </main>
+
+
 
   <script>
     if (typeof Chart !== 'undefined') {
@@ -1571,6 +1476,9 @@ for ts in data["value"]["timeSeries"]:
       document.getElementById('section-reservoirs').classList.add('hidden');
       document.getElementById('section-telemetry').classList.add('hidden');
       document.getElementById('section-ml').classList.add('hidden');
+      document.getElementById('section-methodology').classList.add('hidden');
+      document.getElementById('section-law').classList.add('hidden');
+      document.getElementById('section-sources').classList.add('hidden');
 
       if (tabId === 'overview') {
         topHeader.classList.remove('hidden');
@@ -1580,7 +1488,7 @@ for ts in data["value"]["timeSeries"]:
         document.getElementById('section-map').classList.remove('hidden');
         const iframe = document.getElementById('iframe-map');
         if (iframe) {
-          iframe.focus();
+          iframe.focus({ preventScroll: true });
           try { if (iframe.contentWindow) iframe.contentWindow.focus(); } catch (_) {}
 
           const syncMap = () => {
@@ -1622,6 +1530,15 @@ for ts in data["value"]["timeSeries"]:
       } else if (tabId === 'ml') {
         topHeader.classList.add('hidden'); // Flow regimes and ML analysis dashboard
         document.getElementById('section-ml').classList.remove('hidden');
+      } else if (tabId === 'methodology') {
+        topHeader.classList.add('hidden'); // Architecture & Methodology guide
+        document.getElementById('section-methodology').classList.remove('hidden');
+      } else if (tabId === 'law') {
+        topHeader.classList.add('hidden');
+        document.getElementById('section-law').classList.remove('hidden');
+      } else if (tabId === 'sources') {
+        topHeader.classList.add('hidden');
+        document.getElementById('section-sources').classList.remove('hidden');
       }
 
       // Synchronize browser URL query state without page reload
@@ -1674,14 +1591,14 @@ for ts in data["value"]["timeSeries"]:
       sectionMap.addEventListener('mouseenter', () => {
         const iframe = document.getElementById('iframe-map');
         if (iframe) {
-          iframe.focus();
+          iframe.focus({ preventScroll: true });
           try { if (iframe.contentWindow) iframe.contentWindow.focus(); } catch (_) {}
         }
       });
       sectionMap.addEventListener('mousemove', () => {
         const iframe = document.getElementById('iframe-map');
         if (iframe && document.activeElement !== iframe) {
-          iframe.focus();
+          iframe.focus({ preventScroll: true });
           try { if (iframe.contentWindow) iframe.contentWindow.focus(); } catch (_) {}
         }
       }, { passive: true });
@@ -1696,7 +1613,7 @@ for ts in data["value"]["timeSeries"]:
       const iframe = document.getElementById('iframe-map');
       if (iframe && iframe.contentWindow) {
         if (document.activeElement !== iframe) {
-          iframe.focus();
+          iframe.focus({ preventScroll: true });
           try { iframe.contentWindow.focus(); } catch (_) {}
         }
         try {
@@ -1759,21 +1676,73 @@ for ts in data["value"]["timeSeries"]:
       });
     }
 
-    // Modal controllers
+    // Backwards-compatible panel helpers (converted from modals to in-panel tabs)
     function openLawModal() {
-      document.getElementById('law-modal').classList.remove('hidden');
+      setTab('law');
     }
     function openApiModal() {
-      document.getElementById('api-modal').classList.remove('hidden');
+      setTab('sources');
     }
     function closeModals() {
-      document.getElementById('law-modal').classList.add('hidden');
-      document.getElementById('api-modal').classList.add('hidden');
+      const lm = document.getElementById('law-modal');
+      const am = document.getElementById('api-modal');
+      if (lm) lm.classList.add('hidden');
+      if (am) am.classList.add('hidden');
     }
+
+    // Fullscreen Toggle
+    function syncFullscreenUI() {
+      const enterIcon = document.getElementById('icon-enter-fullscreen');
+      const exitIcon = document.getElementById('icon-exit-fullscreen');
+      const labelEl = document.getElementById('fullscreen-label');
+      const isFs = Boolean(document.fullscreenElement);
+      if (enterIcon) enterIcon.classList.toggle('hidden', isFs);
+      if (exitIcon) exitIcon.classList.toggle('hidden', !isFs);
+      if (labelEl) labelEl.innerText = isFs ? 'Exit Fullscreen' : 'Fullscreen';
+    }
+
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().then(syncFullscreenUI).catch(err => {
+          console.warn('Fullscreen request denied:', err);
+        });
+      } else if (document.exitFullscreen) {
+        document.exitFullscreen().then(syncFullscreenUI).catch(() => {});
+      }
+    }
+    window.toggleFullScreen = toggleFullScreen;
+    document.addEventListener('fullscreenchange', syncFullscreenUI);
 
     // Active Reservoir Record ('mead' or 'powell') and view mode ('envelope' or 'heatmap')
     let currentReservoirRecord = 'mead';
     let currentReservoirView = 'envelope';
+
+    let currentReservoirSubtab = 'timeline';
+    window.switchReservoirsSubtab = function(mode) {
+      currentReservoirSubtab = mode;
+      const timelineSec = document.getElementById('view-res-timeline');
+      const elevSec = document.getElementById('view-res-elevations');
+      const btnTimeline = document.getElementById('subtab-btn-res-timeline');
+      const btnElev = document.getElementById('subtab-btn-res-elevations');
+      if (!timelineSec || !elevSec || !btnTimeline || !btnElev) return;
+
+      const activeCls = 'px-3.5 py-1.5 rounded-[2px] text-xs font-bold transition shadow-xs bg-white text-sky-900 border border-stone-200 cursor-pointer';
+      const inactiveCls = 'px-3.5 py-1.5 rounded-[2px] text-xs font-semibold transition text-stone-600 hover:text-stone-900 cursor-pointer';
+
+      if (mode === 'timeline') {
+        timelineSec.classList.remove('hidden');
+        elevSec.classList.add('hidden');
+        btnTimeline.className = activeCls;
+        btnElev.className = inactiveCls;
+        setTimeout(() => renderMacroStorageTimeline(), 10);
+      } else {
+        timelineSec.classList.add('hidden');
+        elevSec.classList.remove('hidden');
+        btnTimeline.className = inactiveCls;
+        btnElev.className = activeCls;
+        setTimeout(() => switchReservoirRecord(currentReservoirRecord || 'mead'), 10);
+      }
+    };
 
     function switchReservoirRecord(reservoir) {
       currentReservoirRecord = reservoir;
@@ -1869,7 +1838,7 @@ for ts in data["value"]["timeSeries"]:
 
     let seasonalData = null;
     let seasonalChartInstance = null;
-    let currentSeasonalView = 'regimes'; // 'regimes' or 'mismatch'
+    let currentSeasonalView = 'mismatch';
     let macroOverviewChartInstance = null;
     let stateUseChartInstance = null;
 
@@ -1915,42 +1884,7 @@ for ts in data["value"]["timeSeries"]:
       }, { passive: true });
     }
 
-    // Toggle Seasonal Engine Chart view: 'regimes' (5 Pulses) vs 'mismatch' (Why Reservoirs Drain)
-    function setSeasonalView(mode) {
-      currentSeasonalView = mode;
-      const btnRegimes = document.getElementById('btn-seasonal-regimes');
-      const btnMismatch = document.getElementById('btn-seasonal-mismatch');
-      const titleEl = document.getElementById('seasonal-chart-title');
-      const subtitleEl = document.getElementById('seasonal-chart-subtitle');
-
-      if (mode === 'regimes') {
-        if (btnRegimes) {
-          btnRegimes.className = 'px-2.5 py-1 text-[10.5px] font-bold rounded bg-[#0f172a] text-white border border-[#0f172a] shadow-xs cursor-pointer transition';
-        }
-        if (btnMismatch) {
-          btnMismatch.className = 'px-2.5 py-1 text-[10.5px] font-medium rounded bg-[#f1f5f9] text-[#64748b] border border-[#cbd5e1] hover:text-[#0f172a] cursor-pointer transition';
-        }
-        if (titleEl) {
-          titleEl.innerText = '365-Day River Heartbeats: Staggered Timing of Natural Pulses vs. Canals';
-        }
-        if (subtitleEl) {
-          subtitleEl.innerText = 'Normalized Day-of-Year hydrographs demonstrating how alpine snowmelt peaks in June and monsoons strike in August, while canals pull flat demand all 12 months.';
-        }
-      } else {
-        if (btnRegimes) {
-          btnRegimes.className = 'px-2.5 py-1 text-[10.5px] font-medium rounded bg-[#f1f5f9] text-[#64748b] border border-[#cbd5e1] hover:text-[#0f172a] cursor-pointer transition';
-        }
-        if (btnMismatch) {
-          btnMismatch.className = 'px-2.5 py-1 text-[10.5px] font-bold rounded bg-[#0f172a] text-white border border-[#0f172a] shadow-xs cursor-pointer transition';
-        }
-        if (titleEl) {
-          titleEl.innerText = 'The Physical Mismatch: 96 Surplus Days Refill Storage vs. 269 Deficit Days Drain It';
-        }
-        if (subtitleEl) {
-          subtitleEl.innerText = 'Natural river supply (peaking at ~48,000 cfs in June snowmelt) vs. continuous societal demand (~10,000 to 17,000 cfs). Massive reservoirs exist to bridge these 269 deficit days.';
-        }
-      }
-
+    function setSeasonalView() {
       renderSeasonalEngineChart();
     }
     window.setSeasonalView = setSeasonalView;
@@ -1980,191 +1914,84 @@ for ts in data["value"]["timeSeries"]:
         return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
       });
 
-      let targetDatasets = [];
-      let targetOptions = {};
-
-      if (currentSeasonalView === 'regimes') {
-        const regimes = seasonalData.seasonal_heartbeats.regimes;
-        targetDatasets = [
-          {
-            label: 'Alpine Snowmelt (Upper Basin)',
-            data: regimes.alpine_snowmelt,
-            borderColor: '#0072B2',
-            backgroundColor: 'rgba(0, 114, 178, 0.14)',
-            borderWidth: 2.2,
-            fill: true,
-            tension: 0.25,
-            pointRadius: 0,
-            pointHoverRadius: 4
-          },
-          {
-            label: 'Summer Monsoon Flash Floods (San Juan/Little CO)',
-            data: regimes.monsoon_tributaries,
-            borderColor: '#D55E00',
-            backgroundColor: 'rgba(213, 94, 0, 0.10)',
-            borderWidth: 2.0,
-            fill: true,
-            tension: 0.25,
-            pointRadius: 0,
-            pointHoverRadius: 4
-          },
-          {
-            label: 'Lower Basin Canals (Imperial/Yuma Ag Pull)',
-            data: regimes.lower_basin_canals,
-            borderColor: '#b45309',
-            borderDash: [4, 4],
-            borderWidth: 2.0,
-            fill: false,
-            tension: 0.15,
-            pointRadius: 0,
-            pointHoverRadius: 4
-          },
-          {
-            label: 'Regulated Dam Releases (Hoover/Glen Canyon)',
-            data: regimes.regulated_dam_releases,
-            borderColor: '#009E73',
-            borderWidth: 1.8,
-            fill: false,
-            tension: 0.2,
-            pointRadius: 0,
-            pointHoverRadius: 4
-          },
-          {
-            label: 'Trans-Mountain Tunnels (Front Range)',
-            data: regimes.front_range_tunnels,
-            borderColor: '#64748b',
-            borderDash: [2, 2],
-            borderWidth: 1.5,
-            fill: false,
-            tension: 0.2,
-            pointRadius: 0,
-            pointHoverRadius: 4
-          }
-        ];
-        targetOptions = {
-          responsive: true,
-          maintainAspectRatio: false,
-          interaction: { mode: 'index', intersect: false },
-          plugins: {
-            legend: {
-              display: true,
-              position: 'top',
-              labels: {
-                boxWidth: 12,
-                boxHeight: 3,
-                font: { size: 9.5, weight: 'bold' },
-                color: '#334155',
-                padding: 8
-              }
-            },
-            tooltip: {
-              callbacks: {
-                title: items => `Calendar Date: ${items[0].label}`,
-                label: ctx => ` ${ctx.dataset.label}: ${(ctx.parsed.y * 100).toFixed(0)}% relative flow`
-              }
+      // Simplified Inflow vs. Demand hydrograph in the muted river-corridor palette
+      const mismatch = seasonalData.supply_demand_mismatch;
+      const targetDatasets = [
+        {
+          label: 'Natural Inflow (Snowmelt + Tributaries)',
+          data: mismatch.supply_cfs,
+          borderColor: '#2b5c8f',
+          backgroundColor: 'rgba(43, 92, 143, 0.12)',
+          borderWidth: 2.2,
+          fill: true,
+          tension: 0.2,
+          pointRadius: 0,
+          pointHoverRadius: 4
+        },
+        {
+          label: 'System Demand (Canals + Cities + Losses)',
+          data: mismatch.demand_cfs,
+          borderColor: '#c26d2d',
+          borderDash: [5, 4],
+          borderWidth: 2.0,
+          fill: false,
+          tension: 0.1,
+          pointRadius: 0,
+          pointHoverRadius: 4
+        }
+      ];
+      const targetOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top',
+            labels: {
+              boxWidth: 14,
+              boxHeight: 3,
+              font: { size: 10, weight: 'bold' },
+              color: '#475569',
+              padding: 8
             }
           },
-          scales: {
-            x: {
-              grid: { display: false },
-              ticks: {
-                font: { size: 9 },
-                maxTicksLimit: 12,
-                maxRotation: 0,
-                autoSkip: true
+          tooltip: {
+            callbacks: {
+              title: items => `Calendar Date: ${items[0].label}`,
+              label: ctx => ` ${ctx.dataset.label.split(' (')[0]}: ${parseInt(ctx.parsed.y).toLocaleString()} cfs`,
+              afterBody: items => {
+                const supply = items[0].parsed.y;
+                const demand = items[1] ? items[1].parsed.y : 0;
+                const diff = supply - demand;
+                const status = diff >= 0 ? 'Surplus (Storage Refilling)' : 'Deficit (Storage Draining)';
+                return `\nNet Hydrologic Balance: ${diff >= 0 ? '+' : ''}${parseInt(diff).toLocaleString()} cfs\nSystem Mode: ${status}`;
               }
-            },
-            y: {
-              min: 0,
-              max: 1.05,
-              ticks: {
-                font: { size: 9 },
-                callback: v => (v * 100).toFixed(0) + '%'
-              },
-              grid: { color: '#e2e8f0' }
             }
           }
-        };
-      } else {
-        // Mismatch View: Supply vs Demand
-        const mismatch = seasonalData.supply_demand_mismatch;
-        targetDatasets = [
-          {
-            label: 'Natural River Inflow Supply (Snowmelt + Tributaries)',
-            data: mismatch.supply_cfs,
-            borderColor: '#0072B2',
-            backgroundColor: 'rgba(0, 114, 178, 0.16)',
-            borderWidth: 2.4,
-            fill: true,
-            tension: 0.2,
-            pointRadius: 0,
-            pointHoverRadius: 4
-          },
-          {
-            label: 'Sustained Societal Demand (Canals + Cities + Losses)',
-            data: mismatch.demand_cfs,
-            borderColor: '#b2182b',
-            borderDash: [5, 4],
-            borderWidth: 2.2,
-            fill: false,
-            tension: 0.1,
-            pointRadius: 0,
-            pointHoverRadius: 4
-          }
-        ];
-        targetOptions = {
-          responsive: true,
-          maintainAspectRatio: false,
-          interaction: { mode: 'index', intersect: false },
-          plugins: {
-            legend: {
-              display: true,
-              position: 'top',
-              labels: {
-                boxWidth: 14,
-                boxHeight: 4,
-                font: { size: 10, weight: 'bold' },
-                color: '#334155',
-                padding: 8
-              }
-            },
-            tooltip: {
-              callbacks: {
-                title: items => `Calendar Date: ${items[0].label}`,
-                label: ctx => ` ${ctx.dataset.label.split(' (')[0]}: ${parseInt(ctx.parsed.y).toLocaleString()} cfs`,
-                afterBody: items => {
-                  const supply = items[0].parsed.y;
-                  const demand = items[1] ? items[1].parsed.y : 0;
-                  const diff = supply - demand;
-                  const status = diff >= 0 ? 'Surplus (Storage Refilling)' : 'Deficit (Storage Draining)';
-                  return `\nNet Hydrologic Balance: ${diff >= 0 ? '+' : ''}${parseInt(diff).toLocaleString()} cfs\nSystem Mode: ${status}`;
-                }
-              }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: {
+              font: { size: 9 },
+              maxTicksLimit: 12,
+              maxRotation: 0,
+              autoSkip: true
             }
           },
-          scales: {
-            x: {
-              grid: { display: false },
-              ticks: {
-                font: { size: 9 },
-                maxTicksLimit: 12,
-                maxRotation: 0,
-                autoSkip: true
-              }
+          y: {
+            min: 0,
+            max: 52000,
+            ticks: {
+              font: { size: 9 },
+              stepSize: 10000,
+              callback: v => (v / 1000).toFixed(0) + 'k cfs'
             },
-            y: {
-              min: 0,
-              max: 52000,
-              ticks: {
-                font: { size: 9 },
-                stepSize: 10000,
-                callback: v => (v / 1000).toFixed(0) + 'k cfs'
-              },
-              grid: { color: '#e2e8f0' }
-            }
+            grid: { color: '#e6e0d5' }
           }
-        };
-      }
+        }
+      };
 
       // Fast In-Place Chart.js Mutation: Reuse existing instance to prevent canvas context thrashing
       if (seasonalChartInstance) {
@@ -2193,9 +2020,6 @@ for ts in data["value"]["timeSeries"]:
       // 1. Render Act 3 Combined Macro Basin Storage Trajectory (1935 - 2026)
       const timeline = portalData.basin_storage_timeline || [];
       const macroYears = timeline.map(d => d.year);
-      const meadMaf = timeline.map(d => d.mead_maf);
-      const powellMaf = timeline.map(d => d.powell_maf);
-      const crspMaf = timeline.map(d => (d.flaming_gorge_maf || 0) + (d.navajo_maf || 0) + (d.blue_mesa_maf || 0));
       const totalMaf = timeline.map(d => d.total_major_storage_maf);
 
       const macroCanvas = document.getElementById('chart-macro-overview-timeline');
@@ -2215,44 +2039,12 @@ for ts in data["value"]["timeSeries"]:
               {
                 label: 'Total Basin Major Storage',
                 data: totalMaf,
-                borderColor: '#0f172a',
-                borderWidth: 2.2,
+                borderColor: '#2b5c8f',
+                borderWidth: 2.25,
                 fill: false,
                 tension: 0.15,
                 pointRadius: 0,
                 pointHoverRadius: 4
-              },
-              {
-                label: 'Lake Mead (Hoover)',
-                data: meadMaf,
-                borderColor: '#0072B2',
-                backgroundColor: 'rgba(0, 114, 178, 0.12)',
-                borderWidth: 1.8,
-                fill: false,
-                tension: 0.15,
-                pointRadius: 0,
-                pointHoverRadius: 3
-              },
-              {
-                label: 'Lake Powell (Glen Canyon)',
-                data: powellMaf,
-                borderColor: '#E69F00',
-                backgroundColor: 'rgba(230, 159, 0, 0.12)',
-                borderWidth: 1.8,
-                fill: false,
-                tension: 0.15,
-                pointRadius: 0,
-                pointHoverRadius: 3
-              },
-              {
-                label: 'Upper CRSP (Flaming Gorge/Navajo/Blue Mesa)',
-                data: crspMaf,
-                borderColor: '#009E73',
-                borderWidth: 1.5,
-                fill: false,
-                tension: 0.15,
-                pointRadius: 0,
-                pointHoverRadius: 3
               }
             ]
           },
@@ -2263,20 +2055,12 @@ for ts in data["value"]["timeSeries"]:
             plugins: {
               horizontalThresholdPlugin: {
                 lines: [
-                  { value: 60.0, customLabel: 'Full System Capacity (~60.0 MAF)', color: '#1e293b', dash: [6, 4], noBox: true },
-                  { value: 6.0, customLabel: 'Min Power Pool Limit (~6.0 MAF)', color: '#D55E00', dash: [5, 3], noBox: true }
+                  { value: 60.0, customLabel: 'Full System Capacity (~60.0 MAF)', color: '#475569', textColor: '#334155', dash: [6, 4], noBox: true },
+                  { value: 6.0, customLabel: 'Min Power Pool Limit (~6.0 MAF)', color: '#c26d2d', textColor: '#9a4f1b', dash: [5, 3], noBox: true }
                 ]
               },
               legend: {
-                display: true,
-                position: 'top',
-                labels: {
-                  boxWidth: 12,
-                  boxHeight: 3,
-                  font: { size: 9.5, weight: 'bold' },
-                  color: '#334155',
-                  padding: 8
-                }
+                display: false
               },
               tooltip: {
                 callbacks: {
@@ -2294,7 +2078,7 @@ for ts in data["value"]["timeSeries"]:
                 min: 0,
                 max: 65,
                 ticks: { font: { size: 9 }, stepSize: 15, callback: v => v + ' MAF' },
-                grid: { color: '#e2e8f0', lineWidth: 1 }
+                grid: { color: '#e6e0d5', lineWidth: 1 }
               }
             }
           }
@@ -2318,15 +2102,15 @@ for ts in data["value"]["timeSeries"]:
               label: 'Consumptive Depletions (MAF/yr)',
               data: [4.4, 2.8, 2.2, 1.0, 0.6, 0.5, 0.3],
               backgroundColor: [
-                '#0072B2', // CA: Senior Priority 1901
-                '#D55E00', // AZ: Junior Priority CAP (absorbs first cuts)
-                '#009E73', // CO: Headwaters & Front Range
-                '#56B4E9', // UT: Upper Basin
-                '#E69F00', // NM: San Juan-Chama
-                '#64748b', // WY: Green River
-                '#94a3b8'  // NV: Las Vegas / SNWA
+                '#c26d2d', // CA (Lower Basin)
+                '#c26d2d', // AZ (Lower Basin)
+                '#2b5c8f', // CO (Upper Basin)
+                '#2b5c8f', // UT (Upper Basin)
+                '#2b5c8f', // NM (Upper Basin)
+                '#2b5c8f', // WY (Upper Basin)
+                '#c26d2d'  // NV (Lower Basin)
               ],
-              borderRadius: 3
+              borderRadius: 1
             }]
           },
           options: {
@@ -2338,13 +2122,13 @@ for ts in data["value"]["timeSeries"]:
                 callbacks: {
                   title: items => {
                     const desc = {
-                      CA: 'California • 4.4 MAF (Senior 1901 Priority • Zero Baseline Cuts)',
-                      AZ: 'Arizona • 2.8 MAF (Junior CAP Rights • Absorbs First Cuts)',
-                      CO: 'Colorado • 2.2 MAF (Headwaters • Trans-Mountain Diversions)',
+                      CA: 'California • 4.4 MAF (Lower Basin • Senior 1901 Priority)',
+                      AZ: 'Arizona • 2.8 MAF (Lower Basin • Junior CAP Cuts)',
+                      CO: 'Colorado • 2.2 MAF (Upper Basin • Headwaters & Trans-Mountain)',
                       UT: 'Utah • 1.0 MAF (Upper Basin Allocation)',
-                      NM: 'New Mexico • 0.6 MAF (San Juan Basin)',
-                      WY: 'Wyoming • 0.5 MAF (Green River Tributaries)',
-                      NV: 'Nevada • 0.3 MAF (Southern Nevada Water Authority)'
+                      NM: 'New Mexico • 0.6 MAF (Upper Basin • San Juan Basin)',
+                      WY: 'Wyoming • 0.5 MAF (Upper Basin • Green River Tributaries)',
+                      NV: 'Nevada • 0.3 MAF (Lower Basin • Southern Nevada Water Authority)'
                     };
                     return desc[items[0].label] || items[0].label;
                   },
@@ -2361,7 +2145,7 @@ for ts in data["value"]["timeSeries"]:
                 min: 0,
                 max: 5,
                 ticks: { font: { size: 9 }, stepSize: 1, callback: v => v + ' MAF' },
-                grid: { color: '#e2e8f0' }
+                grid: { color: '#e6e0d5' }
               }
             }
           }
@@ -2398,11 +2182,11 @@ for ts in data["value"]["timeSeries"]:
         macroChartInstance = null;
       }
 
-      // 4 Datasets (Okabe-Ito Colorblind-Safe Standard):
-      // 0: Combined Total - Crisp Charcoal Ink boundary line tracing the top of the stack (#0f172a)
-      // 1: Lake Mead - Bottom stacked band: Okabe-Ito Deep Water Blue (#0072B2)
-      // 2: Lake Powell - Middle stacked band: Okabe-Ito Warm Amber/Gold (#E69F00)
-      // 3: Upper CRSP - Top stacked band: Okabe-Ito Bluish Green / Teal (#009E73)
+      // 4 Datasets (Clean multi-line trajectories in the muted river-corridor palette, zero solid fills):
+      // 0: Combined Total - Primary total storage curve (#0f172a)
+      // 1: Lake Mead - Muted river blue (#2b5c8f)
+      // 2: Lake Powell - Muted canyon ochre (#c26d2d)
+      // 3: Upper CRSP - Muted riparian sage dashed (#3f6f58)
       const datasets = [
         {
           label: 'Combined Total',
@@ -2411,7 +2195,6 @@ for ts in data["value"]["timeSeries"]:
           backgroundColor: 'transparent',
           borderWidth: 2.5,
           fill: false,
-          stack: 'total_line',
           order: 0,
           tension: 0.15,
           pointRadius: 0
@@ -2419,23 +2202,21 @@ for ts in data["value"]["timeSeries"]:
         {
           label: 'Lake Mead',
           data: meadMaf,
-          borderColor: '#0072B2',
-          backgroundColor: 'rgba(0, 114, 178, 0.35)',
-          borderWidth: 2.0,
-          fill: true,
-          stack: 'basin',
-          order: 3,
+          borderColor: '#2b5c8f',
+          backgroundColor: 'transparent',
+          borderWidth: 2,
+          fill: false,
+          order: 1,
           tension: 0.15,
           pointRadius: 0
         },
         {
           label: 'Lake Powell',
           data: powellMaf,
-          borderColor: '#E69F00',
-          backgroundColor: 'rgba(230, 159, 0, 0.35)',
-          borderWidth: 2.0,
-          fill: true,
-          stack: 'basin',
+          borderColor: '#c26d2d',
+          backgroundColor: 'transparent',
+          borderWidth: 2,
+          fill: false,
           order: 2,
           tension: 0.15,
           pointRadius: 0
@@ -2443,12 +2224,12 @@ for ts in data["value"]["timeSeries"]:
         {
           label: 'Upper CRSP',
           data: crspMaf,
-          borderColor: '#009E73',
-          backgroundColor: 'rgba(0, 158, 115, 0.30)',
+          borderColor: '#3f6f58',
+          backgroundColor: 'transparent',
           borderWidth: 1.75,
-          fill: true,
-          stack: 'basin',
-          order: 1,
+          borderDash: [4, 3],
+          fill: false,
+          order: 3,
           tension: 0.15,
           pointRadius: 0
         }
@@ -2568,7 +2349,7 @@ for ts in data["value"]["timeSeries"]:
               ticks: { font: { size: 10 }, maxTicksLimit: 15 }
             },
             y: {
-              stacked: true,
+              stacked: false,
               min: 0,
               max: 65,
               ticks: {

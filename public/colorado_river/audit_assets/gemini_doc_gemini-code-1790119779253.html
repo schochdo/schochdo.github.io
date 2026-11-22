@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Colorado River Basin Dashboard ($0 Stack)</title>
+  <script src="https://unpkg.com/maplibre-gl@3.6.0/dist/maplibre-gl.js"></script>
+  <link href="https://unpkg.com/maplibre-gl@3.6.0/dist/maplibre-gl.css" rel="stylesheet" />
+  <style>
+    body { margin: 0; padding: 0; font-family: system-ui, sans-serif; }
+    #map { width: 100vw; height: 100vh; }
+    .panel {
+      position: absolute; top: 20px; left: 20px; z-index: 10;
+      background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px);
+      color: #fff; padding: 16px; border-radius: 8px; width: 280px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .metric { font-size: 24px; font-weight: bold; color: #38bdf8; }
+  </style>
+</head>
+<body>
+
+<div class="panel">
+  <h3 style="margin: 0 0 8px 0;">Lees Ferry (USGS 09380000)</h3>
+  <div>Current Streamflow:</div>
+  <div id="flow-val" class="metric">Loading...</div>
+</div>
+
+<div id="map"></div>
+
+<script>
+  // Initialize MapLibre with CARTO Positron Light Basemap
+  const map = new maplibregl.Map({
+    container: 'map',
+    style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+    center: [-111.4838, 36.8654], // Lees Ferry / Grand Canyon area
+    zoom: 8,
+    pitch: 50
+  });
+
+  map.on('load', async () => {
+    // Add AWS Terrain RGB for 3D Relief
+    map.addSource('terrain', {
+      type: 'raster-dem',
+      tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
+      tileSize: 256,
+      encoding: 'terrarium'
+    });
+    map.setTerrain({ source: 'terrain', exaggeration: 1.2 });
+
+    // Fetch Live USGS Flow Data for Lees Ferry (USGS 09380000)
+    try {
+      const res = await fetch('https://waterservices.usgs.gov/nwis/iv/?format=json&sites=09380000&parameterCd=00060');
+      const data = await res.json();
+      const cfs = data.value.timeSeries[0].values[0].value[0].value;
+      document.getElementById('flow-val').innerText = `${parseInt(cfs).toLocaleString()} cfs`;
+    } catch (err) {
+      document.getElementById('flow-val').innerText = 'API Offline';
+    }
+  });
+</script>
+</body>
+</html>

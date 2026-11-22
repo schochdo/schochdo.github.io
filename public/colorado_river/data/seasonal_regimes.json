@@ -5219,5 +5219,63 @@
       13.393,
       13.234
     ]
-  }
+  },
+  "flow_regimes": [
+    {
+      "station": "Yampa at Deerlodge Park",
+      "doy_50": 248,
+      "rbi": 0.082,
+      "spring_ratio": 0.78,
+      "regime_name": "Regime 3: Monsoonal Flashy Arroyos"
+    },
+    {
+      "station": "Upper Colorado at Cameo",
+      "doy_50": 252,
+      "rbi": 0.048,
+      "spring_ratio": 0.69,
+      "regime_name": "Regime 3: Monsoonal Flashy Arroyos"
+    },
+    {
+      "station": "Gunnison near Grand Jct",
+      "doy_50": 245,
+      "rbi": 0.038,
+      "spring_ratio": 0.62,
+      "regime_name": "Regime 3: Monsoonal Flashy Arroyos"
+    },
+    {
+      "station": "Green below Flaming Gorge",
+      "doy_50": 235,
+      "rbi": 0.018,
+      "spring_ratio": 0.44,
+      "regime_name": "Regime 1: Wild Alpine Snowmelt"
+    },
+    {
+      "station": "Colorado at Lees Ferry",
+      "doy_50": 230,
+      "rbi": 0.015,
+      "spring_ratio": 0.41,
+      "regime_name": "Regime 1: Wild Alpine Snowmelt"
+    },
+    {
+      "station": "San Juan near Bluff",
+      "doy_50": 222,
+      "rbi": 0.115,
+      "spring_ratio": 0.52,
+      "regime_name": "Regime 4: Hybrid Plateau Runoff"
+    },
+    {
+      "station": "Paria River at Lees Ferry",
+      "doy_50": 140,
+      "rbi": 0.312,
+      "spring_ratio": 0.22,
+      "regime_name": "Regime 2: Dam-Buffered Storage Tailwaters"
+    },
+    {
+      "station": "Gila River near Dome",
+      "doy_50": 95,
+      "rbi": 0.245,
+      "spring_ratio": 0.18,
+      "regime_name": "Regime 2: Dam-Buffered Storage Tailwaters"
+    }
+  ]
 }
