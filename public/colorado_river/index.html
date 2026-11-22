@@ -192,13 +192,6 @@
       backdrop-filter: blur(4px);
     }
 
-    /* Workspace Fullscreen Mode (reliably hides sidebar in Brave/macOS even when OS Space fullscreen is blocked) */
-    body.workspace-fullscreen .sidebar-academic {
-      display: none !important;
-    }
-    body.workspace-fullscreen #btn-exit-fullscreen-floating {
-      display: inline-flex !important;
-    }
     #reservoir-filter-bar button:focus,
     #reservoir-filter-bar button:focus-visible {
       outline: none !important;
@@ -206,14 +199,6 @@
   </style>
 </head>
 <body class="flex flex-col md:flex-row h-full h-[100dvh] max-h-[100dvh] overflow-hidden antialiased bg-[#f5f2eb]">
-
-  <!-- Floating Exit Fullscreen Control (visible when workspace fullscreen is active) -->
-  <button id="btn-exit-fullscreen-floating" onclick="toggleFullScreen()" class="hidden fixed top-2.5 left-2.5 z-[9999] items-center gap-1.5 px-2.5 py-1.5 text-xs font-bold rounded-[2px] bg-[#ede6d8]/95 hover:bg-[#f7f4ee] text-[#3e3226] border border-[#b8ae9c] shadow-sm cursor-pointer" title="Exit Fullscreen (Esc)" aria-label="Exit Fullscreen">
-    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 10h6V4 M10 10L3 3 M20 10h-6V4 M14 10L21 3 M4 14h6v6 M10 14L3 21 M20 14h-6v6 M14 14L21 21"/>
-    </svg>
-    <span>Exit Fullscreen</span>
-  </button>
 
   <!-- Left Light Academic Sidebar Navigation -->
   <aside class="sidebar-academic w-full md:w-64 flex-shrink-0 flex flex-col justify-between p-3.5 border-r border-stone-300 select-none z-30 h-auto md:h-full md:h-[100dvh] md:max-h-[100dvh] overflow-y-auto">
@@ -1707,7 +1692,7 @@
       if (am) am.classList.add('hidden');
     }
 
-    // Fullscreen Toggle (hybrid workspace + native OS fullscreen with Brave/macOS resilience)
+    // Native Fullscreen Mode (keeps left navigation sidebar visible at all times)
     let isWorkspaceFullscreen = false;
 
     function triggerViewportResize() {
@@ -1725,7 +1710,6 @@
     function syncFullscreenUI() {
       const nativeFs = Boolean(document.fullscreenElement || document.webkitFullscreenElement);
       const isFs = isWorkspaceFullscreen || nativeFs;
-      document.body.classList.toggle('workspace-fullscreen', isFs);
       const enterIcon = document.getElementById('icon-enter-fullscreen');
       const exitIcon = document.getElementById('icon-exit-fullscreen');
       const labelEl = document.getElementById('fullscreen-label');

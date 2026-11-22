@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-11-22T11:24:08.889704",
+  "fetched_at": "2026-11-22T11:27:02.109552",
   "dam_releases": {
     "hoover_dam": {
       "id": "USBR_HOOVER",
@@ -58,7 +58,7 @@
       "type": "streamflow",
       "flow_cfs": 34.6,
       "timestamp": "2026-11-22T10:15:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 40.00689167,
       "lon": -105.8482722
@@ -70,7 +70,7 @@
       "type": "streamflow",
       "flow_cfs": 82.0,
       "timestamp": "2026-11-22T10:45:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 40.108319,
       "lon": -106.0041847
@@ -142,7 +142,7 @@
       "type": "streamflow",
       "flow_cfs": 220.0,
       "timestamp": "2026-11-22T10:15:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 40.036667,
       "lon": -106.439444
@@ -154,7 +154,7 @@
       "type": "streamflow",
       "flow_cfs": 120.0,
       "timestamp": "2026-11-22T10:15:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 39.64942954,
       "lon": -106.9536554
@@ -178,7 +178,7 @@
       "type": "streamflow",
       "flow_cfs": 39.3,
       "timestamp": "2026-11-22T10:15:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 39.36554075,
       "lon": -106.8255948
@@ -190,7 +190,7 @@
       "type": "streamflow",
       "flow_cfs": 444.0,
       "timestamp": "2026-11-22T10:45:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 39.54666667,
       "lon": -107.33083333
@@ -202,7 +202,7 @@
       "type": "streamflow",
       "flow_cfs": 959.0,
       "timestamp": "2026-11-22T10:15:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 39.5549819,
       "lon": -107.337554
@@ -226,7 +226,7 @@
       "type": "streamflow",
       "flow_cfs": 250.0,
       "timestamp": "2026-11-22T11:15:00.000-07:00",
-      "age_hours": 0.1,
+      "age_hours": 0.2,
       "data_status": "live",
       "lat": 38.54193567,
       "lon": -106.9497661
@@ -250,7 +250,7 @@
       "type": "streamflow",
       "flow_cfs": 468.0,
       "timestamp": "2026-11-22T10:15:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 38.74194444,
       "lon": -108.08041667
@@ -274,7 +274,7 @@
       "type": "streamflow",
       "flow_cfs": 2520.0,
       "timestamp": "2026-11-22T10:45:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 39.132742,
       "lon": -109.027075
@@ -286,7 +286,7 @@
       "type": "streamflow",
       "flow_cfs": 372.0,
       "timestamp": "2026-11-22T10:45:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 37.47249579,
       "lon": -108.49760047
@@ -298,7 +298,7 @@
       "type": "streamflow",
       "flow_cfs": 105.0,
       "timestamp": "2026-11-22T10:15:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 38.3102675,
       "lon": -108.8853805
@@ -309,8 +309,8 @@
       "provider": "USGS",
       "type": "streamflow",
       "flow_cfs": 405.0,
-      "timestamp": "2026-11-22T11:00:00.000-07:00",
-      "age_hours": 0.4,
+      "timestamp": "2026-11-22T11:15:00.000-07:00",
+      "age_hours": 0.2,
       "data_status": "live",
       "lat": 38.79720805,
       "lon": -109.1951142
@@ -334,7 +334,7 @@
       "type": "streamflow",
       "flow_cfs": 229.0,
       "timestamp": "2026-11-22T10:45:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 43.0190833,
       "lon": -110.1188611
@@ -394,7 +394,7 @@
       "type": "streamflow",
       "flow_cfs": 243.0,
       "timestamp": "2026-11-22T10:15:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 40.50273085,
       "lon": -108.0334482
@@ -406,7 +406,7 @@
       "type": "streamflow",
       "flow_cfs": 124.0,
       "timestamp": "2026-11-22T10:15:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 40.54901667,
       "lon": -108.42432222
@@ -478,7 +478,7 @@
       "type": "streamflow",
       "flow_cfs": 299.0,
       "timestamp": "2026-11-22T10:45:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 39.97885629,
       "lon": -109.1787269
@@ -501,8 +501,8 @@
       "provider": "USGS",
       "type": "streamflow",
       "flow_cfs": 4150.0,
-      "timestamp": "2026-11-22T11:00:00.000-07:00",
-      "age_hours": 0.4,
+      "timestamp": "2026-11-22T11:15:00.000-07:00",
+      "age_hours": 0.2,
       "data_status": "live",
       "lat": 38.98886944,
       "lon": -110.15035556
@@ -513,8 +513,8 @@
       "provider": "USGS",
       "type": "streamflow",
       "flow_cfs": 66.1,
-      "timestamp": "2026-11-22T11:00:00.000-07:00",
-      "age_hours": 0.4,
+      "timestamp": "2026-11-22T11:15:00.000-07:00",
+      "age_hours": 0.2,
       "data_status": "live",
       "lat": 38.8583081,
       "lon": -110.3701469
@@ -562,7 +562,7 @@
       "type": "streamflow",
       "flow_cfs": 424.0,
       "timestamp": "2026-11-22T10:15:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 36.80188889,
       "lon": -107.6986389
@@ -646,7 +646,7 @@
       "type": "streamflow",
       "flow_cfs": 9.98,
       "timestamp": "2026-11-22T10:15:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 34.31502222,
       "lon": -109.36233056
@@ -658,7 +658,7 @@
       "type": "streamflow",
       "flow_cfs": 1100.0,
       "timestamp": "2026-11-22T10:45:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 35.9263819,
       "lon": -111.5673682
@@ -668,9 +668,9 @@
       "name": "Colorado River near Grand Canyon, AZ (Phantom Ranch)",
       "provider": "USGS",
       "type": "streamflow",
-      "flow_cfs": 8940.0,
-      "timestamp": "2026-11-22T10:15:00.000-07:00",
-      "age_hours": 1.1,
+      "flow_cfs": 9330.0,
+      "timestamp": "2026-11-22T11:15:00.000-07:00",
+      "age_hours": 0.2,
       "data_status": "live",
       "lat": 36.10137176,
       "lon": -112.0862795
@@ -694,7 +694,7 @@
       "type": "streamflow",
       "flow_cfs": 70.3,
       "timestamp": "2026-11-22T10:15:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 36.30581618,
       "lon": -112.761305
@@ -730,7 +730,7 @@
       "type": "streamflow",
       "flow_cfs": 469.0,
       "timestamp": "2026-11-22T10:05:00.000-08:00",
-      "age_hours": 0.3,
+      "age_hours": 0.4,
       "data_status": "live",
       "lat": 36.8916437,
       "lon": -113.9244098
@@ -742,7 +742,7 @@
       "type": "streamflow",
       "flow_cfs": 44.0,
       "timestamp": "2026-11-22T10:10:00.000-08:00",
-      "age_hours": 0.2,
+      "age_hours": 0.3,
       "data_status": "live",
       "lat": 36.64302844,
       "lon": -114.5397075
@@ -778,7 +778,7 @@
       "type": "streamflow",
       "flow_cfs": 258.0,
       "timestamp": "2026-11-22T10:45:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 32.86758333,
       "lon": -114.472111
@@ -814,7 +814,7 @@
       "type": "streamflow",
       "flow_cfs": 840.0,
       "timestamp": "2026-11-22T11:15:00.000-07:00",
-      "age_hours": 0.1,
+      "age_hours": 0.2,
       "data_status": "live",
       "lat": 33.61916667,
       "lon": -110.92208333
@@ -1239,7 +1239,7 @@
     }
   ],
   "validation": {
-    "timestamp": "2026-11-22T11:24:08.868862",
+    "timestamp": "2026-11-22T11:27:02.090687",
     "overall_status": "VALID",
     "stale_stations": [
       {
@@ -1302,7 +1302,7 @@
         "hist_ratio": 0.8541666666666666,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-22T10:45:00.000-07:00",
-        "age_hours": 0.6,
+        "age_hours": 0.7,
         "data_status": "live",
         "delta_cfs": 71.9,
         "delta_pct": 711.881188118812,
@@ -1317,7 +1317,7 @@
         "hist_ratio": 0.8541666666666666,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-22T10:45:00.000-07:00",
-        "age_hours": 0.6,
+        "age_hours": 0.7,
         "data_status": "live",
         "delta_cfs": 0.0,
         "delta_pct": 0.0,
@@ -1332,7 +1332,7 @@
         "hist_ratio": 0.37865748709122204,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-22T10:15:00.000-07:00",
-        "age_hours": 1.1,
+        "age_hours": 1.2,
         "data_status": "live",
         "delta_cfs": 138.0,
         "delta_pct": 168.29268292682926,
@@ -1377,7 +1377,7 @@
         "hist_ratio": 0.6810810810810811,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-22T10:45:00.000-07:00",
-        "age_hours": 0.6,
+        "age_hours": 0.7,
         "data_status": "live",
         "delta_cfs": 1340.0,
         "delta_pct": 113.55932203389831,
@@ -1432,27 +1432,27 @@
         "reach": "grand_canyon_upper",
         "name": "Colorado River at Phantom Ranch",
         "gauge_id": "09402500",
-        "flow_cfs": 8940.0,
+        "flow_cfs": 9330.0,
         "median_50yr_cfs": 10900.0,
-        "hist_ratio": 0.8201834862385321,
+        "hist_ratio": 0.8559633027522936,
         "hist_status": "NORMAL",
-        "timestamp": "2026-11-22T10:15:00.000-07:00",
-        "age_hours": 1.1,
+        "timestamp": "2026-11-22T11:15:00.000-07:00",
+        "age_hours": 0.2,
         "data_status": "live",
-        "delta_cfs": 2500.0,
-        "delta_pct": 38.81987577639752,
+        "delta_cfs": 2890.0,
+        "delta_pct": 44.87577639751553,
         "mass_balance": "VERIFIED_CONFLUENCE (Paria River at Lees Ferry, AZ, Little Colorado River near Cameron, AZ)"
       },
       {
         "reach": "grand_canyon",
         "name": "Colorado River through Grand Canyon",
         "gauge_id": "09402500",
-        "flow_cfs": 8940.0,
+        "flow_cfs": 9330.0,
         "median_50yr_cfs": 10900.0,
-        "hist_ratio": 0.8201834862385321,
+        "hist_ratio": 0.8559633027522936,
         "hist_status": "NORMAL",
-        "timestamp": "2026-11-22T10:15:00.000-07:00",
-        "age_hours": 1.1,
+        "timestamp": "2026-11-22T11:15:00.000-07:00",
+        "age_hours": 0.2,
         "data_status": "live",
         "delta_cfs": 0.0,
         "delta_pct": 0.0,
@@ -1469,8 +1469,8 @@
         "timestamp": "2026-11-22T02:30:00.000-07:00",
         "age_hours": 8.9,
         "data_status": "daily",
-        "delta_cfs": -1520.0,
-        "delta_pct": -17.002237136465325,
+        "delta_cfs": -1910.0,
+        "delta_pct": -20.471596998928188,
         "mass_balance": "PASS"
       },
       {
@@ -1542,7 +1542,7 @@
         "hist_ratio": 0.30210772833723654,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-22T10:45:00.000-07:00",
-        "age_hours": 0.6,
+        "age_hours": 0.7,
         "data_status": "live",
         "delta_cfs": -5812.0,
         "delta_pct": -95.7495881383855,
@@ -1557,7 +1557,7 @@
         "hist_ratio": 0.30210772833723654,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-22T10:45:00.000-07:00",
-        "age_hours": 0.6,
+        "age_hours": 0.7,
         "data_status": "live",
         "delta_cfs": 0.0,
         "delta_pct": 0.0,
