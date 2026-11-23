@@ -260,16 +260,20 @@
       </div>
 
       <!-- Main Sankey SVG Canvas (Un-squeezed, Full Height) -->
-      <div class="relative bg-white rounded-xs border border-stone-300 shadow-sm overflow-hidden px-4 pt-2.5 pb-2.5">
-        <!-- 5-Tier Column Headers -->
-        <div class="grid grid-cols-4 text-center text-xs font-bold tracking-wider uppercase pb-1.5 mb-1 border-b border-stone-200 text-stone-600">
-          <div class="text-left pl-2">1. Inflow Sources &amp; Drawdown</div>
-          <div>2. Compact Basin Allocations</div>
-          <div>3. Regional Conveyance Conduits &amp; Losses</div>
-          <div class="text-right pr-2">4. State Consumptive Uses &amp; Sovereigns</div>
-        </div>
+      <div class="relative bg-white rounded-xs border border-stone-300 shadow-sm overflow-hidden px-3 md:px-4 pt-2.5 pb-2.5">
+        <div id="sankey-scroll-viewport" class="w-full overflow-x-auto" style="-webkit-overflow-scrolling: touch;">
+          <div id="sankey-scroll-inner" class="min-w-[920px] md:min-w-0">
+            <!-- 5-Tier Column Headers -->
+            <div class="grid grid-cols-4 text-center text-xs font-bold tracking-wider uppercase pb-1.5 mb-1 border-b border-stone-200 text-stone-600">
+              <div class="text-left pl-2">1. Inflow Sources &amp; Drawdown</div>
+              <div>2. Compact Basin Allocations</div>
+              <div>3. Regional Conveyance Conduits &amp; Losses</div>
+              <div class="text-right pr-2">4. State Consumptive Uses &amp; Sovereigns</div>
+            </div>
 
-        <div id="sankey-container" class="w-full overflow-x-auto"></div>
+            <div id="sankey-container" class="w-full"></div>
+          </div>
+        </div>
         <!-- Hover / Click Tooltip & Popups -->
         <div id="sankey-tooltip"></div>
         <div id="flowComparisonBox" style="display:none;"></div>
@@ -315,7 +319,8 @@
         <!-- SIDE-BY-SIDE VERTICAL BARS CONTAINER -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-4 items-start">
           <!-- Left: Physical Supply & Paper Demand Columns (lg:col-span-8) -->
-          <div class="lg:col-span-8 flex items-end gap-3 bg-stone-50/70 p-4 rounded-xs border border-stone-200">
+          <div class="lg:col-span-8 bg-stone-50/70 p-3 md:p-4 rounded-xs border border-stone-200 overflow-x-auto" style="-webkit-overflow-scrolling: touch;">
+            <div class="flex items-end gap-3 min-w-[540px] sm:min-w-0 w-full">
             <!-- Shared Vertical Axis (0 to 20 MAF) -->
             <div class="relative w-16 shrink-0 h-[480px] text-[10px] font-bold text-stone-500 tabular-nums whitespace-nowrap select-none border-r border-stone-300">
               <div class="absolute right-2 top-0 -translate-y-1/2">20.0 MAF</div>
@@ -566,6 +571,7 @@
                 <path d="M 2 302 L 10 302 L 10 478 L 2 478" fill="none" stroke="#0284c7" stroke-width="2.2" />
                 <text x="23" y="390" text-anchor="middle" transform="rotate(-90 23 390)" font-size="9.5" font-weight="900" letter-spacing="0.07em" fill="#0284c7">UPPER BASIN (7.50 MAF)</text>
               </svg>
+            </div>
             </div>
           </div>
 

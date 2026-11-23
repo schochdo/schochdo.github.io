@@ -214,6 +214,27 @@
     .tabular-numbers {
       font-variant-numeric: tabular-nums;
     }
+    @media (max-width: 767px) {
+      #schematic-svg-wrap,
+      #profile-svg-wrap {
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        justify-content: flex-start !important;
+        align-items: stretch !important;
+        height: calc(100dvh - 145px) !important;
+        min-height: 460px !important;
+        -webkit-overflow-scrolling: touch;
+      }
+      #canvas,
+      #profile-svg {
+        width: auto !important;
+        min-width: 880px !important;
+        height: 100% !important;
+        max-height: none !important;
+        max-width: none !important;
+        flex-shrink: 0;
+      }
+    }
   </style>
 </head>
 <body>
@@ -244,7 +265,7 @@
     <!-- ================================================================= -->
     <div id="view-schematic" class="space-y-2.5">
       <!-- River Network Schematic SVG Container (Full Viewport Height) -->
-      <div class="relative bg-white rounded-xs border border-stone-300 shadow-md overflow-hidden flex items-center justify-center h-[calc(100vh-155px)] min-h-[600px]">
+      <div id="schematic-svg-wrap" class="relative bg-white rounded-xs border border-stone-300 shadow-md overflow-hidden flex items-center justify-center h-[calc(100vh-155px)] min-h-[600px]">
         <svg id="canvas" viewBox="0 0 1280 750" class="w-full h-full block select-none">
           <defs>
             <!-- Gradients -->
@@ -646,7 +667,7 @@
     <!-- ================================================================= -->
     <div id="view-elevation" class="hidden space-y-2.5">
       <!-- Main Profile SVG Canvas Container -->
-      <div class="relative bg-white border border-stone-300 rounded-xs p-3 shadow-md overflow-hidden flex items-center justify-center h-[calc(100vh-155px)] min-h-[550px]">
+      <div id="profile-svg-wrap" class="relative bg-white border border-stone-300 rounded-xs p-3 shadow-md overflow-hidden flex items-center justify-center h-[calc(100vh-155px)] min-h-[550px]">
         <svg id="profile-svg" viewBox="0 0 1200 650" class="w-full h-full max-h-[calc(100vh-185px)] select-none block">
           <defs>
             <linearGradient id="sky-grid-grad" x1="0" y1="0" x2="0" y2="1">

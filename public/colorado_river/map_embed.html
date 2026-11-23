@@ -322,6 +322,106 @@
     }
 
     /* Tray Header */
+    @media (max-width: 767px) {
+      .map-top-actions {
+        top: 10px !important;
+        right: 10px !important;
+        gap: 6px !important;
+      }
+      .map-menu-btn {
+        height: 30px !important;
+        padding: 0 9px !important;
+        font-size: 11px !important;
+        gap: 4px !important;
+      }
+      .sidebar-expand-tab {
+        padding: 10px 4px !important;
+        width: 28px !important;
+      }
+      .trackball-nav-control {
+        transform: scale(0.82);
+        transform-origin: bottom right;
+        right: 8px !important;
+        bottom: 58px !important;
+      }
+      .map-legend {
+        bottom: 58px !important;
+        left: 8px !important;
+      }
+      #map-container:has(#flow-replay-bar:not(.hidden)) .map-legend,
+      #map-container:has(#flow-replay-bar:not(.hidden)) .trackball-nav-control {
+        opacity: 0 !important;
+        pointer-events: none !important;
+      }
+      .tray-sub-hint {
+        display: none !important;
+      }
+      .map-tray-header-bar {
+        padding: 0 8px !important;
+        gap: 6px !important;
+      }
+      .tray-title-text {
+        font-size: 9.5px !important;
+        letter-spacing: 0.03em !important;
+        white-space: nowrap !important;
+      }
+      .tray-header-middle {
+        min-width: 0 !important;
+      }
+      .tray-search-wrap {
+        min-width: 0 !important;
+      }
+      .map-gage-tray.collapsed .tray-filter-pills {
+        display: none !important;
+      }
+      #flow-replay-bar {
+        left: 8px !important;
+        right: 8px !important;
+        transform: none !important;
+        width: auto !important;
+        max-width: calc(100vw - 16px) !important;
+        padding: 8px 10px !important;
+        bottom: calc(56px + env(safe-area-inset-bottom, 0px));
+      }
+      #flow-replay-bar .replay-top-row {
+        flex-wrap: nowrap !important;
+        align-items: flex-start !important;
+        gap: 6px !important;
+      }
+      #flow-replay-bar .replay-kicker-group {
+        flex: 1 1 0% !important;
+        min-width: 0 !important;
+        flex-shrink: 1 !important;
+        flex-wrap: wrap !important;
+        row-gap: 2px !important;
+        column-gap: 6px !important;
+      }
+      #flow-replay-bar .replay-time-display {
+        font-size: 11.5px !important;
+      }
+      #flow-replay-bar .replay-rel-time {
+        font-size: 10px !important;
+      }
+      #flow-replay-bar .replay-close-btn {
+        flex-shrink: 0 !important;
+      }
+      #flow-replay-bar .replay-sentinel-strip {
+        overflow-x: auto !important;
+        flex-wrap: nowrap !important;
+        -webkit-overflow-scrolling: touch;
+        justify-content: flex-start !important;
+      }
+      #flow-replay-bar .replay-transport-row {
+        flex-wrap: wrap !important;
+        justify-content: space-between !important;
+        gap: 6px !important;
+      }
+      #flow-replay-bar .replay-slider-wrap {
+        order: -1;
+        flex-basis: 100%;
+        min-width: 0 !important;
+      }
+    }
   </style>
 </head>
 <body>
