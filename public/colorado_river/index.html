@@ -86,6 +86,33 @@
       border-right: 1px solid #cfc8ba;
       scrollbar-gutter: stable;
     }
+    @media (max-width: 767px) {
+      .sidebar-academic {
+        height: auto !important;
+        max-height: 85dvh !important;
+        border-right: none !important;
+        border-bottom: 1.5px solid #cfc8ba !important;
+        padding: 0.875rem 0.875rem max(1.25rem, calc(0.875rem + env(safe-area-inset-bottom, 0px))) !important;
+      }
+      .sidebar-academic:not(.mobile-menu-open) {
+        overflow: hidden !important;
+        scrollbar-gutter: auto !important;
+        padding: 0.875rem 0.875rem 0 !important;
+      }
+      .sidebar-academic:not(.mobile-menu-open) #sidebar-nav-collapsible {
+        display: none !important;
+      }
+      .sidebar-academic:not(.mobile-menu-open) #sidebar-brand-header {
+        margin-bottom: 0 !important;
+        border-bottom: none !important;
+      }
+      main {
+        height: auto !important;
+        max-height: none !important;
+        flex: 1 1 0% !important;
+        min-height: 0 !important;
+      }
+    }
     .sidebar-category-header {
       color: #1e293b;
       font-size: 11.5px;
@@ -201,20 +228,29 @@
 <body class="flex flex-col md:flex-row h-full h-[100dvh] max-h-[100dvh] overflow-hidden antialiased bg-[#f5f2eb]">
 
   <!-- Left Light Academic Sidebar Navigation -->
-  <aside class="sidebar-academic w-full md:w-64 flex-shrink-0 flex flex-col justify-between p-3.5 border-r border-stone-300 select-none z-30 h-auto md:h-full md:h-[100dvh] md:max-h-[100dvh] overflow-y-auto">
+  <aside class="sidebar-academic w-full md:w-64 flex-shrink-0 flex flex-col p-3.5 border-r border-stone-300 select-none z-30 h-auto md:h-full md:h-[100dvh] md:max-h-[100dvh] overflow-y-auto">
     
-    <!-- Top Brand & Navigation Menu -->
-    <div class="space-y-4">
-      <!-- Identity / Header (Full Width) -->
-      <div id="sidebar-brand-header" class="-mx-3.5 -mt-3.5 px-4 py-3.5 bg-[#f7f4ee] border-b border-[#cfc8ba] text-center cursor-pointer" onclick="setTab('overview')">
-        <div class="text-lg font-black text-[#0f172a] tracking-tight leading-tight">COLORADO RIVER BASIN</div>
-        <div class="text-[11px] text-stone-600 font-normal leading-snug mt-1.5 space-y-0.5">
+    <!-- Identity / Header (Full Width) -->
+    <div id="sidebar-brand-header" class="-mx-3.5 -mt-3.5 px-3.5 md:px-4 py-2.5 md:py-3.5 bg-[#f7f4ee] border-b border-[#cfc8ba] flex items-center justify-between md:block md:text-center cursor-pointer flex-shrink-0" onclick="setTab('overview')">
+      <div class="text-left md:text-center min-w-0">
+        <div class="text-base md:text-lg font-black text-[#0f172a] tracking-tight leading-tight">COLORADO RIVER BASIN</div>
+        <div class="hidden md:block text-[11px] text-stone-600 font-normal leading-snug mt-1.5 space-y-0.5">
           <div>Douglas Schoch</div>
           <div>Colorado Mountain College</div>
           <div>DAT1001 &bull; Fall 2026</div>
         </div>
+        <div id="mobile-active-section-label" class="md:hidden text-[11px] text-stone-600 font-medium leading-tight mt-0.5 truncate">
+          Overview
+        </div>
       </div>
+      <button type="button" id="mobile-menu-toggle" onclick="event.stopPropagation(); toggleMobileMenu();" aria-expanded="false" aria-controls="sidebar-nav-collapsible" class="md:hidden border border-[#cfc8ba] bg-white hover:bg-[#f2ede3] text-stone-800 px-2.5 py-1.5 rounded-[2px] text-xs font-bold inline-flex items-center gap-1.5 shadow-sm flex-shrink-0">
+        <span id="mobile-menu-toggle-icon" aria-hidden="true">&#9776;</span>
+        <span id="mobile-menu-toggle-text">Menu</span>
+      </button>
+    </div>
 
+    <!-- Collapsible Navigation & Utilities (Always flex on md+, toggled on mobile) -->
+    <div id="sidebar-nav-collapsible" class="flex-1 flex flex-col justify-between pt-3 md:pt-4">
       <!-- Navigation Links Grouped by Time Scale & Data Source -->
       <nav class="space-y-1">
         <!-- 0. Overview -->
@@ -276,7 +312,6 @@
           <span>Tributaries &amp; Deficit</span>
         </button>
       </nav>
-    </div>
 
     <!-- Bottom Pinned Utilities -->
     <div id="sidebar-bottom-utilities" class="mt-4 pt-2 border-t-[1.5px] border-[#b8ae9c] space-y-1">
@@ -322,6 +357,7 @@
           <span id="fullscreen-label">Fullscreen</span>
         </button>
       </div>
+    </div>
     </div>
   </aside>
 
@@ -1479,11 +1515,35 @@
       setTimeout(openApiModal, 100);
     }
 
+    function toggleMobileMenu(forceOpen) {
+      const aside = document.querySelector('.sidebar-academic');
+      const btn = document.getElementById('mobile-menu-toggle');
+      const icon = document.getElementById('mobile-menu-toggle-icon');
+      const text = document.getElementById('mobile-menu-toggle-text');
+      if (!aside) return;
+
+      const isOpen = typeof forceOpen === 'boolean'
+        ? forceOpen
+        : !aside.classList.contains('mobile-menu-open');
+
+      aside.classList.toggle('mobile-menu-open', isOpen);
+      if (btn) btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      if (icon) icon.innerHTML = isOpen ? '&#10005;' : '&#9776;';
+      if (text) text.textContent = isOpen ? 'Close' : 'Menu';
+    }
+
     function setTab(tabId) {
       currentTab = tabId;
+      toggleMobileMenu(false);
       document.querySelectorAll('.nav-top-link, .sidebar-link').forEach(el => el.classList.remove('active'));
       const activeBtn = document.getElementById('tab-btn-' + tabId);
       if (activeBtn) activeBtn.classList.add('active');
+
+      const mobileLabel = document.getElementById('mobile-active-section-label');
+      if (mobileLabel) {
+        const spanEl = activeBtn ? activeBtn.querySelector('span') : null;
+        mobileLabel.textContent = spanEl ? spanEl.textContent.trim() : 'Overview';
+      }
 
       const topHeader = document.getElementById('academic-top-header');
 
@@ -1569,6 +1629,10 @@
         }
         window.history.replaceState({}, '', newUrl);
       } catch (_) {}
+
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+      }, 30);
     }
 
     // Direct deep-link station focus on the interactive 3D map
