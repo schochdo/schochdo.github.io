@@ -340,72 +340,81 @@ def fetch_usgs_daily():
         "09426650": "Central Arizona Project Canal at Havasu Pumping Plant",
         "09522000": "Canal Alimentador Central (Central Feeder Canal at Morelos Dam)"
     }
+    MONTHLY_USGS_SITES = {"09426650", "09522000"}
     site_ids = ",".join(sites.keys())
     url = f"https://waterservices.usgs.gov/nwis/dv/?format=json&sites={site_ids}&parameterCd=00060&siteStatus=all"
     
     results = []
-    try:
-        response = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=10)
-        if response.status_code == 200:
-            data = response.json()
-            for ts in data.get("value", {}).get("timeSeries", []):
-                code = ts["sourceInfo"]["siteCode"][0]["value"]
-                name = sites.get(code, ts["sourceInfo"]["siteName"])
-                lat = ts["sourceInfo"]["geoLocation"]["geogLocation"]["latitude"]
-                lon = ts["sourceInfo"]["geoLocation"]["geogLocation"]["longitude"]
-                values = ts["values"][0]["value"]
-                
-                if values:
-                    valid_vals = [v for v in values if v.get("value") and v["value"] != "-999999"]
-                    if valid_vals:
-                        latest = valid_vals[-1]
-                        val = float(latest["value"])
-                        dt = latest["dateTime"]
-                        age_hours, status = compute_age_and_status(dt)
-                        
-                        # Treaty / Monthly regulatory accounting allowance for active international border deliveries
-                        if code in ["09426650", "09522000"] and age_hours <= 1440.0: # within 60-day monthly reporting cycle
-                            status = "delayed"
-                        
-                        flow = val if status != "offline" else None
-                        
-                        if code == "09426650":
-                            dest = "Phoenix & Tucson / Central Arizona"
-                            c_name = "Central Arizona Project (CAP Aqueduct)"
-                        elif code == "09522000":
-                            dest = "Mexicali Valley Agriculture & Municipal Users (District 014)"
-                            c_name = "Canal Alimentador Central (Central Feeder Canal)"
-                            lat, lon = 32.7056, -114.7292  # Morelos Dam intake coordinates
-                        else:
-                            dest = "Los Angeles / Southern California"
-                            c_name = "Colorado River Aqueduct"
+    for attempt in range(3):
+        try:
+            response = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=12)
+            if response.status_code == 200:
+                data = response.json()
+                for ts in data.get("value", {}).get("timeSeries", []):
+                    code = ts["sourceInfo"]["siteCode"][0]["value"]
+                    name = sites.get(code, ts["sourceInfo"]["siteName"])
+                    lat = ts["sourceInfo"]["geoLocation"]["geogLocation"]["latitude"]
+                    lon = ts["sourceInfo"]["geoLocation"]["geogLocation"]["longitude"]
+                    values = ts["values"][0]["value"]
+                    
+                    if values:
+                        valid_vals = [v for v in values if v.get("value") and v["value"] != "-999999"]
+                        if valid_vals:
+                            latest = valid_vals[-1]
+                            val = float(latest["value"])
+                            dt = latest["dateTime"]
+                            age_hours, status = compute_age_and_status(dt)
+                            
+                            # Treaty / Monthly regulatory accounting allowance (60-day cycle)
+                            if code in MONTHLY_USGS_SITES and age_hours <= 1440.0:
+                                status = "delayed"
+                            
+                            flow = val if status != "offline" else None
+                            
+                            if code == "09426650":
+                                dest = "Phoenix & Tucson / Central Arizona"
+                                c_name = "Central Arizona Project (CAP Aqueduct)"
+                            elif code == "09522000":
+                                dest = "Mexicali Valley Agriculture & Municipal Users (District 014)"
+                                c_name = "Canal Alimentador Central (Central Feeder Canal)"
+                                lat, lon = 32.7056, -114.7292  # Morelos Dam intake coordinates
+                            else:
+                                dest = "Los Angeles / Southern California"
+                                c_name = "Colorado River Aqueduct"
 
-                        results.append({
-                            "id": code,
-                            "name": c_name,
-                            "type": "diversion_canal",
-                            "destination": dest,
-                            "provider": "USGS / CILA" if code == "09522000" else "USGS",
-                            "flow_cfs": flow,
-                            "timestamp": dt,
-                            "age_hours": age_hours,
-                            "data_status": status,
-                            "lat": lat,
-                            "lon": lon
-                        })
-    except Exception as e:
-        print(f"Warning: Failed to fetch DV data: {e}")
+                            results.append({
+                                "id": code,
+                                "name": c_name,
+                                "type": "diversion_canal",
+                                "destination": dest,
+                                "provider": "USGS / CILA" if code == "09522000" else "USGS",
+                                "flow_cfs": flow,
+                                "timestamp": dt,
+                                "age_hours": age_hours,
+                                "data_status": status,
+                                "lat": lat,
+                                "lon": lon
+                            })
+                if results:
+                    break
+        except Exception as e:
+            print(f"Warning: Failed to fetch DV data (attempt {attempt + 1}): {e}")
+            import time
+            time.sleep(1)
 
-    # Fallback to previous snapshot if NWIS DV query failed
+    # Fallback to previous verified snapshot if NWIS DV query failed (preserving 60-day monthly allowance)
     if not results:
         prev = load_previous_snapshot()
         for c in prev.get("canals", []):
-            if c.get("id") in sites:
+            code = c.get("id")
+            if code in sites:
                 age_hours, status = compute_age_and_status(c.get("timestamp"))
+                if code in MONTHLY_USGS_SITES and age_hours <= 1440.0:
+                    status = "delayed"
                 flow = c.get("flow_cfs") if status != "offline" else None
                 results.append({
                     **c,
-                    "provider": "USGS",
+                    "provider": c.get("provider") or ("USGS / CILA" if code == "09522000" else "USGS"),
                     "flow_cfs": flow,
                     "age_hours": age_hours,
                     "data_status": status
@@ -552,6 +561,9 @@ def fetch_reservoirs(usbr_hourly=None):
 
     csv_jobs = {
         "powell_af": "https://www.usbr.gov/uc/water/hydrodata/reservoir_data/919/csv/17.csv",
+        "powell_elev": "https://www.usbr.gov/uc/water/hydrodata/reservoir_data/919/csv/49.csv",
+        "mead_af": "https://www.usbr.gov/uc/water/hydrodata/reservoir_data/921/csv/17.csv",
+        "mead_elev": "https://www.usbr.gov/uc/water/hydrodata/reservoir_data/921/csv/49.csv",
         "fg_af": "https://www.usbr.gov/uc/water/hydrodata/reservoir_data/917/csv/17.csv",
         "fg_elev": "https://www.usbr.gov/uc/water/hydrodata/reservoir_data/917/csv/49.csv",
         "nav_af": "https://www.usbr.gov/uc/water/hydrodata/reservoir_data/920/csv/17.csv",
@@ -560,7 +572,7 @@ def fetch_reservoirs(usbr_hourly=None):
         "bm_elev": "https://www.usbr.gov/uc/water/hydrodata/reservoir_data/913/csv/49.csv"
     }
 
-    with ThreadPoolExecutor(max_workers=10) as pool:
+    with ThreadPoolExecutor(max_workers=12) as pool:
         csv_futures = {k: pool.submit(get_csv, u) for k, u in csv_jobs.items()}
         f_powell_usgs = pool.submit(get_usgs_lake, "09379900", "62614")
         f_mohave_usgs = pool.submit(get_usgs_lake, "09422500", "00054")
@@ -574,16 +586,36 @@ def fetch_reservoirs(usbr_hourly=None):
     if not usbr_hourly:
         usbr_hourly = _LAST_USBR_HOURLY
 
+    prev_snapshot = load_previous_snapshot()
+    prev_res_map = {r["id"]: r for r in prev_snapshot.get("reservoirs", []) if "id" in r}
+
+    def resolve_res_vals(res_id, live_elev, live_af, live_dt, cap_af):
+        """Use live observed values, falling back only to the last verified snapshot with its true timestamp (no fake placeholders)."""
+        prev = prev_res_map.get(res_id, {})
+        elev = live_elev if live_elev is not None else prev.get("elevation_ft")
+        af = live_af if live_af is not None else prev.get("storage_af")
+        dt = live_dt if (live_af is not None or live_elev is not None) else prev.get("timestamp")
+        age, status = compute_age_and_status(dt)
+        pct = round((af / cap_af) * 100, 1) if (af is not None and cap_af > 0) else None
+        return (
+            round(elev, 1) if elev is not None else None,
+            round(af, 0) if af is not None else None,
+            pct,
+            dt,
+            age,
+            status if af is not None else "offline"
+        )
+
     results = []
 
     # 1. Lake Powell (Glen Canyon Dam)
-    powell_elev = powell_usgs_elev or 3518.9
-    powell_dt = powell_usgs_dt or datetime.now().isoformat()
-    powell_af = csv_data["powell_af"][1] or 5223099.0
-    if csv_data["powell_af"][0] and not powell_usgs_dt:
-        powell_dt = csv_data["powell_af"][0]
-
-    age_powell, status_powell = compute_age_and_status(powell_dt)
+    p_elev, p_af, p_pct, p_dt, p_age, p_status = resolve_res_vals(
+        "lake_powell",
+        powell_usgs_elev if powell_usgs_elev is not None else csv_data["powell_elev"][1],
+        csv_data["powell_af"][1],
+        powell_usgs_dt or csv_data["powell_af"][0],
+        24322000.0
+    )
     results.append({
         "id": "lake_powell",
         "name": "Lake Powell (Glen Canyon Dam)",
@@ -591,61 +623,35 @@ def fetch_reservoirs(usbr_hourly=None):
         "type": "reservoir",
         "category": "system",
         "provider": "USBR / USGS",
-        "elevation_ft": round(powell_elev, 1),
-        "storage_af": round(powell_af, 0),
+        "elevation_ft": p_elev,
+        "storage_af": p_af,
         "capacity_af": 24322000.0,
-        "capacity_pct": round((powell_af / 24322000.0) * 100, 1),
+        "capacity_pct": p_pct,
         "role": "Upper Basin Bank & Compact Delivery to Lower Basin",
-        "timestamp": powell_dt,
-        "age_hours": age_powell,
-        "data_status": status_powell,
+        "timestamp": p_dt,
+        "age_hours": p_age,
+        "data_status": p_status,
         "lat": 36.9367,
         "lon": -111.4839
     })
 
-    # 2. Lake Mead (Hoover Dam)
-    mead_elev = 1038.9
-    mead_af = 8690000.0
-    mead_dt = datetime.now().strftime("%Y-%m-%d")
+    # 2. Lake Mead (Hoover Dam) — Real USBR HydroData 921/csv/17.csv storage + hourly/daily elevation (no linear approximation)
+    live_mead_elev = None
+    live_mead_dt = None
     if usbr_hourly and usbr_hourly.get("mead_elev") and usbr_hourly["mead_elev"] >= 890.0:
-        mead_elev = usbr_hourly["mead_elev"]
-        mead_af = round((mead_elev - 895.0) * 59800.0 + 80000.0, -4)
-        mead_dt = usbr_hourly["timestamp"]
-    else:
-        try:
-            url_mead = "https://www.usbr.gov/lc/region/g4000/hourly/mead-elv.html"
-            html_mead = None
-            try:
-                r = requests.get(url_mead, headers={"User-Agent": USER_AGENT}, timeout=6)
-                if r.status_code == 200:
-                    html_mead = r.text
-            except Exception:
-                pass
-            if not html_mead:
-                html_mead = subprocess.check_output(
-                    ["curl", "-s", "--max-time", "6", url_mead],
-                    stderr=subprocess.DEVNULL
-                ).decode("utf-8")
-            if html_mead:
-                for line in html_mead.splitlines():
-                    if "2026" in line and "<TD>" in line:
-                        raw_tds = line.split("</TR>")[0].split("<TD>")[1:]
-                        clean_tds = [td.replace("<TD>", "").replace("</TD>", "").strip() for td in raw_tds]
-                        non_empty = [td for td in clean_tds if td and td != "---"]
-                        if non_empty:
-                            elev_val = float(non_empty[-1])
-                            if elev_val >= 890.0:
-                                mead_elev = elev_val
-                                mead_af = round((mead_elev - 895.0) * 59800.0 + 80000.0, -4)
-        except Exception:
-            pass
+        live_mead_elev = usbr_hourly["mead_elev"]
+        live_mead_dt = usbr_hourly.get("timestamp")
+    elif csv_data["mead_elev"][1] is not None:
+        live_mead_elev = csv_data["mead_elev"][1]
+        live_mead_dt = csv_data["mead_elev"][0]
 
-    if mead_elev < 895.0:
-        mead_elev = 1038.9
-    if mead_af < 0:
-        mead_af = round((mead_elev - 895.0) * 59800.0 + 80000.0, -4)
+    live_mead_af = csv_data["mead_af"][1]
+    if not live_mead_dt:
+        live_mead_dt = csv_data["mead_af"][0]
 
-    age_mead, status_mead = compute_age_and_status(mead_dt)
+    m_elev, m_af, m_pct, m_dt, m_age, m_status = resolve_res_vals(
+        "lake_mead", live_mead_elev, live_mead_af, live_mead_dt, 26134000.0
+    )
     results.append({
         "id": "lake_mead",
         "name": "Lake Mead (Hoover Dam)",
@@ -653,24 +659,23 @@ def fetch_reservoirs(usbr_hourly=None):
         "type": "reservoir",
         "category": "system",
         "provider": "USBR",
-        "elevation_ft": round(mead_elev, 1),
-        "storage_af": round(mead_af, 0),
+        "elevation_ft": m_elev,
+        "storage_af": m_af,
         "capacity_af": 26134000.0,
-        "capacity_pct": round((mead_af / 26134000.0) * 100, 1),
+        "capacity_pct": m_pct,
         "role": "Lower Basin Primary Storage & Delivery Regulation",
-        "timestamp": mead_dt,
-        "age_hours": age_mead,
-        "data_status": status_mead,
+        "timestamp": m_dt,
+        "age_hours": m_age,
+        "data_status": m_status,
         "lat": 36.0156,
         "lon": -114.7378
     })
 
     # 3. Flaming Gorge Reservoir (Flaming Gorge Dam)
-    fg_af = csv_data["fg_af"][1] or 2460597.0
-    fg_elev = csv_data["fg_elev"][1] or 6006.0
-    fg_dt = csv_data["fg_af"][0] or datetime.now().strftime("%Y-%m-%d")
     fg_cap = 3749000.0
-    age_fg, status_fg = compute_age_and_status(fg_dt)
+    fg_elev, fg_af, fg_pct, fg_dt, fg_age, fg_status = resolve_res_vals(
+        "flaming_gorge", csv_data["fg_elev"][1], csv_data["fg_af"][1], csv_data["fg_af"][0], fg_cap
+    )
     results.append({
         "id": "flaming_gorge",
         "name": "Flaming Gorge Reservoir (Flaming Gorge Dam)",
@@ -678,24 +683,23 @@ def fetch_reservoirs(usbr_hourly=None):
         "type": "reservoir",
         "category": "system",
         "provider": "USBR",
-        "elevation_ft": round(fg_elev, 1),
-        "storage_af": round(fg_af, 0),
+        "elevation_ft": fg_elev,
+        "storage_af": fg_af,
         "capacity_af": fg_cap,
-        "capacity_pct": round((fg_af / fg_cap) * 100, 1),
+        "capacity_pct": fg_pct,
         "role": "Green River DROA Drought Relief Releases to Lake Powell",
         "timestamp": fg_dt,
-        "age_hours": age_fg,
-        "data_status": status_fg,
+        "age_hours": fg_age,
+        "data_status": fg_status,
         "lat": 40.9150,
         "lon": -109.4215
     })
 
     # 4. Navajo Reservoir (Navajo Dam)
-    nav_af = csv_data["nav_af"][1] or 856394.0
-    nav_elev = csv_data["nav_elev"][1] or 6018.9
-    nav_dt = csv_data["nav_af"][0] or datetime.now().strftime("%Y-%m-%d")
     nav_cap = 1696000.0
-    age_nav, status_nav = compute_age_and_status(nav_dt)
+    nav_elev, nav_af, nav_pct, nav_dt, nav_age, nav_status = resolve_res_vals(
+        "navajo_reservoir", csv_data["nav_elev"][1], csv_data["nav_af"][1], csv_data["nav_af"][0], nav_cap
+    )
     results.append({
         "id": "navajo_reservoir",
         "name": "Navajo Reservoir (Navajo Dam)",
@@ -703,26 +707,27 @@ def fetch_reservoirs(usbr_hourly=None):
         "type": "reservoir",
         "category": "system",
         "provider": "USBR",
-        "elevation_ft": round(nav_elev, 1),
-        "storage_af": round(nav_af, 0),
+        "elevation_ft": nav_elev,
+        "storage_af": nav_af,
         "capacity_af": nav_cap,
-        "capacity_pct": round((nav_af / nav_cap) * 100, 1),
+        "capacity_pct": nav_pct,
         "role": "San Juan Basin & Navajo Nation Irrigation Supply",
         "timestamp": nav_dt,
-        "age_hours": age_nav,
-        "data_status": status_nav,
+        "age_hours": nav_age,
+        "data_status": nav_status,
         "lat": 36.8042,
         "lon": -107.6144
     })
 
     # 5. Lake Mohave (Davis Dam)
-    mohave_elev = 638.9
-    mohave_af = mohave_usgs_af or (usbr_hourly and usbr_hourly.get("mohave_storage_af")) or 1582000.0
-    if usbr_hourly and usbr_hourly.get("mohave_elev"):
-        mohave_elev = usbr_hourly["mohave_elev"]
-    mohave_dt = mohave_usgs_dt or (usbr_hourly and usbr_hourly.get("timestamp")) or datetime.now().strftime("%Y-%m-%d")
     mohave_cap = 1810000.0
-    age_mohave, status_mohave = compute_age_and_status(mohave_dt)
+    mo_elev, mo_af, mo_pct, mo_dt, mo_age, mo_status = resolve_res_vals(
+        "lake_mohave",
+        usbr_hourly.get("mohave_elev") if usbr_hourly else None,
+        mohave_usgs_af if mohave_usgs_af is not None else (usbr_hourly.get("mohave_storage_af") if usbr_hourly else None),
+        mohave_usgs_dt or (usbr_hourly.get("timestamp") if usbr_hourly else None),
+        mohave_cap
+    )
     results.append({
         "id": "lake_mohave",
         "name": "Lake Mohave (Davis Dam)",
@@ -730,24 +735,23 @@ def fetch_reservoirs(usbr_hourly=None):
         "type": "reservoir",
         "category": "system",
         "provider": "USBR / USGS",
-        "elevation_ft": round(mohave_elev, 1),
-        "storage_af": round(mohave_af, 0),
+        "elevation_ft": mo_elev,
+        "storage_af": mo_af,
         "capacity_af": mohave_cap,
-        "capacity_pct": round((mohave_af / mohave_cap) * 100, 1),
+        "capacity_pct": mo_pct,
         "role": "Downstream Regulation & Mexican Treaty Deliveries",
-        "timestamp": mohave_dt,
-        "age_hours": age_mohave,
-        "data_status": status_mohave,
+        "timestamp": mo_dt,
+        "age_hours": mo_age,
+        "data_status": mo_status,
         "lat": 35.1989,
         "lon": -114.5683
     })
 
     # 6. Blue Mesa Reservoir (Wayne N. Aspinall Unit)
-    bm_af = csv_data["bm_af"][1] or 140029.0
-    bm_elev = csv_data["bm_elev"][1] or 7412.1
-    bm_dt = csv_data["bm_af"][0] or datetime.now().strftime("%Y-%m-%d")
     bm_cap = 829500.0
-    age_bm, status_bm = compute_age_and_status(bm_dt)
+    bm_elev, bm_af, bm_pct, bm_dt, bm_age, bm_status = resolve_res_vals(
+        "blue_mesa", csv_data["bm_elev"][1], csv_data["bm_af"][1], csv_data["bm_af"][0], bm_cap
+    )
     results.append({
         "id": "blue_mesa",
         "name": "Blue Mesa Reservoir (Blue Mesa Dam)",
@@ -755,26 +759,27 @@ def fetch_reservoirs(usbr_hourly=None):
         "type": "reservoir",
         "category": "system",
         "provider": "USBR",
-        "elevation_ft": round(bm_elev, 1),
-        "storage_af": round(bm_af, 0),
+        "elevation_ft": bm_elev,
+        "storage_af": bm_af,
         "capacity_af": bm_cap,
-        "capacity_pct": round((bm_af / bm_cap) * 100, 1),
+        "capacity_pct": bm_pct,
         "role": "Largest Lake in Colorado & Gunnison Basin Storage",
         "timestamp": bm_dt,
-        "age_hours": age_bm,
-        "data_status": status_bm,
+        "age_hours": bm_age,
+        "data_status": bm_status,
         "lat": 38.4528,
         "lon": -107.3325
     })
 
     # 7. Lake Havasu (Parker Dam)
-    havasu_elev = 448.7
-    havasu_af = havasu_usgs_af or (usbr_hourly and usbr_hourly.get("havasu_storage_af")) or 595800.0
-    if usbr_hourly and usbr_hourly.get("havasu_elev"):
-        havasu_elev = usbr_hourly["havasu_elev"]
-    havasu_dt = havasu_usgs_dt or (usbr_hourly and usbr_hourly.get("timestamp")) or datetime.now().strftime("%Y-%m-%d")
     havasu_cap = 619400.0
-    age_havasu, status_havasu = compute_age_and_status(havasu_dt)
+    ha_elev, ha_af, ha_pct, ha_dt, ha_age, ha_status = resolve_res_vals(
+        "lake_havasu",
+        usbr_hourly.get("havasu_elev") if usbr_hourly else None,
+        havasu_usgs_af if havasu_usgs_af is not None else (usbr_hourly.get("havasu_storage_af") if usbr_hourly else None),
+        havasu_usgs_dt or (usbr_hourly.get("timestamp") if usbr_hourly else None),
+        havasu_cap
+    )
     results.append({
         "id": "lake_havasu",
         "name": "Lake Havasu (Parker Dam)",
@@ -782,14 +787,14 @@ def fetch_reservoirs(usbr_hourly=None):
         "type": "reservoir",
         "category": "system",
         "provider": "USBR / USGS",
-        "elevation_ft": round(havasu_elev, 1),
-        "storage_af": round(havasu_af, 0),
+        "elevation_ft": ha_elev,
+        "storage_af": ha_af,
         "capacity_af": havasu_cap,
-        "capacity_pct": round((havasu_af / havasu_cap) * 100, 1),
+        "capacity_pct": ha_pct,
         "role": "Forebay Pumping Pool for CRA & CAP Aqueducts",
-        "timestamp": havasu_dt,
-        "age_hours": age_havasu,
-        "data_status": status_havasu,
+        "timestamp": ha_dt,
+        "age_hours": ha_age,
+        "data_status": ha_status,
         "lat": 34.2981,
         "lon": -114.1678
     })
@@ -874,41 +879,27 @@ def fetch_reservoirs(usbr_hourly=None):
         except Exception:
             pass
 
-    # Fallback to last verified snapshot if CDWR rate limited
-    prev_snapshot = load_previous_snapshot()
-    prev_res_map = {r["id"]: r for r in prev_snapshot.get("reservoirs", []) if "id" in r}
-
-    fr_baselines = {
-        "GRARESCO": {"af": 259342.0, "elev": 8234.6, "pct": 48.0, "down": 45.4},
-        "DILRESCO": {"af": 156000.0, "elev": 8978.2, "pct": 60.7, "down": 38.8},
-        "GRERESCO": {"af": 15300.0, "elev": 7827.1, "pct": 10.0, "down": 122.9},
-        "HOMRESCO": {"af": 18900.0, "elev": 10230.0, "pct": 43.3, "down": 36.0}
-    }
-
+    # Fallback only to last verified snapshot with its true timestamp (no hardcoded placeholder baselines)
     for fr in front_range_res:
         m = fr_meas_map.get(fr["abbrev"], {})
-        af_val = m.get("af", 0.0)
-        elev_val = m.get("elev", 0.0)
-        dt_str = m.get("dt")
+        af_val = m.get("af") if m.get("af", 0.0) > 0 else None
+        elev_val = m.get("elev") if m.get("elev", 0.0) > 0 else None
+        dt_str = m.get("dt") if (af_val is not None or elev_val is not None) else None
 
-        if af_val <= 0 and fr["id"] in prev_res_map:
+        if af_val is None and fr["id"] in prev_res_map:
             prev = prev_res_map[fr["id"]]
-            af_val = prev.get("storage_af", 0.0)
-            elev_val = prev.get("elevation_ft", 0.0)
+            af_val = prev.get("storage_af")
+            elev_val = prev.get("elevation_ft")
             dt_str = prev.get("timestamp")
 
-        if af_val <= 0 and fr["abbrev"] in fr_baselines:
-            b = fr_baselines[fr["abbrev"]]
-            af_val = b["af"]
-            elev_val = b["elev"]
-            dt_str = dt_str or datetime.now().strftime("%Y-%m-%d")
-
-        pct_val = round((af_val / fr["capacity_af"]) * 100, 1) if fr["capacity_af"] > 0 else 0.0
-        is_stage = elev_val > 0 and elev_val < 500
-        elev_msl = round(fr["full_pool_elev"] - (126.0 - elev_val), 1) if (is_stage and fr.get("full_pool_elev")) else (round(elev_val, 1) if elev_val > 500 else None)
-        feet_down = round(fr["full_pool_elev"] - elev_msl, 1) if (elev_msl and fr.get("full_pool_elev")) else None
+        pct_val = round((af_val / fr["capacity_af"]) * 100, 1) if (af_val is not None and fr["capacity_af"] > 0) else None
+        is_stage = elev_val is not None and 0 < elev_val < 500
+        elev_msl = round(fr["full_pool_elev"] - (126.0 - elev_val), 1) if (is_stage and fr.get("full_pool_elev")) else (round(elev_val, 1) if (elev_val is not None and elev_val > 500) else None)
+        feet_down = round(fr["full_pool_elev"] - elev_msl, 1) if (elev_msl is not None and fr.get("full_pool_elev")) else None
 
         age_fr, status_fr = compute_age_and_status(dt_str)
+        if af_val is None:
+            status_fr = "offline"
 
         results.append({
             "id": fr["id"],
@@ -921,7 +912,7 @@ def fetch_reservoirs(usbr_hourly=None):
             "elevation_ft": elev_msl,
             "stage_ft": round(elev_val, 1) if is_stage else None,
             "feet_below_full": feet_down,
-            "storage_af": round(af_val, 0),
+            "storage_af": round(af_val, 0) if af_val is not None else None,
             "capacity_af": fr["capacity_af"],
             "capacity_pct": pct_val,
             "role": fr["role"],

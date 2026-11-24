@@ -736,7 +736,7 @@ svg text.tabular-nums, svg .maf-badge, svg .axis-label {
 }
 
 .map-legend h4 {
-  color: var(--river-blue, #2b5c8f) !important;
+  color: var(--ink-heading) !important;
   font-size: 11.5px !important;
   font-weight: 800 !important;
   letter-spacing: 0.06em !important;
@@ -747,7 +747,7 @@ svg text.tabular-nums, svg .maf-badge, svg .axis-label {
 .map-legend .legend-toggle-chevron {
   background: #ffffff !important;
   border: 1px solid var(--hairline) !important;
-  color: var(--river-blue, #2b5c8f) !important;
+  color: var(--ink-heading) !important;
 }
 
 .map-legend .legend-content {
@@ -771,6 +771,16 @@ svg text.tabular-nums, svg .maf-badge, svg .axis-label {
   color: var(--ink-body) !important;
 }
 
+.map-legend .legend-nav-details {
+  border-top-color: var(--hairline) !important;
+}
+
+.map-legend .legend-nav-details > div {
+  background: #faf8f4 !important;
+  border: 1px solid #d6cfc2 !important;
+  border-radius: var(--radius-card, 2px) !important;
+}
+
 /* Collapsed State: Warm parchment pill with river-blue accent */
 .map-legend.collapsed {
   background: #faf8f4 !important;
@@ -787,7 +797,7 @@ svg text.tabular-nums, svg .maf-badge, svg .axis-label {
 }
 
 .map-legend.collapsed h4 {
-  color: var(--river-blue, #2b5c8f) !important;
+  color: var(--ink-heading) !important;
   font-size: 11.5px !important;
   font-weight: 800 !important;
   letter-spacing: 0.06em !important;
@@ -805,7 +815,7 @@ svg text.tabular-nums, svg .maf-badge, svg .axis-label {
 .map-legend.collapsed .legend-toggle-chevron {
   background: #ffffff !important;
   border: 1px solid var(--hairline) !important;
-  color: var(--river-blue, #2b5c8f) !important;
+  color: var(--ink-heading) !important;
 }
 
 /* Map Bottom Gage Tray Handle Warm Corridor Overrides */
@@ -873,6 +883,14 @@ svg text.tabular-nums, svg .maf-badge, svg .axis-label {
   background: #ede8df !important;
   border-color: #a89f8e !important;
   color: #0f172a !important;
+}
+
+.popup-copy-btn.is-copied,
+.popup-code-box button.is-copied,
+.code-snippet-copy-btn.is-copied {
+  background: #eaece6 !important;
+  border-color: #9cb0a4 !important;
+  color: #2f5744 !important;
 }
 
 /* Warm Dark-Brown Corridor Scrollbars */

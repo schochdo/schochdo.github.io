@@ -14,7 +14,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   
   <!-- Editorial Design Standard (Edward Tufte / NYT Restrained Palette) -->
-  <link rel="stylesheet" href="editorial.css?v=20261122g">
+  <link rel="stylesheet" href="editorial.css?v=20261124a">
   
   <!-- Chart.js CDN for responsive, publication-quality academic charts -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
@@ -223,6 +223,30 @@
     #reservoir-filter-bar button:focus-visible {
       outline: none !important;
     }
+    .res-filter-btn {
+      flex: 1 1 0%;
+      padding: 0.375rem 0.625rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 2px;
+      color: #57534e;
+      border: 1px solid transparent;
+      background: transparent;
+      text-align: center;
+      cursor: pointer;
+      transition: color 0.15s ease, background-color 0.15s ease;
+    }
+    .res-filter-btn:hover { color: #1c1917; }
+    .res-filter-btn.is-active {
+      font-weight: 700;
+      background: #ffffff;
+      color: #1c1917;
+      border-color: #b8ae9c;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+    @media (min-width: 640px) {
+      .res-filter-btn { flex: none; padding: 0.25rem 0.75rem; white-space: nowrap; }
+    }
   </style>
 </head>
 <body class="flex flex-col md:flex-row h-full h-[100dvh] max-h-[100dvh] overflow-hidden antialiased bg-[#f5f2eb]">
@@ -295,21 +319,21 @@
           <span>Water Budget</span>
         </button>
 
-        <!-- Group 3: Decadal Storage & Historical Regimes -->
+        <!-- Group 3: Historical Analysis -->
         <div class="sidebar-category-header pt-3">
-          <span>Decadal &amp; Regimes</span>
+          <span>Historical Analysis</span>
         </div>
-        <button onclick="setTab('reservoirs')" id="tab-btn-reservoirs" class="sidebar-link" title="Powell &amp; Mead Historical Storage Records">
+        <button onclick="setTab('reservoirs')" id="tab-btn-reservoirs" class="sidebar-link" title="Powell &amp; Mead Historical Storage Records &amp; Compact Deficit">
           <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
           </svg>
           <span>Reservoir Storage</span>
         </button>
-        <button onclick="setTab('ml')" id="tab-btn-ml" class="sidebar-link" title="Upper Basin Tributaries &amp; Powell Deficit">
+        <button onclick="setTab('ml')" id="tab-btn-ml" class="sidebar-link" title="Upper Basin Tributary Hydrology &amp; Flow Regimes">
           <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
           </svg>
-          <span>Tributaries &amp; Deficit</span>
+          <span>Tributary Hydrology</span>
         </button>
       </nav>
 
@@ -638,7 +662,7 @@
               </div>
             </header>
             <div class="flex-1 w-full min-h-0 relative">
-              <iframe id="iframe-map" src="./map_embed.html?v=20261123a" allow="fullscreen" allowfullscreen class="w-full h-full border-none"></iframe>
+              <iframe id="iframe-map" src="./map_embed.html?v=20261124e" allow="fullscreen" allowfullscreen class="w-full h-full border-none"></iframe>
             </div>
           </div>
         </div>
@@ -668,7 +692,7 @@
               </div>
 
               <!-- Two View Sub-Tabs -->
-              <div class="flex items-center gap-1.5 p-1 bg-stone-200/90 rounded-[2px] border border-stone-300">
+              <div class="flex flex-wrap items-center gap-1.5 p-1 bg-stone-200/90 rounded-[2px] border border-stone-300 max-w-full">
                 <button id="subtab-btn-res-timeline" onclick="switchReservoirsSubtab('timeline')" class="px-3.5 py-1.5 rounded-[2px] text-xs font-bold transition shadow-xs bg-white text-sky-900 border border-stone-200 cursor-pointer">
                   Basin Storage Timeline
                 </button>
@@ -723,31 +747,68 @@
               <strong>Note:</strong> Because Lake Mead and Lake Powell sit in V-shaped desert canyons, the bottom 100 feet hold roughly 5× less water per vertical foot (~28,000 AF/ft) than the top (~160,000 AF/ft)—causing water levels to drop faster the lower the reservoirs get.
             </div>
           </div>
+
+          <!-- FEATURED 2: NATURAL FLOW VS. COMPACT PROMISES (1922–2026) -->
+          <div class="card-academic rounded-[2px] border border-stone-300 p-5 shadow-xs bg-white">
+            <div class="flex flex-wrap items-center justify-between gap-4 pb-3 border-b border-stone-200">
+              <div class="max-w-3xl">
+                <h2 class="text-xl font-black text-stone-900 tracking-tight">
+                  Natural Flow vs. Compact Promises (1922–2026)
+                </h2>
+                <p class="text-xs text-stone-600 mt-1">
+                  The <strong>16.5 MAF</strong> core statutory promise (7.5 Upper + 7.5 Lower + 1.5 Mexico) exceeded natural basin supply in <strong>67% of years</strong>—and 26 of 27 years since 2000—forcing the system to draw down Powell and Mead storage to cover the gap.
+                </p>
+              </div>
+              <div class="flex flex-wrap items-center gap-3 text-[11px] font-semibold text-stone-700">
+                <span class="inline-flex items-center gap-1.5 cursor-pointer select-none" onclick="toggleCompactDataset(0)">
+                  <span class="inline-block w-2.5 h-2.5 rounded-[1px]" style="background:#0284c7;"></span>
+                  <span class="inline-block w-2.5 h-2.5 rounded-[1px] -ml-1" style="background:#b2182b;"></span>
+                  <span>Actual Supply (Surplus / Deficit)</span>
+                </span>
+                <span class="inline-flex items-center gap-1.5 cursor-pointer select-none" onclick="toggleCompactDataset(1)">
+                  <span class="inline-block w-3.5 border-t-2 border-slate-700"></span>
+                  <span>Lees Ferry Releases</span>
+                </span>
+                <span class="inline-flex items-center gap-1.5 cursor-pointer select-none" onclick="toggleCompactDataset(2)">
+                  <span class="inline-block w-3.5 border-t-2 border-dashed border-slate-800"></span>
+                  <span>16.5 MAF Core Promise</span>
+                </span>
+              </div>
+            </div>
+
+            <div class="h-72 w-full relative mt-4">
+              <canvas id="chart-compact-100yr"></canvas>
+            </div>
+            <div class="text-xs text-stone-600 flex flex-wrap justify-between items-center mt-2 pt-2 border-t border-stone-200 gap-2">
+              <span>Blue bars indicate wet years above 16.5 MAF; red bars indicate structural deficit years met by drawing down reservoir storage.</span>
+              <span class="font-bold text-stone-700">Source: <a href="https://www.usbr.gov/lc/region/g4000/NaturalFlow/" target="_blank" rel="noopener noreferrer" class="text-sky-700 hover:text-sky-900 hover:underline font-semibold transition">USBR Natural Flow Database ↗</a> &amp; <a href="https://waterdata.usgs.gov/monitoring-location/09380000/" target="_blank" rel="noopener noreferrer" class="text-sky-700 hover:text-sky-900 hover:underline font-semibold transition">USGS Lees Ferry Gage #09380000 ↗</a></span>
+            </div>
+          </div>
           </div>
 
           <div id="view-res-elevations" class="space-y-4 hidden">
           <!-- SECTION 2: INDIVIDUAL RESERVOIR DEEP-DIVE -->
-          <div id="reservoir-filter-bar" class="flex flex-wrap items-center justify-between gap-3 bg-white px-4 py-2.5 rounded-[2px] border border-[#cfc8ba] shadow-xs">
-            <div id="reservoir-filter-left" class="flex items-center gap-2 shrink-0">
-              <span class="text-[11px] font-extrabold text-stone-700 uppercase tracking-wider">Reservoir:</span>
-              <div class="inline-flex items-center gap-1 p-1 rounded-[2px] bg-[#ece8df] border border-[#cfc8ba]">
-                <button id="tab-res-mead" onclick="switchReservoirRecord('mead')" class="px-3 py-1 text-xs font-bold rounded-[2px] bg-white text-stone-900 border border-[#b8ae9c] shadow-xs transition outline-none focus:outline-none cursor-pointer whitespace-nowrap">
+          <div id="reservoir-filter-bar" class="flex flex-wrap items-center justify-between gap-3 bg-white px-3 sm:px-4 py-2.5 rounded-[2px] border border-[#cfc8ba] shadow-xs">
+            <div id="reservoir-filter-left" class="flex flex-wrap items-center gap-2 w-full sm:w-auto min-w-0">
+              <span class="text-[11px] font-extrabold text-stone-700 uppercase tracking-wider shrink-0">Reservoir:</span>
+              <div class="flex flex-wrap sm:inline-flex items-center gap-1 p-1 rounded-[2px] bg-[#ece8df] border border-[#cfc8ba] w-full sm:w-auto">
+                <button id="tab-res-mead" onclick="switchReservoirRecord('mead')" class="res-filter-btn is-active">
                   Lake Mead (1935–Today)
                 </button>
-                <button id="tab-res-powell" onclick="switchReservoirRecord('powell')" class="px-3 py-1 text-xs font-semibold rounded-[2px] text-stone-600 hover:text-stone-900 border border-transparent transition outline-none focus:outline-none cursor-pointer whitespace-nowrap">
+                <button id="tab-res-powell" onclick="switchReservoirRecord('powell')" class="res-filter-btn">
                   Lake Powell (1963–Today)
                 </button>
               </div>
             </div>
 
             <!-- Visualization Mode Selector -->
-            <div id="reservoir-filter-right" class="flex items-center gap-2 shrink-0">
-              <span class="text-[11px] font-extrabold text-stone-700 uppercase tracking-wider">View:</span>
-              <div class="inline-flex items-center gap-1 p-1 rounded-[2px] bg-[#ece8df] border border-[#cfc8ba]">
-                <button onclick="setReservoirView('envelope')" id="btn-view-envelope" class="px-3 py-1 text-xs font-bold rounded-[2px] bg-white text-stone-900 border border-[#b8ae9c] shadow-xs transition outline-none focus:outline-none cursor-pointer whitespace-nowrap">
+            <div id="reservoir-filter-right" class="flex flex-wrap items-center gap-2 w-full sm:w-auto min-w-0">
+              <span class="text-[11px] font-extrabold text-stone-700 uppercase tracking-wider shrink-0">View:</span>
+              <div class="flex flex-wrap sm:inline-flex items-center gap-1 p-1 rounded-[2px] bg-[#ece8df] border border-[#cfc8ba] w-full sm:w-auto">
+                <button onclick="setReservoirView('envelope')" id="btn-view-envelope" class="res-filter-btn is-active">
                   Seasonal Elevation Envelope
                 </button>
-                <button onclick="setReservoirView('heatmap')" id="btn-view-heatmap" class="px-3 py-1 text-xs font-semibold rounded-[2px] text-stone-600 hover:text-stone-900 border border-transparent transition outline-none focus:outline-none cursor-pointer whitespace-nowrap">
+                <button onclick="setReservoirView('heatmap')" id="btn-view-heatmap" class="res-filter-btn">
                   12-Month Water Level Matrix
                 </button>
               </div>
@@ -778,22 +839,22 @@
               </div>
               <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
                 <span class="text-[10px] font-bold text-sky-600 uppercase block">Shortage Tier 1 Trigger</span>
-                <span class="text-sm font-black text-sky-900 tabular-nums">1,075.0 ft</span>
+                <span class="text-sm font-black text-sky-900 tabular-nums">1,075 ft</span>
                 <span class="text-[10px] text-stone-500 block">Mandatory Lower Basin cuts</span>
               </div>
               <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
                 <span class="text-[10px] font-bold text-amber-600 uppercase block">Minimum Power Pool</span>
-                <span class="text-sm font-black text-amber-800 tabular-nums">950.0 ft</span>
+                <span class="text-sm font-black text-amber-800 tabular-nums">950 ft</span>
                 <span class="text-[10px] text-stone-500 block">Hoover Dam turbines cease</span>
               </div>
               <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
                 <span class="text-[10px] font-bold text-red-600 uppercase block">Dead Pool (No Flow)</span>
-                <span class="text-sm font-black text-red-800 tabular-nums">895.0 ft</span>
+                <span class="text-sm font-black text-red-800 tabular-nums">895 ft</span>
                 <span class="text-[10px] text-stone-500 block">Intake sill limit (0 release)</span>
               </div>
               <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
                 <span class="text-[10px] font-bold text-purple-700 uppercase block">SNWA Intake No. 3</span>
-                <span class="text-sm font-black text-purple-900 tabular-nums">860.0 ft</span>
+                <span class="text-sm font-black text-purple-900 tabular-nums">860 ft</span>
                 <span class="text-[10px] text-stone-500 block">Las Vegas "Third Straw" (L3PS)</span>
               </div>
             </div>
@@ -803,7 +864,7 @@
               <div class="h-80 w-full relative">
                 <canvas id="chart-mead-history"></canvas>
               </div>
-              <div class="text-[11px] text-stone-500 flex justify-between items-center mt-2 pt-2 border-t border-stone-200">
+              <div class="text-[11px] text-stone-500 flex flex-wrap justify-between items-center gap-2 mt-2 pt-2 border-t border-stone-200">
                 <span>Shaded envelope illustrates <strong>intra-annual seasonal range (monthly min to max)</strong>. The marked post-1963 dampening reflects Glen Canyon Dam regulatory storage dampening upstream snowmelt runoff pulses.</span>
                 <span class="font-bold text-stone-700">Source: <a href="https://www.usbr.gov/lc/region/g4000/hourly/mead-elv.html" target="_blank" rel="noopener noreferrer" class="underline decoration-stone-300 hover:decoration-stone-700 hover:text-stone-900 transition">USBR Hoover Dam Records ↗</a></span>
               </div>
@@ -854,22 +915,22 @@
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 my-4">
               <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
                 <span class="text-[10px] font-bold text-stone-500 uppercase block">Spillway Crest / Full Pool</span>
-                <span class="text-sm font-black text-stone-900 tabular-nums">3,700.0 ft</span>
+                <span class="text-sm font-black text-stone-900 tabular-nums">3,700 ft</span>
                 <span class="text-[10px] text-stone-500 block">Peak 1983: 3,708.4 ft</span>
               </div>
               <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
-                <span class="text-[10px] font-bold text-sky-600 uppercase block">Top Joint Use Pool</span>
-                <span class="text-sm font-black text-sky-900 tabular-nums">3,648.0 ft</span>
-                <span class="text-[10px] text-stone-500 block">Active conservation storage</span>
+                <span class="text-[10px] font-bold text-sky-600 uppercase block">Drought Protection Target</span>
+                <span class="text-sm font-black text-sky-900 tabular-nums">3,525 ft</span>
+                <span class="text-[10px] text-stone-500 block">35 ft buffer above power pool</span>
               </div>
               <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
                 <span class="text-[10px] font-bold text-amber-600 uppercase block">Minimum Power Pool</span>
-                <span class="text-sm font-black text-amber-800 tabular-nums">3,490.0 ft</span>
+                <span class="text-sm font-black text-amber-800 tabular-nums">3,490 ft</span>
                 <span class="text-[10px] text-stone-500 block">Glen Canyon Dam turbines cease</span>
               </div>
               <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
                 <span class="text-[10px] font-bold text-red-600 uppercase block">Dead Pool (No Flow)</span>
-                <span class="text-sm font-black text-red-800 tabular-nums">3,370.0 ft</span>
+                <span class="text-sm font-black text-red-800 tabular-nums">3,370 ft</span>
                 <span class="text-[10px] text-stone-500 block">River bypass tubes sill limit</span>
               </div>
             </div>
@@ -879,7 +940,7 @@
               <div class="h-80 w-full relative">
                 <canvas id="chart-powell-elevation-history"></canvas>
               </div>
-              <div class="text-[11px] text-stone-500 flex justify-between items-center mt-2 pt-2 border-t border-stone-200">
+              <div class="text-[11px] text-stone-500 flex flex-wrap justify-between items-center gap-2 mt-2 pt-2 border-t border-stone-200">
                 <span>Shaded band shows <strong>monthly seasonal range (Min to Max)</strong> within each calendar year, driven by spring snowmelt runoff peaks and winter drawdown.</span>
                 <span class="font-bold text-stone-700">Source: <a href="https://www.usbr.gov/uc/water/hydrodata/reservoir_data/919/charts/pool_elevation.html" target="_blank" rel="noopener noreferrer" class="underline decoration-stone-300 hover:decoration-stone-700 hover:text-stone-900 transition">USBR Glen Canyon HydroData</a> &amp; <a href="https://www.usbr.gov/uc/water/hydrodata/reservoir_data/919/csv/49.csv" target="_blank" rel="noopener noreferrer" class="underline decoration-stone-300 hover:decoration-stone-700 hover:text-stone-900 transition">Complete Record CSV (1963–Present) ↗</a></span>
               </div>
@@ -1013,13 +1074,13 @@
           </p>
           <div class="space-y-2.5 my-3">
             <div class="p-3 bg-white rounded-[3px] border border-stone-300/80">
-              <strong class="text-slate-900">Senior Present Perfected Rights in California (1901):</strong> Southern California agricultural users—led by the Imperial Irrigation District (IID) and Coachella Valley Water District—hold senior water rights established in 1901 that pre-date the 1922 Compact. Confirmed by the Supreme Court in <em>Arizona v. California</em> (1963), IID's 3.1 MAF entitlement is senior to all municipal water projects across the Lower Basin.
+              <strong class="text-slate-900">Senior Present Perfected Rights in California (1901):</strong> Southern California agricultural users—led by the Imperial Irrigation District (IID) and Coachella Valley Water District—hold 1901 water rights that predate the 1922 Compact. Confirmed by the Supreme Court in <em>Arizona v. California</em> (1963), IID's 3.1 MAF entitlement is senior to all Lower Basin municipal water projects.
             </div>
             <div class="p-3 bg-white rounded-[3px] border border-stone-300/80">
-              <strong class="text-slate-900">Subordination of the Central Arizona Project (1968):</strong> To obtain federal authorization and funding for the 336-mile Central Arizona Project (CAP) canal in the 1968 Basin Project Act, Arizona agreed that CAP deliveries are junior to California's 4.4 MAF baseline allocation. As a result, when shortage triggers occur, Arizona takes the first and deepest cuts while senior California agricultural users receive their full supply.
+              <strong class="text-slate-900">The Shoshone Call &amp; Upper Basin Headwaters (1902):</strong> In Glenwood Canyon, the Shoshone Hydroelectric Plant holds a non-consumptive <strong>1902 senior right for 1,250 cfs</strong> (administered at USGS #09070500 near Dotsero) that predates Colorado's major Front Range trans-mountain tunnels. During low flows, an active Shoshone Call compels upstream tunnels to bypass water down the West Slope mainstem; combined with other headwater priority limits, Upper Basin consumptive use averages 4.0 to 4.5 MAF/yr—well below its 7.5 MAF paper apportionment.
             </div>
             <div class="p-3 bg-white rounded-[3px] border border-stone-300/80">
-              <strong class="text-slate-900">The Shoshone Call &amp; Upper Basin Headwater Administration (1902, USGS #09070500 Dotsero):</strong> Without large regulatory reservoirs above their diversion points, Upper Basin users divert directly under local priority calls—most consequentially the Shoshone Hydroelectric Plant in Glenwood Canyon, which holds a 1902 senior water right for <strong>1,250 cfs</strong> (plus a 1929 right for 158 cfs, totaling 1,408 cfs) administered at <strong>USGS #09070500 (Colorado River near Dotsero)</strong>. Because its 1902 priority predates major Front Range trans-mountain tunnels (Moffat 1921, Adams/C-BT 1935, Roberts/Dillon 1946) and its turbine flow is 100% non-consumptive, a Shoshone Call compels upstream trans-divide diverters to bypass native headwaters down the West Slope mainstem—supporting Glenwood Canyon, Grand Valley irrigation at Cameo (#09095500), and the 15-Mile Reach endangered fish corridor (now advancing as a permanent West Slope instream flow right led by the Colorado River District). Combined with late-summer priority limits, Upper Basin consumptive use averages 4.0 to 4.5 MAF/yr, well below its 7.5 MAF paper apportionment.
+              <strong class="text-slate-900">Subordination of the Central Arizona Project (1968):</strong> To obtain federal authorization and funding for the 336-mile Central Arizona Project (CAP) canal in the 1968 Basin Project Act, Arizona agreed that CAP deliveries are junior to California's 4.4 MAF baseline allocation. When shortage triggers occur, Arizona absorbs the first and deepest cuts while senior California agricultural users receive their full supply.
             </div>
           </div>
         </section>
@@ -1361,7 +1422,8 @@
                     <strong>62614:</strong> Lake elevation (ft)
                   </td>
                   <td class="p-2.5 align-top whitespace-nowrap">
-                    <span class="px-1.5 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded font-bold text-[10px]">15–60 min</span>
+                    <span class="px-1.5 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded font-bold text-[10px]">15–60 min (IV)</span>
+                    <div class="text-[10px] text-stone-500 mt-1">Monthly DV (CAP/Morelos)</div>
                   </td>
                   <td class="p-2.5 align-top space-y-1">
                     <a href="https://waterservices.usgs.gov/docs/instantaneous-values/instantaneous-values-details/" target="_blank" rel="noopener noreferrer" class="text-sky-700 hover:text-sky-900 hover:underline font-bold block">USGS Instantaneous Values (IV) Docs ↗</a>
@@ -1474,1498 +1536,6 @@
 
 
 
-  <script>
-    if (typeof Chart !== 'undefined') {
-      Chart.defaults.font.family = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
-      Chart.defaults.color = '#334155';
-      Chart.defaults.borderColor = '#e2e8f0';
-      Chart.defaults.animation = false;
-      Chart.defaults.animations = false;
-      Chart.defaults.transitions = false;
-
-      // Editorial light card tooltip styling across all charts
-      if (Chart.defaults.plugins && Chart.defaults.plugins.tooltip) {
-        const tt = Chart.defaults.plugins.tooltip;
-        tt.backgroundColor = 'rgba(255, 255, 255, 0.98)';
-        tt.borderColor = '#cbd5e1';
-        tt.borderWidth = 1;
-        tt.cornerRadius = 3;
-        tt.titleColor = '#0f172a';
-        tt.titleFont = { family: 'Inter, sans-serif', size: 13, weight: '700' };
-        tt.bodyColor = '#334155';
-        tt.bodyFont = { family: 'Inter, sans-serif', size: 12, weight: '500' };
-        tt.footerColor = '#64748b';
-        tt.footerFont = { family: 'Inter, sans-serif', size: 11, weight: '400' };
-        tt.padding = { top: 10, right: 12, bottom: 10, left: 12 };
-        tt.boxWidth = 8;
-        tt.boxHeight = 8;
-        tt.boxPadding = 6;
-        tt.usePointStyle = true;
-      }
-    }
-    // Tab switching logic for the unified Colorado River Basin platform
-    let currentTab = 'overview';
-    const urlParams = new URLSearchParams(window.location.search);
-    const initialStation = urlParams.get('station');
-    const initialTab = urlParams.get('tab') || (initialStation ? 'map' : 'overview');
-    const initialModal = urlParams.get('modal');
-    if (initialModal === 'law') {
-      setTimeout(openLawModal, 100);
-    } else if (initialModal === 'api') {
-      setTimeout(openApiModal, 100);
-    }
-
-    function toggleMobileMenu(forceOpen) {
-      const aside = document.querySelector('.sidebar-academic');
-      const btn = document.getElementById('mobile-menu-toggle');
-      const icon = document.getElementById('mobile-menu-toggle-icon');
-      const text = document.getElementById('mobile-menu-toggle-text');
-      if (!aside) return;
-
-      const isOpen = typeof forceOpen === 'boolean'
-        ? forceOpen
-        : !aside.classList.contains('mobile-menu-open');
-
-      aside.classList.toggle('mobile-menu-open', isOpen);
-      if (btn) btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-      if (icon) icon.innerHTML = isOpen ? '&#10005;' : '&#9776;';
-      if (text) text.textContent = isOpen ? 'Close' : 'Menu';
-    }
-
-    function setTab(tabId) {
-      currentTab = tabId;
-      toggleMobileMenu(false);
-      document.querySelectorAll('.nav-top-link, .sidebar-link').forEach(el => el.classList.remove('active'));
-      const activeBtn = document.getElementById('tab-btn-' + tabId);
-      if (activeBtn) activeBtn.classList.add('active');
-
-      const mobileLabel = document.getElementById('mobile-active-section-label');
-      if (mobileLabel) {
-        const spanEl = activeBtn ? activeBtn.querySelector('span') : null;
-        mobileLabel.textContent = spanEl ? spanEl.textContent.trim() : 'Overview';
-      }
-
-      const topHeader = document.getElementById('academic-top-header');
-
-      // Hide all content containers
-      document.getElementById('section-overview').classList.add('hidden');
-      document.getElementById('section-map').classList.add('hidden');
-      document.getElementById('section-sankey').classList.add('hidden');
-      document.getElementById('section-pipeline').classList.add('hidden');
-      document.getElementById('section-reservoirs').classList.add('hidden');
-      document.getElementById('section-telemetry').classList.add('hidden');
-      document.getElementById('section-ml').classList.add('hidden');
-      document.getElementById('section-methodology').classList.add('hidden');
-      document.getElementById('section-law').classList.add('hidden');
-      document.getElementById('section-sources').classList.add('hidden');
-
-      if (tabId === 'overview') {
-        topHeader.classList.remove('hidden');
-        document.getElementById('section-overview').classList.remove('hidden');
-      } else if (tabId === 'map') {
-        topHeader.classList.add('hidden'); // Allow full-bleed map
-        document.getElementById('section-map').classList.remove('hidden');
-        const iframe = document.getElementById('iframe-map');
-        if (iframe) {
-          iframe.focus({ preventScroll: true });
-          try { if (iframe.contentWindow) iframe.contentWindow.focus(); } catch (_) {}
-
-          const syncMap = () => {
-            try {
-              if (iframe.contentWindow && iframe.contentWindow.map && typeof iframe.contentWindow.map.resize === 'function') {
-                iframe.contentWindow.map.resize();
-                // If map was initialized with 0x0 hidden container dimensions or zoomed out to world view, restore authoritative basin bounds INSTANTLY with jumpTo (NO bounce)
-                const currentZ = iframe.contentWindow.map.getZoom();
-                if ((currentZ < 4.2 || currentZ === undefined) && typeof iframe.contentWindow.zoomToPreset === 'function') {
-                  iframe.contentWindow.zoomToPreset('basin', true);
-                }
-              }
-            } catch (_) {}
-          };
-          syncMap();
-          setTimeout(syncMap, 60);
-          setTimeout(syncMap, 200);
-        }
-      } else if (tabId === 'sankey') {
-        topHeader.classList.add('hidden'); // Allow full-bleed Sankey budget diagram
-        document.getElementById('section-sankey').classList.remove('hidden');
-      } else if (tabId === 'pipeline') {
-        topHeader.classList.add('hidden'); // Allow full-bleed geographic transit schematic
-        document.getElementById('section-pipeline').classList.remove('hidden');
-      } else if (tabId === 'reservoirs') {
-        topHeader.classList.add('hidden'); // Dedicated full-bleed historical charts
-        document.getElementById('section-reservoirs').classList.remove('hidden');
-        setTimeout(() => {
-          renderMacroStorageTimeline();
-          if (currentReservoirRecord === 'mead') {
-            renderMeadHistoricalCharts();
-          } else {
-            renderPowellHistoricalCharts();
-          }
-        }, 10);
-      } else if (tabId === 'telemetry') {
-        topHeader.classList.add('hidden'); // Telemetry has its own header table
-        document.getElementById('section-telemetry').classList.remove('hidden');
-      } else if (tabId === 'ml') {
-        topHeader.classList.add('hidden'); // Flow regimes and ML analysis dashboard
-        document.getElementById('section-ml').classList.remove('hidden');
-      } else if (tabId === 'methodology') {
-        topHeader.classList.add('hidden'); // Architecture & Methodology guide
-        document.getElementById('section-methodology').classList.remove('hidden');
-      } else if (tabId === 'law') {
-        topHeader.classList.add('hidden');
-        document.getElementById('section-law').classList.remove('hidden');
-      } else if (tabId === 'sources') {
-        topHeader.classList.add('hidden');
-        document.getElementById('section-sources').classList.remove('hidden');
-      }
-
-      // Synchronize browser URL query state without page reload
-      try {
-        const newUrl = new URL(window.location);
-        newUrl.searchParams.set('tab', tabId);
-        if (tabId !== 'map') {
-          newUrl.searchParams.delete('station');
-        }
-        window.history.replaceState({}, '', newUrl);
-      } catch (_) {}
-
-      setTimeout(() => {
-        window.dispatchEvent(new Event('resize'));
-      }, 30);
-    }
-
-    // Direct deep-link station focus on the interactive 3D map
-    function focusMapStation(stationId) {
-      setTab('map');
-      const iframe = document.getElementById('iframe-map');
-      if (iframe && iframe.contentWindow) {
-        const tryFocus = () => {
-          try {
-            if (typeof iframe.contentWindow.focusMapStation === 'function') {
-              iframe.contentWindow.focusMapStation(stationId);
-            } else {
-              iframe.contentWindow.postMessage({ type: 'focusStation', stationId: stationId }, '*');
-            }
-          } catch (err) {
-            iframe.contentWindow.postMessage({ type: 'focusStation', stationId: stationId }, '*');
-          }
-        };
-        tryFocus();
-        setTimeout(tryFocus, 250);
-        setTimeout(tryFocus, 650);
-      }
-    }
-    window.focusMapStation = focusMapStation;
-
-    // Cross-iframe communication for tab switching and station navigation
-    window.addEventListener('message', (event) => {
-      if (event.data && event.data.type === 'focusStation') {
-        focusMapStation(event.data.stationId);
-      } else if (event.data && event.data.type === 'setTab') {
-        setTab(event.data.tabId);
-      }
-    });
-
-    // Seamless focus & keyboard forwarding for embedded map:
-    // User does NOT have to click the map first for controls to work.
-    const sectionMap = document.getElementById('section-map');
-    if (sectionMap) {
-      sectionMap.addEventListener('mouseenter', () => {
-        const iframe = document.getElementById('iframe-map');
-        if (iframe) {
-          iframe.focus({ preventScroll: true });
-          try { if (iframe.contentWindow) iframe.contentWindow.focus(); } catch (_) {}
-        }
-      });
-      sectionMap.addEventListener('mousemove', () => {
-        const iframe = document.getElementById('iframe-map');
-        if (iframe && document.activeElement !== iframe) {
-          iframe.focus({ preventScroll: true });
-          try { if (iframe.contentWindow) iframe.contentWindow.focus(); } catch (_) {}
-        }
-      }, { passive: true });
-    }
-
-    // Forward navigation keys directly to map iframe when on System Map tab
-    window.addEventListener('keydown', (e) => {
-      if (currentTab !== 'map') return;
-      const tag = document.activeElement ? (document.activeElement.tagName || '').toUpperCase() : '';
-      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
-      if (e.metaKey || e.ctrlKey || e.altKey) return;
-      const iframe = document.getElementById('iframe-map');
-      if (iframe && iframe.contentWindow) {
-        if (document.activeElement !== iframe) {
-          iframe.focus({ preventScroll: true });
-          try { iframe.contentWindow.focus(); } catch (_) {}
-        }
-        try {
-          iframe.contentWindow.dispatchEvent(new KeyboardEvent(e.type, {
-            key: e.key,
-            code: e.code,
-            keyCode: e.keyCode,
-            which: e.which,
-            shiftKey: e.shiftKey,
-            altKey: e.altKey,
-            ctrlKey: e.ctrlKey,
-            metaKey: e.metaKey,
-            bubbles: true,
-            cancelable: true
-          }));
-        } catch (_) {}
-      }
-    });
-    window.addEventListener('keyup', (e) => {
-      if (currentTab !== 'map') return;
-      const iframe = document.getElementById('iframe-map');
-      if (iframe && iframe.contentWindow) {
-        try {
-          iframe.contentWindow.dispatchEvent(new KeyboardEvent(e.type, {
-            key: e.key,
-            code: e.code,
-            keyCode: e.keyCode,
-            which: e.which,
-            shiftKey: e.shiftKey,
-            altKey: e.altKey,
-            ctrlKey: e.ctrlKey,
-            metaKey: e.metaKey,
-            bubbles: true,
-            cancelable: true
-          }));
-        } catch (_) {}
-      }
-    });
-
-    // Close modals on Escape key
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeModals();
-    });
-
-    // Copy Python Code snippet helper with visual feedback
-    function copyApiSnippet() {
-      const codeEl = document.getElementById('api-code-snippet');
-      const btn = document.getElementById('btn-copy-code');
-      if (!codeEl) return;
-      navigator.clipboard.writeText(codeEl.innerText).then(() => {
-        if (btn) {
-          const orig = btn.innerText;
-          btn.innerText = 'Copied!';
-          btn.classList.add('text-emerald-400');
-          setTimeout(() => {
-            btn.innerText = orig;
-            btn.classList.remove('text-emerald-400');
-          }, 2000);
-        }
-      });
-    }
-
-    // Backwards-compatible panel helpers (converted from modals to in-panel tabs)
-    function openLawModal() {
-      setTab('law');
-    }
-    function openApiModal() {
-      setTab('sources');
-    }
-    function closeModals() {
-      const lm = document.getElementById('law-modal');
-      const am = document.getElementById('api-modal');
-      if (lm) lm.classList.add('hidden');
-      if (am) am.classList.add('hidden');
-    }
-
-    // Native Fullscreen Mode (keeps left navigation sidebar visible at all times)
-    let isWorkspaceFullscreen = false;
-
-    function triggerViewportResize() {
-      window.dispatchEvent(new Event('resize'));
-      setTimeout(() => {
-        const mapIframe = document.getElementById('iframe-map');
-        try {
-          if (mapIframe && mapIframe.contentWindow && mapIframe.contentWindow.map) {
-            mapIframe.contentWindow.map.resize();
-          }
-        } catch (_) {}
-      }, 60);
-    }
-
-    function syncFullscreenUI() {
-      const nativeFs = Boolean(document.fullscreenElement || document.webkitFullscreenElement);
-      const isFs = isWorkspaceFullscreen || nativeFs;
-      const enterIcon = document.getElementById('icon-enter-fullscreen');
-      const exitIcon = document.getElementById('icon-exit-fullscreen');
-      const labelEl = document.getElementById('fullscreen-label');
-      if (enterIcon) enterIcon.classList.toggle('hidden', isFs);
-      if (exitIcon) exitIcon.classList.toggle('hidden', !isFs);
-      if (labelEl) labelEl.innerText = isFs ? 'Exit Fullscreen' : 'Fullscreen';
-      triggerViewportResize();
-    }
-
-    function toggleFullScreen() {
-      const nativeFs = Boolean(document.fullscreenElement || document.webkitFullscreenElement);
-      const active = isWorkspaceFullscreen || nativeFs;
-
-      if (!active) {
-        isWorkspaceFullscreen = true;
-        syncFullscreenUI();
-        let root = document.documentElement;
-        try {
-          if (window.top && window.top.document && window.top.document.documentElement) {
-            root = window.top.document.documentElement;
-          }
-        } catch (_) {}
-        try {
-          const req = root.requestFullscreen ? root.requestFullscreen()
-            : root.webkitRequestFullscreen ? root.webkitRequestFullscreen()
-            : null;
-          if (req && typeof req.then === 'function') {
-            req.then(syncFullscreenUI).catch(() => syncFullscreenUI());
-          }
-        } catch (_) {}
-      } else {
-        isWorkspaceFullscreen = false;
-        syncFullscreenUI();
-        try {
-          const exitFn = document.exitFullscreen ? document.exitFullscreen()
-            : document.webkitExitFullscreen ? document.webkitExitFullscreen()
-            : null;
-          if (exitFn && typeof exitFn.then === 'function') {
-            exitFn.then(syncFullscreenUI).catch(() => syncFullscreenUI());
-          }
-        } catch (_) {}
-      }
-    }
-    window.toggleFullScreen = toggleFullScreen;
-    document.addEventListener('fullscreenchange', () => {
-      if (!document.fullscreenElement) isWorkspaceFullscreen = false;
-      syncFullscreenUI();
-    });
-    document.addEventListener('webkitfullscreenchange', () => {
-      if (!document.webkitFullscreenElement) isWorkspaceFullscreen = false;
-      syncFullscreenUI();
-    });
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && isWorkspaceFullscreen && !document.fullscreenElement && !document.webkitFullscreenElement) {
-        toggleFullScreen();
-      }
-    });
-
-    // Active Reservoir Record ('mead' or 'powell') and view mode ('envelope' or 'heatmap')
-    let currentReservoirRecord = 'mead';
-    let currentReservoirView = 'envelope';
-
-    let currentReservoirSubtab = 'timeline';
-    window.switchReservoirsSubtab = function(mode) {
-      currentReservoirSubtab = mode;
-      const timelineSec = document.getElementById('view-res-timeline');
-      const elevSec = document.getElementById('view-res-elevations');
-      const btnTimeline = document.getElementById('subtab-btn-res-timeline');
-      const btnElev = document.getElementById('subtab-btn-res-elevations');
-      if (!timelineSec || !elevSec || !btnTimeline || !btnElev) return;
-
-      const activeCls = 'px-3.5 py-1.5 rounded-[2px] text-xs font-bold transition shadow-xs bg-white text-sky-900 border border-stone-200 cursor-pointer';
-      const inactiveCls = 'px-3.5 py-1.5 rounded-[2px] text-xs font-semibold transition text-stone-600 hover:text-stone-900 cursor-pointer';
-
-      if (mode === 'timeline') {
-        timelineSec.classList.remove('hidden');
-        elevSec.classList.add('hidden');
-        btnTimeline.className = activeCls;
-        btnElev.className = inactiveCls;
-        setTimeout(() => renderMacroStorageTimeline(), 10);
-      } else {
-        timelineSec.classList.add('hidden');
-        elevSec.classList.remove('hidden');
-        btnTimeline.className = inactiveCls;
-        btnElev.className = activeCls;
-        setTimeout(() => switchReservoirRecord(currentReservoirRecord || 'mead'), 10);
-      }
-    };
-
-    const resFilterActiveCls = 'px-3 py-1 text-xs font-bold rounded-[2px] bg-white text-stone-900 border border-[#b8ae9c] shadow-xs transition outline-none focus:outline-none cursor-pointer whitespace-nowrap';
-    const resFilterInactiveCls = 'px-3 py-1 text-xs font-semibold rounded-[2px] text-stone-600 hover:text-stone-900 border border-transparent transition outline-none focus:outline-none cursor-pointer whitespace-nowrap';
-
-    function switchReservoirRecord(reservoir) {
-      currentReservoirRecord = reservoir;
-      const tabMead = document.getElementById('tab-res-mead');
-      const tabPowell = document.getElementById('tab-res-powell');
-      const panelMead = document.getElementById('panel-res-mead');
-      const panelPowell = document.getElementById('panel-res-powell');
-
-      if (reservoir === 'mead') {
-        tabMead.className = resFilterActiveCls;
-        tabPowell.className = resFilterInactiveCls;
-        panelMead.classList.remove('hidden');
-        panelPowell.classList.add('hidden');
-        setTimeout(() => {
-          renderMeadHistoricalCharts();
-          if (currentReservoirView === 'heatmap') {
-            renderHeatmap();
-          }
-        }, 10);
-      } else {
-        tabPowell.className = resFilterActiveCls;
-        tabMead.className = resFilterInactiveCls;
-        panelMead.classList.add('hidden');
-        panelPowell.classList.remove('hidden');
-        setTimeout(() => {
-          renderPowellHistoricalCharts();
-          if (currentReservoirView === 'heatmap') {
-            renderPowellHeatmap();
-          }
-        }, 10);
-      }
-    }
-
-    // Toggle between Clean Seasonal Envelope and Full 12-Month Heatmap
-    function setReservoirView(mode) {
-      currentReservoirView = mode;
-      const btnEnv = document.getElementById('btn-view-envelope');
-      const btnHeat = document.getElementById('btn-view-heatmap');
-      
-      const meadEnv = document.getElementById('container-mead-envelope');
-      const meadHeat = document.getElementById('container-mead-heatmap');
-      const powellEnv = document.getElementById('container-powell-envelope');
-      const powellHeat = document.getElementById('container-powell-heatmap');
-
-      if (mode === 'envelope') {
-        btnEnv.className = resFilterActiveCls;
-        btnHeat.className = resFilterInactiveCls;
-        meadEnv.classList.remove('hidden');
-        meadHeat.classList.add('hidden');
-        powellEnv.classList.remove('hidden');
-        powellHeat.classList.add('hidden');
-      } else {
-        btnHeat.className = resFilterActiveCls;
-        btnEnv.className = resFilterInactiveCls;
-        meadEnv.classList.add('hidden');
-        meadHeat.classList.remove('hidden');
-        powellEnv.classList.add('hidden');
-        powellHeat.classList.remove('hidden');
-        if (currentReservoirRecord === 'mead') {
-          renderHeatmap();
-        } else {
-          renderPowellHeatmap();
-        }
-      }
-    }
-
-
-    let portalData = null;
-
-    async function loadPortalData() {
-      try {
-        const res = await fetch('./data/portal_historical.json');
-        portalData = await res.json();
-        
-        // Render charts once data is loaded
-        initOverviewCharts();
-        if (currentTab === 'reservoirs') {
-          renderMacroStorageTimeline();
-          if (currentReservoirRecord === 'mead') {
-            renderMeadHistoricalCharts();
-          } else {
-            renderPowellHistoricalCharts();
-          }
-        }
-      } catch (err) {
-        console.error('Failed loading portal data:', err);
-      }
-    }
-
-    // ==============================================================
-    // OVERVIEW CHAPTER CONTROLLERS
-    // ==============================================================
-
-    let seasonalData = null;
-    let seasonalChartInstance = null;
-    let currentSeasonalView = 'mismatch';
-    let macroOverviewChartInstance = null;
-    let stateUseChartInstance = null;
-
-    // Scroll to section smoothly
-    function scrollToAct(actId) {
-      const container = document.getElementById('section-overview');
-      const el = document.getElementById(actId);
-      if (!el || !container) return;
-      
-      const targetTop = Math.max(0, el.offsetTop - 12);
-      container.scrollTo({ top: targetTop, behavior: 'smooth' });
-
-      updateActiveActButton(actId);
-    }
-
-    function updateActiveActButton(actId) {
-      document.querySelectorAll('.act-btn').forEach(btn => {
-        btn.classList.remove('active', 'bg-[#0f172a]', 'text-white', 'border-[#0f172a]');
-        btn.classList.add('bg-white', 'text-stone-600', 'border-stone-300');
-      });
-      const activeBtn = document.getElementById(`btn-${actId}`);
-      if (activeBtn) {
-        activeBtn.classList.remove('bg-white', 'text-stone-600', 'border-stone-300');
-        activeBtn.classList.add('active', 'bg-[#0f172a]', 'text-white', 'border-[#0f172a]');
-      }
-    }
-
-    function initActScrollSpy() {
-      const container = document.getElementById('section-overview');
-      if (!container) return;
-      const acts = ['act-1', 'act-2', 'act-3', 'act-4'];
-
-      container.addEventListener('scroll', () => {
-        const scrollPos = container.scrollTop + 40;
-
-        for (let i = acts.length - 1; i >= 0; i--) {
-          const el = document.getElementById(acts[i]);
-          if (el && el.offsetTop <= scrollPos) {
-            updateActiveActButton(acts[i]);
-            break;
-          }
-        }
-      }, { passive: true });
-    }
-
-    function setSeasonalView() {
-      renderSeasonalEngineChart();
-    }
-    window.setSeasonalView = setSeasonalView;
-
-    async function loadSeasonalData() {
-      try {
-        const res = await fetch('./data/seasonal_regimes.json');
-        seasonalData = await res.json();
-        window.seasonalData = seasonalData;
-        renderSeasonalEngineChart();
-      } catch (err) {
-        console.error('Failed loading seasonal regimes:', err);
-      }
-    }
-
-    function renderSeasonalEngineChart() {
-      if (!seasonalData) return;
-      const canvas = document.getElementById('chart-seasonal-engine');
-      if (!canvas) return;
-
-      const ctx = canvas.getContext('2d');
-
-      // Generate calendar date labels for DOY 1..365
-      const doy = seasonalData.seasonal_heartbeats.doy;
-      const dateLabels = doy.map(d => {
-        const dt = new Date(2024, 0, d);
-        return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-      });
-
-      // Simplified Inflow vs. Demand hydrograph in the muted river-corridor palette
-      const mismatch = seasonalData.supply_demand_mismatch;
-      const targetDatasets = [
-        {
-          label: 'Natural Inflow (Snowmelt + Tributaries)',
-          data: mismatch.supply_cfs,
-          borderColor: '#2b5c8f',
-          backgroundColor: 'rgba(43, 92, 143, 0.12)',
-          borderWidth: 2.2,
-          fill: true,
-          tension: 0.2,
-          pointRadius: 0,
-          pointHoverRadius: 4
-        },
-        {
-          label: 'System Demand (Canals + Cities + Losses)',
-          data: mismatch.demand_cfs,
-          borderColor: '#c26d2d',
-          borderDash: [5, 4],
-          borderWidth: 2.0,
-          fill: false,
-          tension: 0.1,
-          pointRadius: 0,
-          pointHoverRadius: 4
-        }
-      ];
-      const targetOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: { mode: 'index', intersect: false },
-        plugins: {
-          legend: {
-            display: true,
-            position: 'top',
-            labels: {
-              boxWidth: 14,
-              boxHeight: 3,
-              font: { size: 10, weight: 'bold' },
-              color: '#475569',
-              padding: 8
-            }
-          },
-          tooltip: {
-            callbacks: {
-              title: items => `Calendar Date: ${items[0].label}`,
-              label: ctx => ` ${ctx.dataset.label.split(' (')[0]}: ${parseInt(ctx.parsed.y).toLocaleString()} cfs`,
-              afterBody: items => {
-                const supply = items[0].parsed.y;
-                const demand = items[1] ? items[1].parsed.y : 0;
-                const diff = supply - demand;
-                return `Net Balance: ${diff >= 0 ? '+' : ''}${parseInt(diff).toLocaleString()} cfs (${diff >= 0 ? 'Refilling' : 'Draining'})`;
-              }
-            }
-          }
-        },
-        scales: {
-          x: {
-            grid: { display: false },
-            ticks: {
-              font: { size: 9 },
-              maxTicksLimit: 12,
-              maxRotation: 0,
-              autoSkip: true
-            }
-          },
-          y: {
-            min: 0,
-            max: 52000,
-            ticks: {
-              font: { size: 9 },
-              stepSize: 10000,
-              callback: v => (v / 1000).toFixed(0) + 'k cfs'
-            },
-            grid: { color: '#e6e0d5' }
-          }
-        }
-      };
-
-      // Fast In-Place Chart.js Mutation: Reuse existing instance to prevent canvas context thrashing
-      if (seasonalChartInstance) {
-        seasonalChartInstance.data.labels = dateLabels;
-        seasonalChartInstance.data.datasets = targetDatasets;
-        seasonalChartInstance.options = targetOptions;
-        seasonalChartInstance.update('none'); // Suppress expensive animations on instant view toggle
-        window.seasonalChartInstance = seasonalChartInstance;
-        return;
-      }
-
-      seasonalChartInstance = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: dateLabels,
-          datasets: targetDatasets
-        },
-        options: targetOptions
-      });
-      window.seasonalChartInstance = seasonalChartInstance;
-    }
-
-    function initOverviewCharts() {
-      if (!portalData) return;
-
-      // 1. Render Act 3 Combined Macro Basin Storage Trajectory (1935 - 2026)
-      const timeline = portalData.basin_storage_timeline || [];
-      const macroYears = timeline.map(d => d.year);
-      const totalMaf = timeline.map(d => d.total_major_storage_maf);
-
-      const macroCanvas = document.getElementById('chart-macro-overview-timeline');
-      if (macroCanvas) {
-        const macroCtx = macroCanvas.getContext('2d');
-        if (macroOverviewChartInstance) {
-          macroOverviewChartInstance.destroy();
-          macroOverviewChartInstance = null;
-        }
-
-        macroOverviewChartInstance = new Chart(macroCtx, {
-          type: 'line',
-          plugins: [horizontalThresholdPlugin],
-          data: {
-            labels: macroYears,
-            datasets: [
-              {
-                label: 'Total Basin Major Storage',
-                data: totalMaf,
-                borderColor: '#2b5c8f',
-                borderWidth: 2.25,
-                fill: false,
-                tension: 0.15,
-                pointRadius: 0,
-                pointHoverRadius: 4
-              }
-            ]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: { mode: 'index', intersect: false },
-            plugins: {
-              horizontalThresholdPlugin: {
-                lines: [
-                  { value: 60.0, customLabel: 'Full System Capacity (~60.0 MAF)', color: '#475569', textColor: '#334155', dash: [6, 4], noBox: true, yAdjust: -8 }
-                ]
-              },
-              legend: {
-                display: false
-              },
-              tooltip: {
-                callbacks: {
-                  title: items => `Calendar Year ${items[0].label}`,
-                  label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)} MAF`
-                }
-              }
-            },
-            scales: {
-              x: {
-                grid: { display: false },
-                ticks: { font: { size: 9 }, maxTicksLimit: 10 }
-              },
-              y: {
-                min: 0,
-                max: 70,
-                ticks: { font: { size: 9 }, stepSize: 15, callback: v => v + ' MAF' },
-                grid: { color: '#e6e0d5', lineWidth: 1 }
-              }
-            }
-          }
-        });
-      }
-
-      // 2. Render Act 4 State Consumptive Use Bar Chart
-      const stateCanvas = document.getElementById('chart-state-use');
-      if (stateCanvas) {
-        const stateCtx = stateCanvas.getContext('2d');
-        if (stateUseChartInstance) {
-          stateUseChartInstance.destroy();
-          stateUseChartInstance = null;
-        }
-
-        stateUseChartInstance = new Chart(stateCtx, {
-          type: 'bar',
-          data: {
-            labels: ['CA', 'AZ', 'CO', 'UT', 'NM', 'WY', 'NV'],
-            datasets: [{
-              label: 'Consumptive Depletions (MAF/yr)',
-              data: [4.4, 2.8, 2.2, 1.0, 0.6, 0.5, 0.3],
-              backgroundColor: [
-                '#c26d2d', // CA (Lower Basin)
-                '#c26d2d', // AZ (Lower Basin)
-                '#2b5c8f', // CO (Upper Basin)
-                '#2b5c8f', // UT (Upper Basin)
-                '#2b5c8f', // NM (Upper Basin)
-                '#2b5c8f', // WY (Upper Basin)
-                '#c26d2d'  // NV (Lower Basin)
-              ],
-              borderRadius: 1
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: { display: false },
-              tooltip: {
-                callbacks: {
-                  title: items => {
-                    const desc = {
-                      CA: 'California • 4.4 MAF (Lower Basin • Senior 1901 Priority)',
-                      AZ: 'Arizona • 2.8 MAF (Lower Basin • Junior CAP Cuts)',
-                      CO: 'Colorado • 2.2 MAF (Upper Basin • Headwaters & Trans-Mountain)',
-                      UT: 'Utah • 1.0 MAF (Upper Basin Allocation)',
-                      NM: 'New Mexico • 0.6 MAF (Upper Basin • San Juan Basin)',
-                      WY: 'Wyoming • 0.5 MAF (Upper Basin • Green River Tributaries)',
-                      NV: 'Nevada • 0.3 MAF (Lower Basin • Southern Nevada Water Authority)'
-                    };
-                    return desc[items[0].label] || items[0].label;
-                  },
-                  label: ctx => ` Consumptive Use: ${ctx.parsed.y.toFixed(1)} MAF/yr`
-                }
-              }
-            },
-            scales: {
-              x: {
-                grid: { display: false },
-                ticks: { font: { size: 9.5, weight: 'bold' } }
-              },
-              y: {
-                min: 0,
-                max: 5,
-                ticks: { font: { size: 9 }, stepSize: 1, callback: v => v + ' MAF' },
-                grid: { color: '#e6e0d5' }
-              }
-            }
-          }
-        });
-      }
-    }
-
-    // Macro Basin Multi-Reservoir Storage Timeline (1935 - Present)
-    let macroChartInstance = null;
-    function renderMacroStorageTimeline() {
-      if (!portalData) return;
-      const timeline = portalData.basin_storage_timeline || [];
-      if (!timeline.length) return;
-
-      const years = timeline.map(d => d.year);
-      const meadMaf = timeline.map(d => d.mead_maf);
-      const powellMaf = timeline.map(d => d.powell_maf);
-      const crspMaf = timeline.map(d => (d.flaming_gorge_maf || 0) + (d.navajo_maf || 0) + (d.blue_mesa_maf || 0));
-      const totalMaf = timeline.map(d => d.total_major_storage_maf);
-
-      // Update current total stat card if available
-      const latestPoint = timeline[timeline.length - 1];
-      const metricEl = document.getElementById('metric-current-total-maf');
-      if (metricEl && latestPoint) {
-        metricEl.innerText = `${latestPoint.total_major_storage_maf.toFixed(1)} MAF`;
-      }
-
-      const canvas = document.getElementById('chart-macro-timeline');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-
-      if (macroChartInstance) {
-        macroChartInstance.destroy();
-        macroChartInstance = null;
-      }
-
-      // 4 Datasets (Clean multi-line trajectories in the muted river-corridor palette, zero solid fills):
-      // 0: Combined Total - Primary total storage curve (#0f172a)
-      // 1: Lake Mead - Muted river blue (#2b5c8f)
-      // 2: Lake Powell - Muted canyon ochre (#c26d2d)
-      // 3: Upper CRSP - Muted riparian sage dashed (#3f6f58)
-      const datasets = [
-        {
-          label: 'Combined Total',
-          data: totalMaf,
-          borderColor: '#0f172a',
-          backgroundColor: 'transparent',
-          borderWidth: 2.5,
-          fill: false,
-          order: 0,
-          tension: 0.15,
-          pointRadius: 0
-        },
-        {
-          label: 'Lake Mead',
-          data: meadMaf,
-          borderColor: '#2b5c8f',
-          backgroundColor: 'transparent',
-          borderWidth: 2,
-          fill: false,
-          order: 1,
-          tension: 0.15,
-          pointRadius: 0
-        },
-        {
-          label: 'Lake Powell',
-          data: powellMaf,
-          borderColor: '#c26d2d',
-          backgroundColor: 'transparent',
-          borderWidth: 2,
-          fill: false,
-          order: 2,
-          tension: 0.15,
-          pointRadius: 0
-        },
-        {
-          label: 'Upper CRSP',
-          data: crspMaf,
-          borderColor: '#3f6f58',
-          backgroundColor: 'transparent',
-          borderWidth: 1.75,
-          borderDash: [4, 3],
-          fill: false,
-          order: 3,
-          tension: 0.15,
-          pointRadius: 0
-        }
-      ];
-
-      const thresholdLines = [
-        { 
-          value: 60.0, 
-          customLabel: 'Full System Capacity (~60.0 MAF)', 
-          color: '#64748b', 
-          textColor: '#0f172a', 
-          width: 1.0, 
-          dash: [6, 4],
-          noBox: true,
-          font: { size: 11, weight: '600' },
-          position: 'end',
-          xAdjust: -6,
-          yAdjust: -8
-        }
-      ];
-
-      macroChartInstance = new Chart(ctx, {
-        type: 'line',
-        plugins: [horizontalThresholdPlugin],
-        data: {
-          labels: years,
-          datasets: datasets
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          interaction: {
-            mode: 'index',
-            intersect: false
-          },
-          plugins: {
-            horizontalThresholdPlugin: {
-              drawTime: 'afterDatasetsDraw',
-              lines: thresholdLines
-            },
-            legend: {
-              position: 'top',
-              labels: { font: { size: 10, weight: '600' }, boxWidth: 12, usePointStyle: true }
-            },
-            tooltip: {
-              backgroundColor: 'rgba(255, 255, 255, 0.98)',
-              borderColor: '#cbd5e1',
-              borderWidth: 1,
-              cornerRadius: 3,
-              titleColor: '#0f172a',
-              titleFont: { family: 'Inter, sans-serif', size: 13, weight: '700' },
-              bodyColor: '#334155',
-              bodyFont: { family: 'Inter, sans-serif', size: 12, weight: '500' },
-              footerColor: '#64748b',
-              footerFont: { family: 'Inter, sans-serif', size: 11, weight: '400' },
-              padding: { top: 10, right: 12, bottom: 10, left: 12 },
-              boxWidth: 8,
-              boxHeight: 8,
-              boxPadding: 6,
-              usePointStyle: true,
-              itemSort: (a, b) => {
-                const orderMap = {
-                  'Combined Total': 0,
-                  'Lake Mead': 1,
-                  'Lake Powell': 2,
-                  'Upper CRSP': 3
-                };
-                const getRank = (item) => {
-                  const lbl = (item && item.dataset && item.dataset.label) || '';
-                  for (const [k, v] of Object.entries(orderMap)) {
-                    if (lbl.includes(k)) return v;
-                  }
-                  return 99;
-                };
-                return getRank(a) - getRank(b);
-              },
-              callbacks: {
-                label: (ctx) => {
-                  const val = ctx.parsed.y !== null && ctx.parsed.y !== undefined ? ctx.parsed.y.toFixed(2) : '0.00';
-                  let name = ctx.dataset.label || '';
-                  name = name.replace(/\s*\([^)]*\)/g, '').replace(' Reservoirs', '').replace(' Storage', '').trim();
-                  if (name === 'Combined Total') return ` Combined Total: ${val} MAF`;
-                  if (name === 'Lake Mead') return ` Lake Mead: ${val} MAF`;
-                  if (name === 'Lake Powell') return ` Lake Powell: ${val} MAF`;
-                  if (name.includes('CRSP')) return ` Upper CRSP: ${val} MAF`;
-                  return ` ${name}: ${val} MAF`;
-                },
-                footer: (tooltipItems) => {
-                  if (!tooltipItems || !tooltipItems.length) return '';
-                  const idx = tooltipItems[0].dataIndex;
-                  const point = timeline[idx];
-                  if (!point) return '';
-                  const fg = point.flaming_gorge_maf !== undefined ? point.flaming_gorge_maf.toFixed(2) : '0.00';
-                  const nav = point.navajo_maf !== undefined ? point.navajo_maf.toFixed(2) : '0.00';
-                  const bm = point.blue_mesa_maf !== undefined ? point.blue_mesa_maf.toFixed(2) : '0.00';
-                  return `CRSP Breakdown: Flaming Gorge ${fg} · Navajo ${nav} · Blue Mesa ${bm} MAF`;
-                }
-              }
-            }
-          },
-          scales: {
-            x: {
-              grid: { display: false },
-              ticks: { font: { size: 10 }, maxTicksLimit: 15 }
-            },
-            y: {
-              stacked: false,
-              min: 0,
-              max: 65,
-              ticks: {
-                font: { size: 10 },
-                callback: (val) => val + 'M AF'
-              },
-              grid: { color: '#e2e8f0', lineWidth: 1 }
-            }
-          }
-        }
-      });
-      window.macroChartInstance = macroChartInstance;
-    }
-
-    // Historical Lake Mead Charts (Envelope & Heatmap)
-    let meadChartInstance = null;
-
-    // Custom plugin to draw horizontal reference lines with crisp, high-contrast editorial badges or unboxed labels
-    const horizontalThresholdPlugin = {
-      id: 'horizontalThresholdPlugin',
-      afterDatasetsDraw(chart, args, options) {
-        if (options && options.drawTime === 'afterDraw') return;
-        this.drawLines(chart, args, options);
-      },
-      afterDraw(chart, args, options) {
-        if (options && options.drawTime === 'afterDraw') {
-          this.drawLines(chart, args, options);
-        }
-      },
-      drawLines(chart, args, options) {
-        if (!chart || !chart.chartArea || !chart.scales || !chart.scales.y) return;
-        const { ctx, chartArea } = chart;
-        const left = chartArea.left;
-        const right = chartArea.right;
-        const top = chartArea.top;
-        const bottom = chartArea.bottom;
-        const y = chart.scales.y;
-        const lines = (options && options.lines) || [];
-        
-        ctx.save();
-        lines.forEach(line => {
-          if (line.value === undefined || line.value === null) return;
-          const yPos = y.getPixelForValue(line.value);
-          if (yPos === undefined || isNaN(yPos) || yPos < top || yPos > bottom) return;
-
-          // Draw dashed threshold line
-          ctx.beginPath();
-          ctx.setLineDash(line.dash || [5, 4]);
-          ctx.strokeStyle = line.color || '#94a3b8';
-          ctx.lineWidth = line.width || 1.2;
-          ctx.moveTo(left, yPos);
-          ctx.lineTo(right, yPos);
-          ctx.stroke();
-
-          // Draw label badge or unboxed text
-          if (line.label || line.customLabel) {
-            ctx.setLineDash([]);
-            const fontSize = (line.font && line.font.size) || line.fontSize || 11;
-            const fontWeight = (line.font && line.font.weight) || line.fontWeight || '600';
-            const fontFamily = (line.font && line.font.family) || line.fontFamily || "'Inter', -apple-system, BlinkMacSystemFont, sans-serif";
-            ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
-            
-            const unit = line.unit !== undefined ? line.unit : ' ft';
-            const valStr = typeof line.value === 'number' ? line.value.toLocaleString() : line.value;
-            const labelText = line.customLabel || `${line.label} (${valStr}${unit})`;
-
-            if (line.noBox) {
-              // Clean unboxed text sitting above the dashed line with protective white halo
-              const xAdjust = line.xAdjust !== undefined ? line.xAdjust : -8;
-              let yAdjust = line.yAdjust !== undefined ? line.yAdjust : -8;
-              let textY = yPos + yAdjust;
-              // Guard against top frame collision: ensure at least 6px buffer from top edge
-              if (textY - (fontSize / 2) < top + 6) {
-                textY = yPos + fontSize + 4;
-              }
-              const textX = (line.position === 'start') ? (left - xAdjust) : (right + xAdjust);
-
-              ctx.textAlign = (line.position === 'start') ? 'left' : ((line.position === 'center') ? 'center' : 'right');
-              ctx.textBaseline = 'middle';
-
-              // White halo to prevent intersecting dataset lines from slicing through text
-              ctx.save();
-              ctx.strokeStyle = '#ffffff';
-              ctx.lineWidth = 4;
-              ctx.lineJoin = 'round';
-              ctx.strokeText(labelText, textX, textY);
-              ctx.restore();
-
-              ctx.fillStyle = line.textColor || line.color || '#0f172a';
-              ctx.fillText(labelText, textX, textY);
-            } else {
-              const textWidth = ctx.measureText(labelText).width;
-              const padX = line.padX !== undefined ? line.padX : 8;
-              const padY = line.padY !== undefined ? line.padY : 3.5;
-              const pillW = textWidth + padX * 2;
-              const pillH = fontSize + padY * 2;
-              const pillX = (line.position === 'start') ? (left + 10) : (line.position === 'center') ? (left + (right - left - pillW) / 2) : (right - pillW - 10);
-              
-              let pillY = yPos - pillH - 4;
-              if (line.yOffset !== undefined) {
-                pillY = yPos + line.yOffset;
-              } else if (pillY < top + 6) {
-                // Guard: at least 6px buffer from top
-                pillY = yPos + 6;
-              } else if (pillY + pillH > bottom - 6) {
-                pillY = yPos - pillH - 4;
-              }
-
-              ctx.beginPath();
-              const r = line.radius !== undefined ? line.radius : 3.5;
-              if (typeof ctx.roundRect === 'function') {
-                ctx.roundRect(pillX, pillY, pillW, pillH, r);
-              } else {
-                ctx.moveTo(pillX + r, pillY);
-                ctx.lineTo(pillX + pillW - r, pillY);
-                ctx.arcTo(pillX + pillW, pillY, pillX + pillW, pillY + r, r);
-                ctx.arcTo(pillX + pillW, pillY + pillH, pillX + pillW - r, pillY + pillH, r);
-                ctx.arcTo(pillX, pillY + pillH, pillX, pillY + pillH - r, r);
-                ctx.arcTo(pillX, pillY, pillX + r, pillY, r);
-                ctx.closePath();
-              }
-              ctx.fillStyle = line.bgColor || '#ffffff';
-              ctx.fill();
-              ctx.strokeStyle = line.borderColor || '#cbd5e1';
-              ctx.lineWidth = line.borderWidth || 1;
-              ctx.stroke();
-
-              ctx.fillStyle = line.textColor || line.color || '#0f172a';
-              ctx.textAlign = 'center';
-              ctx.textBaseline = 'middle';
-              ctx.fillText(labelText, pillX + pillW / 2, pillY + pillH / 2);
-            }
-          }
-        });
-        ctx.restore();
-      }
-    };
-
-    function renderMeadHistoricalCharts() {
-      if (!portalData) return;
-
-      const records = portalData.lake_mead_historical || [];
-      if (!records.length) return;
-
-      const years = records.map(r => r.year);
-      const minElv = records.map(r => r.min);
-      const maxElv = records.map(r => r.max);
-      const meanElv = records.map(r => r.mean);
-
-      const canvas = document.getElementById('chart-mead-history');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-
-      if (meadChartInstance) {
-        meadChartInstance.destroy();
-        meadChartInstance = null;
-      }
-
-      meadChartInstance = new Chart(ctx, {
-        type: 'line',
-        plugins: [horizontalThresholdPlugin],
-        data: {
-          labels: years,
-          datasets: [
-            {
-              label: 'Annual Mean Elevation',
-              data: meanElv,
-              borderColor: '#0072B2',
-              backgroundColor: 'rgba(0, 114, 178, 0.16)',
-              borderWidth: 2.2,
-              pointRadius: 0,
-              tension: 0.15
-            },
-            {
-              label: 'Annual Max Elevation',
-              data: maxElv,
-              borderColor: 'rgba(0, 114, 178, 0.5)',
-              borderWidth: 1,
-              borderDash: [2, 2],
-              pointRadius: 0,
-              fill: '+1',
-              backgroundColor: 'rgba(0, 114, 178, 0.10)'
-            },
-            {
-              label: 'Annual Min Elevation',
-              data: minElv,
-              borderColor: 'rgba(0, 114, 178, 0.5)',
-              borderWidth: 1,
-              borderDash: [2, 2],
-              pointRadius: 0,
-              fill: false
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          interaction: {
-            mode: 'index',
-            intersect: false
-          },
-          plugins: {
-            horizontalThresholdPlugin: {
-              lines: [
-                { value: 1221.4, label: 'Spillway Crest', color: '#1e293b', dash: [6, 4] },
-                { value: 1075.0, label: 'Tier 1 Shortage', color: '#0072B2', dash: [5, 3], position: 'center' },
-                { value: 950.0, label: 'Min Power Pool', color: '#D55E00', dash: [5, 3] },
-                { value: 895.0, label: 'Dead Pool', color: '#dc2626', dash: [6, 3] },
-                { value: 860.0, label: 'SNWA Intake No. 3 ("Third Straw")', color: '#6d28d9', dash: [3, 3], position: 'start' }
-              ]
-            },
-            legend: {
-              position: 'top',
-              labels: { font: { size: 10, weight: '600' }, boxWidth: 12 }
-            },
-            tooltip: {
-              callbacks: {
-                label: (ctx) => ` ${ctx.dataset.label}: ${ctx.parsed.y ? ctx.parsed.y.toFixed(1) + ' ft' : 'N/A'}`
-              }
-            }
-          },
-          scales: {
-            x: {
-              grid: { display: false },
-              ticks: { font: { size: 10 }, maxTicksLimit: 15 }
-            },
-            y: {
-              min: 830,
-              max: 1270,
-              ticks: {
-                font: { size: 10 },
-                callback: (val) => val + ' ft'
-              },
-              grid: { color: '#e2e8f0', lineWidth: 1 }
-            }
-          }
-        }
-      });
-    }
-
-    // Render the 1935–2026 by 12-month heatmap matrix
-    function renderHeatmap() {
-      const container = document.getElementById('heatmap-grid');
-      if (container.children.length > 0 || !portalData) return;
-
-      const records = portalData.lake_mead_historical || [];
-      const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
-
-      // Header row
-      const headerRow = document.createElement('div');
-      headerRow.className = 'grid grid-cols-13 gap-1 text-[9px] font-bold text-stone-500 mb-1';
-      headerRow.style.gridTemplateColumns = '48px repeat(12, minmax(0, 1fr))';
-      
-      const emptyCell = document.createElement('div');
-      emptyCell.innerText = 'Year';
-      headerRow.appendChild(emptyCell);
-
-      monthNames.forEach(m => {
-        const mCell = document.createElement('div');
-        mCell.className = 'text-center uppercase';
-        mCell.innerText = m;
-        headerRow.appendChild(mCell);
-      });
-      container.appendChild(headerRow);
-
-      // Standardized ColorBrewer Diverging Water Scale (Blue-to-Red)
-      function getColor(elv) {
-        if (!elv) return '#f1f5f9';
-        if (elv > 1200) return '#1e3a8a'; // Near Full Pool / Historic Spillway Crest (1,221.4 ft)
-        if (elv > 1170) return '#0284c7'; // Upper Operating Range (>70% capacity)
-        if (elv > 1140) return '#38bdf8'; // Active Storage Mid-Pool
-        if (elv > 1110) return '#cbd5e1'; // Lower Operating Buffer Range
-        if (elv > 1075) return '#f59e0b'; // Tier 1 Shortage Trigger Zone (1,075 ft)
-        if (elv > 1050) return '#ea580c'; // Tier 2 Shortage Cutbacks (1,050 ft)
-        return '#991b1b';                 // Critical Shortage (Tier 3 at 1,025 ft & approaching Min Power 950 ft)
-      }
-
-      // Rows for each year
-      records.forEach(r => {
-        const row = document.createElement('div');
-        row.className = 'grid gap-1 items-center';
-        row.style.gridTemplateColumns = '48px repeat(12, minmax(0, 1fr))';
-
-        const yearLabel = document.createElement('div');
-        yearLabel.className = 'text-[9.5px] tabular-nums font-bold text-stone-600';
-        yearLabel.innerText = r.year;
-        row.appendChild(yearLabel);
-
-        monthNames.forEach(mKey => {
-          const val = r.elevations ? r.elevations[mKey] : null;
-          const cell = document.createElement('div');
-          cell.className = 'h-3 rounded-xs heatmap-cell cursor-pointer relative';
-          cell.style.backgroundColor = getColor(val);
-          if (val) {
-            cell.title = `${r.year} ${mKey}: ${val.toFixed(1)} ft NGVD29`;
-          }
-          row.appendChild(cell);
-        });
-
-        container.appendChild(row);
-      });
-    }
-
-    // Historical Lake Powell Charts (Envelope & Heatmap)
-    let powellChartInstance = null;
-    function renderPowellHistoricalCharts() {
-      if (!portalData) return;
-
-      const records = portalData.lake_powell_elevation_historical || [];
-      if (!records.length) return;
-
-      const years = records.map(r => r.year);
-      const minElv = records.map(r => r.min);
-      const maxElv = records.map(r => r.max);
-      const meanElv = records.map(r => r.mean);
-
-      const canvas = document.getElementById('chart-powell-elevation-history');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-
-      if (powellChartInstance) {
-        powellChartInstance.destroy();
-        powellChartInstance = null;
-      }
-
-      powellChartInstance = new Chart(ctx, {
-        type: 'line',
-        plugins: [horizontalThresholdPlugin],
-        data: {
-          labels: years,
-          datasets: [
-            {
-              label: 'Annual Mean Elevation',
-              data: meanElv,
-              borderColor: '#0072B2',
-              backgroundColor: 'rgba(0, 114, 178, 0.16)',
-              borderWidth: 2.2,
-              pointRadius: 0,
-              tension: 0.15
-            },
-            {
-              label: 'Annual Max Elevation',
-              data: maxElv,
-              borderColor: 'rgba(0, 114, 178, 0.5)',
-              borderWidth: 1,
-              borderDash: [2, 2],
-              pointRadius: 0,
-              fill: '+1',
-              backgroundColor: 'rgba(0, 114, 178, 0.10)'
-            },
-            {
-              label: 'Annual Min Elevation',
-              data: minElv,
-              borderColor: 'rgba(0, 114, 178, 0.5)',
-              borderWidth: 1,
-              borderDash: [2, 2],
-              pointRadius: 0,
-              fill: false
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          interaction: {
-            mode: 'index',
-            intersect: false
-          },
-          plugins: {
-            horizontalThresholdPlugin: {
-              lines: [
-                { value: 3700.0, label: 'Spillway / Full Pool', color: '#1e293b', dash: [6, 4] },
-                { value: 3648.0, label: 'Top Joint Use', color: '#0072B2', dash: [5, 3] },
-                { value: 3490.0, label: 'Min Power Pool', color: '#D55E00', dash: [5, 3] },
-                { value: 3370.0, label: 'Dead Pool', color: '#dc2626', dash: [6, 3] }
-              ]
-            },
-            legend: {
-              position: 'top',
-              labels: { font: { size: 10, weight: '600' }, boxWidth: 12 }
-            },
-            tooltip: {
-              callbacks: {
-                label: (ctx) => ` ${ctx.dataset.label}: ${ctx.parsed.y ? ctx.parsed.y.toFixed(1) + ' ft' : 'N/A'}`
-              }
-            }
-          },
-          scales: {
-            x: {
-              grid: { display: false },
-              ticks: { font: { size: 10 }, maxTicksLimit: 15 }
-            },
-            y: {
-              min: 3350,
-              max: 3750,
-              ticks: {
-                font: { size: 10 },
-                callback: (val) => val + ' ft'
-              },
-              grid: { color: '#e2e8f0', lineWidth: 1 }
-            }
-          }
-        }
-      });
-    }
-
-    // Render the 64-year by 12-month heatmap matrix for Lake Powell
-    function renderPowellHeatmap() {
-      const container = document.getElementById('powell-heatmap-grid');
-      if (container.children.length > 0 || !portalData) return;
-
-      const records = portalData.lake_powell_elevation_historical || [];
-      const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
-
-      // Header row
-      const headerRow = document.createElement('div');
-      headerRow.className = 'grid grid-cols-13 gap-1 text-[9px] font-bold text-stone-500 mb-1';
-      headerRow.style.gridTemplateColumns = '48px repeat(12, minmax(0, 1fr))';
-      
-      const emptyCell = document.createElement('div');
-      emptyCell.innerText = 'Year';
-      headerRow.appendChild(emptyCell);
-
-      monthNames.forEach(m => {
-        const mCell = document.createElement('div');
-        mCell.className = 'text-center uppercase';
-        mCell.innerText = m;
-        headerRow.appendChild(mCell);
-      });
-      container.appendChild(headerRow);
-
-      // Standardized ColorBrewer Diverging Water Scale (Blue-to-Red)
-      function getPowellColor(elv) {
-        if (!elv) return '#f1f5f9';
-        if (elv > 3670) return '#1e3a8a'; // Near Full Pool / Historic Spillway Crest (3,700 ft)
-        if (elv > 3620) return '#0284c7'; // Upper Operating Range (Top Joint Use Pool 3,648 ft)
-        if (elv > 3575) return '#38bdf8'; // Active Conservation Mid-Pool (Buffer Target 3,575 ft)
-        if (elv > 3525) return '#cbd5e1'; // DCP Conservation Buffer Range
-        if (elv > 3490) return '#f59e0b'; // Critical Warning Buffer above Min Power Pool (3,490 ft)
-        if (elv > 3450) return '#ea580c'; // Below Minimum Power Pool (turbines cease generation)
-        return '#991b1b';                 // Critical Emergency Drawdown toward Dead Pool (3,370 ft)
-      }
-
-      // Rows for each year
-      records.forEach(r => {
-        const row = document.createElement('div');
-        row.className = 'grid gap-1 items-center';
-        row.style.gridTemplateColumns = '48px repeat(12, minmax(0, 1fr))';
-
-        const yearLabel = document.createElement('div');
-        yearLabel.className = 'text-[9.5px] tabular-nums font-bold text-stone-600';
-        yearLabel.innerText = r.year;
-        row.appendChild(yearLabel);
-
-        monthNames.forEach(mKey => {
-          const val = r.elevations ? r.elevations[mKey] : null;
-          const cell = document.createElement('div');
-          cell.className = 'h-3 rounded-xs heatmap-cell cursor-pointer relative';
-          cell.style.backgroundColor = getPowellColor(val);
-          if (val) {
-            cell.title = `${r.year} ${mKey}: ${val.toFixed(1)} ft`;
-          }
-          row.appendChild(cell);
-        });
-
-        container.appendChild(row);
-      });
-    }
-
-    // Prevent WebKit / iPad Safari page-level pinch zoom when scrolling with mouse wheel or trackpad
-    window.addEventListener('wheel', (e) => {
-      if (e.ctrlKey || e.metaKey) {
-        e.preventDefault();
-      }
-    }, { passive: false });
-    window.addEventListener('gesturestart', (e) => e.preventDefault());
-    window.addEventListener('gesturechange', (e) => e.preventDefault());
-
-    // Initialize portal on DOM content loaded
-    document.addEventListener('DOMContentLoaded', () => {
-      loadPortalData();
-      loadSeasonalData();
-      initActScrollSpy();
-      if (initialTab) {
-        setTab(initialTab);
-      }
-      if (initialStation) {
-        setTimeout(() => {
-          focusMapStation(initialStation);
-        }, 900);
-      }
-    });
-  </script>
+  <script src="dashboard.js"></script>
 </body>
 </html>

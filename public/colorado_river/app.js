@@ -294,12 +294,14 @@ function copyPopupCode(btn, ev) {
   const text = codeEl.innerText;
   navigator.clipboard.writeText(text).then(() => {
     const orig = btn.textContent;
-    btn.textContent = '✓ Copied!';
-    btn.style.color = '#15803d';
-    btn.style.background = '#f0fdf4';
-    btn.style.borderColor = '#86efac';
+    btn.textContent = 'Copied';
+    btn.classList.add('is-copied');
+    btn.style.color = '#2f5744';
+    btn.style.background = '#eaece6';
+    btn.style.borderColor = '#9cb0a4';
     setTimeout(() => {
       btn.textContent = orig;
+      btn.classList.remove('is-copied');
       btn.style.color = '';
       btn.style.background = '';
       btn.style.borderColor = '';
@@ -308,7 +310,7 @@ function copyPopupCode(btn, ev) {
 }
 const copySnippetCode = copyPopupCode;
 
-function formatTabbedPopup({ dataHtml, codeTitle, endpointUrl, pythonCode, notes }) {
+function formatTabbedPopup({ dataHtml, codeTitle, endpointUrl, endpointLabel, pythonCode, notes }) {
   if (!pythonCode) {
     return `
       <div class="custom-popup-body popup-single-card" onclick="event.stopPropagation()" onmousedown="event.stopPropagation()" style="font-family:'Inter',sans-serif; min-width:240px; max-width:320px; border-radius:3px;">
@@ -337,10 +339,206 @@ function formatTabbedPopup({ dataHtml, codeTitle, endpointUrl, pythonCode, notes
         <div class="popup-code-box" style="background:#f2ede2; border:1px solid #cfc8ba; border-radius:2px; padding:8px; overflow:hidden;">
           <pre style="margin:0; font-family:ui-monospace,Menlo,monospace; font-size:10.5px; color:#0f172a; line-height:1.4; max-height:160px; overflow-y:auto; white-space:pre-wrap; padding-right:4px;"><code>${cleanCode}</code></pre>
         </div>
-        ${endpointUrl ? `<div style="margin-top:6px; font-size:10px; color:#5c5346; word-break:break-all;"><strong style="color:#4f463a;">Endpoint:</strong> <a href="${endpointUrl}" target="_blank" rel="noopener" style="color:#2b5c8f; text-decoration:none; font-weight:600;">REST API URL ↗</a></div>` : ''}
+        ${endpointUrl ? `<div style="margin-top:6px; font-size:10px; color:#5c5346; word-break:break-all;"><strong style="color:#4f463a;">Endpoint:</strong> <a href="${endpointUrl}" target="_blank" rel="noopener" style="color:#2b5c8f; text-decoration:none; font-weight:600;">${endpointLabel || 'REST API URL'} ↗</a></div>` : ''}
       </div>
     </div>
   `;
+}
+
+function buildUsbrHourlyApiSpec(damKey, displayName) {
+  const key = String(damKey || '').toLowerCase();
+  let cfg = null;
+  if (key.includes('hoover')) {
+    cfg = { title: displayName || 'Hoover Dam (Lake Mead)', relIdx: 2, elevIdx: 1, poolName: 'Lake Mead' };
+  } else if (key.includes('davis')) {
+    cfg = { title: displayName || 'Davis Dam (Lake Mohave)', relIdx: 5, elevIdx: 3, poolName: 'Lake Mohave' };
+  } else if (key.includes('parker')) {
+    cfg = { title: displayName || 'Parker Dam (Lake Havasu)', relIdx: 8, elevIdx: 6, poolName: 'Lake Havasu' };
+  }
+  if (!cfg) return null;
+  const safeTitle = String(cfg.title).replace(/["\\]/g, '');
+  const endpointUrl = 'https://www.usbr.gov/lc/region/g4000/hourly/hourly.html';
+  return {
+    codeTitle: safeTitle,
+    endpointUrl,
+    endpointLabel: 'USBR Hourly Feed',
+    notes: 'USBR Lower Colorado River Hourly Operations teletype feed.',
+    pythonCode: `import re
+import requests
+
+# USBR Lower Colorado River Hourly Operations
+url = "${endpointUrl}"
+text = requests.get(url, timeout=10).text.split("PAGE 2")[0]
+pattern = r"^\\s*(\\d{4}-\\d{4})\\s+([\\d.]+)\\s+(\\d+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+(\\d+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+(\\d+)"
+rows = re.findall(pattern, text, re.MULTILINE)
+latest = rows[-1]
+print(f"${safeTitle} ({latest[0]}): {int(latest[${cfg.relIdx}]):,} cfs release | ${cfg.poolName} {latest[${cfg.elevIdx}]} ft")`
+  };
+}
+
+function buildReservoirApiSpec(res) {
+  if (!res || !res.id) return null;
+  const cleanName = String(res.name || 'Reservoir').replace(/["\\]/g, '');
+  const USBR_CSV_MAP = {
+    lake_powell: '919',
+    lake_mead: '921',
+    flaming_gorge: '917',
+    navajo_reservoir: '920',
+    blue_mesa: '913'
+  };
+  const USGS_RES_MAP = {
+    lake_mohave: '09422500',
+    lake_havasu: '09427500'
+  };
+  const CDWR_RES_MAP = {
+    lake_granby: 'GRARESCO',
+    dillon_reservoir: 'DILRESCO',
+    green_mountain: 'GRERESCO',
+    homestake_reservoir: 'HOMRESCO'
+  };
+
+  const usbrId = USBR_CSV_MAP[res.id];
+  if (usbrId) {
+    const endpointUrl = `https://www.usbr.gov/uc/water/hydrodata/reservoir_data/${usbrId}/csv/17.csv`;
+    return {
+      codeTitle: cleanName,
+      endpointUrl,
+      endpointLabel: 'USBR HydroData CSV',
+      notes: 'USBR HydroData CSV feeds (17.csv = storage AF, 49.csv = elevation ft).',
+      pythonCode: `import requests
+
+# USBR HydroData CSV (17 = Storage AF, 49 = Elevation ft)
+base = "https://www.usbr.gov/uc/water/hydrodata/reservoir_data/${usbrId}/csv"
+stor_row = requests.get(f"{base}/17.csv", timeout=10).text.strip().splitlines()[-1].split(",")
+elev_row = requests.get(f"{base}/49.csv", timeout=10).text.strip().splitlines()[-1].split(",")
+print(f"${cleanName} ({stor_row[0]}): {float(stor_row[1]):,.0f} AF | {float(elev_row[1]):,.2f} ft")`
+    };
+  }
+
+  const usgsId = USGS_RES_MAP[res.id];
+  if (usgsId) {
+    const endpointUrl = `https://waterservices.usgs.gov/nwis/iv/?sites=${usgsId}&parameterCd=00054&format=json`;
+    return {
+      codeTitle: `USGS Reservoir #${usgsId}`,
+      endpointUrl,
+      endpointLabel: 'USGS REST API',
+      notes: 'USGS NWIS instantaneous reservoir storage contents (parameter 00054, AF).',
+      pythonCode: `import requests
+
+# USGS Instantaneous Values (IV) API — Reservoir Storage (00054)
+url = "https://waterservices.usgs.gov/nwis/iv/"
+params = {
+    "sites": "${usgsId}",  # ${cleanName}
+    "parameterCd": "00054",  # Reservoir storage (AF)
+    "format": "json"
+}
+res = requests.get(url, params=params, timeout=10).json()
+val = res["value"]["timeSeries"][0]["values"][0]["value"][-1]
+print(f"${cleanName}: {float(val['value']):,.0f} AF at {val['dateTime']}")`
+    };
+  }
+
+  const cdwrAbbrev = CDWR_RES_MAP[res.id];
+  if (cdwrAbbrev) {
+    const endpointUrl = `https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeseriesday/?abbrev=${cdwrAbbrev}&parameter=STORAGE&format=json`;
+    return {
+      codeTitle: `Colorado DWR: ${cdwrAbbrev}`,
+      endpointUrl,
+      endpointLabel: 'CDWR REST API',
+      notes: 'Colorado DWR HydroBase daily reservoir storage accounting.',
+      pythonCode: `import requests
+
+# Colorado DWR HydroBase REST API v2 — Daily Reservoir Storage
+url = "https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeseriesday/"
+params = {
+    "abbrev": "${cdwrAbbrev}",  # ${cleanName}
+    "parameter": "STORAGE",
+    "format": "json"
+}
+res = requests.get(url, params=params, timeout=10).json()
+latest = res["ResultList"][-1]
+print(f"${cleanName}: {float(latest['measValue']):,.0f} {latest['measUnit']} on {latest['measDate'][:10]}")`
+    };
+  }
+
+  return null;
+}
+
+function buildCdwrTunnelApiSpec(abbrev, displayName, notes) {
+  if (!abbrev) return null;
+  const cleanName = String(displayName || abbrev).replace(/["\\]/g, '');
+  const endpointUrl = `https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeserieshour/?abbrev=${encodeURIComponent(abbrev)}&format=json`;
+  return {
+    codeTitle: `Colorado DWR: ${abbrev}`,
+    endpointUrl,
+    endpointLabel: 'CDWR REST API',
+    notes: notes || 'Colorado DWR HydroBase hourly surface water / diversion telemetry.',
+    pythonCode: `import requests
+
+# Colorado DWR HydroBase REST API v2 — Hourly Discharge
+url = "https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeserieshour/"
+params = {
+    "abbrev": "${abbrev}",  # ${cleanName}
+    "format": "json"
+}
+res = requests.get(url, params=params, timeout=10).json()
+rows = [r for r in res["ResultList"] if r.get("parameter") == "DISCHRG"]
+latest = rows[-1]
+print(f"${cleanName}: {float(latest['measValue']):,.1f} cfs at {latest['measDate']}")`
+  };
+}
+
+function buildUsgsFlowApiSpec(siteId, displayName, { isDaily = false, codeTitle = '', notes = '' } = {}) {
+  if (!/^\d{8}$/.test(String(siteId || ''))) return null;
+  const cleanName = String(displayName || `USGS #${siteId}`).replace(/["\\]/g, '');
+  const svc = isDaily ? 'dv' : 'iv';
+  const endpointUrl = `https://waterservices.usgs.gov/nwis/${svc}/?sites=${siteId}&parameterCd=00060&format=json`;
+  return {
+    codeTitle: codeTitle || `USGS Gauge #${siteId}`,
+    endpointUrl,
+    endpointLabel: 'USGS REST API',
+    notes: notes || (isDaily ? 'USGS Daily Values (DV) discharge (parameter 00060, cfs).' : 'USGS Instantaneous Values (IV) discharge (parameter 00060, cfs).'),
+    pythonCode: `import requests
+
+# USGS NWIS ${isDaily ? 'Daily Values (DV)' : 'Instantaneous Values (IV)'} API
+url = "https://waterservices.usgs.gov/nwis/${svc}/"
+params = {
+    "sites": "${siteId}",  # ${cleanName}
+    "parameterCd": "00060",  # Streamflow discharge (cfs)
+    "format": "json"
+}
+res = requests.get(url, params=params, timeout=10).json()
+val = res["value"]["timeSeries"][0]["values"][0]["value"][-1]
+print(f"${cleanName}: {float(val['value']):,.0f} cfs at {val['dateTime']}")`
+  };
+}
+
+function buildDamApiSpec(d) {
+  if (!d || !d.id) return null;
+  const DAM_RES_MAP = {
+    glen_canyon_dam: { id: 'lake_powell', name: 'Lake Powell (Glen Canyon Dam)' },
+    flaming_gorge_dam: { id: 'flaming_gorge', name: 'Flaming Gorge Reservoir' },
+    navajo_dam: { id: 'navajo_reservoir', name: 'Navajo Reservoir' },
+    blue_mesa_dam: { id: 'blue_mesa', name: 'Blue Mesa Reservoir' },
+    granby_dam: { id: 'lake_granby', name: 'Lake Granby' },
+    dillon_dam: { id: 'dillon_reservoir', name: 'Dillon Reservoir' },
+    green_mountain_dam: { id: 'green_mountain', name: 'Green Mountain Reservoir' },
+    homestake_dam: { id: 'homestake_reservoir', name: 'Homestake Reservoir' }
+  };
+  if (d.id === 'hoover_dam' || d.id === 'davis_dam' || d.id === 'parker_dam') {
+    return buildUsbrHourlyApiSpec(d.id, d.name);
+  }
+  if (DAM_RES_MAP[d.id]) {
+    return buildReservoirApiSpec(DAM_RES_MAP[d.id]);
+  }
+  if (d.id === 'morelos_dam') {
+    return buildUsgsFlowApiSpec('09522000', 'Morelos Dam / NIB', {
+      isDaily: true,
+      codeTitle: 'USGS / CILA Border #09522000',
+      notes: '1944 Treaty delivery station above Morelos Dam (USGS #09522000).'
+    });
+  }
+  return null;
 }
 
 let cachedGeography = null;
@@ -1190,24 +1388,29 @@ function resolveStation(st) {
   }
   age = age != null ? Math.round(age * 10) / 10 : 999999;
   
+  const isMonthlyStation = st.id && ['09426650', '09522000'].includes(String(st.id));
+  const maxAllowedAge = isMonthlyStation ? 1440 : 336;
+
   let status = st.data_status;
   if (!status) {
     if (age <= 6) status = 'live';
     else if (age <= 72) status = 'daily';
-    else if (age <= 336) status = 'delayed';
+    else if (age <= maxAllowedAge) status = 'delayed';
     else status = 'offline';
+  } else if (isMonthlyStation && status === 'offline' && age <= 1440 && st.flow_cfs != null) {
+    status = 'delayed';
   }
   
   const rawFlow = st.flow_cfs;
   const isInvalidFlow = rawFlow == null || isNaN(rawFlow) || rawFlow < 0;
   
-  if (status === 'offline' || isInvalidFlow || age > 336) {
+  if (status === 'offline' || isInvalidFlow || age > maxAllowedAge) {
     return {
       flow_cfs: null,
       status: 'offline',
       timestamp: ts,
       age_hours: age,
-      source_label: 'Station Offline'
+      source_label: String(st.id) === '09424150' ? 'Discontinued (2022)' : 'Telemetry Offline'
     };
   }
   
@@ -2778,11 +2981,6 @@ function renderGeography(geo, riverNetwork, lakes, powellContours) {
         highlightSelectedReservoir(p.GNIS_NAME);
       }
 
-      const highlightBadge = `<div style="font-size:9.5px; font-weight:700; color:#0e7490; background:#cffafe; border:1px solid #a5f3fc; padding:2px 6px; border-radius:4px; display:inline-flex; align-items:center; gap:4px; margin-top:5px;">
-        <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#06b6d4;"></span>
-        Waterbody Isolated &amp; Highlighted
-      </div>`;
-
       const portal = getPortalInfo(matchRes || { name: name });
       if (matchRes) {
         const dataHtml = `
@@ -2809,57 +3007,14 @@ function renderGeography(geo, riverNetwork, lakes, powellContours) {
               ${matchedDam?.legal_priority ? `<strong>Legal Priority:</strong> ${matchedDam.legal_priority}<br>` : ''}
               ${matchedDam?.historical_note ? `<div style="margin-top:6px;padding:6px 8px;background:#f2ede2;border-left:3px solid #2b5c8f;font-size:10.5px;color:#3e3226;line-height:1.4;">${matchedDam.historical_note}</div>` : ''}
             </div>
-            ${highlightBadge}
             ${formatPortalHtml(portal, '#2b5c8f')}
           </div>
         `;
 
-        const isFrontRange = matchRes.category === 'front_range';
-        const cleanResName = matchRes.name.replace(/["\\]/g, '');
-        let endpointUrl = '';
-        let pyCode = '';
-        let notes = '';
-
-        if (isFrontRange) {
-          const resAbbrev = (matchRes.id || 'DILRESCO').toUpperCase();
-          endpointUrl = `https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeseriesday/?abbrev=${resAbbrev}&format=json`;
-          pyCode = `import requests
-
-# Colorado DWR HydroBase Storage Records
-url = "https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeseriesday/"
-params = {
-    "abbrev": "${resAbbrev}",  # ${cleanResName}
-    "format": "json"
-}
-res = requests.get(url, params=params, timeout=10).json()
-reading = res["ResultList"][0]
-print(f"${cleanResName}: {reading['measValue']} AF on {reading['measDate']}")`;
-          notes = "Colorado DWR daily reservoir storage accounting & dam records.";
-        } else {
-          const usgsGauge = matchRes.id === 'lake_powell' ? '09379900' : (matchRes.id === 'lake_mead' ? '09421000' : '09379900');
-          endpointUrl = `https://waterservices.usgs.gov/nwis/iv/?sites=${usgsGauge}&parameterCd=62614&format=json`;
-          pyCode = `import requests
-
-# USGS Lake Elevation & USBR HydroData Records
-url = "https://waterservices.usgs.gov/nwis/iv/"
-params = {
-    "sites": "${usgsGauge}",       # ${cleanResName}
-    "parameterCd": "62614",  # Elevation (ft NGVD 1929)
-    "format": "json"
-}
-res = requests.get(url, params=params, timeout=10).json()
-val = res["value"]["timeSeries"][0]["values"][0]["value"][-1]
-elev = float(val["value"])
-print(f"${cleanResName} Elevation: {elev:,.1f} ft")`;
-          notes = "USGS parameter 62614 = Lake water surface elevation. Synced with USBR storage curves.";
-        }
-
+        const apiSpec = buildReservoirApiSpec(matchRes);
         const popupHtml = formatTabbedPopup({
           dataHtml,
-          codeTitle: `${cleanResName}`,
-          endpointUrl,
-          pythonCode: pyCode,
-          notes
+          ...(apiSpec || {})
         });
         const popup = new maplibregl.Popup({ offset: 8 }).setHTML(popupHtml);
         showFeaturePopup(popup, e.lngLat);
@@ -2872,26 +3027,7 @@ print(f"${cleanResName} Elevation: {elev:,.1f} ft")`;
             ${formatPortalHtml(portal, '#2b5c8f')}
           </div>
         `;
-        const cleanName = name.replace(/["\\]/g, '');
-        const pyCode = `import requests
-
-# USGS National Hydrography Dataset (NHD) Feature Query
-url = "https://hydro.nationalmap.gov/arcgis/rest/services/nhd/MapServer/6/query"
-params = {
-    "where": "GNIS_NAME = '${cleanName}'",
-    "outFields": "GNIS_NAME,AREASQKM,ELEVATION",
-    "f": "json"
-}
-res = requests.get(url, params=params, timeout=10).json()
-print("NHD Features found:", len(res.get("features", [])))`;
-
-        const popupHtml = formatTabbedPopup({
-          dataHtml,
-          codeTitle: `${cleanName} (NHD)`,
-          endpointUrl: `https://hydro.nationalmap.gov/arcgis/rest/services/nhd/MapServer/6/query?where=GNIS_NAME='${encodeURIComponent(cleanName)}'&f=json`,
-          pythonCode: pyCode,
-          notes: "USGS National Hydrography Dataset polygon geometry."
-        });
+        const popupHtml = formatTabbedPopup({ dataHtml });
         const popup = new maplibregl.Popup({ offset: 8 }).setHTML(popupHtml);
         showFeaturePopup(popup, e.lngLat);
       }
@@ -3690,81 +3826,32 @@ print("NHD Features found:", len(res.get("features", [])))`;
     `;
 
     const cleanReachName = (p.name || 'River Reach').replace(/["\\]/g, '');
-    let pyCode = '';
-    let endpointUrl = '';
-    let notes = '';
+    let apiSpec = null;
 
     if (isCanalAlimentador || gaugeId === "09522000") {
-      endpointUrl = `https://waterservices.usgs.gov/nwis/dv/?sites=09522000&parameterCd=00060&format=json`;
-      pyCode = `import requests
-
-# USGS / CILA Border Station #09522000 (Morelos Dam Delivery)
-url = "https://waterservices.usgs.gov/nwis/dv/"
-params = {
-    "sites": "09522000",       # Colorado River at NIB above Morelos Dam
-    "parameterCd": "00060",  # Canal Diversion / Treaty Flow (cfs)
-    "format": "json"
-}
-res = requests.get(url, params=params, timeout=10).json()
-val = res["value"]["timeSeries"][0]["values"][0]["value"][-1]
-flow_cfs = float(val["value"])
-print(f"Canal Diversion: {flow_cfs:,.0f} cfs at {val['dateTime']}")`;
-      notes = "Verified at border via USGS #09522000 above Morelos Dam.";
+      apiSpec = buildUsgsFlowApiSpec('09522000', 'Colorado River at NIB above Morelos Dam', {
+        isDaily: true,
+        codeTitle: 'USGS / CILA Border #09522000',
+        notes: 'Verified at border via USGS #09522000 above Morelos Dam.'
+      });
     } else if (gaugeId) {
       const isUsbrReach = gaugeId.startsWith('USBR') || (p.name && p.name.includes('USBR'));
       const isCdssReach = gaugeId.endsWith('CO') || gaugeId.endsWith('TUNCO') || gaugeId.endsWith('DIVCO');
       if (isUsbrReach) {
-        endpointUrl = "https://www.usbr.gov/lc/region/g4000/riverops/hourly7.html";
-        pyCode = `import requests
-
-# USBR Lower Colorado River Operations Teletype
-url = "https://www.usbr.gov/lc/region/g4000/riverops/hourly7.html"
-res = requests.get(url, timeout=10)
-# Managed hydroelectric release parsed from USBR RiverOps teletype
-print(f"${cleanReachName}: Hydroelectric release from USBR Lower Colorado Operations")`;
-        notes = "Managed dam release parsed from USBR Lower Colorado River Operations hourly teletype.";
+        apiSpec = buildUsbrHourlyApiSpec(gaugeId, cleanReachName);
       } else if (isCdssReach) {
-        endpointUrl = `https://dwr.state.co.us/Tools/Stations?station=${encodeURIComponent(gaugeId)}`;
-        pyCode = `import requests
-
-# Colorado DWR / CDSS Surface Water REST API
-url = "https://dwr.state.co.us/Rest/GET/api/v2/surfacewater/surfacewatertsday/"
-params = {
-    "format": "json",
-    "stationNum": "${gaugeId}"
-}
-res = requests.get(url, params=params, timeout=10).json()`;
-        notes = "Colorado Division of Water Resources instantaneous surface water telemetry.";
+        apiSpec = buildCdwrTunnelApiSpec(gaugeId, cleanReachName);
       } else {
-        endpointUrl = `https://waterservices.usgs.gov/nwis/iv/?sites=${gaugeId}&parameterCd=00060&format=json`;
-        pyCode = `import requests
-
-# USGS NWIS Instantaneous Values (IV) API
-url = "https://waterservices.usgs.gov/nwis/iv/"
-params = {
-    "sites": "${gaugeId}",       # ${cleanReachName}
-    "parameterCd": "00060",  # Streamflow discharge (cfs)
-    "format": "json"
-}
-res = requests.get(url, params=params, timeout=10).json()
-val = res["value"]["timeSeries"][0]["values"][0]["value"][-1]
-flow_cfs = float(val["value"])
-print(f"${cleanReachName}: {flow_cfs:,.0f} cfs at {val['dateTime']}")`;
-        notes = `Discharge indexed from USGS gage #${gaugeId}.`;
+        apiSpec = buildUsgsFlowApiSpec(gaugeId, cleanReachName, {
+          codeTitle: `USGS Reach #${gaugeId}`,
+          notes: `Discharge indexed from USGS gage #${gaugeId}.`
+        });
       }
-    } else {
-      pyCode = `# Reach Hydrology: Mass-Balance Network Routing
-reach_flow_cfs = ${Number(p.flow_cfs || 0)}
-print(f"${cleanReachName} Calculated Flow: {reach_flow_cfs:,.0f} cfs")`;
-      notes = "Calculated via conservation-of-mass river routing across confluences.";
     }
 
     const popupHtml = formatTabbedPopup({
       dataHtml,
-      codeTitle: gaugeId ? (gaugeId.startsWith('USBR') ? `USBR Reach #${gaugeId}` : (gaugeId.endsWith('CO') ? `CDSS Reach #${gaugeId}` : `USGS Reach #${gaugeId}`)) : cleanReachName,
-      endpointUrl,
-      pythonCode: pyCode,
-      notes
+      ...(apiSpec || {})
     });
     const popup = new maplibregl.Popup({ offset: 10 }).setHTML(popupHtml);
     showFeaturePopup(popup, lngLat);
@@ -4027,26 +4114,11 @@ print(f"${cleanReachName} Calculated Flow: {reach_flow_cfs:,.0f} cfs")`;
           </div>
         `;
         const cleanTName = (t.name || '').replace(/["\\]/g, '');
-        const endpoint = `https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeserieshour/?abbrev=${t.id}&format=json`;
-        const pyCode = `import requests
-
-# Colorado DWR HydroBase REST API v2
-url = "https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeserieshour/"
-params = {
-    "abbrev": "${t.id}",  # ${cleanTName}
-    "format": "json"
-}
-res = requests.get(url, params=params, timeout=10).json()
-reading = res["ResultList"][0]
-flow_cfs = float(reading["measValue"])
-print(f"${cleanTName}: {flow_cfs:,.1f} cfs")`;
+        const apiSpec = buildCdwrTunnelApiSpec(t.id, cleanTName, 'Trans-mountain diversion monitoring under Continental Divide.');
 
         const popupHtml = formatTabbedPopup({
           dataHtml,
-          codeTitle: `Colorado DWR: ${t.id}`,
-          endpointUrl: endpoint,
-          pythonCode: pyCode,
-          notes: "Trans-mountain diversion monitoring under Continental Divide."
+          ...(apiSpec || {})
         });
         const popup = new maplibregl.Popup({ offset: 8 }).setHTML(popupHtml);
         showFeaturePopup(popup, e.lngLat);
@@ -4234,32 +4306,17 @@ print(f"${cleanTName}: {flow_cfs:,.1f} cfs")`;
         `;
         const cleanCName = (t.name || '').replace(/["\\]/g, '');
         const isDvStation = t.id === "09522000" || t.id === "09426650" || t.id === "09424150";
-        const endpoint = isDvStation 
-          ? `https://waterservices.usgs.gov/nwis/dv/?sites=${t.id}&parameterCd=00060&format=json`
-          : `https://waterservices.usgs.gov/nwis/iv/?sites=${t.id}&parameterCd=00060&format=json`;
-        const pyCode = `import requests
-
-# ${t.id === "09522000" ? "USGS / CILA Border Station" : "USGS Canal Monitoring Station"} #${t.id}
-url = "${isDvStation ? "https://waterservices.usgs.gov/nwis/dv/" : "https://waterservices.usgs.gov/nwis/iv/"}"
-params = {
-    "sites": "${t.id}",       # ${cleanCName}
-    "parameterCd": "00060",  # Canal Flow (cfs)
-    "format": "json"
-}
-res = requests.get(url, params=params, timeout=10).json()
-try:
-    val = res["value"]["timeSeries"][0]["values"][0]["value"][-1]
-    flow_cfs = float(val["value"])
-    print(f"${cleanCName}: {flow_cfs:,.0f} cfs at {val['dateTime']}")
-except Exception as e:
-    print(f"${cleanCName}: Station offline or inactive ({e})")`;
+        const apiSpec = isOffline
+          ? null
+          : buildUsgsFlowApiSpec(t.id, cleanCName, {
+              isDaily: isDvStation,
+              codeTitle: t.id === "09522000" ? `USGS / CILA Border Station #${t.id}` : `USGS Canal #${t.id}`,
+              notes: t.id === "09522000" ? "1944 Treaty international diversion monitoring at Morelos Dam." : "Major conveyance canal monitoring."
+            });
 
         const popupHtml = formatTabbedPopup({
           dataHtml,
-          codeTitle: t.id === "09522000" ? `USGS / CILA Border Station #${t.id}` : `USGS Canal #${t.id}`,
-          endpointUrl: endpoint,
-          pythonCode: pyCode,
-          notes: t.id === "09522000" ? "1944 Treaty international diversion monitoring at Morelos Dam." : (isOffline ? "Gage discontinued by USGS NWIS in Oct 2022." : "Major conveyance canal monitoring.")
+          ...(apiSpec || {})
         });
         const popup = new maplibregl.Popup({ offset: 8 }).setHTML(popupHtml);
         showFeaturePopup(popup, e.lngLat);
@@ -4347,27 +4404,10 @@ except Exception as e:
           ${formatPortalHtml(portal, '#2b5c8f')}
         </div>
       `;
-      const cleanDamName = (d.name || 'Dam').replace(/["\\]/g, '');
-      const cleanImpounds = (d.impounds || '').replace(/["\\]/g, '');
-      const pyCode = `import requests
-
-# USBR National Dam Inventory & River Operations
-# Facility: ${cleanDamName} (Impounds ${cleanImpounds})
-# Operator: ${d.operator}
-url = "https://waterservices.usgs.gov/nwis/iv/"
-params = {
-    "siteStatus": "all",
-    "parameterCd": "00060",  # Tailwater release discharge (cfs)
-    "format": "json"
-}
-# Operations synchronize daily release schedules with reservoir storage curves`;
-
+      const apiSpec = buildDamApiSpec(d);
       const popupHtml = formatTabbedPopup({
         dataHtml,
-        codeTitle: `${cleanDamName}`,
-        endpointUrl: portal?.url || 'https://www.usbr.gov/lc/region/g4000/riverops/hourly7.html',
-        pythonCode: pyCode,
-        notes: `Federal dam operations & tailwater release monitoring. Built ${d.year}.`
+        ...(apiSpec || {})
       });
       const popup = new maplibregl.Popup({ offset: 14 }).setHTML(popupHtml);
       showFeaturePopup(popup, e.lngLat);
@@ -4557,9 +4597,9 @@ function formatGaugePopup(s) {
   }
 
   const typeBadge = isUsbr
-    ? '<span style="font-size:9.5px; font-weight:700; color:#065f46; background:#d1fae5; border:1px solid #a7f3d0; padding:1px 5px; border-radius:2px;">USBR Dam Release</span>'
+    ? '<span style="font-size:9.5px; font-weight:700; color:#2f5744; background:#eaece6; border:1px solid #9cb0a4; padding:1px 5px; border-radius:2px;">USBR Dam Release</span>'
     : (isCdss
-        ? '<span style="font-size:9.5px; font-weight:700; color:#9a3412; background:#ffedd5; border:1px solid #fed7aa; padding:1px 5px; border-radius:2px;">CDSS Diversion Tunnel</span>'
+        ? '<span style="font-size:9.5px; font-weight:700; color:#8a4b1f; background:#f2ede2; border:1px solid #cfc8ba; padding:1px 5px; border-radius:2px;">CDSS Diversion Tunnel</span>'
         : '<span style="font-size:9.5px; font-weight:700; color:#2b5c8f; background:#ebe4d6; padding:1px 5px; border-radius:2px;">USGS Gage</span>');
 
   const dataHtml = `
@@ -4580,81 +4620,32 @@ function formatGaugePopup(s) {
         <strong style="color:#0f172a;">Shoshone Power Plant Water Right:</strong> Benchmarks the non-consumptive <strong>1902 call (1,250 cfs senior / 1,408 cfs total)</strong> in Glenwood Canyon, regulating upstream Front Range trans-mountain tunnel diversions.
       </div>` : ''}
       <div style="font-size:11px; color:#4f463a; line-height:1.45;">
-        <strong>Station ID:</strong> <a href="${portalUrl}" target="_blank" rel="noopener" style="color:#2b5c8f; text-decoration:none; font-weight:600;">#${s.id} ↗</a><br>
+        <strong>Station ID:</strong> <a href="${portalUrl}" target="_blank" rel="noopener"${portal?.name ? ` title="${portal.name.replace(/"/g, '&quot;')}"` : ''} style="color:#2b5c8f; text-decoration:none; font-weight:600;">#${s.id} ↗</a><br>
         <strong>Measured:</strong> ${formatTimestamp(s.timestamp)}
       </div>
-      ${portal ? `
-      <div style="margin-top:6px; padding-top:4px; border-top:1px solid #cfc8ba; font-size:10.5px;">
-        <span style="color:#5c5346;">Authoritative Source:</span> 
-        <a href="${portalUrl}" target="_blank" rel="noopener" style="color:#2b5c8f; text-decoration:none; font-weight:600;">${portal.name} ↗</a>
-      </div>` : ''}
     </div>
   `;
 
   const cleanName = (s.name || '').replace(/["\\]/g, '');
-  let pyCode = '';
-  let codeTitle = '';
-  let endpointUrl = '';
-  let notes = '';
+  let apiSpec = null;
 
   if (isUsbr) {
-    codeTitle = `USBR Operations #${s.id}`;
-    endpointUrl = "https://www.usbr.gov/lc/region/g4000/riverops/hourly7.html";
-    pyCode = `import requests
-
-# USBR Lower Colorado River Operations Teletype
-url = "https://www.usbr.gov/lc/region/g4000/riverops/hourly7.html"
-res = requests.get(url, timeout=10)
-# Managed hydroelectric release parsed hourly from the USBR RiverOps teletype table.
-print(f"Station: ${cleanName}")
-print(f"Authoritative Portal: {url}")`;
-    notes = "Hourly hydroelectric releases parsed from USBR Lower Colorado River Operations teletype table.";
+    apiSpec = buildUsbrHourlyApiSpec(s.id || s.name, cleanName);
   } else if (isCdss) {
-    codeTitle = `CDSS Station #${s.id}`;
-    endpointUrl = `https://dwr.state.co.us/Tools/Stations?station=${encodeURIComponent(s.id)}`;
-    pyCode = `import requests
-
-# Colorado DWR / CDSS Surface Water REST API
-url = "https://dwr.state.co.us/Rest/GET/api/v2/surfacewater/surfacewatertsday/"
-params = {
-    "format": "json",
-    "stationNum": "${s.id}"
-}
-res = requests.get(url, params=params, timeout=10).json()`;
-    notes = "Colorado Division of Water Resources instantaneous surface water telemetry.";
+    apiSpec = buildCdwrTunnelApiSpec(s.id, cleanName);
   } else {
-    codeTitle = `USGS Gauge #${s.id}`;
-    endpointUrl = `https://waterservices.usgs.gov/nwis/iv/?sites=${s.id}&parameterCd=00060&format=json`;
-    pyCode = `import requests
-
-# USGS Instantaneous Values (IV) REST API
-url = "https://waterservices.usgs.gov/nwis/iv/"
-params = {
-    "sites": "${s.id}",       # ${cleanName}
-    "parameterCd": "00060",  # Streamflow (cfs)
-    "siteStatus": "all",
-    "format": "json"
-}
-res = requests.get(url, params=params, timeout=10).json()
-val = res["value"]["timeSeries"][0]["values"][0]["value"][-1]
-flow_cfs = float(val["value"])
-print(f"Discharge: {flow_cfs:,.0f} cfs at {val['dateTime']}")`;
-    notes = "Parameter 00060 = Discharge (cfs). Data refreshed every 15–60 minutes.";
+    apiSpec = buildUsgsFlowApiSpec(s.id, cleanName);
   }
 
   return formatTabbedPopup({
     dataHtml,
-    codeTitle,
-    endpointUrl,
-    pythonCode: pyCode,
-    notes
+    ...(apiSpec || {})
   });
 }
 
 function formatReservoirStationPopup(r) {
   const cleanResName = (r.name || 'Reservoir').replace(/["\\]/g, '');
   const portal = getPortalInfo(r);
-  const portalLink = portal ? `<a href="${portal.url}" target="_blank" rel="noopener" style="color:#2b5c8f; text-decoration:none; font-weight:700; margin-left:4px;">↗</a>` : '';
   const isFrontRange = r.category === 'front_range' || (r.id && ['lake_granby', 'dillon_reservoir', 'green_mountain', 'homestake_reservoir'].includes(r.id));
   const capacityPct = (r.capacity_pct !== undefined && r.capacity_pct !== null) ? r.capacity_pct : Math.round(((r.storage_af || 0) / (r.capacity_af || 1)) * 100);
   const elevText = r.elevation_ft ? `${Number(r.elevation_ft).toLocaleString()} ft` : 'USBR Records';
@@ -4663,10 +4654,10 @@ function formatReservoirStationPopup(r) {
 
   const dataHtml = `
     <div style="padding: 2px;">
-      <span style="font-size:10px; font-weight:700; color:#dc2626; background:#fee2e2; border:1px solid #fecaca; padding:2px 6px; border-radius:4px; display:inline-block; margin-bottom:4px;">
-        Major Storage Reservoir Station
+      <span style="font-size:10px; font-weight:700; color:#2b5c8f; background:#ebe4d6; border:1px solid #cfc8ba; padding:2px 6px; border-radius:2px; display:inline-block; margin-bottom:4px;">
+        Major Storage Reservoir
       </span>
-      <strong style="font-size:13.5px; color:#0f172a; display:block;">${cleanResName} ${portalLink}</strong>
+      <strong style="font-size:13.5px; color:#0f172a; display:block;">${cleanResName}</strong>
       <div style="font-size:11px; color:#5c5346; font-weight:600; margin-bottom:6px;">${r.river || 'Colorado River Basin'} &bull; ${r.operator || (isFrontRange ? 'Denver Water / Northern' : 'USBR')}</div>
       <div style="margin: 6px 0; padding: 6px 8px; background:#f2ede2; border-radius:6px; border:1px solid #cfc8ba;">
         <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
@@ -4684,34 +4675,14 @@ function formatReservoirStationPopup(r) {
         <strong>Operational Role:</strong> ${r.role || 'System Storage &amp; Regulation'}<br>
         <strong>Last Synced:</strong> ${formatTimestamp(r.timestamp)}
       </div>
-      ${formatPortalHtml(portal, '#dc2626')}
+      ${formatPortalHtml(portal, '#2b5c8f')}
     </div>
   `;
 
-  const endpointUrl = isFrontRange
-    ? `https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeseriesday/?abbrev=${r.id.toUpperCase()}&format=json`
-    : `https://www.usbr.gov/lc/region/g4000/riverops/hourly7.html`;
-
-  const pyCode = isFrontRange ? `import requests
-
-# Colorado DWR HydroBase Daily Reservoir Records
-url = "https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeseriesday/"
-params = {"abbrev": "${r.id.toUpperCase()}", "format": "json"}
-res = requests.get(url, params=params, timeout=10).json()
-reading = res["ResultList"][0]
-print(f"${cleanResName} Elevation: {reading['measValue']} ft")` : `import requests
-
-# USBR Lower/Upper Colorado River Operations
-# Station: ${cleanResName} (#${r.id})
-# Elevation: ${elevText}
-print(f"${cleanResName} Storage: ${storageAfText} (${capacityPct}% Full)")`;
-
+  const apiSpec = buildReservoirApiSpec(r);
   return formatTabbedPopup({
     dataHtml,
-    codeTitle: `${cleanResName} Records`,
-    endpointUrl,
-    pythonCode: pyCode,
-    notes: "Official storage reservoir records. Water surface elevation converted to volume via USBR/CDSS elevation-area-capacity curves."
+    ...(apiSpec || {})
   });
 }
 
@@ -4865,42 +4836,22 @@ function renderMetrics(metrics) {
       </div>
     `;
 
-    const endpoint = isFrontRange 
-      ? `https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeserieshour/?abbrev=${t.id}&format=json`
-      : `https://waterservices.usgs.gov/nwis/iv/?sites=${t.id}&parameterCd=00060&format=json`;
-
     const cleanTName = t.name.replace(/["\\]/g, '');
-    const pyCode = isFrontRange ? `import requests
-
-# Colorado DWR HydroBase REST API v2
-url = "https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeserieshour/"
-params = {
-    "abbrev": "${t.id}",  # ${cleanTName}
-    "format": "json"
-}
-res = requests.get(url, params=params, timeout=10).json()
-reading = res["ResultList"][0]
-flow_cfs = float(reading["measValue"])
-print(f"${cleanTName}: {flow_cfs:,.1f} cfs")` : `import requests
-
-# USGS Canal Monitoring Station #${t.id}
-url = "https://waterservices.usgs.gov/nwis/iv/"
-params = {
-    "sites": "${t.id}",       # ${cleanTName}
-    "parameterCd": "00060",  # Canal Flow (cfs)
-    "format": "json"
-}
-res = requests.get(url, params=params, timeout=10).json()
-val = res["value"]["timeSeries"][0]["values"][0]["value"][-1]
-flow_cfs = float(val["value"])
-print(f"${cleanTName}: {flow_cfs:,.0f} cfs")`;
+    const isDvCanal = t.id === "09522000" || t.id === "09426650" || t.id === "09424150";
+    const isCanalOffline = t.data_status === 'offline' || t.status === 'offline' || t.flow_cfs == null;
+    const apiSpec = isFrontRange
+      ? buildCdwrTunnelApiSpec(t.id, cleanTName, 'Trans-mountain diversion monitoring under Continental Divide.')
+      : (isCanalOffline
+          ? null
+          : buildUsgsFlowApiSpec(t.id, cleanTName, {
+              isDaily: isDvCanal,
+              codeTitle: t.id === "09522000" ? `USGS / CILA Border Station #${t.id}` : `USGS Canal #${t.id}`,
+              notes: 'Major conveyance canal monitoring.'
+            }));
 
     const popupHtml = formatTabbedPopup({
       dataHtml,
-      codeTitle: isFrontRange ? `Colorado DWR: ${t.id}` : `USGS Canal #${t.id}`,
-      endpointUrl: endpoint,
-      pythonCode: pyCode,
-      notes: isFrontRange ? "Trans-mountain diversion monitoring under Continental Divide." : "Major conveyance canal monitoring."
+      ...(apiSpec || {})
     });
 
     const popup = new maplibregl.Popup({ offset: 12 }).setHTML(popupHtml);
@@ -5137,11 +5088,11 @@ print(f"${cleanTName}: {flow_cfs:,.0f} cfs")`;
 
       if (g.station_type === 'reservoir') {
         headerKicker = 'STORAGE RESERVOIR STATION';
-        kickerBg = '#dc2626';
+        kickerBg = '#2b5c8f';
         metricRow = `
-          <div style="font-size:15px; font-weight:800; color:#dc2626; font-variant-numeric:tabular-nums; margin:3px 0;">
+          <div style="font-size:15px; font-weight:800; color:#2b5c8f; font-variant-numeric:tabular-nums; margin:3px 0;">
             ${g.capacity_pct != null ? g.capacity_pct + '% Full' : ''} 
-            <span style="font-size:10.5px; font-weight:600; color:#64748b;">(${g.storage_af ? Math.round(Number(g.storage_af)).toLocaleString() + ' AF' : ''})</span>
+            <span style="font-size:10.5px; font-weight:600; color:#5c5346;">(${g.storage_af ? Math.round(Number(g.storage_af)).toLocaleString() + ' AF' : ''})</span>
           </div>
         `;
       } else if (g.station_type === 'diversion_tunnel') {
@@ -5240,16 +5191,29 @@ function updateSidebar(metrics) {
 
   const flowChartElem = document.getElementById("flow-dest-chart");
   if (flowChartElem) {
+    const formatShortMonthDay = (ts) => {
+      if (!ts) return '';
+      const d = new Date(ts);
+      if (isNaN(d.getTime())) return '';
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+    };
+    const delayedTag = (obj) => {
+      if (!obj || obj.data_status !== 'delayed') return null;
+      const md = formatShortMonthDay(obj.timestamp);
+      return md ? `Monthly · ${md}` : 'Delayed';
+    };
     const validFlows = [tunnelsExport, aacFlow, craFlow, capFlow, cacFlow, leesFlow].filter(v => v != null && v > 0);
     const maxFlow = Math.max(...validFlows, 1000);
     const makeBar = (name, flow, color, label1, label2, center, zoomLevel, meta, conduitType, conduitId, statusLabel = null) => {
       const isOffline = flow == null;
+      const isDiscontinued = conduitId === '09424150';
       const pct = isOffline ? 0 : Math.max(2, (flow / maxFlow) * 100);
       const portal = getPortalInfo(meta || { name: name });
       const portalLink = portal ? `<a href="${portal.url}" target="_blank" rel="noopener" title="Open official ${portal.name}" onclick="event.stopPropagation();" style="margin-left:6px; color:${color}; text-decoration:none; font-size:12px; font-weight:800;">↗</a>` : '';
+      const offlineText = isDiscontinued ? 'Discontinued (2022)' : 'Telemetry Offline';
       const valDisplay = isOffline 
-        ? `<span class="flow-bar-val" style="color: #94a3b8; font-size: 11px; font-weight: 700;">Offline (Discontinued)</span>`
-        : `<span class="flow-bar-val" style="color: ${color}">${Math.round(flow).toLocaleString()} cfs ${statusLabel ? `<span style="font-size:10px; font-weight:600; color:#b45309;">(${statusLabel})</span>` : ''}</span>`;
+        ? `<span class="flow-bar-val" style="color: #64748b; font-size: 11px; font-weight: 700;">${offlineText}</span>`
+        : `<span class="flow-bar-val" style="color: ${color}">${Math.round(flow).toLocaleString()} cfs ${statusLabel ? `<span style="font-size:10px; font-weight:600; color:#8a4b1f;">(${statusLabel})</span>` : ''}</span>`;
       return `
         <div class="flow-bar-row interactive" onclick="handleConduitCardClick('${conduitType}', '${conduitId}', [${center[0]}, ${center[1]}], ${zoomLevel || 9})" title="Click to view and highlight ${name}">
           <div class="flow-bar-labels">
@@ -5267,8 +5231,8 @@ function updateSidebar(metrics) {
       <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 8px;">
         ${makeBar("Lees Ferry", leesFlow, "var(--color-primary)", "Upper \u2192 Lower Basin", "", [-111.587, 36.865], 9.5, { id: "09380000", name: "Lees Ferry" }, 'reach', 'lees_ferry')}
         ${makeBar("All-American Canal", aacFlow, "var(--color-emerald)", "Imperial Valley Ag", "", [-114.467, 32.883], 9, { id: "09527700", name: "All-American Canal" }, 'canal', '09527700')}
-        ${makeBar("Canal Alimentador Central", cacFlow, "var(--color-emerald)", "1944 Treaty (Mexico)", "", [-114.729, 32.705], 9, { id: "09522000", name: "Canal Alimentador Central" }, 'canal', '09522000', cacObj?.data_status === 'delayed' ? 'Delayed' : null)}
-        ${makeBar("Central AZ Project", capFlow, "var(--color-emerald)", "AZ Municipal/Ag", "", [-114.111, 34.289], 9, { id: "09426650", name: "Central Arizona Project" }, 'canal', '09426650', capObj?.data_status === 'delayed' ? 'Delayed' : null)}
+        ${makeBar("Canal Alimentador Central", cacFlow, "var(--color-emerald)", "1944 Treaty (Mexico)", "", [-114.729, 32.705], 9, { id: "09522000", name: "Canal Alimentador Central" }, 'canal', '09522000', delayedTag(cacObj))}
+        ${makeBar("Central AZ Project", capFlow, "var(--color-emerald)", "AZ Municipal/Ag", "", [-114.111, 34.289], 9, { id: "09426650", name: "Central Arizona Project" }, 'canal', '09426650', delayedTag(capObj))}
         ${makeBar("CO River Aqueduct", craFlow, "var(--color-emerald)", "Urban Export", "", [-114.162, 34.314], 9, { id: "09424150", name: "Colorado River Aqueduct" }, 'canal', '09424150')}
         ${makeBar("Front Range Tunnels", tunnelsExport, "var(--color-primary)", "Divide Export", "", [-105.7, 39.8], 8.5, { id: "ROBTUNCO", name: "Front Range Tunnels" }, 'tunnel', 'ROBTUNCO')}
       </div>
@@ -5559,7 +5523,7 @@ function populateTelemetryTable(metrics) {
       let b = "Upper Basin";
       if (s.id === "09380000") b = "Upper/Lower Divide";
       else if (["09402000", "09415000", "09426000", "09429100", "09474000", "09520500", "09498500", "09511300"].includes(s.id)) b = "Lower Basin";
-      const readingStr = s.flow_cfs != null ? `${s.flow_cfs.toLocaleString()} cfs` : 'Offline (Discontinued)';
+      const readingStr = s.flow_cfs != null ? `${s.flow_cfs.toLocaleString()} cfs` : 'Telemetry Offline';
       return {
         id: s.id,
         name: s.name,
@@ -5583,17 +5547,25 @@ function populateTelemetryTable(metrics) {
       lat: t.lat,
       lon: t.lon
     })),
-    ...(metrics.canals || []).map(c => ({
-      id: c.id,
-      name: c.name,
-      type: "diversion_canal",
-      basin: "Lower Basin Conveyance",
-      reading: c.flow_cfs != null ? `${c.flow_cfs.toLocaleString()} cfs` : "Offline (Discontinued)",
-      notes: c.destination,
-      timestamp: c.timestamp,
-      lat: c.lat,
-      lon: c.lon
-    })),
+    ...(metrics.canals || []).map(c => {
+      const md = c.timestamp && !isNaN(new Date(c.timestamp).getTime())
+        ? new Date(c.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })
+        : '';
+      const cReading = c.flow_cfs != null
+        ? (c.data_status === 'delayed' && md ? `${c.flow_cfs.toLocaleString()} cfs (Monthly · ${md})` : `${c.flow_cfs.toLocaleString()} cfs`)
+        : (c.id === '09424150' ? 'Discontinued (2022)' : 'Telemetry Offline');
+      return {
+        id: c.id,
+        name: c.name,
+        type: "diversion_canal",
+        basin: "Lower Basin Conveyance",
+        reading: cReading,
+        notes: c.destination,
+        timestamp: c.timestamp,
+        lat: c.lat,
+        lon: c.lon
+      };
+    }),
     ...[...(metrics.reservoirs || [])].sort((a, b) => {
       const catA = a.category === 'front_range' ? 1 : 0;
       const catB = b.category === 'front_range' ? 1 : 0;
@@ -5943,32 +5915,17 @@ function formatCanalPopupHtml(t) {
   `;
   const cleanCName = (t.name || '').replace(/["\\]/g, '');
   const isDvStation = t.id === "09522000" || t.id === "09426650" || t.id === "09424150";
-  const endpoint = isDvStation 
-    ? `https://waterservices.usgs.gov/nwis/dv/?sites=${t.id}&parameterCd=00060&format=json`
-    : `https://waterservices.usgs.gov/nwis/iv/?sites=${t.id}&parameterCd=00060&format=json`;
-  const pyCode = `import requests
-
-# ${t.id === "09522000" ? "USGS / CILA Border Station" : "USGS Canal Monitoring Station"} #${t.id}
-url = "${isDvStation ? "https://waterservices.usgs.gov/nwis/dv/" : "https://waterservices.usgs.gov/nwis/iv/"}"
-params = {
-    "sites": "${t.id}",       # ${cleanCName}
-    "parameterCd": "00060",  # Canal Flow (cfs)
-    "format": "json"
-}
-res = requests.get(url, params=params, timeout=10).json()
-try:
-    val = res["value"]["timeSeries"][0]["values"][0]["value"][-1]
-    flow_cfs = float(val["value"])
-    print(f"${cleanCName}: {flow_cfs:,.0f} cfs at {val['dateTime']}")
-except Exception as e:
-    print(f"${cleanCName}: Station offline or inactive ({e})")`;
+  const apiSpec = isOffline
+    ? null
+    : buildUsgsFlowApiSpec(t.id, cleanCName, {
+        isDaily: isDvStation,
+        codeTitle: t.id === "09522000" ? `USGS / CILA Border Station #${t.id}` : `USGS Canal #${t.id}`,
+        notes: t.id === "09522000" ? "1944 Treaty international diversion monitoring at Morelos Dam." : "Major conveyance canal monitoring."
+      });
 
   return formatTabbedPopup({
     dataHtml,
-    codeTitle: t.id === "09522000" ? `USGS / CILA Border Station #${t.id}` : `USGS Canal #${t.id}`,
-    endpointUrl: endpoint,
-    pythonCode: pyCode,
-    notes: t.id === "09522000" ? "1944 Treaty international diversion monitoring at Morelos Dam." : (isOffline ? "Gage discontinued by USGS NWIS in Oct 2022." : "Major conveyance canal monitoring.")
+    ...(apiSpec || {})
   });
 }
 
@@ -5997,52 +5954,10 @@ function formatReservoirDetailPopup(matchRes, cleanName) {
       ${formatPortalHtml(portal, '#2b5c8f')}
     </div>
   `;
-  const isFrontRange = matchRes.category === 'front_range';
-  const cleanResName = matchRes.name.replace(/["\\]/g, '');
-  let endpointUrl = '';
-  let pyCode = '';
-  let notes = '';
-
-  if (isFrontRange) {
-    const resAbbrev = (matchRes.id || 'DILRESCO').toUpperCase();
-    endpointUrl = `https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeseriesday/?abbrev=${resAbbrev}&format=json`;
-    pyCode = `import requests
-
-# Colorado DWR HydroBase Storage Records
-url = "https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeseriesday/"
-params = {
-    "abbrev": "${resAbbrev}",  # ${cleanResName}
-    "format": "json"
-}
-res = requests.get(url, params=params, timeout=10).json()
-reading = res["ResultList"][0]
-print(f"${cleanResName}: {reading['measValue']} AF on {reading['measDate']}")`;
-    notes = "Colorado DWR daily reservoir storage accounting & dam records.";
-  } else {
-    const usgsGauge = matchRes.id === 'lake_powell' ? '09379900' : (matchRes.id === 'lake_mead' ? '09421000' : '09379900');
-    endpointUrl = `https://waterservices.usgs.gov/nwis/iv/?sites=${usgsGauge}&parameterCd=62614&format=json`;
-    pyCode = `import requests
-
-# USGS Lake Elevation & USBR HydroData Records
-url = "https://waterservices.usgs.gov/nwis/iv/"
-params = {
-    "sites": "${usgsGauge}",       # ${cleanResName}
-    "parameterCd": "62614",  # Elevation (ft NGVD 1929)
-    "format": "json"
-}
-res = requests.get(url, params=params, timeout=10).json()
-val = res["value"]["timeSeries"][0]["values"][0]["value"][-1]
-elev = float(val["value"])
-print(f"${cleanResName} Elevation: {elev:,.1f} ft")`;
-    notes = "USGS parameter 62614 = Lake water surface elevation. Synced with USBR storage curves.";
-  }
-
+  const apiSpec = buildReservoirApiSpec(matchRes);
   return formatTabbedPopup({
     dataHtml,
-    codeTitle: `${cleanResName}`,
-    endpointUrl,
-    pythonCode: pyCode,
-    notes
+    ...(apiSpec || {})
   });
 }
 

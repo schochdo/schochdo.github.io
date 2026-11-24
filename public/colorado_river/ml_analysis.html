@@ -224,7 +224,7 @@
   <!-- Compact Standard Header -->
   <header class="bg-[#f5f2eb] border-b border-stone-300 px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 box-border z-20">
     <div>
-      <h1 class="text-lg md:text-xl font-black text-slate-900 tracking-tight leading-none">Tributaries &amp; Deficit</h1>
+      <h1 class="text-lg md:text-xl font-black text-slate-900 tracking-tight leading-none">Tributary Hydrology</h1>
     </div>
 
     <!-- Compact Regime Key & Direct Selection Hint (Top Two Charts) -->
@@ -294,45 +294,8 @@
       </div>
     </section>
 
-    <!-- CARD 3: NATURAL FLOW VS. COMPACT PROMISES (1922-2026) -->
-    <section class="dashboard-card">
-      <div class="card-header-row">
-        <h2 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-          <span class="w-2 h-2 rounded-full bg-[#1e293b]"></span>
-          Natural Flow vs. Compact Promises (1922–2026)
-        </h2>
-      </div>
-      <p class="text-[11px] text-slate-600 mb-1.5 leading-snug shrink-0">
-        16.5 MAF core promises exceeded natural flow in 74% of years—and every year since 2000.
-      </p>
-      <!-- Compact HTML Legend for Card 3 -->
-      <div id="legend-compact-100yr" class="chart-html-legend">
-        <span class="legend-item" onclick="toggleDataset(chartCompact, 0)">
-          <span class="legend-color-box" style="background: #0284c7;"></span>
-          <span class="legend-color-box" style="background: #b2182b; margin-left: -4px;"></span>
-          <span>Actual Supply (Surplus / Deficit)</span>
-        </span>
-        <span class="legend-item" id="legend-item-lees" onclick="toggleDataset(chartCompact, 1)">
-          <span class="legend-line" style="border-top: 2px solid #334155;"></span>
-          <span>Lees Ferry Releases</span>
-        </span>
-        <span class="legend-item" onclick="toggleDataset(chartCompact, 2)">
-          <span class="legend-line" style="border-top: 2px dashed #1e293b;"></span>
-          <span>16.5 MAF Core Promise (7.5+7.5+1.5)</span>
-        </span>
-      </div>
-      <div class="flex-1 min-h-0 min-w-0 relative w-full">
-        <canvas id="chart-compact-100yr" style="position: absolute; top: 0; left: 0; width: 100% !important; height: 100% !important;"></canvas>
-      </div>
-      <div class="chart-provenance-footer flex items-center justify-between text-[10px] text-slate-500 pt-1.5 border-t border-slate-200 mt-1 shrink-0">
-        <div class="truncate">
-          <span class="font-bold text-slate-700">Source:</span> <a href="https://www.usbr.gov/lc/region/g4000/NaturalFlow/" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 underline font-semibold">USBR Natural Flow Database ↗</a> &amp; <a href="https://waterdata.usgs.gov/monitoring-location/09380000/" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 underline font-semibold">USGS Lees Ferry Gage #09380000 ↗</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- CARD 4: SEASONAL SUPPLY VS. DEMAND & 5 FLOW REGIMES -->
-    <section class="dashboard-card">
+    <!-- CARD 3: SEASONAL SUPPLY VS. DEMAND & 5 FLOW REGIMES (Full-Width Bottom Row) -->
+    <section class="dashboard-card" style="grid-column: 1 / -1;">
       <div class="card-header-row">
         <h2 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
           <span class="w-2 h-2 rounded-full bg-[#2b5c8f]"></span>
@@ -823,7 +786,7 @@
               suggestedMax: 5.5,
               title: {
                 display: true,
-                text: 'Annual Water Volume (Million Acre-Feet / yr)',
+                text: 'Annual Volume (MAF/yr)',
                 font: { size: 10, weight: 600 },
                 color: '#475569'
               },
@@ -1070,7 +1033,7 @@
               max: 0.90,
               title: {
                 display: true,
-                text: 'Wave Arrival Strength at Reservoir',
+                text: 'Wave Arrival Strength',
                 font: { size: 10, weight: 600 },
                 color: '#475569'
               },
@@ -1295,9 +1258,8 @@
                 maxRotation: 0,
                 minRotation: 0,
                 callback: function(val, idx) {
-                  const yr = String(labels[idx]);
-                  const milestones = ['1922', '1940', '1960', '1980', '2000', '2020', '2026'];
-                  return milestones.includes(yr) ? yr : null;
+                  const yr = Number(labels[idx]);
+                  return yr % 20 === 0 ? String(yr) : null;
                 },
                 font: { size: 9.5, weight: '600' },
                 color: '#64748b'
@@ -1309,7 +1271,7 @@
               max: 30,
               title: {
                 display: true,
-                text: 'Annual Volume (Million Acre-Feet)',
+                text: 'Annual Volume (MAF)',
                 font: { size: 10, weight: 600 },
                 color: '#475569'
               },
@@ -1394,7 +1356,7 @@
           },
           scales: {
             x: { title: { display: true, text: 'Seasonal Timeline (January through December)', font: { size: 10, weight: 600 }, color: '#475569' }, ticks: { callback: monthStartTick, autoSkip: false, font: { size: 9.5, weight: '600' }, color: '#64748b' }, grid: { display: false } },
-            y: { min: 0, max: 1.05, title: { display: true, text: 'Normalized Flow Regime Share', font: { size: 10, weight: 600 }, color: '#475569' }, ticks: { stepSize: 0.25, callback: (v) => `${Math.round(v * 100)}%`, font: { size: 9.5 }, color: '#64748b' }, grid: { color: '#e2e8f0', lineWidth: 1 } }
+            y: { min: 0, max: 1.05, title: { display: true, text: 'Flow Regime Share', font: { size: 10, weight: 600 }, color: '#475569' }, ticks: { stepSize: 0.25, callback: (v) => `${Math.round(v * 100)}%`, font: { size: 9.5 }, color: '#64748b' }, grid: { color: '#e2e8f0', lineWidth: 1 } }
           }
         }
       });
@@ -1497,7 +1459,7 @@
               max: 52000,
               title: {
                 display: true,
-                text: 'Daily River Flow Rate (cfs)',
+                text: 'Daily Flow (cfs)',
                 font: { size: 10, weight: 600 },
                 color: '#475569'
               },
@@ -1606,7 +1568,6 @@
     window.addEventListener('DOMContentLoaded', () => {
       initBubbleChart();
       initTravelChart();
-      initCompactChart();
       initHydrographChart();
     });
   </script>

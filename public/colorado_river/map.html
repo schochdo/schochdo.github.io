@@ -14,7 +14,7 @@
   
   <link rel="stylesheet" href="style.css">
   <!-- Editorial Design Standard (Edward Tufte / NYT Restrained Palette) -->
-  <link rel="stylesheet" href="editorial.css?v=20261122g">
+  <link rel="stylesheet" href="editorial.css?v=20261124a">
 </head>
 <body>
   <!-- Header Bar -->
@@ -308,7 +308,7 @@
               <span>3D Flight &amp; Controls</span>
               <span style="font-size: 9px; opacity: 0.6;">▾</span>
             </summary>
-            <div style="font-size: 10px; line-height: 1.45; color: var(--text-muted); margin-top: 5px; padding: 5px 7px; background: var(--bg-card); border-radius: 5px; border: 1px solid var(--border-subtle);">
+            <div style="font-size: 10px; line-height: 1.45; color: var(--text-muted); margin-top: 5px; padding: 5px 7px; background: #faf8f4; border-radius: 2px; border: 1px solid #d6cfc2;">
               <div><strong style="color: var(--text-main);">Trackpad:</strong> Pinch zoom &middot; Shift+scroll tilt &middot; Alt+scroll orbit</div>
               <div style="margin-top: 2px;"><strong style="color: var(--text-main);">Keys:</strong> Arrows/WASD flight &middot; Q/E altitude &middot; +/- zoom</div>
               <div style="margin-top: 2px;"><strong style="color: var(--text-main);">Touch:</strong> 2-finger rotate &amp; tilt &middot; Pinch zoom</div>
@@ -857,7 +857,7 @@ for ts in data["value"]["timeSeries"]:
               <tr>
                 <td><code>telemetrytimeseriesday</code></td>
                 <td>Daily Accounting</td>
-                <td>Daily storage volume and elevation for Front Range municipal reservoirs (<code>GRARESCO</code>, <code>DILRESCO</code>, <code>GRMRESCO</code>).</td>
+                <td>Daily storage volume and elevation for Front Range municipal reservoirs (<code>GRARESCO</code>, <code>DILRESCO</code>, <code>GRERESCO</code>).</td>
               </tr>
               <tr>
                 <td><code>abbrev</code></td>
@@ -1047,8 +1047,8 @@ print("Hydrologic monitoring pipeline synced successfully.")</code></pre>
   <!-- MapLibre GL JS & 3D Flight Camera Engine -->
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
   <script src="cameraFlight.js"></script>
-  <script src="flowReplay.js"></script>
-  <script src="app.js?v=20261122i"></script>
+  <script src="flowReplay.js?v=20261124e"></script>
+  <script src="app.js?v=20261124e"></script>
   <script>
     // URL parameter support for direct testing & deep-linking
     window.addEventListener('load', () => {

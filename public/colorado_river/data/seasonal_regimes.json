@@ -297,310 +297,310 @@
       },
       {
         "wy": 1963,
-        "supply_maf": 6.5,
+        "supply_maf": 9.61,
         "lees_ferry_release_maf": 2.5,
-        "surplus_deficit_maf": -10.0,
+        "surplus_deficit_maf": -6.89,
         "meets_compact": false
       },
       {
         "wy": 1964,
-        "supply_maf": 6.41,
+        "supply_maf": 11.43,
         "lees_ferry_release_maf": 2.41,
-        "surplus_deficit_maf": -10.09,
+        "surplus_deficit_maf": -5.07,
         "meets_compact": false
       },
       {
         "wy": 1965,
-        "supply_maf": 14.82,
+        "supply_maf": 18.07,
         "lees_ferry_release_maf": 10.82,
-        "surplus_deficit_maf": -1.68,
-        "meets_compact": false
+        "surplus_deficit_maf": 1.57,
+        "meets_compact": true
       },
       {
         "wy": 1966,
-        "supply_maf": 11.85,
+        "supply_maf": 13.19,
         "lees_ferry_release_maf": 7.85,
-        "surplus_deficit_maf": -4.65,
+        "surplus_deficit_maf": -3.31,
         "meets_compact": false
       },
       {
         "wy": 1967,
-        "supply_maf": 11.8,
+        "supply_maf": 12.44,
         "lees_ferry_release_maf": 7.8,
-        "surplus_deficit_maf": -4.7,
+        "surplus_deficit_maf": -4.06,
         "meets_compact": false
       },
       {
         "wy": 1968,
-        "supply_maf": 12.33,
+        "supply_maf": 14.26,
         "lees_ferry_release_maf": 8.33,
-        "surplus_deficit_maf": -4.17,
+        "surplus_deficit_maf": -2.24,
         "meets_compact": false
       },
       {
         "wy": 1969,
-        "supply_maf": 12.82,
+        "supply_maf": 15.83,
         "lees_ferry_release_maf": 8.82,
-        "surplus_deficit_maf": -3.68,
+        "surplus_deficit_maf": -0.67,
         "meets_compact": false
       },
       {
         "wy": 1970,
-        "supply_maf": 12.67,
+        "supply_maf": 16.14,
         "lees_ferry_release_maf": 8.67,
-        "surplus_deficit_maf": -3.83,
+        "surplus_deficit_maf": -0.36,
         "meets_compact": false
       },
       {
         "wy": 1971,
-        "supply_maf": 12.59,
+        "supply_maf": 15.53,
         "lees_ferry_release_maf": 8.59,
-        "surplus_deficit_maf": -3.91,
+        "surplus_deficit_maf": -0.97,
         "meets_compact": false
       },
       {
         "wy": 1972,
-        "supply_maf": 13.31,
+        "supply_maf": 13.03,
         "lees_ferry_release_maf": 9.31,
-        "surplus_deficit_maf": -3.19,
+        "surplus_deficit_maf": -3.47,
         "meets_compact": false
       },
       {
         "wy": 1973,
-        "supply_maf": 14.11,
+        "supply_maf": 19.35,
         "lees_ferry_release_maf": 10.11,
-        "surplus_deficit_maf": -2.39,
-        "meets_compact": false
+        "surplus_deficit_maf": 2.85,
+        "meets_compact": true
       },
       {
         "wy": 1974,
-        "supply_maf": 12.27,
+        "supply_maf": 14.55,
         "lees_ferry_release_maf": 8.27,
-        "surplus_deficit_maf": -4.23,
+        "surplus_deficit_maf": -1.95,
         "meets_compact": false
       },
       {
         "wy": 1975,
-        "supply_maf": 13.26,
+        "supply_maf": 16.58,
         "lees_ferry_release_maf": 9.26,
-        "surplus_deficit_maf": -3.24,
-        "meets_compact": false
+        "surplus_deficit_maf": 0.08,
+        "meets_compact": true
       },
       {
         "wy": 1976,
-        "supply_maf": 12.48,
+        "supply_maf": 13.02,
         "lees_ferry_release_maf": 8.48,
-        "surplus_deficit_maf": -4.02,
+        "surplus_deficit_maf": -3.48,
         "meets_compact": false
       },
       {
         "wy": 1977,
-        "supply_maf": 12.26,
+        "supply_maf": 9.77,
         "lees_ferry_release_maf": 8.26,
-        "surplus_deficit_maf": -4.24,
+        "surplus_deficit_maf": -6.73,
         "meets_compact": false
       },
       {
         "wy": 1978,
-        "supply_maf": 12.35,
+        "supply_maf": 13.75,
         "lees_ferry_release_maf": 8.35,
-        "surplus_deficit_maf": -4.15,
+        "surplus_deficit_maf": -2.75,
         "meets_compact": false
       },
       {
         "wy": 1979,
-        "supply_maf": 12.3,
+        "supply_maf": 18.53,
         "lees_ferry_release_maf": 8.3,
-        "surplus_deficit_maf": -4.2,
-        "meets_compact": false
+        "surplus_deficit_maf": 2.03,
+        "meets_compact": true
       },
       {
         "wy": 1980,
-        "supply_maf": 14.91,
+        "supply_maf": 17.18,
         "lees_ferry_release_maf": 10.91,
-        "surplus_deficit_maf": -1.59,
-        "meets_compact": false
+        "surplus_deficit_maf": 0.68,
+        "meets_compact": true
       },
       {
         "wy": 1981,
-        "supply_maf": 12.3,
+        "supply_maf": 10.67,
         "lees_ferry_release_maf": 8.3,
-        "surplus_deficit_maf": -4.2,
+        "surplus_deficit_maf": -5.83,
         "meets_compact": false
       },
       {
         "wy": 1982,
-        "supply_maf": 12.3,
+        "supply_maf": 15.27,
         "lees_ferry_release_maf": 8.3,
-        "surplus_deficit_maf": -4.2,
+        "surplus_deficit_maf": -1.23,
         "meets_compact": false
       },
       {
         "wy": 1983,
-        "supply_maf": 21.49,
+        "supply_maf": 24.03,
         "lees_ferry_release_maf": 17.49,
-        "surplus_deficit_maf": 4.99,
+        "surplus_deficit_maf": 7.53,
         "meets_compact": true
       },
       {
         "wy": 1984,
-        "supply_maf": 24.5,
+        "supply_maf": 25.12,
         "lees_ferry_release_maf": 20.5,
-        "surplus_deficit_maf": 8.0,
+        "surplus_deficit_maf": 8.62,
         "meets_compact": true
       },
       {
         "wy": 1985,
-        "supply_maf": 23.09,
+        "supply_maf": 21.99,
         "lees_ferry_release_maf": 19.09,
-        "surplus_deficit_maf": 6.59,
+        "surplus_deficit_maf": 5.49,
         "meets_compact": true
       },
       {
         "wy": 1986,
-        "supply_maf": 20.85,
+        "supply_maf": 22.02,
         "lees_ferry_release_maf": 16.85,
-        "surplus_deficit_maf": 4.35,
+        "surplus_deficit_maf": 5.52,
         "meets_compact": true
       },
       {
         "wy": 1987,
-        "supply_maf": 17.43,
+        "supply_maf": 18.01,
         "lees_ferry_release_maf": 13.43,
-        "surplus_deficit_maf": 0.93,
+        "surplus_deficit_maf": 1.51,
         "meets_compact": true
       },
       {
         "wy": 1988,
-        "supply_maf": 12.14,
+        "supply_maf": 12.67,
         "lees_ferry_release_maf": 8.14,
-        "surplus_deficit_maf": -4.36,
+        "surplus_deficit_maf": -3.83,
         "meets_compact": false
       },
       {
         "wy": 1989,
-        "supply_maf": 11.98,
+        "supply_maf": 10.3,
         "lees_ferry_release_maf": 7.98,
-        "surplus_deficit_maf": -4.52,
+        "surplus_deficit_maf": -6.2,
         "meets_compact": false
       },
       {
         "wy": 1990,
-        "supply_maf": 12.14,
+        "supply_maf": 9.46,
         "lees_ferry_release_maf": 8.14,
-        "surplus_deficit_maf": -4.36,
+        "surplus_deficit_maf": -7.04,
         "meets_compact": false
       },
       {
         "wy": 1991,
-        "supply_maf": 12.12,
+        "supply_maf": 11.58,
         "lees_ferry_release_maf": 8.12,
-        "surplus_deficit_maf": -4.38,
+        "surplus_deficit_maf": -4.92,
         "meets_compact": false
       },
       {
         "wy": 1992,
-        "supply_maf": 12.0,
+        "supply_maf": 11.86,
         "lees_ferry_release_maf": 8.0,
-        "surplus_deficit_maf": -4.5,
+        "surplus_deficit_maf": -4.64,
         "meets_compact": false
       },
       {
         "wy": 1993,
-        "supply_maf": 12.1,
+        "supply_maf": 17.18,
         "lees_ferry_release_maf": 8.1,
-        "surplus_deficit_maf": -4.4,
-        "meets_compact": false
+        "surplus_deficit_maf": 0.68,
+        "meets_compact": true
       },
       {
         "wy": 1994,
-        "supply_maf": 12.29,
+        "supply_maf": 11.91,
         "lees_ferry_release_maf": 8.29,
-        "surplus_deficit_maf": -4.21,
+        "surplus_deficit_maf": -4.59,
         "meets_compact": false
       },
       {
         "wy": 1995,
-        "supply_maf": 13.22,
+        "supply_maf": 18.55,
         "lees_ferry_release_maf": 9.22,
-        "surplus_deficit_maf": -3.28,
-        "meets_compact": false
+        "surplus_deficit_maf": 2.05,
+        "meets_compact": true
       },
       {
         "wy": 1996,
-        "supply_maf": 15.52,
+        "supply_maf": 15.38,
         "lees_ferry_release_maf": 11.52,
-        "surplus_deficit_maf": -0.98,
+        "surplus_deficit_maf": -1.12,
         "meets_compact": false
       },
       {
         "wy": 1997,
-        "supply_maf": 17.85,
+        "supply_maf": 20.06,
         "lees_ferry_release_maf": 13.85,
-        "surplus_deficit_maf": 1.35,
+        "surplus_deficit_maf": 3.56,
         "meets_compact": true
       },
       {
         "wy": 1998,
-        "supply_maf": 17.42,
+        "supply_maf": 17.74,
         "lees_ferry_release_maf": 13.42,
-        "surplus_deficit_maf": 0.92,
+        "surplus_deficit_maf": 1.24,
         "meets_compact": true
       },
       {
         "wy": 1999,
-        "supply_maf": 15.41,
+        "supply_maf": 16.54,
         "lees_ferry_release_maf": 11.41,
-        "surplus_deficit_maf": -1.09,
-        "meets_compact": false
+        "surplus_deficit_maf": 0.04,
+        "meets_compact": true
       },
       {
         "wy": 2000,
-        "supply_maf": 13.52,
+        "supply_maf": 12.4,
         "lees_ferry_release_maf": 9.52,
-        "surplus_deficit_maf": -2.98,
+        "surplus_deficit_maf": -4.1,
         "meets_compact": false
       },
       {
         "wy": 2001,
-        "supply_maf": 12.34,
+        "supply_maf": 11.13,
         "lees_ferry_release_maf": 8.34,
-        "surplus_deficit_maf": -4.16,
+        "surplus_deficit_maf": -5.37,
         "meets_compact": false
       },
       {
         "wy": 2002,
-        "supply_maf": 12.34,
+        "supply_maf": 8.36,
         "lees_ferry_release_maf": 8.34,
-        "surplus_deficit_maf": -4.16,
+        "surplus_deficit_maf": -8.14,
         "meets_compact": false
       },
       {
         "wy": 2003,
-        "supply_maf": 12.36,
+        "supply_maf": 10.33,
         "lees_ferry_release_maf": 8.36,
-        "surplus_deficit_maf": -4.14,
+        "surplus_deficit_maf": -6.17,
         "meets_compact": false
       },
       {
         "wy": 2004,
-        "supply_maf": 12.34,
+        "supply_maf": 9.69,
         "lees_ferry_release_maf": 8.34,
-        "surplus_deficit_maf": -4.16,
+        "surplus_deficit_maf": -6.81,
         "meets_compact": false
       },
       {
         "wy": 2005,
-        "supply_maf": 12.36,
+        "supply_maf": 15.37,
         "lees_ferry_release_maf": 8.36,
-        "surplus_deficit_maf": -4.14,
+        "surplus_deficit_maf": -1.13,
         "meets_compact": false
       },
       {
         "wy": 2006,
-        "supply_maf": 12.49,
+        "supply_maf": 12.68,
         "lees_ferry_release_maf": 8.49,
-        "surplus_deficit_maf": -4.01,
+        "surplus_deficit_maf": -3.82,
         "meets_compact": false
       },
       {
@@ -612,135 +612,135 @@
       },
       {
         "wy": 2008,
-        "supply_maf": 13.16,
+        "supply_maf": 16.36,
         "lees_ferry_release_maf": 9.16,
-        "surplus_deficit_maf": -3.34,
+        "surplus_deficit_maf": -0.14,
         "meets_compact": false
       },
       {
         "wy": 2009,
-        "supply_maf": 12.4,
+        "supply_maf": 14.27,
         "lees_ferry_release_maf": 8.4,
-        "surplus_deficit_maf": -4.1,
+        "surplus_deficit_maf": -2.23,
         "meets_compact": false
       },
       {
         "wy": 2010,
-        "supply_maf": 12.42,
+        "supply_maf": 12.76,
         "lees_ferry_release_maf": 8.42,
-        "surplus_deficit_maf": -4.08,
+        "surplus_deficit_maf": -3.74,
         "meets_compact": false
       },
       {
         "wy": 2011,
-        "supply_maf": 16.73,
+        "supply_maf": 19.69,
         "lees_ferry_release_maf": 12.73,
-        "surplus_deficit_maf": 0.23,
+        "surplus_deficit_maf": 3.19,
         "meets_compact": true
       },
       {
         "wy": 2012,
-        "supply_maf": 13.53,
+        "supply_maf": 10.42,
         "lees_ferry_release_maf": 9.53,
-        "surplus_deficit_maf": -2.97,
+        "surplus_deficit_maf": -6.08,
         "meets_compact": false
       },
       {
         "wy": 2013,
-        "supply_maf": 12.26,
+        "supply_maf": 9.58,
         "lees_ferry_release_maf": 8.26,
-        "surplus_deficit_maf": -4.24,
+        "surplus_deficit_maf": -6.92,
         "meets_compact": false
       },
       {
         "wy": 2014,
-        "supply_maf": 11.57,
+        "supply_maf": 13.2,
         "lees_ferry_release_maf": 7.57,
-        "surplus_deficit_maf": -4.93,
+        "surplus_deficit_maf": -3.3,
         "meets_compact": false
       },
       {
         "wy": 2015,
-        "supply_maf": 13.14,
+        "supply_maf": 13.76,
         "lees_ferry_release_maf": 9.14,
-        "surplus_deficit_maf": -3.36,
+        "surplus_deficit_maf": -2.74,
         "meets_compact": false
       },
       {
         "wy": 2016,
-        "supply_maf": 13.12,
+        "supply_maf": 14.26,
         "lees_ferry_release_maf": 9.12,
-        "surplus_deficit_maf": -3.38,
+        "surplus_deficit_maf": -2.24,
         "meets_compact": false
       },
       {
         "wy": 2017,
-        "supply_maf": 13.15,
+        "supply_maf": 15.67,
         "lees_ferry_release_maf": 9.15,
-        "surplus_deficit_maf": -3.35,
+        "surplus_deficit_maf": -0.83,
         "meets_compact": false
       },
       {
         "wy": 2018,
-        "supply_maf": 13.16,
+        "supply_maf": 10.43,
         "lees_ferry_release_maf": 9.16,
-        "surplus_deficit_maf": -3.34,
+        "surplus_deficit_maf": -6.07,
         "meets_compact": false
       },
       {
         "wy": 2019,
-        "supply_maf": 13.24,
+        "supply_maf": 15.88,
         "lees_ferry_release_maf": 9.24,
-        "surplus_deficit_maf": -3.26,
+        "surplus_deficit_maf": -0.62,
         "meets_compact": false
       },
       {
         "wy": 2020,
-        "supply_maf": 12.42,
+        "supply_maf": 11.29,
         "lees_ferry_release_maf": 8.42,
-        "surplus_deficit_maf": -4.08,
+        "surplus_deficit_maf": -5.21,
         "meets_compact": false
       },
       {
         "wy": 2021,
-        "supply_maf": 12.28,
+        "supply_maf": 8.74,
         "lees_ferry_release_maf": 8.28,
-        "surplus_deficit_maf": -4.22,
+        "surplus_deficit_maf": -7.76,
         "meets_compact": false
       },
       {
         "wy": 2022,
-        "supply_maf": 11.07,
+        "supply_maf": 10.4,
         "lees_ferry_release_maf": 7.07,
-        "surplus_deficit_maf": -5.43,
+        "surplus_deficit_maf": -6.1,
         "meets_compact": false
       },
       {
         "wy": 2023,
-        "supply_maf": 12.73,
+        "supply_maf": 16.44,
         "lees_ferry_release_maf": 8.73,
-        "surplus_deficit_maf": -3.77,
+        "surplus_deficit_maf": -0.06,
         "meets_compact": false
       },
       {
         "wy": 2024,
-        "supply_maf": 11.55,
+        "supply_maf": 12.7,
         "lees_ferry_release_maf": 7.55,
-        "surplus_deficit_maf": -4.95,
+        "surplus_deficit_maf": -3.8,
         "meets_compact": false
       },
       {
         "wy": 2025,
-        "supply_maf": 11.5,
+        "supply_maf": 9.8,
         "lees_ferry_release_maf": 7.5,
-        "surplus_deficit_maf": -5.0,
+        "surplus_deficit_maf": -6.7,
         "meets_compact": false
       },
       {
         "wy": 2026,
-        "supply_maf": 9.91,
+        "supply_maf": 8.8,
         "lees_ferry_release_maf": 5.91,
-        "surplus_deficit_maf": -6.59,
+        "surplus_deficit_maf": -7.7,
         "meets_compact": false
       }
     ]

@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main ]
   schedule:
-    - cron: '0 6,18 * * *'
+    - cron: '0 */6 * * *'
   workflow_dispatch:
 
 permissions:
@@ -31,8 +31,11 @@ jobs:
       - name: Install Python dependencies
         run: pip install requests
 
-      - name: Fetch fresh Colorado River telemetry snapshot
-        run: python scripts/fetch_colorado_river.py
+      - name: Fetch fresh Colorado River telemetry & replay snapshots
+        run: |
+          python scripts/fetch_colorado_river.py
+          python scripts/fetch_replay_7d.py --no-cache
+          python scripts/fetch_replay_30d.py --no-cache
 
       - name: Setup Node.js
         uses: actions/setup-node@v4

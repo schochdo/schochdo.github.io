@@ -631,9 +631,12 @@
 
         const isOffline = s.flow_cfs == null || s.data_status === 'offline';
         const isDelayed = s.data_status === 'delayed';
+        const shortMd = s.timestamp && !isNaN(new Date(s.timestamp).getTime())
+          ? new Date(s.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })
+          : '';
         const readingStr = isOffline 
-          ? `<span class="text-rose-600 font-semibold">Offline</span> <span class="text-[10px] text-slate-400 font-normal">(${s.data_status === 'delayed' ? 'Delayed' : 'Discontinued'})</span>`
-          : `${s.flow_cfs.toLocaleString()} cfs${isDelayed ? ' <span class="text-[10px] text-amber-600 font-semibold">(Delayed)</span>' : ''}`;
+          ? `<span class="text-rose-600 font-semibold">Offline</span>`
+          : `${s.flow_cfs.toLocaleString()} cfs${isDelayed ? ` <span class="text-[10px] text-amber-700 font-semibold">(Delayed${shortMd ? ' · ' + shortMd : ''})</span>` : ''}`;
 
         let noteText = s.notes || (
           s.id === '09380000' ? "Statutory Lee Ferry Compact boundary (1922 Treaty)" :
@@ -706,15 +709,23 @@
       (metrics.canals || []).forEach((c, idx) => {
         const isOffline = c.flow_cfs == null || c.data_status === 'offline';
         const isDelayed = c.data_status === 'delayed';
+        const isDiscontinued = c.id === '09424150';
+        const shortMd = c.timestamp && !isNaN(new Date(c.timestamp).getTime())
+          ? new Date(c.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })
+          : '';
         const readingStr = isOffline
-          ? `<span class="text-rose-600 font-semibold">Offline</span> <span class="text-[10px] text-slate-400 font-normal">(Discontinued)</span>`
-          : `${c.flow_cfs.toLocaleString()} cfs${isDelayed ? ' <span class="text-[10px] text-amber-600 font-semibold">(Delayed)</span>' : ''}`;
+          ? (isDiscontinued
+              ? `<span class="text-slate-600 font-semibold">Discontinued</span> <span class="text-[10px] text-slate-400 font-normal">(2022)</span>`
+              : `<span class="text-rose-600 font-semibold">Offline</span>`)
+          : `${c.flow_cfs.toLocaleString()} cfs${isDelayed ? ` <span class="text-[10px] text-amber-700 font-semibold">(Monthly${shortMd ? ' · ' + shortMd : ''})</span>` : ''}`;
 
         let noteText = c.destination || "Lower Basin Conveyance Canal";
-        if (isOffline) {
-          noteText = `Gage discontinued by USGS in 2022 (Last: ${formatTimestamp(c.timestamp)})`;
+        if (isOffline && isDiscontinued) {
+          noteText = `Gage discontinued by USGS in Sep 2022 (Last: ${formatTimestamp(c.timestamp)})`;
+        } else if (isOffline) {
+          noteText = `Telemetry Offline (Last: ${formatTimestamp(c.timestamp)})`;
         } else if (isDelayed) {
-          noteText = `Monthly USGS AZ DV Compilation (Last: ${formatTimestamp(c.timestamp)})`;
+          noteText = `Monthly USGS Daily-Value Publication (Last: ${formatTimestamp(c.timestamp)})`;
         }
 
         const hier = getStationHierarchy(c.id, 'diversion_canal');

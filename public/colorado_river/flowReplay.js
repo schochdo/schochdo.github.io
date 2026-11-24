@@ -537,18 +537,9 @@
       if (this.cachedReachesFeatures) {
         const updatedReaches = this.cachedReachesFeatures.map(reach => {
           const gid = reach.properties.gauge_id;
-          let flowSeries = gid ? stations[gid] : null;
-
-          // Operational USBR Dam proxy mapping: ensures continuous downstream pulse below Mead & Havasu
-          if (!flowSeries) {
-            if (gid === 'USBR-PARKER' && stations['09429100']) {
-              flowSeries = stations['09429100']; // USGS below Palo Verde (immediate Parker tailwater)
-            } else if (gid === 'USBR-DAVIS' && stations['09429100']) {
-              flowSeries = stations['09429100'];
-            } else if (gid === 'USBR-HOOVER') {
-              flowSeries = stations['09404200'] || stations['09429100'];
-            }
-          }
+          const flowSeries = gid ? stations[gid] : null;
+          // Note: USBR hourly dam releases (Hoover, Davis, Parker) are not in the USGS NWIS 7D/30D archive;
+          // do not substitute upstream/downstream USGS proxy gages for regulated dam reaches.
 
           let flow = reach.properties.flow_cfs;
           if (flowSeries && flowSeries[index] !== undefined && flowSeries[index] !== null) {
