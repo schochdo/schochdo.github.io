@@ -755,7 +755,7 @@ function renderSeasonalEngineChart() {
     return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   });
 
-  // Real WY 2000-2025 USGS Powell Inflow vs. Lees Ferry Dam Release
+  // Real WY 2000-2024 USGS Powell Inflow vs. Lees Ferry Dam Release
   const mismatch = seasonalData.supply_demand_mismatch;
   if (mismatch.spring_peak_cfs != null) {
     const elPeak = document.getElementById('act2-peak');

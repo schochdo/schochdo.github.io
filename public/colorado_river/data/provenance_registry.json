@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-26T05:10:59.609383+00:00",
+  "generated_at": "2026-11-26T17:57:01.154700+00:00",
   "total_sources": 33,
   "sources": [
     {
@@ -41,7 +41,7 @@
       "title": "Lower Colorado River System Consumptive Uses and Losses Data (1971-2024)",
       "period": "CY 1971-2024",
       "period_basis": "CY",
-      "locator_detail": "Tabs 'Mainstream', 'Mainstream_Reservoirs', 'Mexico', 'Tributary', YEAR 2005-2024",
+      "locator_detail": "Tabs 'Mainstream', 'Mainstream_Reservoirs', 'Mexico', 'Tributary', YEAR 2000-2024",
       "official_url": "https://www.usbr.gov/lc/region/g4000/4200Rpts/CULReport/1971-2024%20Lower%20Colorado%20River%20System%20CUL%20Data.xlsx",
       "doc_url": "https://www.usbr.gov/lc/region/g4000/4200Rpts/CULReport/1971-2024%20Lower%20Colorado%20River%20System%20CUL%20Data.xlsx",
       "local_raw_path": "data/raw/usbr_consumptive_use/LowerColoradoCUL1971-2024_Data.xlsx",
@@ -73,7 +73,7 @@
       "title": "Upper Colorado River System Consumptive Uses and Losses Summary (1971-2024 Complete)",
       "period": "CY 1971-2024",
       "period_basis": "CY",
-      "locator_detail": "Sheet 'Summary', Rows 6-28 & 37-259, Cols AO:BH (CY 2005-2024) & Col BL ('20 yr')",
+      "locator_detail": "Sheet 'Summary', Rows 6-28 & 37-259, Cols AJ:BH (CY 2000-2024)",
       "official_url": "https://www.usbr.gov/uc/DocLibrary/Reports/ConsumptiveUsesLosses/20251201-UpperColoradoCUL1971-2025_v24.5_MajorTribSummary-DataSummariesFigures.xlsx",
       "doc_url": "https://www.usbr.gov/uc/DocLibrary/Reports/ConsumptiveUsesLosses/20251201-UpperColoradoCUL1971-2025_v24.5_MajorTribSummary-DataSummariesFigures.xlsx",
       "local_raw_path": "data/raw/usbr_consumptive_use/UpperColoradoCUL1971-2025_Summary.xlsx",
@@ -438,10 +438,10 @@
       "source_id": "usgs_water_budget_gages_dv",
       "category": "historical_series",
       "agency": "U.S. Geological Survey (NWIS)",
-      "title": "Basin Sentinel & Lower Mainstem Tributary Daily Discharge (2004-2025)",
-      "period": "2004-10-01 - 2025-09-30",
+      "title": "Basin Sentinel & Lower Mainstem Tributary Daily Discharge (WY 2000-2025)",
+      "period": "1999-10-01 - 2025-09-30",
       "period_basis": "CY/WY",
-      "locator_detail": "NWIS dv JSON parameterCd=00060 for 9 basin sentinel & lower tributary gages",
+      "locator_detail": "NWIS dv JSON parameterCd=00060 for 9 basin sentinel & lower tributary gages (CY/WY 2000-2024 baseline)",
       "official_url": "https://waterservices.usgs.gov/nwis/dv/?format=json&sites=09180500,09315000,09379500,09380000,09382000,09402000,09415000,09419000,09426000&parameterCd=00060&startDT=1999-10-01&endDT=2025-09-30",
       "doc_url": "https://waterservices.usgs.gov/nwis/dv/?format=json&sites=09180500,09315000,09379500,09380000,09382000,09402000,09415000,09419000,09426000&parameterCd=00060&startDT=1999-10-01&endDT=2025-09-30",
       "local_raw_path": "data/raw/usgs_baselines/usgs_budget_and_inflow_gages_dv.json",
