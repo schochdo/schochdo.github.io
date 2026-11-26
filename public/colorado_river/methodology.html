@@ -120,12 +120,12 @@
         <div class="p-3.5 bg-stone-50 border border-stone-300/80 rounded-[2px] space-y-2">
           <h3 class="font-bold text-slate-900 text-sm">Visualization Engines</h3>
           <p class="text-slate-600 leading-relaxed">
-            Each interface view uses the optimal specialized rendering engine matched to its domain physics:
+            Each interface view uses a specialized rendering engine matched to its domain physics:
           </p>
           <ul class="space-y-1.5 text-slate-700 text-[11px] pt-1 border-t border-stone-200">
             <li><strong class="text-sky-800">MapLibre GL JS v4.7.1:</strong> WebGL 3D terrain elevation, USGS 3DEP topography, and 83 streamflow reaches.</li>
-            <li><strong class="text-emerald-800">D3.js v7:</strong> Flow-proportional mass-balance Sankey network closing at exact 14.90 MAF.</li>
-            <li><strong class="text-indigo-800">Chart.js v4:</strong> Responsive 365-day hydrographs, seasonal heartbeats, and 104-year Compact timelines.</li>
+            <li><strong class="text-emerald-800">D3.js v7:</strong> Flow-proportional mass-balance Sankey network closing at exact 13.89 MAF/yr (2005–2024 USBR accounting).</li>
+            <li><strong class="text-indigo-800">Chart.js v4:</strong> Responsive 365-day hydrographs, seasonal heartbeats, and 103-year Compact timelines (Water Years 1922–2024).</li>
           </ul>
         </div>
 
@@ -215,86 +215,110 @@
 
       <div class="space-y-4 text-xs">
         <p class="text-slate-600 leading-relaxed">
-          The project utilizes an embedded relational <strong>SQLite database</strong> (<code class="inline-code">data/colorado_river_basin.db</code>). Flat files alone cannot enforce data types, maintain foreign key integrity across multiple federal agencies, or calculate multi-year rolling aggregates efficiently. SQLite delivers full ACID compliance, zero setup, and millisecond query execution within a single 2.5 MB portable file.
+          All authoritative agency reference files are archived immutably in <code class="inline-code">data/raw/</code> (<strong>26 reference files</strong>, <strong>50.3 MB</strong>, SHA-256 verified in <code class="inline-code">data/raw/MANIFEST.csv</code>) and compiled alongside live telemetry into a single relational <strong>SQLite database</strong> (<code class="inline-code">data/colorado_river_basin.db</code>, <strong>2.7 MB</strong>, <strong>31 tables</strong> and <strong>2 analytical views</strong>). No ingestion script writes analytics JSON directly; every static dataset in <code class="inline-code">web/data/</code> is compiled solely by <code class="inline-code">scripts/export_sqlite_to_json.py</code>.
         </p>
 
         <!-- Database Schema Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
           <div class="p-3 bg-stone-50 border border-stone-300/80 rounded-[2px] space-y-1.5">
             <div class="flex items-center justify-between">
-              <strong class="text-slate-900 font-mono text-xs">stations</strong>
-              <span class="flow-badge bg-sky-100 text-sky-800">92 Records</span>
+              <strong class="text-slate-900 font-mono text-xs">stations &amp; rbi_flashiness</strong>
+              <span class="flow-badge bg-sky-100 text-sky-800">92 / 74 Rows</span>
             </div>
             <p class="text-[11px] text-slate-600">
-              Metadata and current readings for basin monitoring facilities (streamflow gages, export tunnels, and conveyance canals).
+              Metadata and live telemetry for 92 monitoring facilities plus true daily Water Years 2016–2025 Richards–Baker Flashiness Index (RBI) for 74 USGS stations.
             </p>
             <div class="text-[10px] text-slate-500 font-mono pt-1 border-t border-stone-200">
-              Columns: station_id, name, type, reach_id, live_flow_cfs, normal_flow_cfs, health_pct, rbi_index, lat, lon
+              Tables: stations (92), telemetry_latest (81), rbi_flashiness (74), station_hierarchy (92)
             </div>
           </div>
 
           <div class="p-3 bg-stone-50 border border-stone-300/80 rounded-[2px] space-y-1.5">
             <div class="flex items-center justify-between">
-              <strong class="text-slate-900 font-mono text-xs">reservoirs</strong>
-              <span class="flow-badge bg-blue-100 text-blue-800">11 Facilities</span>
+              <strong class="text-slate-900 font-mono text-xs">reservoirs &amp; history</strong>
+              <span class="flow-badge bg-blue-100 text-blue-800">11 / 364 Rows</span>
             </div>
             <p class="text-[11px] text-slate-600">
-              Live storage volumes, full structural capacity, active water surface elevation, and capacity percentage across all 11 reservoirs (System + Front Range).
+              Live storage, elevation, End-of-Month (EOM) monthly elevation matrices (364 yr-rows), and dated 1937–2026 volumetric timeline (90 rows) from USBR 17.csv/49.csv.
             </p>
             <div class="text-[10px] text-slate-500 font-mono pt-1 border-t border-stone-200">
-              Columns: reservoir_id, name, current_storage_af, total_capacity_af, elevation_ft, capacity_pct, category, operator
+              Tables: reservoirs (11), reservoir_monthly_history (364), basin_storage_timeline (90)
             </div>
           </div>
 
           <div class="p-3 bg-stone-50 border border-stone-300/80 rounded-[2px] space-y-1.5">
             <div class="flex items-center justify-between">
-              <strong class="text-slate-900 font-mono text-xs">annual_lees_ferry</strong>
-              <span class="flow-badge bg-amber-100 text-amber-800">104 Years</span>
+              <strong class="text-slate-900 font-mono text-xs">annual_lees_ferry &amp; cul</strong>
+              <span class="flow-badge bg-amber-100 text-amber-800">119 / 3,024</span>
             </div>
             <p class="text-[11px] text-slate-600">
-              Annual historical records (1922–2026) documenting natural virgin runoff, actual physical delivery past Lees Ferry, and statutory 10-year rolling Compact compliance.
+              USBR Lees Ferry Natural Flow (WY 1906–2024; 103 Compact years 1922–2024) plus parsed Upper &amp; Lower Basin CUL accounting tables (CY 1971–2024).
             </p>
             <div class="text-[10px] text-slate-500 font-mono pt-1 border-t border-stone-200">
-              Columns: water_year, natural_flow_maf, actual_delivery_maf, rolling_10yr_maf, deficit_surplus_maf
+              Tables: annual_lees_ferry (119), cul_upper_annual (1,674), cul_lower_annual (1,350)
             </div>
           </div>
 
           <div class="p-3 bg-stone-50 border border-stone-300/80 rounded-[2px] space-y-1.5">
             <div class="flex items-center justify-between">
-              <strong class="text-slate-900 font-mono text-xs">rbi_flashiness</strong>
-              <span class="flow-badge bg-emerald-100 text-emerald-800">Tributaries</span>
+              <strong class="text-slate-900 font-mono text-xs">water_budget &amp; catalog</strong>
+              <span class="flow-badge bg-emerald-100 text-emerald-800">25 / 32 Rows</span>
             </div>
             <p class="text-[11px] text-slate-600">
-              Mathematical Richards-Baker Flashiness Index computations measuring day-to-day hydrograph volatility relative to total cumulative discharge across all major rivers.
+              2005–2024 balanced water-budget DAG (25 nodes, 39 links = 13.89 MAF/yr), stacked statutory comparison, and 32 SHA-256 cataloged agency sources.
             </p>
             <div class="text-[10px] text-slate-500 font-mono pt-1 border-t border-stone-200">
-              Columns: station_id, river_name, rbi_index, regime_cluster, drainage_sqmi, annual_volume_maf
+              Tables: water_budget_nodes (25), water_budget_links (39), source_catalog (32)
             </div>
           </div>
         </div>
 
         <!-- Static JSON Export Contracts -->
         <div class="mt-4 pt-3 border-t border-stone-200">
-          <h4 class="font-bold text-slate-900 mb-2">The 4 Static JSON Export Contracts</h4>
+          <h4 class="font-bold text-slate-900 mb-2">The 10 SQLite-Compiled Static JSON Contracts (<code class="inline-code">scripts/export_sqlite_to_json.py</code>)</h4>
           <p class="text-slate-600 mb-3">
-            Python scripts compile SQL query views from SQLite into four decoupled, static JSON payloads placed in <code class="inline-code">web/data/</code>:
+            A pure SQL-to-JSON exporter reads solely from SQLite (zero HTTP requests) to build all non-GeoJSON payloads in <code class="inline-code">web/data/</code> alongside static NHDPlus cartographic GeoJSONs:
           </p>
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-2 text-[11px]">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-2 text-[11px]">
             <div class="p-2 bg-white border border-stone-200 rounded-[2px]">
               <strong class="text-slate-900 block font-mono">latest_metrics.json</strong>
-              <span class="text-slate-500">~45 KB • Live flow rates, storage volumes, and flow health tiers for all 92 stations.</span>
+              <span class="text-slate-500">Live flow, reservoir storage, dam releases &amp; validation report.</span>
             </div>
             <div class="p-2 bg-white border border-stone-200 rounded-[2px]">
-              <strong class="text-slate-900 block font-mono">river_network.json</strong>
-              <span class="text-slate-500">~120 KB • Topological DAG connecting 83 reaches with flow scaling weights.</span>
+              <strong class="text-slate-900 block font-mono">water_budget.json</strong>
+              <span class="text-slate-500">2005–2024 USBR CUL Sankey DAG &amp; statutory comparison.</span>
             </div>
             <div class="p-2 bg-white border border-stone-200 rounded-[2px]">
-              <strong class="text-slate-900 block font-mono">station_hierarchy.json</strong>
-              <span class="text-slate-500">~35 KB • Sentinel classifications, priority gaging tiers, and coordinates.</span>
+              <strong class="text-slate-900 block font-mono">portal_historical.json</strong>
+              <span class="text-slate-500">EOM reservoir matrices (1935–2026) &amp; dated storage (1937–2026).</span>
             </div>
             <div class="p-2 bg-white border border-stone-200 rounded-[2px]">
               <strong class="text-slate-900 block font-mono">seasonal_regimes.json</strong>
-              <span class="text-slate-500">~180 KB • 365-day hydrograph curves and 104-year Compact balance timelines.</span>
+              <span class="text-slate-500">103-yr USBR natural flow, 5 regime curves &amp; Powell inflow vs release.</span>
+            </div>
+            <div class="p-2 bg-white border border-stone-200 rounded-[2px]">
+              <strong class="text-slate-900 block font-mono">tributary_hydrology.json</strong>
+              <span class="text-slate-500">WY 2016–2025 tributary RBI, Powell hypsometry &amp; WY 2021 event.</span>
+            </div>
+            <div class="p-2 bg-white border border-stone-200 rounded-[2px]">
+              <strong class="text-slate-900 block font-mono">station_hierarchy.json</strong>
+              <span class="text-slate-500">92 facility sentinel tiers &amp; true daily USGS RBI classifications.</span>
+            </div>
+            <div class="p-2 bg-white border border-stone-200 rounded-[2px]">
+              <strong class="text-slate-900 block font-mono">historical_normals.json</strong>
+              <span class="text-slate-500">Full-POR daily USGS mean curves with per-gage begin/end years.</span>
+            </div>
+            <div class="p-2 bg-white border border-stone-200 rounded-[2px]">
+              <strong class="text-slate-900 block font-mono">provenance_registry.json</strong>
+              <span class="text-slate-500">32 cataloged datasets, sheet/row locators, URLs &amp; SHA-256 hashes.</span>
+            </div>
+            <div class="p-2 bg-white border border-stone-200 rounded-[2px]">
+              <strong class="text-slate-900 block font-mono">replay_7d.json</strong>
+              <span class="text-slate-500">169 hourly timestamps across 70 USGS gages (SQLite-backed).</span>
+            </div>
+            <div class="p-2 bg-white border border-stone-200 rounded-[2px]">
+              <strong class="text-slate-900 block font-mono">replay_30d.json</strong>
+              <span class="text-slate-500">361 2-hourly timestamps across 70 USGS gages (SQLite-backed).</span>
             </div>
           </div>
         </div>
@@ -315,18 +339,18 @@
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs">
         <div class="space-y-3">
-          <h3 class="font-bold text-slate-900 text-sm">Tier 1: Client-Side Direct REST Queries (CORS-Enabled)</h3>
+          <h3 class="font-bold text-slate-900 text-sm">Tier 1: Direct Browser-to-Agency Fetching (CORS-Enabled REST)</h3>
           <p class="text-slate-600 leading-relaxed">
             When a user visits the interactive map or facility ledger, the browser executes a direct client-side fetch (<code class="inline-code">fetch()</code> in <code class="inline-code">web/app.js</code>) against the official USGS NWIS REST API (<code class="inline-code">waterservices.usgs.gov</code>):
           </p>
           <div class="p-3 bg-stone-50 border border-stone-300 rounded-[2px] font-mono text-[11px] space-y-1">
-            <div class="text-slate-500">// Direct client-side browser query (No backend proxy required)</div>
+            <div class="text-slate-500">// Direct browser query to federal servers (No middleman proxy required)</div>
             <div class="text-sky-800">const url = `https://waterservices.usgs.gov/nwis/iv/?sites=${sites}&amp;parameterCd=00060,00065&amp;format=json`;</div>
             <div class="text-slate-700">const response = await fetch(url);</div>
             <div class="text-slate-700">const nwisJson = await response.json();</div>
           </div>
           <p class="text-slate-600 leading-relaxed">
-            Because the USGS NWIS REST service officially supports Cross-Origin Resource Sharing (CORS), the user's web browser receives live 15-minute telemetry directly from government servers without routing through any intermediary backend server.
+            <strong>Why CORS matters:</strong> By default, web browsers block web pages on one domain (such as GitHub Pages) from fetching data from a different domain (like <code class="inline-code">usgs.gov</code>) under the Cross-Origin Resource Sharing (CORS) security standard. Because USGS officially includes open CORS permission headers (<code class="inline-code">Access-Control-Allow-Origin: *</code>) on their REST responses, the user's browser can retrieve live 15-minute gage measurements directly from federal servers without needing a dedicated backend proxy.
           </p>
         </div>
 
@@ -338,7 +362,7 @@
           <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-[2px] space-y-2">
             <strong class="text-emerald-950 font-bold block">Static Snapshot Fallback:</strong>
             <p class="text-emerald-900 leading-relaxed">
-              In <code class="inline-code">web/app.js</code>, if the live USGS fetch encounters a network timeout, HTTP error, or CORS rejection, the app falls back to loading <code class="inline-code">web/data/latest_metrics.json</code> (the static snapshot refreshed every 6 hours by GitHub Actions). Monthly-published USGS stations (CAP <code class="inline-code">09426650</code>, Morelos <code class="inline-code">09522000</code>) display their exact last-published date, and discontinued stations (<code class="inline-code">09424150</code>) are explicitly marked discontinued rather than filled with placeholders.
+              In <code class="inline-code">web/app.js</code>, if the live USGS fetch encounters a network timeout, HTTP error, or browser connectivity issue, the app falls back to loading <code class="inline-code">web/data/latest_metrics.json</code> (the static snapshot refreshed every 6 hours by GitHub Actions). Monthly-published USGS stations (CAP <code class="inline-code">09426650</code>, Morelos <code class="inline-code">09522000</code>) display their exact last-published date, and discontinued stations (<code class="inline-code">09424150</code>) are explicitly marked discontinued rather than filled with placeholders.
             </p>
             <p class="text-emerald-900 leading-relaxed font-semibold">
               This keeps the map and station ledger populated with recent basin data during upstream federal API outages, without requiring a backend proxy.
@@ -367,7 +391,7 @@
               <strong class="text-sm font-black text-slate-900">colorado_river_analysis.ipynb</strong>
             </div>
             <p class="text-slate-600 max-w-3xl leading-relaxed">
-              Single self-contained notebook covering geospatial topology, live USGS telemetry, SQLite analytics, 104-year Compact accounting, reservoir storage depletion, tributary travel times, and Richards-Baker Flashiness / K-Means flow regimes.
+              Single self-contained notebook covering geospatial topology, live USGS streamflow ingestion, SQLite analytics, 104-year Compact accounting, reservoir storage depletion, tributary travel times, and Richards-Baker Flashiness regimes.
             </p>
           </div>
           <div class="flex items-center gap-2 shrink-0 flex-wrap">
@@ -396,10 +420,10 @@
           <div class="p-3 bg-[#faf8f4] border border-[#e2dcd0] rounded-[2px]">
             <div class="font-bold text-slate-900 mb-1">Sections 5–7: Deficits, Regimes &amp; JSON Contracts</div>
             <ul class="text-[11px] text-slate-600 space-y-1 list-disc list-inside">
-              <li>1922–2025 Compact natural flow vs. 16.5 MAF statutory claims</li>
+              <li>1922–2024 Compact natural flow vs. 16.5 MAF statutory claims</li>
               <li>Major reservoir storage capacity vs. current active pool buffer</li>
-              <li>Tributary travel lag times, RBI flashiness, &amp; K-Means (<span class="font-mono">k=4</span>)</li>
-              <li>360&times; volumetric proof (flash flood vs. sustained alpine snowmelt)</li>
+              <li>Tributary travel lag times, RBI flashiness &amp; flow regimes</li>
+              <li>Flash flood peak vs. snowmelt volume (WY 2021 case study)</li>
             </ul>
           </div>
         </div>

@@ -71,17 +71,18 @@
           <h1 class="text-lg md:text-xl font-black text-slate-900 tracking-tight leading-none">
             Gages
           </h1>
+          <p class="text-[10.5px] text-slate-500 mt-0.5">Latest 6-hour telemetry snapshot (observation time per row) · Flashiness (RBI) computed over Water Years 2016–2025</p>
         </div>
       </div>
 
       <div class="flex items-center gap-2">
-        <button id="refresh-btn" onclick="fetchData()" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[2px] bg-white hover:bg-stone-100 text-slate-800 text-xs font-semibold border border-stone-300 transition">
+        <button id="refresh-btn" onclick="fetchData()" title="Reloads the latest 6-hour automated USGS/USBR/CDSS snapshot" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[2px] bg-white hover:bg-stone-100 text-slate-800 text-xs font-semibold border border-stone-300 transition">
           <svg id="refresh-icon" class="w-3.5 h-3.5 text-slate-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <polyline points="23 4 23 10 17 10"></polyline>
             <polyline points="1 20 1 14 7 14"></polyline>
             <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
           </svg>
-          <span id="sync-label">Sync Live Feeds</span>
+          <span id="sync-label">Reload Snapshot</span>
         </button>
       </div>
     </div>
@@ -206,9 +207,9 @@
           <div class="relative">
             <select id="flashiness-filter" onchange="applyFilters()" class="text-xs bg-white border border-stone-300 rounded-[2px] pl-2 pr-6 py-1 text-slate-700 focus:outline-none focus:ring-1 focus:ring-sky-600 font-medium cursor-pointer">
               <option value="all">Flashiness (RBI): All</option>
-              <option value="Regulated">Regulated (RBI &lt; 0.020)</option>
-              <option value="Snowmelt">Snowmelt Baseflow (0.020–0.060)</option>
-              <option value="Flashy">Flashy / Monsoon (≥ 0.060)</option>
+              <option value="Regulated">Regulated (RBI &lt; 0.045)</option>
+              <option value="Snowmelt">Snowmelt (0.045–0.150)</option>
+              <option value="Flashy">Flashy / Monsoon (≥ 0.150)</option>
               <option value="Storage Buffer">Storage Buffers (Dams)</option>
             </select>
           </div>
@@ -247,7 +248,7 @@
               <th class="px-2 py-2 cursor-pointer hover:text-slate-900" onclick="sortTable('groupName')">Reach ↕</th>
               <th class="px-2.5 py-2 text-right cursor-pointer hover:text-slate-900" onclick="sortTable('reading_num')">Live Flow / Vol ↕</th>
               <th class="px-2 py-2">Flow Health</th>
-              <th class="px-2 py-2 cursor-pointer hover:text-slate-900" onclick="sortTable('rbi_sort')">Flashiness (RBI) ↕</th>
+              <th class="px-2 py-2 cursor-pointer hover:text-slate-900" onclick="sortTable('rbi_sort')" title="10-year Richards–Baker Flashiness Index from USGS daily discharge (Water Years 2016–2025)">Flashiness (RBI) ↕</th>
               <th class="px-2.5 py-2">Purpose / Notes</th>
               <th class="px-2 py-2 cursor-pointer hover:text-slate-900" onclick="sortTable('timestamp')">Timestamp ↕</th>
               <th class="px-2 py-2 text-center">Map</th>
@@ -266,7 +267,7 @@
 
   <!-- Sticky Footer Domain Note -->
   <footer class="bg-white border-t border-stone-200 px-6 py-3 text-xs text-slate-500 text-center">
-    Data Sources: <a href="https://waterdata.usgs.gov/nwis" target="_blank" rel="noopener noreferrer" class="underline hover:text-slate-800">USGS National Water Information System (NWIS) ↗</a>, <a href="https://dwr.state.co.us/Tools/Stations" target="_blank" rel="noopener noreferrer" class="underline hover:text-slate-800">Colorado Division of Water Resources (CDSS) ↗</a>, and <a href="https://www.usbr.gov/lc/region/g4000/riverops/hourly7.html" target="_blank" rel="noopener noreferrer" class="underline hover:text-slate-800">USBR River Operations Teletype ↗</a>. Streamflow reported in cubic feet per second (cfs); reservoir storage reported in acre-feet (AF).
+    Data Sources: <a href="https://waterservices.usgs.gov/nwis/iv/?format=rdb&amp;sites=09380000&amp;parameterCd=00060" target="_blank" rel="noopener noreferrer" class="underline hover:text-slate-800">USGS Water Services IV API (#09380000 sample; click any Station ID above for its exact gage page) ↗</a>, <a href="https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeseriesday/?format=json&amp;abbrev=ADATUNCO&amp;startDate=01%2F01%2F2022&amp;endDate=12%2F31%2F2024" target="_blank" rel="noopener noreferrer" class="underline hover:text-slate-800">CDSS REST API v2 ↗</a>, and <a href="https://www.usbr.gov/lc/region/g4000/riverops/hourly7.html" target="_blank" rel="noopener noreferrer" class="underline hover:text-slate-800">USBR River Operations Teletype ↗</a>. Streamflow reported in cubic feet per second (cfs); reservoir storage reported in acre-feet (AF). Flashiness (RBI) computed over Water Years 2016–2025 USGS daily discharge.
   </footer>
 
   <script>
@@ -489,10 +490,10 @@
       let regime = 'Storage Buffer';
       let badge_class = 'bg-stone-100 text-slate-600 border-stone-300';
       if (rbi !== null) {
-        if (rbi < 0.020) {
+        if (rbi < 0.045) {
           regime = 'Regulated';
           badge_class = 'bg-emerald-100 text-emerald-800 border-emerald-300';
-        } else if (rbi < 0.060) {
+        } else if (rbi < 0.150) {
           regime = 'Snowmelt';
           badge_class = 'bg-sky-100 text-sky-800 border-sky-300';
         } else {
@@ -564,12 +565,12 @@
           </div>
         `;
       }
-      return `<span class="text-[10.5px] text-slate-400 font-medium whitespace-nowrap">Storage Buffer</span>`;
+      return `<span class="text-[10.5px] text-slate-500 font-medium whitespace-nowrap">${node.regime || 'Storage Buffer'}</span>`;
     }
 
     async function fetchData() {
       const syncLabel = document.getElementById('sync-label');
-      syncLabel.textContent = 'Syncing...';
+      syncLabel.textContent = 'Reloading...';
       try {
         const [metricsRes, normalsRes, hierarchyRes] = await Promise.all([
           fetch('./data/latest_metrics.json?t=' + Date.now()),
@@ -591,10 +592,10 @@
         applyFilters();
 
         const ts = formatTimestamp(metrics.fetched_at);
-        syncLabel.textContent = `Synced (${ts})`;
+        syncLabel.textContent = `Snapshot: ${ts} (6h)`;
       } catch (err) {
         console.error('Error fetching data:', err);
-        syncLabel.textContent = 'Sync Failed (Offline)';
+        syncLabel.textContent = 'Reload Failed';
       }
     }
 
@@ -1049,7 +1050,7 @@
       tbody.innerHTML = html;
     }
 
-    // Seamless navigation between tabs / standalone windows
+    // Navigation between tabs / standalone windows
     function showStationOnMap(stationId) {
       if (window.parent && window.parent !== window && typeof window.parent.focusMapStation === 'function') {
         window.parent.focusMapStation(stationId);

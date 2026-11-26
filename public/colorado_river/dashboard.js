@@ -657,7 +657,7 @@ function renderCompact100yrChart() {
       datasets: [
         {
           type: 'bar',
-          label: 'Actual Basin Water Supply (MAF)',
+          label: 'USBR Natural Flow at Lees Ferry (MAF)',
           data: supplyVals,
           backgroundColor: bgColors,
           borderRadius: 1.5,
@@ -671,6 +671,10 @@ function renderCompact100yrChart() {
           borderColor: '#334155',
           borderWidth: 1.75,
           pointRadius: 0,
+          pointHoverRadius: 4,
+          pointHoverBackgroundColor: '#334155',
+          pointHoverBorderColor: '#ffffff',
+          pointHoverBorderWidth: 1.5,
           tension: 0.1,
           order: 1
         },
@@ -682,6 +686,7 @@ function renderCompact100yrChart() {
           borderWidth: 2,
           borderDash: [5, 4],
           pointRadius: 0,
+          pointHoverRadius: 0,
           fill: false,
           order: 0
         }
@@ -691,19 +696,33 @@ function renderCompact100yrChart() {
       responsive: true,
       maintainAspectRatio: false,
       animation: false,
+      interaction: { mode: 'index', intersect: false },
       layout: { padding: { left: 8, right: 10, top: 16, bottom: 4 } },
       plugins: {
         legend: { display: false },
         tooltip: {
+          filter: (item) => item.datasetIndex !== 2,
           callbacks: {
-            title: (items) => `Water Year ${items[0].label}`,
+            title: (items) => items.length ? `Water Year ${items[0].label}` : '',
             label: (ctx) => {
+              const item = ts[ctx.dataIndex];
               if (ctx.dataset.type === 'bar') {
-                const item = ts[ctx.dataIndex];
-                return `Actual Supply: ${item.supply_maf.toFixed(2)} MAF`;
+                return ` USBR Natural Flow: ${item.supply_maf.toFixed(2)} MAF`;
               }
-              const name = ctx.dataset.label.includes('Lees Ferry') ? 'Lees Ferry Releases' : '1922 Compact Target';
-              return `${name}: ${ctx.parsed.y.toFixed(2)} MAF`;
+              return ` Lees Ferry Release: ${ctx.parsed.y.toFixed(2)} MAF`;
+            },
+            footer: (items) => {
+              if (!items.length) return '';
+              const item = ts[items[0].dataIndex];
+              if (!item) return '';
+              const gapPromise = item.supply_maf - 16.5;
+              const signP = gapPromise >= 0 ? '+' : '';
+              const netDiff = item.supply_maf - item.lees_ferry_release_maf;
+              const signD = netDiff >= 0 ? '+' : '';
+              return [
+                `vs. 16.50 MAF Core Promise: ${signP}${gapPromise.toFixed(2)} MAF`,
+                `Natural − Release (Upper Use ± ΔStor): ${signD}${netDiff.toFixed(2)} MAF`
+              ];
             }
           }
         }
@@ -736,11 +755,24 @@ function renderSeasonalEngineChart() {
     return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   });
 
-  // Simplified Inflow vs. Demand hydrograph in the muted river-corridor palette
+  // Real WY 2000-2025 USGS Powell Inflow vs. Lees Ferry Dam Release
   const mismatch = seasonalData.supply_demand_mismatch;
+  if (mismatch.spring_peak_cfs != null) {
+    const elPeak = document.getElementById('act2-peak');
+    const elBase = document.getElementById('act2-base');
+    const elRel = document.getElementById('act2-release');
+    const elBal = document.getElementById('act2-balance');
+    if (elPeak) elPeak.textContent = `${Math.round(mismatch.spring_peak_cfs).toLocaleString()} cfs`;
+    if (elBase) elBase.textContent = `${Math.round(mismatch.winter_base_cfs).toLocaleString()} cfs`;
+    if (elRel) elRel.textContent = `${Math.round(mismatch.mean_release_cfs).toLocaleString()} cfs`;
+    if (elBal) elBal.textContent = `${mismatch.surplus_days}d Refill / ${mismatch.deficit_days}d Drain`;
+  }
+  const maxFlow = Math.max(...mismatch.supply_cfs, ...mismatch.demand_cfs, 35000);
+  const yMax = Math.ceil(maxFlow / 10000) * 10000;
+
   const targetDatasets = [
     {
-      label: 'Natural Inflow (Snowmelt + Tributaries)',
+      label: 'Gaged Powell Inflow (Cisco + Green + San Juan)',
       data: mismatch.supply_cfs,
       borderColor: '#2b5c8f',
       backgroundColor: 'rgba(43, 92, 143, 0.12)',
@@ -751,7 +783,7 @@ function renderSeasonalEngineChart() {
       pointHoverRadius: 4
     },
     {
-      label: 'System Demand (Canals + Cities + Losses)',
+      label: 'Glen Canyon Release (Lees Ferry #09380000)',
       data: mismatch.demand_cfs,
       borderColor: '#c26d2d',
       borderDash: [5, 4],
@@ -803,7 +835,7 @@ function renderSeasonalEngineChart() {
       },
       y: {
         min: 0,
-        max: 52000,
+        max: yMax,
         ticks: {
           font: { size: 9 },
           stepSize: 10000,
@@ -838,7 +870,7 @@ function renderSeasonalEngineChart() {
 function initOverviewCharts() {
   if (!portalData) return;
 
-  // 1. Render Act 3 Combined Macro Basin Storage Trajectory (1935 - 2026)
+  // 1. Render Act 3 Combined Macro Basin Storage Trajectory (1937 - 2026)
   const timeline = portalData.basin_storage_timeline || [];
   const macroYears = timeline.map(d => d.year);
   const totalMaf = timeline.map(d => d.total_major_storage_maf);
@@ -914,17 +946,17 @@ function initOverviewCharts() {
     stateUseChartInstance = new Chart(stateCtx, {
       type: 'bar',
       data: {
-        labels: ['CA', 'AZ', 'CO', 'UT', 'NM', 'WY', 'NV'],
+        labels: ['CA', 'CO', 'AZ', 'UT', 'WY', 'NM', 'NV'],
         datasets: [{
-          label: 'Consumptive Depletions (MAF/yr)',
-          data: [4.4, 2.8, 2.2, 1.0, 0.6, 0.5, 0.3],
+          label: 'Statutory Apportionment (MAF/yr)',
+          data: [4.40, 3.86, 2.85, 1.71, 1.04, 0.84, 0.30],
           backgroundColor: [
             '#c26d2d', // CA (Lower Basin)
-            '#c26d2d', // AZ (Lower Basin)
             '#2b5c8f', // CO (Upper Basin)
+            '#c26d2d', // AZ (Lower Basin + 0.05 Upper)
             '#2b5c8f', // UT (Upper Basin)
-            '#2b5c8f', // NM (Upper Basin)
             '#2b5c8f', // WY (Upper Basin)
+            '#2b5c8f', // NM (Upper Basin)
             '#c26d2d'  // NV (Lower Basin)
           ],
           borderRadius: 1
@@ -939,17 +971,17 @@ function initOverviewCharts() {
             callbacks: {
               title: items => {
                 const desc = {
-                  CA: 'California • 4.4 MAF (Lower Basin • Senior 1901 Priority)',
-                  AZ: 'Arizona • 2.8 MAF (Lower Basin • Junior CAP Cuts)',
-                  CO: 'Colorado • 2.2 MAF (Upper Basin • Headwaters & Trans-Mountain)',
-                  UT: 'Utah • 1.0 MAF (Upper Basin Allocation)',
-                  NM: 'New Mexico • 0.6 MAF (Upper Basin • San Juan Basin)',
-                  WY: 'Wyoming • 0.5 MAF (Upper Basin • Green River Tributaries)',
-                  NV: 'Nevada • 0.3 MAF (Lower Basin • Southern Nevada Water Authority)'
+                  CA: 'California • 4.40 MAF (1928 BCPA §4a, 45 Stat. 1058 p. 2)',
+                  CO: 'Colorado • 3.86 MAF derived (51.75% × 7.45 MAF • 1948 Compact Art. III, p. 3)',
+                  AZ: 'Arizona • 2.85 MAF (2.80 Lower BCPA p. 3 + 0.05 Upper 1948 Compact p. 2)',
+                  UT: 'Utah • 1.71 MAF derived (23.00% × 7.45 MAF • 1948 Compact Art. III, p. 3)',
+                  WY: 'Wyoming • 1.04 MAF derived (14.00% × 7.45 MAF • 1948 Compact Art. III, p. 3)',
+                  NM: 'New Mexico • 0.84 MAF derived (11.25% × 7.45 MAF • 1948 Compact Art. III, p. 3)',
+                  NV: 'Nevada • 0.30 MAF (1928 BCPA §4a, 45 Stat. 1059 p. 3)'
                 };
                 return desc[items[0].label] || items[0].label;
               },
-              label: ctx => ` Consumptive Use: ${ctx.parsed.y.toFixed(1)} MAF/yr`
+              label: ctx => ` Statutory Apportionment: ${ctx.parsed.y.toFixed(2)} MAF/yr`
             }
           }
         },
@@ -970,7 +1002,7 @@ function initOverviewCharts() {
   }
 }
 
-// Macro Basin Multi-Reservoir Storage Timeline (1935 - Present)
+// Macro Basin Multi-Reservoir Storage Timeline (1937 - Present)
 let macroChartInstance = null;
 function renderMacroStorageTimeline() {
   if (!portalData) return;
@@ -1390,7 +1422,7 @@ function renderMeadHistoricalCharts() {
   });
 }
 
-// Render the 1935–2026 by 12-month heatmap matrix
+// Render the 1937–2026 by 12-month heatmap matrix
 function renderHeatmap() {
   const container = document.getElementById('heatmap-grid');
   if (container.children.length > 0 || !portalData) return;

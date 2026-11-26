@@ -1,10 +1,15 @@
 {
   "metadata": {
-    "description": "Richards-Baker Flashiness Index & Gaging Priority Hierarchy for Colorado River telemetry nodes",
-    "formula": "RBI = sum(|Q_t - Q_{t-1}|) / sum(Q_t)",
+    "description": "True daily Richards-Baker Flashiness Index (WY 2016-2025) & Basin Sentinel Hierarchy",
+    "formula": "RBI = mean_WY( sum(|Q_t - Q_{t-1}|) / sum(Q_t) ) (Baker et al., 2004)",
+    "thresholds": {
+      "regulated": "< 0.045 (or major dam tailwater)",
+      "snowmelt": "0.045 - 0.150 (project regime band)",
+      "flashy": ">= 0.150 (project regime band)"
+    },
     "tiers": [
-      "1922 Compact Point (Tier 1)",
-      "Key Reference Gage (Tier 2)",
+      "Compact Sentinel (Tier 1)",
+      "Basin Sentinel (Tier 2)",
       "Tributary Gage (Tier 3)",
       "Trans-Divide Tunnel (Tier 4)",
       "Conveyance Canal (Tier 5)",
@@ -12,6 +17,193 @@
     ]
   },
   "stations": {
+    "09380000": {
+      "id": "09380000",
+      "name": "Colorado River at Lees Ferry, AZ",
+      "type": "streamflow",
+      "tier_code": "compact_sentinel",
+      "tier_label": "Compact Sentinel",
+      "tier_rank": 1,
+      "rbi": 0.05,
+      "regime": "Regulated",
+      "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
+    },
+    "09070500": {
+      "id": "09070500",
+      "name": "Colorado River near Dotsero, CO (Shoshone Call Gage)",
+      "type": "streamflow",
+      "tier_code": "basin_sentinel",
+      "tier_label": "Basin Sentinel",
+      "tier_rank": 2,
+      "rbi": 0.0498,
+      "regime": "Snowmelt",
+      "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
+    },
+    "09095500": {
+      "id": "09095500",
+      "name": "Colorado River near Cameo, CO",
+      "type": "streamflow",
+      "tier_code": "basin_sentinel",
+      "tier_label": "Basin Sentinel",
+      "tier_rank": 2,
+      "rbi": 0.0516,
+      "regime": "Snowmelt",
+      "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
+    },
+    "09152500": {
+      "id": "09152500",
+      "name": "Gunnison River near Grand Junction, CO",
+      "type": "streamflow",
+      "tier_code": "basin_sentinel",
+      "tier_label": "Basin Sentinel",
+      "tier_rank": 2,
+      "rbi": 0.0543,
+      "regime": "Snowmelt",
+      "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
+    },
+    "09163500": {
+      "id": "09163500",
+      "name": "Colorado River near CO-UT State Line",
+      "type": "streamflow",
+      "tier_code": "basin_sentinel",
+      "tier_label": "Basin Sentinel",
+      "tier_rank": 2,
+      "rbi": 0.0512,
+      "regime": "Snowmelt",
+      "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
+    },
+    "09180000": {
+      "id": "09180000",
+      "name": "Dolores River near Cisco, UT",
+      "type": "streamflow",
+      "tier_code": "basin_sentinel",
+      "tier_label": "Basin Sentinel",
+      "tier_rank": 2,
+      "rbi": 0.1126,
+      "regime": "Snowmelt",
+      "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
+    },
+    "09180500": {
+      "id": "09180500",
+      "name": "Colorado River near Cisco, UT",
+      "type": "streamflow",
+      "tier_code": "basin_sentinel",
+      "tier_label": "Basin Sentinel",
+      "tier_rank": 2,
+      "rbi": 0.0517,
+      "regime": "Snowmelt",
+      "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
+    },
+    "09234500": {
+      "id": "09234500",
+      "name": "Green River near Greendale, UT (Flaming Gorge Dam)",
+      "type": "streamflow",
+      "tier_code": "basin_sentinel",
+      "tier_label": "Basin Sentinel",
+      "tier_rank": 2,
+      "rbi": 0.035,
+      "regime": "Regulated",
+      "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
+    },
+    "09260050": {
+      "id": "09260050",
+      "name": "Yampa River at Deerlodge Park, CO",
+      "type": "streamflow",
+      "tier_code": "basin_sentinel",
+      "tier_label": "Basin Sentinel",
+      "tier_rank": 2,
+      "rbi": 0.0874,
+      "regime": "Snowmelt",
+      "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
+    },
+    "09261000": {
+      "id": "09261000",
+      "name": "Green River near Jensen, UT (below Yampa)",
+      "type": "streamflow",
+      "tier_code": "basin_sentinel",
+      "tier_label": "Basin Sentinel",
+      "tier_rank": 2,
+      "rbi": 0.0516,
+      "regime": "Snowmelt",
+      "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
+    },
+    "09315000": {
+      "id": "09315000",
+      "name": "Green River at Green River, UT",
+      "type": "streamflow",
+      "tier_code": "basin_sentinel",
+      "tier_label": "Basin Sentinel",
+      "tier_rank": 2,
+      "rbi": 0.0512,
+      "regime": "Snowmelt",
+      "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
+    },
+    "09379500": {
+      "id": "09379500",
+      "name": "San Juan River near Bluff, UT",
+      "type": "streamflow",
+      "tier_code": "basin_sentinel",
+      "tier_label": "Basin Sentinel",
+      "tier_rank": 2,
+      "rbi": 0.1063,
+      "regime": "Snowmelt",
+      "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
+    },
+    "09429100": {
+      "id": "09429100",
+      "name": "Colorado River below Palo Verde Dam, AZ-CA",
+      "type": "streamflow",
+      "tier_code": "basin_sentinel",
+      "tier_label": "Basin Sentinel",
+      "tier_rank": 2,
+      "rbi": 0.1731,
+      "regime": "Regulated",
+      "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
+    },
+    "09429500": {
+      "id": "09429500",
+      "name": "Colorado River below Imperial Dam, AZ-CA",
+      "type": "streamflow",
+      "tier_code": "basin_sentinel",
+      "tier_label": "Basin Sentinel",
+      "tier_rank": 2,
+      "rbi": 0.1878,
+      "regime": "Flashy",
+      "badge_class": "bg-amber-100 text-amber-900 border-amber-300"
+    },
+    "USBR-DAVIS": {
+      "id": "USBR-DAVIS",
+      "name": "Colorado River below Davis Dam (USBR Hydroelectric Release)",
+      "type": "streamflow",
+      "tier_code": "basin_sentinel",
+      "tier_label": "Basin Sentinel",
+      "tier_rank": 2,
+      "rbi": null,
+      "regime": "Regulated Dam",
+      "badge_class": "bg-stone-100 text-slate-600 border-stone-300"
+    },
+    "USBR-HOOVER": {
+      "id": "USBR-HOOVER",
+      "name": "Colorado River below Hoover Dam (USBR Hydroelectric Release)",
+      "type": "streamflow",
+      "tier_code": "basin_sentinel",
+      "tier_label": "Basin Sentinel",
+      "tier_rank": 2,
+      "rbi": null,
+      "regime": "Regulated Dam",
+      "badge_class": "bg-stone-100 text-slate-600 border-stone-300"
+    },
+    "USBR-PARKER": {
+      "id": "USBR-PARKER",
+      "name": "Colorado River below Parker Dam (USBR Hydroelectric Release)",
+      "type": "streamflow",
+      "tier_code": "basin_sentinel",
+      "tier_label": "Basin Sentinel",
+      "tier_rank": 2,
+      "rbi": null,
+      "regime": "Regulated Dam",
+      "badge_class": "bg-stone-100 text-slate-600 border-stone-300"
+    },
     "09010500": {
       "id": "09010500",
       "name": "Colorado River below Baker Gulch nr Grand Lake, CO (Headwaters)",
@@ -19,7 +211,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0314,
+      "rbi": 0.0964,
       "regime": "Snowmelt",
       "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
     },
@@ -30,7 +222,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0334,
+      "rbi": 0.1013,
       "regime": "Snowmelt",
       "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
     },
@@ -41,7 +233,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.028,
+      "rbi": 0.0911,
       "regime": "Snowmelt",
       "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
     },
@@ -52,7 +244,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0262,
+      "rbi": 0.0863,
       "regime": "Snowmelt",
       "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
     },
@@ -63,9 +255,9 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0328,
-      "regime": "Snowmelt",
-      "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
+      "rbi": 0.077,
+      "regime": "Regulated",
+      "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
     },
     "09046600": {
       "id": "09046600",
@@ -74,7 +266,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0217,
+      "rbi": 0.0528,
       "regime": "Snowmelt",
       "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
     },
@@ -85,9 +277,9 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0209,
-      "regime": "Snowmelt",
-      "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
+      "rbi": 0.0419,
+      "regime": "Regulated",
+      "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
     },
     "09057500": {
       "id": "09057500",
@@ -96,7 +288,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0175,
+      "rbi": 0.0579,
       "regime": "Regulated",
       "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
     },
@@ -107,9 +299,9 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0128,
-      "regime": "Regulated",
-      "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
+      "rbi": 0.0508,
+      "regime": "Snowmelt",
+      "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
     },
     "09070000": {
       "id": "09070000",
@@ -118,20 +310,9 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0252,
+      "rbi": 0.0835,
       "regime": "Snowmelt",
       "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
-    },
-    "09070500": {
-      "id": "09070500",
-      "name": "Colorado River near Dotsero, CO (Shoshone Call Gage)",
-      "type": "streamflow",
-      "tier_code": "basin_sentinel",
-      "tier_label": "Key Reference Gage",
-      "tier_rank": 2,
-      "rbi": 0.0172,
-      "regime": "Regulated",
-      "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
     },
     "09080400": {
       "id": "09080400",
@@ -140,7 +321,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0124,
+      "rbi": 0.0292,
       "regime": "Regulated",
       "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
     },
@@ -151,9 +332,9 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0198,
-      "regime": "Regulated",
-      "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
+      "rbi": 0.0642,
+      "regime": "Snowmelt",
+      "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
     },
     "09085100": {
       "id": "09085100",
@@ -162,20 +343,9 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0169,
-      "regime": "Regulated",
-      "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
-    },
-    "09095500": {
-      "id": "09095500",
-      "name": "Colorado River near Cameo, CO",
-      "type": "streamflow",
-      "tier_code": "basin_sentinel",
-      "tier_label": "Key Reference Gage",
-      "tier_rank": 2,
-      "rbi": 0.0181,
-      "regime": "Regulated",
-      "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
+      "rbi": 0.0496,
+      "regime": "Snowmelt",
+      "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
     },
     "09114500": {
       "id": "09114500",
@@ -184,9 +354,9 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0195,
-      "regime": "Regulated",
-      "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
+      "rbi": 0.0587,
+      "regime": "Snowmelt",
+      "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
     },
     "09128000": {
       "id": "09128000",
@@ -195,7 +365,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0198,
+      "rbi": 0.0465,
       "regime": "Regulated",
       "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
     },
@@ -206,31 +376,9 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0226,
+      "rbi": 0.0743,
       "regime": "Snowmelt",
       "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
-    },
-    "09152500": {
-      "id": "09152500",
-      "name": "Gunnison River near Grand Junction, CO",
-      "type": "streamflow",
-      "tier_code": "basin_sentinel",
-      "tier_label": "Key Reference Gage",
-      "tier_rank": 2,
-      "rbi": 0.0185,
-      "regime": "Regulated",
-      "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
-    },
-    "09163500": {
-      "id": "09163500",
-      "name": "Colorado River near CO-UT State Line",
-      "type": "streamflow",
-      "tier_code": "basin_sentinel",
-      "tier_label": "Key Reference Gage",
-      "tier_rank": 2,
-      "rbi": 0.0168,
-      "regime": "Regulated",
-      "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
     },
     "09166500": {
       "id": "09166500",
@@ -239,7 +387,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0277,
+      "rbi": 0.1112,
       "regime": "Snowmelt",
       "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
     },
@@ -250,29 +398,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0532,
-      "regime": "Snowmelt",
-      "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
-    },
-    "09180000": {
-      "id": "09180000",
-      "name": "Dolores River near Cisco, UT",
-      "type": "streamflow",
-      "tier_code": "basin_sentinel",
-      "tier_label": "Key Reference Gage",
-      "tier_rank": 2,
-      "rbi": 0.0344,
-      "regime": "Snowmelt",
-      "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
-    },
-    "09180500": {
-      "id": "09180500",
-      "name": "Colorado River near Cisco, UT",
-      "type": "streamflow",
-      "tier_code": "basin_sentinel",
-      "tier_label": "Key Reference Gage",
-      "tier_rank": 2,
-      "rbi": 0.018,
+      "rbi": 0.1988,
       "regime": "Regulated",
       "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
     },
@@ -283,7 +409,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0214,
+      "rbi": 0.0809,
       "regime": "Snowmelt",
       "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
     },
@@ -294,7 +420,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.022,
+      "rbi": 0.0752,
       "regime": "Snowmelt",
       "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
     },
@@ -305,7 +431,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0164,
+      "rbi": 0.0233,
       "regime": "Regulated",
       "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
     },
@@ -316,18 +442,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0169,
-      "regime": "Regulated",
-      "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
-    },
-    "09234500": {
-      "id": "09234500",
-      "name": "Green River near Greendale, UT (Flaming Gorge Dam)",
-      "type": "streamflow",
-      "tier_code": "basin_sentinel",
-      "tier_label": "Key Reference Gage",
-      "tier_rank": 2,
-      "rbi": 0.018,
+      "rbi": 0.0284,
       "regime": "Regulated",
       "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
     },
@@ -338,7 +453,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0263,
+      "rbi": 0.0916,
       "regime": "Snowmelt",
       "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
     },
@@ -349,31 +464,9 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0329,
+      "rbi": 0.1147,
       "regime": "Snowmelt",
       "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
-    },
-    "09260050": {
-      "id": "09260050",
-      "name": "Yampa River at Deerlodge Park, CO",
-      "type": "streamflow",
-      "tier_code": "basin_sentinel",
-      "tier_label": "Key Reference Gage",
-      "tier_rank": 2,
-      "rbi": 0.0296,
-      "regime": "Snowmelt",
-      "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
-    },
-    "09261000": {
-      "id": "09261000",
-      "name": "Green River near Jensen, UT (below Yampa)",
-      "type": "streamflow",
-      "tier_code": "basin_sentinel",
-      "tier_label": "Key Reference Gage",
-      "tier_rank": 2,
-      "rbi": 0.0185,
-      "regime": "Regulated",
-      "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
     },
     "09272400": {
       "id": "09272400",
@@ -382,7 +475,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0207,
+      "rbi": 0.0497,
       "regime": "Snowmelt",
       "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
     },
@@ -393,7 +486,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0275,
+      "rbi": 0.1154,
       "regime": "Snowmelt",
       "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
     },
@@ -404,9 +497,9 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0181,
-      "regime": "Regulated",
-      "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
+      "rbi": 0.0652,
+      "regime": "Snowmelt",
+      "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
     },
     "09306500": {
       "id": "09306500",
@@ -415,7 +508,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.022,
+      "rbi": 0.0697,
       "regime": "Snowmelt",
       "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
     },
@@ -426,20 +519,9 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.087,
+      "rbi": 0.3086,
       "regime": "Flashy",
       "badge_class": "bg-amber-100 text-amber-900 border-amber-300"
-    },
-    "09315000": {
-      "id": "09315000",
-      "name": "Green River at Green River, UT",
-      "type": "streamflow",
-      "tier_code": "basin_sentinel",
-      "tier_label": "Key Reference Gage",
-      "tier_rank": 2,
-      "rbi": 0.0182,
-      "regime": "Regulated",
-      "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
     },
     "09328500": {
       "id": "09328500",
@@ -448,7 +530,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0693,
+      "rbi": 0.3194,
       "regime": "Flashy",
       "badge_class": "bg-amber-100 text-amber-900 border-amber-300"
     },
@@ -459,7 +541,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.1422,
+      "rbi": 0.284,
       "regime": "Flashy",
       "badge_class": "bg-amber-100 text-amber-900 border-amber-300"
     },
@@ -470,7 +552,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.098,
+      "rbi": 0.5516,
       "regime": "Flashy",
       "badge_class": "bg-amber-100 text-amber-900 border-amber-300"
     },
@@ -481,7 +563,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0301,
+      "rbi": 0.1085,
       "regime": "Snowmelt",
       "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
     },
@@ -492,7 +574,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0136,
+      "rbi": 0.035,
       "regime": "Regulated",
       "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
     },
@@ -503,7 +585,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0264,
+      "rbi": 0.1099,
       "regime": "Snowmelt",
       "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
     },
@@ -514,7 +596,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0227,
+      "rbi": 0.0833,
       "regime": "Snowmelt",
       "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
     },
@@ -525,31 +607,9 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0264,
+      "rbi": 0.0982,
       "regime": "Snowmelt",
       "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
-    },
-    "09379500": {
-      "id": "09379500",
-      "name": "San Juan River near Bluff, UT",
-      "type": "streamflow",
-      "tier_code": "basin_sentinel",
-      "tier_label": "Key Reference Gage",
-      "tier_rank": 2,
-      "rbi": 0.0283,
-      "regime": "Snowmelt",
-      "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
-    },
-    "09380000": {
-      "id": "09380000",
-      "name": "Colorado River at Lees Ferry, AZ",
-      "type": "streamflow",
-      "tier_code": "compact_sentinel",
-      "tier_label": "1922 Compact Point",
-      "tier_rank": 1,
-      "rbi": 0.0146,
-      "regime": "Regulated",
-      "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
     },
     "09382000": {
       "id": "09382000",
@@ -558,7 +618,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.2296,
+      "rbi": 0.5171,
       "regime": "Flashy",
       "badge_class": "bg-amber-100 text-amber-900 border-amber-300"
     },
@@ -569,7 +629,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0668,
+      "rbi": 0.2039,
       "regime": "Flashy",
       "badge_class": "bg-amber-100 text-amber-900 border-amber-300"
     },
@@ -580,7 +640,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.136,
+      "rbi": 0.4838,
       "regime": "Flashy",
       "badge_class": "bg-amber-100 text-amber-900 border-amber-300"
     },
@@ -591,9 +651,9 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0145,
-      "regime": "Regulated",
-      "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
+      "rbi": 0.0486,
+      "regime": "Snowmelt",
+      "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
     },
     "09403850": {
       "id": "09403850",
@@ -602,7 +662,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.5656,
+      "rbi": 0.6862,
       "regime": "Flashy",
       "badge_class": "bg-amber-100 text-amber-900 border-amber-300"
     },
@@ -613,9 +673,9 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0351,
-      "regime": "Snowmelt",
-      "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
+      "rbi": 0.0419,
+      "regime": "Regulated",
+      "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
     },
     "09404200": {
       "id": "09404200",
@@ -624,9 +684,9 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0154,
-      "regime": "Regulated",
-      "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
+      "rbi": 0.0497,
+      "regime": "Snowmelt",
+      "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
     },
     "09406000": {
       "id": "09406000",
@@ -635,7 +695,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0758,
+      "rbi": 0.1715,
       "regime": "Flashy",
       "badge_class": "bg-amber-100 text-amber-900 border-amber-300"
     },
@@ -646,7 +706,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0975,
+      "rbi": 0.1876,
       "regime": "Flashy",
       "badge_class": "bg-amber-100 text-amber-900 border-amber-300"
     },
@@ -657,9 +717,9 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0812,
-      "regime": "Flashy",
-      "badge_class": "bg-amber-100 text-amber-900 border-amber-300"
+      "rbi": 0.1122,
+      "regime": "Snowmelt",
+      "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
     },
     "09426000": {
       "id": "09426000",
@@ -668,31 +728,9 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0748,
-      "regime": "Flashy",
-      "badge_class": "bg-amber-100 text-amber-900 border-amber-300"
-    },
-    "09429100": {
-      "id": "09429100",
-      "name": "Colorado River below Palo Verde Dam, AZ-CA",
-      "type": "streamflow",
-      "tier_code": "basin_sentinel",
-      "tier_label": "Key Reference Gage",
-      "tier_rank": 2,
-      "rbi": 0.0159,
+      "rbi": 0.0795,
       "regime": "Regulated",
       "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
-    },
-    "09429500": {
-      "id": "09429500",
-      "name": "Colorado River below Imperial Dam, AZ-CA",
-      "type": "streamflow",
-      "tier_code": "basin_sentinel",
-      "tier_label": "Key Reference Gage",
-      "tier_rank": 2,
-      "rbi": 0.111,
-      "regime": "Flashy",
-      "badge_class": "bg-amber-100 text-amber-900 border-amber-300"
     },
     "09471000": {
       "id": "09471000",
@@ -701,7 +739,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.2492,
+      "rbi": 0.6523,
       "regime": "Flashy",
       "badge_class": "bg-amber-100 text-amber-900 border-amber-300"
     },
@@ -712,9 +750,9 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0845,
-      "regime": "Flashy",
-      "badge_class": "bg-amber-100 text-amber-900 border-amber-300"
+      "rbi": 0.1286,
+      "regime": "Snowmelt",
+      "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
     },
     "09498500": {
       "id": "09498500",
@@ -723,7 +761,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.1007,
+      "rbi": 0.189,
       "regime": "Flashy",
       "badge_class": "bg-amber-100 text-amber-900 border-amber-300"
     },
@@ -734,9 +772,9 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0395,
-      "regime": "Snowmelt",
-      "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
+      "rbi": 0.0955,
+      "regime": "Regulated",
+      "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
     },
     "09506000": {
       "id": "09506000",
@@ -745,7 +783,7 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.2154,
+      "rbi": 0.2543,
       "regime": "Flashy",
       "badge_class": "bg-amber-100 text-amber-900 border-amber-300"
     },
@@ -756,9 +794,9 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.0973,
-      "regime": "Flashy",
-      "badge_class": "bg-amber-100 text-amber-900 border-amber-300"
+      "rbi": 0.1257,
+      "regime": "Regulated",
+      "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
     },
     "09511300": {
       "id": "09511300",
@@ -767,9 +805,9 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.1228,
-      "regime": "Flashy",
-      "badge_class": "bg-amber-100 text-amber-900 border-amber-300"
+      "rbi": 0.1448,
+      "regime": "Snowmelt",
+      "badge_class": "bg-sky-100 text-sky-800 border-sky-300"
     },
     "09520500": {
       "id": "09520500",
@@ -778,42 +816,9 @@
       "tier_code": "tributary_gage",
       "tier_label": "Tributary Gage",
       "tier_rank": 3,
-      "rbi": 0.1413,
+      "rbi": 0.2794,
       "regime": "Flashy",
       "badge_class": "bg-amber-100 text-amber-900 border-amber-300"
-    },
-    "USBR-HOOVER": {
-      "id": "USBR-HOOVER",
-      "name": "Colorado River below Hoover Dam (USBR Hydroelectric Release)",
-      "type": "streamflow",
-      "tier_code": "basin_sentinel",
-      "tier_label": "Key Reference Gage",
-      "tier_rank": 2,
-      "rbi": 0.015,
-      "regime": "Regulated",
-      "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
-    },
-    "USBR-DAVIS": {
-      "id": "USBR-DAVIS",
-      "name": "Colorado River below Davis Dam (USBR Hydroelectric Release)",
-      "type": "streamflow",
-      "tier_code": "basin_sentinel",
-      "tier_label": "Key Reference Gage",
-      "tier_rank": 2,
-      "rbi": 0.015,
-      "regime": "Regulated",
-      "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
-    },
-    "USBR-PARKER": {
-      "id": "USBR-PARKER",
-      "name": "Colorado River below Parker Dam (USBR Hydroelectric Release)",
-      "type": "streamflow",
-      "tier_code": "basin_sentinel",
-      "tier_label": "Key Reference Gage",
-      "tier_rank": 2,
-      "rbi": 0.015,
-      "regime": "Regulated",
-      "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
     },
     "ADATUNCO": {
       "id": "ADATUNCO",
@@ -822,29 +827,7 @@
       "tier_code": "export_tunnel",
       "tier_label": "Trans-Divide Tunnel",
       "tier_rank": 4,
-      "rbi": 0.01,
-      "regime": "Regulated Export",
-      "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
-    },
-    "MOFTUNCO": {
-      "id": "MOFTUNCO",
-      "name": "Moffat Water Tunnel",
-      "type": "diversion_tunnel",
-      "tier_code": "export_tunnel",
-      "tier_label": "Trans-Divide Tunnel",
-      "tier_rank": 4,
-      "rbi": 0.01,
-      "regime": "Regulated Export",
-      "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
-    },
-    "ROBTUNCO": {
-      "id": "ROBTUNCO",
-      "name": "Harold D. Roberts Tunnel",
-      "type": "diversion_tunnel",
-      "tier_code": "export_tunnel",
-      "tier_label": "Trans-Divide Tunnel",
-      "tier_rank": 4,
-      "rbi": 0.01,
+      "rbi": null,
       "regime": "Regulated Export",
       "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
     },
@@ -855,7 +838,29 @@
       "tier_code": "export_tunnel",
       "tier_label": "Trans-Divide Tunnel",
       "tier_rank": 4,
-      "rbi": 0.01,
+      "rbi": null,
+      "regime": "Regulated Export",
+      "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
+    },
+    "MOFTUNCO": {
+      "id": "MOFTUNCO",
+      "name": "Moffat Water Tunnel",
+      "type": "diversion_tunnel",
+      "tier_code": "export_tunnel",
+      "tier_label": "Trans-Divide Tunnel",
+      "tier_rank": 4,
+      "rbi": null,
+      "regime": "Regulated Export",
+      "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
+    },
+    "ROBTUNCO": {
+      "id": "ROBTUNCO",
+      "name": "Harold D. Roberts Tunnel",
+      "type": "diversion_tunnel",
+      "tier_code": "export_tunnel",
+      "tier_label": "Trans-Divide Tunnel",
+      "tier_rank": 4,
+      "rbi": null,
       "regime": "Regulated Export",
       "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
     },
@@ -866,8 +871,8 @@
       "tier_code": "conveyance_canal",
       "tier_label": "Conveyance Canal",
       "tier_rank": 5,
-      "rbi": 0.012,
-      "regime": "Regulated Canal",
+      "rbi": 0.0408,
+      "regime": "Regulated",
       "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
     },
     "09426650": {
@@ -877,8 +882,8 @@
       "tier_code": "conveyance_canal",
       "tier_label": "Conveyance Canal",
       "tier_rank": 5,
-      "rbi": 0.012,
-      "regime": "Regulated Canal",
+      "rbi": 0.0896,
+      "regime": "Regulated",
       "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
     },
     "09522000": {
@@ -888,8 +893,8 @@
       "tier_code": "conveyance_canal",
       "tier_label": "Conveyance Canal",
       "tier_rank": 5,
-      "rbi": 0.012,
-      "regime": "Regulated Canal",
+      "rbi": 0.0353,
+      "regime": "Regulated",
       "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
     },
     "09527700": {
@@ -899,64 +904,9 @@
       "tier_code": "conveyance_canal",
       "tier_label": "Conveyance Canal",
       "tier_rank": 5,
-      "rbi": 0.0212,
-      "regime": "Regulated Canal",
+      "rbi": 0.1034,
+      "regime": "Regulated",
       "badge_class": "bg-emerald-100 text-emerald-800 border-emerald-300"
-    },
-    "lake_mead": {
-      "id": "lake_mead",
-      "name": "Lake Mead (Hoover Dam)",
-      "type": "reservoir",
-      "tier_code": "storage_reservoir",
-      "tier_label": "Storage Reservoir",
-      "tier_rank": 6,
-      "rbi": null,
-      "regime": "Storage Buffer",
-      "badge_class": "bg-slate-100 text-slate-600 border-slate-300"
-    },
-    "lake_powell": {
-      "id": "lake_powell",
-      "name": "Lake Powell (Glen Canyon Dam)",
-      "type": "reservoir",
-      "tier_code": "storage_reservoir",
-      "tier_label": "Storage Reservoir",
-      "tier_rank": 6,
-      "rbi": null,
-      "regime": "Storage Buffer",
-      "badge_class": "bg-slate-100 text-slate-600 border-slate-300"
-    },
-    "flaming_gorge": {
-      "id": "flaming_gorge",
-      "name": "Flaming Gorge Reservoir (Flaming Gorge Dam)",
-      "type": "reservoir",
-      "tier_code": "storage_reservoir",
-      "tier_label": "Storage Reservoir",
-      "tier_rank": 6,
-      "rbi": null,
-      "regime": "Storage Buffer",
-      "badge_class": "bg-slate-100 text-slate-600 border-slate-300"
-    },
-    "lake_mohave": {
-      "id": "lake_mohave",
-      "name": "Lake Mohave (Davis Dam)",
-      "type": "reservoir",
-      "tier_code": "storage_reservoir",
-      "tier_label": "Storage Reservoir",
-      "tier_rank": 6,
-      "rbi": null,
-      "regime": "Storage Buffer",
-      "badge_class": "bg-slate-100 text-slate-600 border-slate-300"
-    },
-    "navajo_reservoir": {
-      "id": "navajo_reservoir",
-      "name": "Navajo Reservoir (Navajo Dam)",
-      "type": "reservoir",
-      "tier_code": "storage_reservoir",
-      "tier_label": "Storage Reservoir",
-      "tier_rank": 6,
-      "rbi": null,
-      "regime": "Storage Buffer",
-      "badge_class": "bg-slate-100 text-slate-600 border-slate-300"
     },
     "blue_mesa": {
       "id": "blue_mesa",
@@ -967,29 +917,7 @@
       "tier_rank": 6,
       "rbi": null,
       "regime": "Storage Buffer",
-      "badge_class": "bg-slate-100 text-slate-600 border-slate-300"
-    },
-    "lake_havasu": {
-      "id": "lake_havasu",
-      "name": "Lake Havasu (Parker Dam)",
-      "type": "reservoir",
-      "tier_code": "storage_reservoir",
-      "tier_label": "Storage Reservoir",
-      "tier_rank": 6,
-      "rbi": null,
-      "regime": "Storage Buffer",
-      "badge_class": "bg-slate-100 text-slate-600 border-slate-300"
-    },
-    "lake_granby": {
-      "id": "lake_granby",
-      "name": "Lake Granby",
-      "type": "reservoir",
-      "tier_code": "storage_reservoir",
-      "tier_label": "Storage Reservoir",
-      "tier_rank": 6,
-      "rbi": null,
-      "regime": "Storage Buffer",
-      "badge_class": "bg-slate-100 text-slate-600 border-slate-300"
+      "badge_class": "bg-stone-100 text-slate-600 border-stone-300"
     },
     "dillon_reservoir": {
       "id": "dillon_reservoir",
@@ -1000,7 +928,18 @@
       "tier_rank": 6,
       "rbi": null,
       "regime": "Storage Buffer",
-      "badge_class": "bg-slate-100 text-slate-600 border-slate-300"
+      "badge_class": "bg-stone-100 text-slate-600 border-stone-300"
+    },
+    "flaming_gorge": {
+      "id": "flaming_gorge",
+      "name": "Flaming Gorge Reservoir (Flaming Gorge Dam)",
+      "type": "reservoir",
+      "tier_code": "storage_reservoir",
+      "tier_label": "Storage Reservoir",
+      "tier_rank": 6,
+      "rbi": null,
+      "regime": "Storage Buffer",
+      "badge_class": "bg-stone-100 text-slate-600 border-stone-300"
     },
     "green_mountain": {
       "id": "green_mountain",
@@ -1011,7 +950,7 @@
       "tier_rank": 6,
       "rbi": null,
       "regime": "Storage Buffer",
-      "badge_class": "bg-slate-100 text-slate-600 border-slate-300"
+      "badge_class": "bg-stone-100 text-slate-600 border-stone-300"
     },
     "homestake_reservoir": {
       "id": "homestake_reservoir",
@@ -1022,7 +961,73 @@
       "tier_rank": 6,
       "rbi": null,
       "regime": "Storage Buffer",
-      "badge_class": "bg-slate-100 text-slate-600 border-slate-300"
+      "badge_class": "bg-stone-100 text-slate-600 border-stone-300"
+    },
+    "lake_granby": {
+      "id": "lake_granby",
+      "name": "Lake Granby",
+      "type": "reservoir",
+      "tier_code": "storage_reservoir",
+      "tier_label": "Storage Reservoir",
+      "tier_rank": 6,
+      "rbi": null,
+      "regime": "Storage Buffer",
+      "badge_class": "bg-stone-100 text-slate-600 border-stone-300"
+    },
+    "lake_havasu": {
+      "id": "lake_havasu",
+      "name": "Lake Havasu (Parker Dam)",
+      "type": "reservoir",
+      "tier_code": "storage_reservoir",
+      "tier_label": "Storage Reservoir",
+      "tier_rank": 6,
+      "rbi": null,
+      "regime": "Storage Buffer",
+      "badge_class": "bg-stone-100 text-slate-600 border-stone-300"
+    },
+    "lake_mead": {
+      "id": "lake_mead",
+      "name": "Lake Mead (Hoover Dam)",
+      "type": "reservoir",
+      "tier_code": "storage_reservoir",
+      "tier_label": "Storage Reservoir",
+      "tier_rank": 6,
+      "rbi": null,
+      "regime": "Storage Buffer",
+      "badge_class": "bg-stone-100 text-slate-600 border-stone-300"
+    },
+    "lake_mohave": {
+      "id": "lake_mohave",
+      "name": "Lake Mohave (Davis Dam)",
+      "type": "reservoir",
+      "tier_code": "storage_reservoir",
+      "tier_label": "Storage Reservoir",
+      "tier_rank": 6,
+      "rbi": null,
+      "regime": "Storage Buffer",
+      "badge_class": "bg-stone-100 text-slate-600 border-stone-300"
+    },
+    "lake_powell": {
+      "id": "lake_powell",
+      "name": "Lake Powell (Glen Canyon Dam)",
+      "type": "reservoir",
+      "tier_code": "storage_reservoir",
+      "tier_label": "Storage Reservoir",
+      "tier_rank": 6,
+      "rbi": null,
+      "regime": "Storage Buffer",
+      "badge_class": "bg-stone-100 text-slate-600 border-stone-300"
+    },
+    "navajo_reservoir": {
+      "id": "navajo_reservoir",
+      "name": "Navajo Reservoir (Navajo Dam)",
+      "type": "reservoir",
+      "tier_code": "storage_reservoir",
+      "tier_label": "Storage Reservoir",
+      "tier_rank": 6,
+      "rbi": null,
+      "regime": "Storage Buffer",
+      "badge_class": "bg-stone-100 text-slate-600 border-stone-300"
     }
   }
 }

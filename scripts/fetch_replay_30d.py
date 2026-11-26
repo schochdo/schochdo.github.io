@@ -188,13 +188,33 @@ def main():
         'stations': matrix_stations
     }
 
-    # Write compact JSON
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    with open(output_path, 'w') as f:
-        json.dump(payload, f, separators=(',', ':'))
+    # Persist matrix in SQLite SSOT and export via export_sqlite_to_json.py
+    import sqlite3
+    sys.path.insert(0, os.path.join(root_dir, 'scripts'))
+    from export_sqlite_to_json import export_replay, get_conn
 
-    size_kb = os.path.getsize(output_path) / 1024.0
-    print(f"Successfully generated {output_path} ({size_kb:.1f} KB).")
+    db_path = os.path.join(root_dir, 'data', 'colorado_river_basin.db')
+    conn = get_conn(db_path)
+    conn.execute(
+        """
+        CREATE TABLE IF NOT EXISTS replay_matrices (
+            window_key TEXT PRIMARY KEY,
+            generated_at TEXT NOT NULL,
+            payload_json TEXT NOT NULL
+        )
+        """
+    )
+    conn.execute(
+        """
+        INSERT INTO replay_matrices (window_key, generated_at, payload_json)
+        VALUES ('30d', ?, ?)
+        ON CONFLICT(window_key) DO UPDATE SET generated_at=excluded.generated_at, payload_json=excluded.payload_json
+        """,
+        (payload['metadata']['generated_at'], json.dumps(payload, separators=(',', ':'))),
+    )
+    conn.commit()
+    export_replay(conn, '30d')
+    conn.close()
 
 if __name__ == '__main__':
     main()

@@ -939,7 +939,7 @@ def validate_hydrology(streamflows, dam_releases, canals, tunnels, river_network
     5. Lower Basin Dam Cross-Checks: Hoover, Davis, Parker, and Imperial dams.
     """
     report = {
-        "timestamp": datetime.now().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "overall_status": "VALID",
         "stale_stations": [],
         "reach_coverage": {
@@ -1261,17 +1261,56 @@ def sync_to_sqlite(db_path, streamflows, dam_releases, canals, tunnels, reservoi
     """)
 
     cur.execute("""
+    CREATE TABLE IF NOT EXISTS dam_releases_latest (
+        dam_key TEXT PRIMARY KEY,
+        station_id TEXT NOT NULL,
+        name TEXT NOT NULL,
+        flow_cfs REAL,
+        timestamp_utc TEXT,
+        source TEXT NOT NULL,
+        source_url TEXT NOT NULL,
+        age_hours REAL,
+        data_status TEXT,
+        lat REAL,
+        lon REAL,
+        updated_at TEXT NOT NULL
+    );
+    """)
+
+    cur.execute("""
     CREATE TABLE IF NOT EXISTS ingestion_runs (
         run_id INTEGER PRIMARY KEY AUTOINCREMENT,
         run_timestamp TEXT NOT NULL,
         stations_fetched INTEGER,
         reservoirs_fetched INTEGER,
         validation_status TEXT,
-        notes TEXT
+        notes TEXT,
+        validation_json TEXT
     );
     """)
 
-    now_iso = datetime.now().isoformat()
+    run_cols = {c[1] for c in cur.execute("PRAGMA table_info(ingestion_runs);").fetchall()}
+    if "validation_json" not in run_cols:
+        cur.execute("ALTER TABLE ingestion_runs ADD COLUMN validation_json TEXT;")
+
+    now_iso = datetime.now(timezone.utc).isoformat()
+
+    for dam_key, dr in (dam_releases or {}).items():
+        cur.execute("""
+        INSERT INTO dam_releases_latest (
+            dam_key, station_id, name, flow_cfs, timestamp_utc, source, source_url, age_hours, data_status, lat, lon, updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(dam_key) DO UPDATE SET
+            flow_cfs=excluded.flow_cfs,
+            timestamp_utc=excluded.timestamp_utc,
+            age_hours=excluded.age_hours,
+            data_status=excluded.data_status,
+            updated_at=excluded.updated_at;
+        """, (
+            dam_key, dr["id"], dr["name"], dr.get("flow_cfs"), dr.get("timestamp"),
+            dr["source"], dr["source_url"], dr.get("age_hours", 0.0), dr.get("data_status", "live"),
+            dr.get("lat"), dr.get("lon"), now_iso
+        ))
 
     all_telemetry = []
     for s in streamflows:
@@ -1367,9 +1406,9 @@ def sync_to_sqlite(db_path, streamflows, dam_releases, canals, tunnels, reservoi
         ))
 
     cur.execute("""
-    INSERT INTO ingestion_runs (run_timestamp, stations_fetched, reservoirs_fetched, validation_status, notes)
-    VALUES (?, ?, ?, ?, ?);
-    """, (now_iso, len(all_telemetry), len(reservoirs), validation_report.get("overall_status", "UNKNOWN"), f"Audited {validation_report.get('reach_coverage', {}).get('active_reaches', 0)} active reaches"))
+    INSERT INTO ingestion_runs (run_timestamp, stations_fetched, reservoirs_fetched, validation_status, notes, validation_json)
+    VALUES (?, ?, ?, ?, ?, ?);
+    """, (now_iso, len(all_telemetry), len(reservoirs), validation_report.get("overall_status", "UNKNOWN"), f"Audited {validation_report.get('reach_coverage', {}).get('active_reaches', 0)} active reaches", json.dumps(validation_report)))
 
     cur.execute("""
     CREATE VIEW IF NOT EXISTS view_live_station_telemetry AS
@@ -1403,105 +1442,16 @@ def sync_to_sqlite(db_path, streamflows, dam_releases, canals, tunnels, reservoi
 
 def export_json_from_sqlite(db_path, dam_releases, validation_report, out_candidates, in_memory_reservoirs=None):
     """
-    Constructs the static web dashboard JSON payloads by querying the SQLite database using SQL.
-    Maintains clean decoupled architecture: Python -> SQLite SSOT -> SQL Queries -> JSON Feeds.
+    Delegates static JSON export to scripts/export_sqlite_to_json.py so SQLite
+    remains the sole Single Source of Truth across the entire pipeline.
     """
-    conn = sqlite3.connect(db_path)
-    conn.row_factory = sqlite3.Row
-    cur = conn.cursor()
-
-    streamflow_rows = cur.execute("""
-    SELECT station_id AS id, name, provider, 'streamflow' AS type, flow_cfs, timestamp_utc AS timestamp, age_hours, data_status, latitude AS lat, longitude AS lon
-    FROM telemetry_latest
-    WHERE station_type = 'streamflow'
-    ORDER BY station_id ASC;
-    """).fetchall()
-    streamflows = [dict(r) for r in streamflow_rows]
-
-    tunnel_rows = cur.execute("""
-    SELECT station_id AS id, name, provider, 'diversion_tunnel' AS type, flow_cfs, timestamp_utc AS timestamp, age_hours, data_status, latitude AS lat, longitude AS lon
-    FROM telemetry_latest
-    WHERE station_type = 'diversion_tunnel'
-    ORDER BY station_id ASC;
-    """).fetchall()
-    tunnels = [dict(r) for r in tunnel_rows]
-
-    canal_rows = cur.execute("""
-    SELECT station_id AS id, name, provider, 'diversion_canal' AS type, flow_cfs, timestamp_utc AS timestamp, age_hours, data_status, latitude AS lat, longitude AS lon
-    FROM telemetry_latest
-    WHERE station_type = 'diversion_canal'
-    ORDER BY station_id ASC;
-    """).fetchall()
-    canals = [dict(r) for r in canal_rows]
-
-    reservoir_rows = cur.execute("""
-    SELECT 
-        r.reservoir_id AS id,
-        r.name,
-        r.river,
-        'reservoir' AS type,
-        r.category,
-        r.operator,
-        t.elevation_ft,
-        r.feet_below_full,
-        t.storage_af,
-        r.capacity_af,
-        COALESCE(t.percent_full, r.capacity_pct) AS capacity_pct,
-        r.role,
-        t.timestamp_utc AS timestamp,
-        0.0 AS age_hours,
-        t.data_status,
-        r.latitude AS lat,
-        r.longitude AS lon
-    FROM reservoirs r
-    JOIN reservoirs_telemetry t ON r.reservoir_id = t.reservoir_id;
-    """).fetchall()
-
-    system_res = []
-    fr_res = []
-    for row in reservoir_rows:
-        d = dict(row)
-        if d.get("category") == "front_range":
-            d["provider"] = "CDWR"
-            fr_res.append(d)
-        else:
-            if d.get("id") in ["lake_powell", "lake_mohave", "lake_havasu"]:
-                d["provider"] = "USBR / USGS"
-            else:
-                d["provider"] = "USBR"
-            system_res.append(d)
-
-    system_res = sorted(system_res, key=lambda x: x.get("capacity_af") or 0, reverse=True)
-    fr_res = sorted(fr_res, key=lambda x: x.get("capacity_af") or 0, reverse=True)
-    reservoirs = system_res + fr_res
-
-    if len(reservoirs) == 0 and in_memory_reservoirs:
-        reservoirs = in_memory_reservoirs
-
-    run_row = cur.execute("SELECT run_timestamp FROM ingestion_runs ORDER BY run_id DESC LIMIT 1;").fetchone()
-    fetched_at = run_row["run_timestamp"] if run_row else datetime.now().isoformat()
+    import sys
+    repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.insert(0, os.path.join(repo_root, "scripts"))
+    from export_sqlite_to_json import export_latest_metrics, get_conn
+    conn = get_conn(db_path)
+    export_latest_metrics(conn)
     conn.close()
-
-    payload = {
-        "fetched_at": fetched_at,
-        "dam_releases": dam_releases,
-        "streamflows": streamflows,
-        "tunnels": tunnels,
-        "canals": canals,
-        "reservoirs": reservoirs,
-        "validation": validation_report
-    }
-
-    saved_to = []
-    for out_file in out_candidates:
-        parent = os.path.dirname(out_file)
-        if os.path.exists(parent) or parent in ["web/data", "data"]:
-            os.makedirs(parent, exist_ok=True)
-            with open(out_file, "w") as f:
-                json.dump(payload, f, indent=2)
-            saved_to.append(out_file)
-
-    print(f"[SQL EXPORT] Compiled JSON snapshot from SQLite database and exported to {', '.join(saved_to)}!")
 
 def main():
     print("Fetching Colorado River hydrologic data...")
