@@ -450,17 +450,17 @@
               The <strong>16.5 MAF</strong> core statutory promise (7.5 Upper + 7.5 Lower + 1.5 Mexico) exceeded official USBR Lees Ferry Natural Flow in <strong>68.0% of years</strong>—and 21 of 25 years since 2000—forcing the system to draw down Powell and Mead storage to cover the gap.
             </p>
           </div>
-          <div class="flex flex-wrap items-center gap-1.5 text-[11px] font-semibold text-stone-700">
-            <button type="button" class="inline-flex items-center gap-1.5 px-2 py-1 rounded-[2px] bg-[#faf8f4] hover:bg-white border border-[#cfc8ba] cursor-pointer select-none" onclick="toggleCompactDataset(0)">
+          <div class="flex flex-wrap items-center gap-1.5 text-[11px] font-semibold">
+            <button type="button" id="compact-toggle-0" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[2px] bg-white text-slate-900 border border-[#8c8476] shadow-xs cursor-pointer select-none transition" onclick="toggleCompactDataset(0)">
               <span class="inline-block w-2.5 h-2.5 rounded-[1px]" style="background:#0284c7;"></span>
               <span class="inline-block w-2.5 h-2.5 rounded-[1px] -ml-1" style="background:#b2182b;"></span>
               <span>USBR Natural Flow (Surplus / Deficit)</span>
             </button>
-            <button type="button" class="inline-flex items-center gap-1.5 px-2 py-1 rounded-[2px] bg-[#faf8f4] hover:bg-white border border-[#cfc8ba] cursor-pointer select-none" onclick="toggleCompactDataset(1)">
+            <button type="button" id="compact-toggle-1" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[2px] bg-white text-slate-900 border border-[#8c8476] shadow-xs cursor-pointer select-none transition" onclick="toggleCompactDataset(1)">
               <span class="inline-block w-3.5 border-t-2 border-slate-700"></span>
               <span>Lees Ferry Releases</span>
             </button>
-            <button type="button" class="inline-flex items-center gap-1.5 px-2 py-1 rounded-[2px] bg-[#faf8f4] hover:bg-white border border-[#cfc8ba] cursor-pointer select-none" onclick="toggleCompactDataset(2)">
+            <button type="button" id="compact-toggle-2" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[2px] bg-white text-slate-900 border border-[#8c8476] shadow-xs cursor-pointer select-none transition" onclick="toggleCompactDataset(2)">
               <span class="inline-block w-3.5 border-t-2 border-dashed border-slate-800"></span>
               <span>16.5 MAF Core Promise</span>
             </button>
@@ -1239,8 +1239,17 @@
     function toggleCompactDataset(dsIdx) {
       if (!compact100yrChart) return;
       const meta = compact100yrChart.getDatasetMeta(dsIdx);
-      meta.hidden = meta.hidden === null ? !compact100yrChart.data.datasets[dsIdx].hidden : null;
+      const nowHidden = meta.hidden === null ? !compact100yrChart.data.datasets[dsIdx].hidden : !meta.hidden;
+      meta.hidden = nowHidden;
       compact100yrChart.update();
+      const btn = document.getElementById(`compact-toggle-${dsIdx}`);
+      if (btn) {
+        if (nowHidden) {
+          btn.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[2px] bg-[#f5f2eb] text-stone-400 border border-[#d6cfc2] line-through opacity-65 cursor-pointer select-none transition';
+        } else {
+          btn.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[2px] bg-white text-slate-900 border border-[#8c8476] shadow-xs cursor-pointer select-none transition';
+        }
+      }
     }
 
     async function renderCompact100yrChart() {

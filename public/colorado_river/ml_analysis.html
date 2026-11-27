@@ -327,11 +327,11 @@
     };
 
     const LABEL_OFFSETS = {
-      '09380000': { dx: 10, dy: -8 },
-      '09180500': { dx: 10, dy: -8 },
-      '09315000': { dx: 10, dy: 10 },
+      '09380000': { dx: 12, dy: 2 },
+      '09180500': { dx: 11, dy: -2 },
+      '09315000': { dx: 11, dy: 4 },
       '09379500': { dx: 10, dy: -2 },
-      '09234500': { dx: -10, dy: 0, align: 'right' },
+      '09234500': { dx: -11, dy: -12, align: 'right' },
       '09333500': { dx: -10, dy: -8, align: 'right' },
       '09337500': { dx: -10, dy: 0, align: 'right' }
     };
@@ -445,9 +445,9 @@
           ctx.font = '700 9.5px Inter, sans-serif';
           ctx.fillStyle = '#78716c';
           ctx.textAlign = 'center';
-          ctx.fillText('DAM-REGULATED', (chartArea.left + x05) / 2, chartArea.top + 11);
-          ctx.fillText('SNOWMELT', (x05 + x15) / 2, chartArea.top + 11);
-          ctx.fillText('DESERT FLASH', (x15 + chartArea.right) / 2, chartArea.top + 11);
+          ctx.fillText('DAM-REGULATED', (chartArea.left + x05) / 2, chartArea.top - 7);
+          ctx.fillText('SNOWMELT', (x05 + x15) / 2, chartArea.top - 7);
+          ctx.fillText('DESERT FLASH', (x15 + chartArea.right) / 2, chartArea.top - 7);
           ctx.restore();
         }
       };
@@ -464,8 +464,8 @@
               const raw = ds.data[i];
               if (!raw || raw.isDim) return;
               const g = raw.gage;
-              if (!LABELED_IDS.has(g.id) && !raw.isSel) return;
-              const txt = SHORT_LABELS[g.id] || g.name.split(',')[0].slice(0, 22);
+              if (!LABELED_IDS.has(g.id)) return;
+              const txt = SHORT_LABELS[g.id];
               const off = LABEL_OFFSETS[g.id] || { dx: raw.r + 5, dy: 0 };
               const alignRight = off.align === 'right' || el.x > chart.chartArea.right - 95;
               ctx.textAlign = alignRight ? 'right' : 'left';
@@ -492,6 +492,7 @@
           responsive: true,
           maintainAspectRatio: false,
           animation: false,
+          layout: { padding: { top: 20, right: 8 } },
           onClick: (_evt, elements) => {
             if (!elements.length) return;
             const { datasetIndex, index } = elements[0];
