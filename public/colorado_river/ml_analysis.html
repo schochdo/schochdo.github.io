@@ -47,6 +47,42 @@
       overflow: hidden;
       box-sizing: border-box;
     }
+    .regime-toggle-bar {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px;
+      background: #ebe4d6;
+      border: 1px solid #cfc8ba;
+      border-radius: 2px;
+      padding: 3px;
+    }
+    .regime-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 9px;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 2px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: #334155;
+      cursor: pointer;
+      transition: background-color 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+      white-space: nowrap;
+    }
+    .regime-btn:hover {
+      background: #faf8f4;
+      border-color: #cfc8ba;
+      color: #0f172a;
+    }
+    .regime-btn.is-active {
+      background: #ffffff;
+      border-color: #8c8476;
+      color: #0f172a;
+      box-shadow: 0 1px 1px rgba(15, 23, 42, 0.06);
+    }
     .legend-item {
       display: inline-flex;
       align-items: center;
@@ -64,6 +100,13 @@
       width: 9px;
       height: 9px;
       border-radius: 9999px;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+    .legend-diamond {
+      width: 8px;
+      height: 8px;
+      transform: rotate(45deg);
       display: inline-block;
       flex-shrink: 0;
     }
@@ -121,21 +164,27 @@
       <h1 class="text-lg md:text-xl font-black text-slate-900 tracking-tight leading-none">Tributary Hydrology &amp; Flow Regimes</h1>
     </div>
 
-    <!-- Interactive Regime Filter Legend -->
-    <div id="regime-key" class="flex flex-wrap items-center gap-3 text-xs shrink-0">
-      <span id="leg-Snowmelt" class="legend-item font-semibold" onclick="toggleRegimeFilter('Snowmelt')" title="Filter Snowmelt gages">
-        <span class="legend-dot" style="background: #2b5c8f;"></span>
-        <span class="text-[#2b5c8f]">Snowmelt</span>
-      </span>
-      <span id="leg-Regulated" class="legend-item font-semibold" onclick="toggleRegimeFilter('Regulated')" title="Filter Dam-Regulated gages">
-        <span class="legend-dot" style="background: #3f6f58;"></span>
-        <span class="text-[#3f6f58]">Dam-Regulated</span>
-      </span>
-      <span id="leg-Flashy" class="legend-item font-semibold" onclick="toggleRegimeFilter('Flashy')" title="Filter Desert Flash-Flood gages">
-        <span class="legend-dot" style="background: #b8502a;"></span>
-        <span class="text-[#b8502a]">Desert Flash</span>
-      </span>
-      <button id="btn-reset" onclick="resetSelection()" class="hidden text-[11px] font-bold text-[#2b5c8f] hover:underline cursor-pointer">Reset</button>
+    <!-- Tactile Segmented Regime Filter Toggles -->
+    <div id="regime-key" class="regime-toggle-bar shrink-0" role="group" aria-label="Filter gages by flow regime">
+      <button type="button" id="btn-reg-ALL" class="regime-btn is-active" onclick="setRegimeFilter(null)">
+        <span>All Gages</span>
+        <span id="cnt-ALL" class="mono text-[10px] text-slate-500">71</span>
+      </button>
+      <button type="button" id="btn-reg-Snowmelt" class="regime-btn" onclick="setRegimeFilter('Snowmelt')">
+        <span class="legend-dot" style="background: #1d5ea8;"></span>
+        <span>Snowmelt</span>
+        <span id="cnt-Snowmelt" class="mono text-[10px] text-slate-500">—</span>
+      </button>
+      <button type="button" id="btn-reg-Regulated" class="regime-btn" onclick="setRegimeFilter('Regulated')">
+        <span class="legend-diamond" style="background: #b8860b;"></span>
+        <span>Dam-Regulated</span>
+        <span id="cnt-Regulated" class="mono text-[10px] text-slate-500">—</span>
+      </button>
+      <button type="button" id="btn-reg-Flashy" class="regime-btn" onclick="setRegimeFilter('Flashy')">
+        <span class="legend-dot" style="background: #c2410c;"></span>
+        <span>Desert Flash</span>
+        <span id="cnt-Flashy" class="mono text-[10px] text-slate-500">—</span>
+      </button>
     </div>
   </header>
 
@@ -243,20 +292,20 @@
     }
 
     const REGIME_COLORS = {
-      Snowmelt:  { fill: 'rgba(43, 92, 143, 0.72)',  border: '#2b5c8f', bg: '#eef4fa', text: '#1e436a' },
-      Regulated: { fill: 'rgba(63, 111, 88, 0.72)',  border: '#3f6f58', bg: '#edf5f0', text: '#27533d' },
-      Flashy:    { fill: 'rgba(184, 80, 42, 0.76)',  border: '#b8502a', bg: '#fbf0eb', text: '#8c3517' }
+      Snowmelt:  { fill: 'rgba(29, 94, 168, 0.78)',  border: '#1d5ea8', bg: '#eef4fa', text: '#16447a', pointStyle: 'circle' },
+      Regulated: { fill: 'rgba(184, 134, 11, 0.84)', border: '#9a6f08', bg: '#fbf5e6', text: '#755205', pointStyle: 'rectRot' },
+      Flashy:    { fill: 'rgba(194, 65, 12, 0.80)',  border: '#c2410c', bg: '#fbf0eb', text: '#8c2d08', pointStyle: 'circle' }
     };
 
     const FIVE_REGIME_DEFS = [
-      { key: 'alpine_snowmelt',        label: 'Alpine Snowmelt',                    color: '#2b5c8f', dash: [] },
+      { key: 'alpine_snowmelt',        label: 'Alpine Snowmelt',                    color: '#1d5ea8', dash: [] },
       { key: 'front_range_tunnels',    label: 'Trans-Mountain Tunnels',             color: '#7c4318', dash: [5, 3] },
-      { key: 'regulated_dam_releases', label: 'Dam Releases',                       color: '#3f6f58', dash: [] },
+      { key: 'regulated_dam_releases', label: 'Dam Releases',                       color: '#9a6f08', dash: [] },
       { key: 'lower_basin_canals',     label: 'Lower Basin Canals',                 color: '#6b5b95', dash: [3, 3] },
-      { key: 'monsoon_tributaries',    label: 'Desert Bimodal (Winter + Monsoon)',  color: '#b8502a', dash: [] }
+      { key: 'monsoon_tributaries',    label: 'Desert Bimodal (Winter + Monsoon)',  color: '#c2410c', dash: [] }
     ];
 
-    // Landmark gages labeled directly on the scatter plot for instant orientation
+    // Landmark gages labeled directly on the scatter plot with clean offsets
     const LABELED_IDS = new Set([
       '09380000', // Lees Ferry
       '09180500', // Cisco
@@ -264,9 +313,7 @@
       '09379500', // San Juan Bluff
       '09234500', // Flaming Gorge
       '09333500', // Dirty Devil
-      '09337500', // Escalante
-      '09402000', // Little Colorado
-      '09421500'  // Below Hoover
+      '09337500'  // Escalante
     ]);
 
     const SHORT_LABELS = {
@@ -276,9 +323,17 @@
       '09379500': 'San Juan',
       '09234500': 'Flaming Gorge',
       '09333500': 'Dirty Devil',
-      '09337500': 'Escalante',
-      '09402000': 'Little Colorado',
-      '09421500': 'Below Hoover'
+      '09337500': 'Escalante'
+    };
+
+    const LABEL_OFFSETS = {
+      '09380000': { dx: 10, dy: -8 },
+      '09180500': { dx: 10, dy: -8 },
+      '09315000': { dx: 10, dy: 10 },
+      '09379500': { dx: 10, dy: -2 },
+      '09234500': { dx: -10, dy: 0, align: 'right' },
+      '09333500': { dx: -10, dy: -8, align: 'right' },
+      '09337500': { dx: -10, dy: 0, align: 'right' }
     };
 
     const MONTH_DOY = [1, 32, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335];
@@ -334,11 +389,11 @@
           .map(g => {
             const isSel = g.id === selectedId;
             const isDim = activeRegimeFilter && activeRegimeFilter !== reg;
-            const radius = Math.max(4.5, Math.min(16, 4 + Math.pow(g.annualMaf, 0.35) * 5.2));
+            const radius = Math.max(4, Math.min(11, 3.8 + Math.pow(g.annualMaf, 0.30) * 3.4));
             return {
-              x: g.rbi,
+              x: Math.max(0.015, g.rbi),
               y: Math.max(0.001, g.annualMaf),
-              r: isSel ? radius + 3 : radius,
+              r: isSel ? radius + 2.5 : radius,
               gage: g,
               isSel,
               isDim
@@ -349,30 +404,59 @@
         return {
           label: reg,
           data: pts,
+          pointStyle: pal.pointStyle,
           backgroundColor: ctx2 => {
             const raw = ctx2.raw;
             if (!raw) return pal.fill;
             if (raw.isSel) return pal.border;
-            if (raw.isDim) return 'rgba(148, 163, 184, 0.18)';
+            if (raw.isDim) return 'rgba(148, 163, 184, 0.14)';
             return pal.fill;
           },
           borderColor: ctx2 => {
             const raw = ctx2.raw;
             if (!raw) return '#ffffff';
             if (raw.isSel) return '#0f172a';
-            if (raw.isDim) return 'rgba(148, 163, 184, 0.25)';
+            if (raw.isDim) return 'rgba(148, 163, 184, 0.20)';
             return '#ffffff';
           },
-          borderWidth: ctx2 => (ctx2.raw && ctx2.raw.isSel ? 2.5 : 1.1)
+          borderWidth: ctx2 => (ctx2.raw && ctx2.raw.isSel ? 2.5 : 1.0)
         };
       });
+
+      const regimeBandPlugin = {
+        id: 'regimeBands',
+        beforeDatasetsDraw(chart) {
+          const { ctx, chartArea, scales: { x } } = chart;
+          const x05 = x.getPixelForValue(0.05);
+          const x15 = x.getPixelForValue(0.15);
+          ctx.save();
+          ctx.strokeStyle = '#d6cfc2';
+          ctx.lineWidth = 1;
+          ctx.setLineDash([4, 3]);
+          [x05, x15].forEach(xp => {
+            if (xp >= chartArea.left && xp <= chartArea.right) {
+              ctx.beginPath();
+              ctx.moveTo(xp, chartArea.top);
+              ctx.lineTo(xp, chartArea.bottom);
+              ctx.stroke();
+            }
+          });
+          ctx.setLineDash([]);
+          ctx.font = '700 9.5px Inter, sans-serif';
+          ctx.fillStyle = '#78716c';
+          ctx.textAlign = 'center';
+          ctx.fillText('DAM-REGULATED', (chartArea.left + x05) / 2, chartArea.top + 11);
+          ctx.fillText('SNOWMELT', (x05 + x15) / 2, chartArea.top + 11);
+          ctx.fillText('DESERT FLASH', (x15 + chartArea.right) / 2, chartArea.top + 11);
+          ctx.restore();
+        }
+      };
 
       const labelPlugin = {
         id: 'landmarkLabels',
         afterDatasetsDraw(chart) {
           const { ctx } = chart;
           ctx.save();
-          ctx.font = '600 10px Inter, sans-serif';
           ctx.textBaseline = 'middle';
           chart.data.datasets.forEach((ds, dsIdx) => {
             const meta = chart.getDatasetMeta(dsIdx);
@@ -382,15 +466,17 @@
               const g = raw.gage;
               if (!LABELED_IDS.has(g.id) && !raw.isSel) return;
               const txt = SHORT_LABELS[g.id] || g.name.split(',')[0].slice(0, 22);
-              const px = el.x;
-              const py = el.y;
-              const alignRight = px > chart.chartArea.right - 95;
+              const off = LABEL_OFFSETS[g.id] || { dx: raw.r + 5, dy: 0 };
+              const alignRight = off.align === 'right' || el.x > chart.chartArea.right - 95;
               ctx.textAlign = alignRight ? 'right' : 'left';
-              const ox = alignRight ? -(raw.r + 5) : (raw.r + 5);
+              const lx = el.x + (alignRight ? -Math.abs(off.dx || (raw.r + 5)) : Math.abs(off.dx || (raw.r + 5)));
+              const ly = el.y + (off.dy || 0);
+              ctx.font = raw.isSel ? '800 10.5px Inter, sans-serif' : '600 9.5px Inter, sans-serif';
+              ctx.lineWidth = 3;
+              ctx.strokeStyle = 'rgba(255, 255, 255, 0.92)';
+              ctx.strokeText(txt, lx, ly);
               ctx.fillStyle = raw.isSel ? '#0f172a' : '#334155';
-              if (raw.isSel) ctx.font = '800 10.5px Inter, sans-serif';
-              else ctx.font = '600 9.5px Inter, sans-serif';
-              ctx.fillText(txt, px + ox, py);
+              ctx.fillText(txt, lx, ly);
             });
           });
           ctx.restore();
@@ -401,7 +487,7 @@
       gapminderChart = new Chart(ctx, {
         type: 'bubble',
         data: { datasets },
-        plugins: [labelPlugin],
+        plugins: [regimeBandPlugin, labelPlugin],
         options: {
           responsive: true,
           maintainAspectRatio: false,
@@ -440,11 +526,16 @@
           },
           scales: {
             x: {
-              title: { display: true, text: 'Richards–Baker Flashiness Index (Daily RBI, WY 2016–2025)', font: { size: 11, weight: '700' }, color: '#334155' },
-              min: 0,
-              max: 0.72,
+              type: 'logarithmic',
+              title: { display: true, text: 'Richards–Baker Flashiness Index (Daily RBI, log scale · WY 2016–2025)', font: { size: 11, weight: '700' }, color: '#334155' },
+              min: 0.015,
+              max: 0.85,
               grid: { color: '#ece7dd' },
-              ticks: { font: { size: 10 }, color: '#475569' }
+              ticks: {
+                font: { size: 10 },
+                color: '#475569',
+                callback: v => ([0.02, 0.05, 0.1, 0.15, 0.3, 0.6].includes(v) ? String(v) : '')
+              }
             },
             y: {
               type: 'logarithmic',
@@ -636,24 +727,15 @@
       regimesChart.update();
     }
 
-    function toggleRegimeFilter(reg) {
-      activeRegimeFilter = (activeRegimeFilter === reg) ? null : reg;
-      ['Snowmelt', 'Regulated', 'Flashy'].forEach(r => {
-        const el = document.getElementById(`leg-${r}`);
-        if (el) el.classList.toggle('dimmed', Boolean(activeRegimeFilter && activeRegimeFilter !== r));
+    function setRegimeFilter(reg) {
+      activeRegimeFilter = (reg && activeRegimeFilter === reg) ? null : reg;
+      ['ALL', 'Snowmelt', 'Regulated', 'Flashy'].forEach(key => {
+        const btn = document.getElementById(`btn-reg-${key}`);
+        if (!btn) return;
+        const isAct = (key === 'ALL' && !activeRegimeFilter) || (key === activeRegimeFilter);
+        btn.classList.toggle('is-active', isAct);
       });
-      document.getElementById('btn-reset').classList.toggle('hidden', !activeRegimeFilter);
       renderGapminder();
-    }
-
-    function resetSelection() {
-      activeRegimeFilter = null;
-      ['Snowmelt', 'Regulated', 'Flashy'].forEach(r => {
-        const el = document.getElementById(`leg-${r}`);
-        if (el) el.classList.remove('dimmed');
-      });
-      document.getElementById('btn-reset').classList.add('hidden');
-      selectStationById('09180500');
     }
 
     function selectStationById(id) {
@@ -710,6 +792,12 @@
       picker.innerHTML = allGages.map(g =>
         `<option value="${g.id}">${g.name} (${fmtVolume(g.annualMaf)})</option>`
       ).join('');
+
+      document.getElementById('cnt-ALL').textContent = String(allGages.length);
+      ['Snowmelt', 'Regulated', 'Flashy'].forEach(r => {
+        const el = document.getElementById(`cnt-${r}`);
+        if (el) el.textContent = String(allGages.filter(g => g.regime === r).length);
+      });
 
       const defaultGage = allGages.find(g => g.id === '09180500') || allGages[0];
       selectedId = defaultGage.id;
