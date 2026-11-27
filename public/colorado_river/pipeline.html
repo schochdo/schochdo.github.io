@@ -308,19 +308,17 @@
             <!-- AZ-NM border (109th meridian) -->
             <line x1="900" y1="351" x2="900" y2="758" class="state-line" />
 
-            <!-- NV-UT & NV-AZ border: 114th meridian runs straight south from 42° N down to Lake Mead -->
-            <line x1="360" y1="82" x2="360" y2="520" class="state-line" />
-            <!-- Lake Mead to Hoover Dam transition -->
-            <path d="M 360,520 Q 405,535 480,561" class="state-line" />
+            <!-- NV-UT & NV-AZ border: 114th meridian runs straight south from 42° N to ~36° N, then follows Lake Mead into Hoover Dam -->
+            <path d="M 360,82 L 360,415 L 480,535" class="state-line" />
 
-            <!-- NV-CA diagonal border: from Colorado River at southern tip of NV (~35° N near Laughlin) northwest to Lake Tahoe (39° N, 120° W) -->
-            <line x1="480" y1="580" x2="80" y2="250" class="state-line" />
+            <!-- NV-CA diagonal border: from Colorado River at southern tip of NV (~35° N near Laughlin, y=600) northwest to Lake Tahoe (39° N, 120° W) -->
+            <line x1="480" y1="600" x2="80" y2="340" class="state-line" />
 
             <!-- NV-CA western border: 120th meridian from Lake Tahoe north to 42° N (Oregon border) -->
-            <line x1="80" y1="250" x2="80" y2="82" class="state-line" />
+            <line x1="80" y1="340" x2="80" y2="82" class="state-line" />
 
-            <!-- CA-AZ border: down the Colorado River from Hoover Dam through Laughlin to Mexican Border -->
-            <line x1="480" y1="561" x2="480" y2="758" class="state-line" stroke="#94a3b8" stroke-dasharray="4 4" />
+            <!-- NV-AZ & CA-AZ river border: down the Colorado River from Lake Mead / Hoover Dam through Laughlin to Mexican Border -->
+            <line x1="480" y1="535" x2="480" y2="758" class="state-line" stroke="#94a3b8" stroke-dasharray="4 4" />
 
             <!-- US-Mexico International Boundary -->
             <line x1="60" y1="758" x2="900" y2="758" class="state-line" stroke-width="1.8" stroke="#fca5a5" />
@@ -1035,14 +1033,14 @@
               <rect x="0" y="0" width="222" height="28" rx="2" fill="#ffffff" fill-opacity="0.97" stroke="#0284c7" stroke-width="1.5" filter="drop-shadow(0 2px 6px rgba(2,132,199,0.14))"/>
               <text x="111" y="18" text-anchor="middle" class="text-[12px] fill-[#0c4a6e] font-black tracking-tight">Lake Powell (Pool: 3,540 ft &bull; 145 mi)</text>
             </g>
-            <text x="488" y="465" class="text-[11px] fill-slate-900 font-bold pointer-events-none">Glen Canyon Dam</text>
+            <text x="494" y="458" style="paint-order: stroke; stroke: #ffffff; stroke-width: 3px;" class="text-[11px] fill-slate-900 font-bold pointer-events-none">Glen Canyon Dam</text>
 
             <!-- Lake Mead & Hoover Dam Prominent Card Badge -->
             <g transform="translate(626, 508)" class="pointer-events-none">
               <rect x="0" y="0" width="204" height="28" rx="2" fill="#ffffff" fill-opacity="0.97" stroke="#0284c7" stroke-width="1.5" filter="drop-shadow(0 2px 6px rgba(2,132,199,0.14))"/>
               <text x="102" y="18" text-anchor="middle" class="text-[12px] fill-[#0c4a6e] font-black tracking-tight">Lake Mead (Pool: 1,065 ft &bull; 85 mi)</text>
             </g>
-            <text x="754" y="558" text-anchor="end" class="text-[11px] fill-slate-900 font-bold pointer-events-none">Hoover Dam</text>
+            <text x="752" y="569" text-anchor="end" class="text-[11px] fill-slate-900 font-bold pointer-events-none">Hoover Dam</text>
 
             <!-- Lower Basin Minor Dam & Pool Labels with Halos -->
             <text x="785" y="555" text-anchor="middle" class="text-[11px] fill-sky-900 font-bold pointer-events-none">Mohave</text>
