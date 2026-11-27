@@ -734,7 +734,7 @@
                 <span>893 dialogues</span> &bull; 
                 <span>220 screenshots</span> &bull; 
                 <span>25 Argon &rarr; Flash prompts</span> &bull; 
-                <span>Updated Nov 27, 2026 02:48 AM</span>
+                <span>Updated Nov 27, 2026 02:51 AM</span>
             </div>
         </div>
         <a href="index.html" class="back-btn">&larr; System Dashboard</a>
@@ -48428,13 +48428,15 @@ Whenever you’re ready, we can walk through every design choice one topic at a 
             <div class="tool-list">
                 <span class="tool-header">Actions:</span>
                 <span class="tool-pill">update_steps</span><span class="tool-pill">update_focus</span><span class="tool-pill">Detect all SVG box overflows and text collisions in pipeline.html</span><span class="tool-pill">Measure exact screen-space text overflows on both pipeline SVGs</span><span class="tool-pill">Find all SVG rect-border crossings and edge clips in pipeline.html</span><span class="tool-pill">Compare 47bf6a3 baseline boxes and small fonts via CDP</span><span class="tool-pill">Check visible Elevation Profile overflows via CDP</span><span class="tool-pill">read_file</span>
-                <span class="tool-pill more">+3 more</span>
+                <span class="tool-pill more">+4 more</span>
             </div>
             
                     <div class="ai-markdown-content">
                         <p>Measured every single overflowing card, pill, and 2-line label pair across both SVGs in headless Chrome. Now resizing the enclosing <code class="inline-code">&lt;rect&gt;</code> boxes, increasing 2-line vertical spacing (<code class="inline-code">12px</code> → <code class="inline-code">15px</code>), and adjusting pill badges so the <code class="inline-code">11px / 12px / 13px</code> typography fits with clean padding and zero overflows.</p>
 <p>---</p>
 <p>Resized every overflowing <code class="inline-code">&lt;rect&gt;</code> card, MAF pill, and 2-line label pair across both SVGs in <code class="inline-code">web/pipeline.html</code>. Now running headless Chrome CDP bounding-box verification across both sub-tabs to confirm <code class="inline-code">0</code> rect overflows and <code class="inline-code">0</code> text collisions before committing and deploying.</p>
+<p>---</p>
+<p>Measured and fixed the SVG card and badge overflows on <code class="inline-code">web/pipeline.html</code> (caught one remaining 1px touch on <code class="inline-code">Lake Mead Evaporation</code>, which I will nudge as soon as the current release check finishes); waiting for the background command to finish.</p>
                     </div>
                 </div>
             </div>
