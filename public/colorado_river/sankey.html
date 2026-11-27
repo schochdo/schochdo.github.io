@@ -464,6 +464,10 @@
               <span class="inline-block w-3.5 border-t-2 border-dashed border-slate-800"></span>
               <span>16.5 MAF Core Promise</span>
             </button>
+            <button type="button" id="compact-toggle-3" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[2px] bg-white text-slate-900 border border-[#8c8476] shadow-xs cursor-pointer select-none transition" onclick="toggleCompactDataset(3)">
+              <span class="inline-block w-3.5 border-t-2 border-dotted" style="border-color:#9a6f08;"></span>
+              <span>7.5 MAF/yr (75 MAF / 10-Yr Delivery)</span>
+            </button>
           </div>
         </div>
 
@@ -1311,6 +1315,18 @@
               pointHoverRadius: 0,
               fill: false,
               order: 0
+            },
+            {
+              type: 'line',
+              label: '7.5 MAF/yr (75 MAF / 10-Yr Lee\'s Ferry Delivery Obligation)',
+              data: labels.map(() => 7.5),
+              borderColor: '#9a6f08',
+              borderWidth: 1.8,
+              borderDash: [2, 3],
+              pointRadius: 0,
+              pointHoverRadius: 0,
+              fill: false,
+              order: 0
             }
           ]
         },
@@ -1323,7 +1339,7 @@
           plugins: {
             legend: { display: false },
             tooltip: {
-              filter: item => item.datasetIndex !== 2,
+              filter: item => item.datasetIndex < 2,
               callbacks: {
                 title: items => items.length ? `Water Year ${items[0].label}` : '',
                 label: ctx => {
