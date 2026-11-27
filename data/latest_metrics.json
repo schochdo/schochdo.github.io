@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-11-27T08:53:17.100414+00:00",
+  "fetched_at": "2026-11-27T08:55:11.249421+00:00",
   "dam_releases": {
     "hoover_dam": {
       "id": "USBR_HOOVER",
@@ -58,7 +58,7 @@
       "type": "streamflow",
       "flow_cfs": 42.4,
       "timestamp": "2026-11-27T01:15:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 40.00689167,
       "lon": -105.8482722
@@ -70,7 +70,7 @@
       "type": "streamflow",
       "flow_cfs": 62.9,
       "timestamp": "2026-11-27T00:45:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 40.108319,
       "lon": -106.0041847
@@ -118,7 +118,7 @@
       "type": "streamflow",
       "flow_cfs": 63.0,
       "timestamp": "2026-11-27T01:15:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 39.625556,
       "lon": -106.065833
@@ -142,7 +142,7 @@
       "type": "streamflow",
       "flow_cfs": 301.0,
       "timestamp": "2026-11-27T01:15:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 40.036667,
       "lon": -106.439444
@@ -154,7 +154,7 @@
       "type": "streamflow",
       "flow_cfs": 111.0,
       "timestamp": "2026-11-27T01:15:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 39.64942954,
       "lon": -106.9536554
@@ -178,7 +178,7 @@
       "type": "streamflow",
       "flow_cfs": 38.3,
       "timestamp": "2026-11-27T01:15:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 39.36554075,
       "lon": -106.8255948
@@ -190,7 +190,7 @@
       "type": "streamflow",
       "flow_cfs": 439.0,
       "timestamp": "2026-11-27T00:45:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 39.54666667,
       "lon": -107.33083333
@@ -202,7 +202,7 @@
       "type": "streamflow",
       "flow_cfs": 878.0,
       "timestamp": "2026-11-27T01:15:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 39.5549819,
       "lon": -107.337554
@@ -226,7 +226,7 @@
       "type": "streamflow",
       "flow_cfs": 314.0,
       "timestamp": "2026-11-27T01:15:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 38.54193567,
       "lon": -106.9497661
@@ -250,7 +250,7 @@
       "type": "streamflow",
       "flow_cfs": 378.0,
       "timestamp": "2026-11-27T01:15:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 38.74194444,
       "lon": -108.08041667
@@ -274,7 +274,7 @@
       "type": "streamflow",
       "flow_cfs": 2300.0,
       "timestamp": "2026-11-27T00:45:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 39.132742,
       "lon": -109.027075
@@ -286,7 +286,7 @@
       "type": "streamflow",
       "flow_cfs": 403.0,
       "timestamp": "2026-11-27T00:45:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 37.47249579,
       "lon": -108.49760047
@@ -298,7 +298,7 @@
       "type": "streamflow",
       "flow_cfs": 80.1,
       "timestamp": "2026-11-27T01:15:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 38.3102675,
       "lon": -108.8853805
@@ -309,8 +309,8 @@
       "provider": "USGS",
       "type": "streamflow",
       "flow_cfs": 292.0,
-      "timestamp": "2026-11-27T01:30:00.000-07:00",
-      "age_hours": 0.4,
+      "timestamp": "2026-11-27T01:45:00.000-07:00",
+      "age_hours": 0.2,
       "data_status": "live",
       "lat": 38.79720805,
       "lon": -109.1951142
@@ -334,7 +334,7 @@
       "type": "streamflow",
       "flow_cfs": 285.0,
       "timestamp": "2026-11-27T00:45:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 43.0190833,
       "lon": -110.1188611
@@ -394,7 +394,7 @@
       "type": "streamflow",
       "flow_cfs": 184.0,
       "timestamp": "2026-11-27T01:15:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 40.50273085,
       "lon": -108.0334482
@@ -406,7 +406,7 @@
       "type": "streamflow",
       "flow_cfs": 82.0,
       "timestamp": "2026-11-27T01:15:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 40.54901667,
       "lon": -108.42432222
@@ -478,7 +478,7 @@
       "type": "streamflow",
       "flow_cfs": 284.0,
       "timestamp": "2026-11-27T00:45:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 39.97885629,
       "lon": -109.1787269
@@ -562,7 +562,7 @@
       "type": "streamflow",
       "flow_cfs": 462.0,
       "timestamp": "2026-11-27T01:15:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 36.80188889,
       "lon": -107.6986389
@@ -646,7 +646,7 @@
       "type": "streamflow",
       "flow_cfs": 6.76,
       "timestamp": "2026-11-27T01:15:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 34.31502222,
       "lon": -109.36233056
@@ -658,7 +658,7 @@
       "type": "streamflow",
       "flow_cfs": 162.0,
       "timestamp": "2026-11-27T00:45:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 35.9263819,
       "lon": -111.5673682
@@ -670,7 +670,7 @@
       "type": "streamflow",
       "flow_cfs": 6410.0,
       "timestamp": "2026-11-27T01:15:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 36.10137176,
       "lon": -112.0862795
@@ -694,7 +694,7 @@
       "type": "streamflow",
       "flow_cfs": 70.3,
       "timestamp": "2026-11-27T01:15:00.000-07:00",
-      "age_hours": 0.6,
+      "age_hours": 0.7,
       "data_status": "live",
       "lat": 36.30581618,
       "lon": -112.761305
@@ -778,7 +778,7 @@
       "type": "streamflow",
       "flow_cfs": 583.0,
       "timestamp": "2026-11-27T00:45:00.000-07:00",
-      "age_hours": 1.1,
+      "age_hours": 1.2,
       "data_status": "live",
       "lat": 32.86758333,
       "lon": -114.472111
@@ -1044,15 +1044,15 @@
       "type": "reservoir",
       "category": "system",
       "operator": null,
-      "elevation_ft": 3540.9,
+      "elevation_ft": 3541.2,
       "feet_below_full": null,
       "storage_af": 6523584.0,
       "capacity_af": 24322000.0,
       "capacity_pct": 26.8,
       "role": "Upper Basin Bank & Compact Delivery to Lower Basin",
-      "timestamp": "2026-11-27T00:45:00.000-07:00",
+      "timestamp": "2026-11-25",
       "age_hours": 0.0,
-      "data_status": "live",
+      "data_status": "daily",
       "lat": 36.9367,
       "lon": -111.4839,
       "provider": "USBR / USGS"
@@ -1086,11 +1086,11 @@
       "operator": null,
       "elevation_ft": 639.4,
       "feet_below_full": null,
-      "storage_af": 1595000.0,
+      "storage_af": 1659000.0,
       "capacity_af": 1810000.0,
-      "capacity_pct": 88.1,
+      "capacity_pct": 91.7,
       "role": "Downstream Regulation & Mexican Treaty Deliveries",
-      "timestamp": "2026-11-27T00:45:00.000-07:00",
+      "timestamp": "2026-11-27T01:00:00-07:00",
       "age_hours": 0.0,
       "data_status": "live",
       "lat": 35.1989,
@@ -1239,7 +1239,7 @@
     }
   ],
   "validation": {
-    "timestamp": "2026-11-27T08:53:17.085527+00:00",
+    "timestamp": "2026-11-27T08:55:11.236492+00:00",
     "overall_status": "VALID",
     "stale_stations": [
       {
@@ -1295,7 +1295,7 @@
         "hist_ratio": 0.683695652173913,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-27T00:45:00.000-07:00",
-        "age_hours": 1.1,
+        "age_hours": 1.2,
         "data_status": "live",
         "delta_cfs": 52.099999999999994,
         "delta_pct": 482.40740740740733,
@@ -1310,7 +1310,7 @@
         "hist_ratio": 0.683695652173913,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-27T00:45:00.000-07:00",
-        "age_hours": 1.1,
+        "age_hours": 1.2,
         "data_status": "live",
         "delta_cfs": 0.0,
         "delta_pct": 0.0,
@@ -1325,7 +1325,7 @@
         "hist_ratio": 0.5433212996389891,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-27T01:15:00.000-07:00",
-        "age_hours": 0.6,
+        "age_hours": 0.7,
         "data_status": "live",
         "delta_cfs": 238.1,
         "delta_pct": 378.53736089030207,
@@ -1370,7 +1370,7 @@
         "hist_ratio": 0.6318681318681318,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-27T00:45:00.000-07:00",
-        "age_hours": 1.1,
+        "age_hours": 1.2,
         "data_status": "live",
         "delta_cfs": 1240.0,
         "delta_pct": 116.98113207547169,
@@ -1430,7 +1430,7 @@
         "hist_ratio": 0.6601441812564367,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-27T01:15:00.000-07:00",
-        "age_hours": 0.6,
+        "age_hours": 0.7,
         "data_status": "live",
         "delta_cfs": 460.0,
         "delta_pct": 7.73109243697479,
@@ -1445,7 +1445,7 @@
         "hist_ratio": 0.6601441812564367,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-27T01:15:00.000-07:00",
-        "age_hours": 0.6,
+        "age_hours": 0.7,
         "data_status": "live",
         "delta_cfs": 0.0,
         "delta_pct": 0.0,
@@ -1535,7 +1535,7 @@
         "hist_ratio": 1.1190019193857965,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-27T00:45:00.000-07:00",
-        "age_hours": 1.1,
+        "age_hours": 1.2,
         "data_status": "live",
         "delta_cfs": -1107.0,
         "delta_pct": -65.50295857988165,
@@ -1550,7 +1550,7 @@
         "hist_ratio": 1.1190019193857965,
         "hist_status": "NORMAL",
         "timestamp": "2026-11-27T00:45:00.000-07:00",
-        "age_hours": 1.1,
+        "age_hours": 1.2,
         "data_status": "live",
         "delta_cfs": 0.0,
         "delta_pct": 0.0,
