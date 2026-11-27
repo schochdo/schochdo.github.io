@@ -215,8 +215,98 @@
 
       <div class="space-y-4 text-xs">
         <p class="text-slate-600 leading-relaxed">
-          All authoritative agency reference files are archived immutably in <code class="inline-code">data/raw/</code> (<strong>26 reference files</strong>, <strong>50.3 MB</strong>, SHA-256 verified in <code class="inline-code">data/raw/MANIFEST.csv</code>) and compiled alongside live telemetry into a single relational <strong>SQLite database</strong> (<code class="inline-code">data/colorado_river_basin.db</code>, <strong>2.7 MB</strong>, <strong>31 tables</strong> and <strong>2 analytical views</strong>). No ingestion script writes analytics JSON directly; every static dataset in <code class="inline-code">web/data/</code> is compiled solely by <code class="inline-code">scripts/export_sqlite_to_json.py</code>.
+          All authoritative agency reference files are archived immutably in <code class="inline-code">data/raw/</code> (<strong>27 reference files</strong>, <strong>50.3 MB</strong>, SHA-256 verified in <code class="inline-code">data/raw/MANIFEST.csv</code>) and compiled alongside live telemetry into a single relational <strong>SQLite database</strong> (<code class="inline-code">data/colorado_river_basin.db</code>, <strong>2.7 MB</strong>, <strong>31 tables</strong> and <strong>2 analytical views</strong>). No ingestion script writes analytics JSON directly; every static dataset in <code class="inline-code">web/data/</code> is compiled solely by <code class="inline-code">scripts/export_sqlite_to_json.py</code>.
         </p>
+
+        <!-- End-to-End Unidirectional Data Pipeline Flowchart -->
+        <div class="p-3.5 bg-[#faf8f4] border border-[#cfc8ba] rounded-[2px]">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+            <span class="text-[10.5px] font-extrabold uppercase tracking-wider text-slate-700">End-to-End Unidirectional Pipeline &amp; Two-Tier Browser Delivery</span>
+            <span class="text-[10px] font-mono text-slate-500">Raw Archives + 6h Actions &rarr; SQLite SSOT &rarr; 10 Static JSONs &rarr; Browser CORS / Fallback</span>
+          </div>
+          <svg viewBox="0 0 960 206" class="w-full h-auto block" role="img" aria-label="End-to-end Colorado River Basin data pipeline flowchart">
+            <defs>
+              <marker id="pipe-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#475569"/>
+              </marker>
+              <marker id="pipe-arr-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#2b5c8f"/>
+              </marker>
+              <marker id="pipe-arr-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#7c4318"/>
+              </marker>
+            </defs>
+
+            <!-- Box 1A: Immutable Raw Archive -->
+            <rect x="8" y="10" width="206" height="82" rx="2" fill="#ffffff" stroke="#b8ae9c"/>
+            <rect x="8" y="10" width="206" height="21" rx="2" fill="#ebe4d6"/>
+            <text x="16" y="24" font-size="10" font-weight="800" fill="#0f172a">1A. IMMUTABLE RAW ARCHIVE</text>
+            <text x="16" y="45" font-size="10.5" font-weight="700" fill="#1e293b">data/raw/ (27 Files · 50.3 MB)</text>
+            <text x="16" y="61" font-size="9.5" fill="#475569">USBR Natural Flow, CUL, Compacts</text>
+            <text x="16" y="77" font-size="9" font-family="JetBrains Mono, monospace" fill="#7c4318">SHA-256 verified · MANIFEST.csv</text>
+
+            <!-- Box 1B: Scheduled GitHub Actions -->
+            <rect x="8" y="110" width="206" height="86" rx="2" fill="#ffffff" stroke="#b8ae9c"/>
+            <rect x="8" y="110" width="206" height="21" rx="2" fill="#ebe4d6"/>
+            <text x="16" y="124" font-size="10" font-weight="800" fill="#0f172a">1B. SCHEDULED GITHUB ACTIONS</text>
+            <text x="16" y="145" font-size="10.5" font-weight="700" fill="#1e293b">Every 6h (00, 06, 12, 18 UTC)</text>
+            <text x="16" y="161" font-size="9.5" fill="#475569">USGS NWIS (P7D/P30D) · USBR · CDWR</text>
+            <text x="16" y="177" font-size="9" font-family="JetBrains Mono, monospace" fill="#2b5c8f">.github/workflows/update_data.yml</text>
+
+            <!-- Connectors 1 -> 2 -->
+            <path d="M 214 51 L 246 51 L 246 86 L 268 86" fill="none" stroke="#475569" stroke-width="1.5" marker-end="url(#pipe-arr)"/>
+            <path d="M 214 153 L 246 153 L 246 118 L 268 118" fill="none" stroke="#475569" stroke-width="1.5" marker-end="url(#pipe-arr)"/>
+
+            <!-- Box 2: SQLite Single Source of Truth -->
+            <rect x="272" y="38" width="214" height="128" rx="2" fill="#ffffff" stroke="#2b5c8f" stroke-width="1.6"/>
+            <rect x="272" y="38" width="214" height="22" rx="2" fill="#2b5c8f"/>
+            <text x="281" y="53" font-size="10" font-weight="800" fill="#ffffff">2. SQLITE SINGLE SOURCE OF TRUTH</text>
+            <text x="281" y="76" font-size="10.5" font-weight="700" font-family="JetBrains Mono, monospace" fill="#0f172a">data/colorado_river_basin.db</text>
+            <text x="281" y="93" font-size="9.5" fill="#334155">• 31 relational tables + 2 SQL views</text>
+            <text x="281" y="109" font-size="9.5" fill="#334155">• 2000–2024 unified mass balance</text>
+            <text x="281" y="125" font-size="9.5" fill="#334155">• 92 facilities · WY 2016–2025 RBI</text>
+            <text x="281" y="148" font-size="9" font-family="JetBrains Mono, monospace" fill="#3f6f58">Audit Gate: data_smoke_test.py</text>
+
+            <!-- Connectors 2 -> 3 -->
+            <path d="M 486 88 L 522 54" fill="none" stroke="#475569" stroke-width="1.5" marker-end="url(#pipe-arr)"/>
+            <path d="M 486 120 L 522 150" fill="none" stroke="#475569" stroke-width="1.5" marker-end="url(#pipe-arr)"/>
+
+            <!-- Box 3A: Static JSON Exporter -->
+            <rect x="526" y="10" width="196" height="86" rx="2" fill="#ffffff" stroke="#b8ae9c"/>
+            <rect x="526" y="10" width="196" height="21" rx="2" fill="#ebe4d6"/>
+            <text x="534" y="24" font-size="10" font-weight="800" fill="#0f172a">3A. STATIC JSON COMPILER</text>
+            <text x="534" y="45" font-size="10" font-weight="700" font-family="JetBrains Mono, monospace" fill="#1e293b">export_sqlite_to_json.py</text>
+            <text x="534" y="61" font-size="9.5" fill="#475569">10 JSON contracts in web/data/</text>
+            <text x="534" y="77" font-size="9" font-family="JetBrains Mono, monospace" fill="#475569">Pure SQL-to-JSON (0 HTTP calls)</text>
+
+            <!-- Box 3B: Executed Research Notebook -->
+            <rect x="526" y="110" width="196" height="86" rx="2" fill="#ffffff" stroke="#b8ae9c"/>
+            <rect x="526" y="110" width="196" height="21" rx="2" fill="#ebe4d6"/>
+            <text x="534" y="124" font-size="10" font-weight="800" fill="#0f172a">3B. EXECUTED NOTEBOOK</text>
+            <text x="534" y="145" font-size="10" font-weight="700" font-family="JetBrains Mono, monospace" fill="#1e293b">colorado_river_analysis.ipynb</text>
+            <text x="534" y="161" font-size="9.5" fill="#475569">nbclient execution &rarr; HTML export</text>
+            <text x="534" y="177" font-size="9" font-family="JetBrains Mono, monospace" fill="#7c4318">web/notebooks/*.html (5 PNGs)</text>
+
+            <!-- Connectors 3 -> 4 -->
+            <path d="M 722 53 L 756 53" fill="none" stroke="#2b5c8f" stroke-width="1.5" marker-end="url(#pipe-arr-blue)"/>
+            <path d="M 722 74 L 740 74 L 740 132 L 756 132" fill="none" stroke="#7c4318" stroke-width="1.3" stroke-dasharray="3,2" marker-end="url(#pipe-arr-amber)"/>
+
+            <!-- Box 4: Browser Two-Tier Runtime -->
+            <rect x="760" y="10" width="192" height="186" rx="2" fill="#ffffff" stroke="#3f6f58" stroke-width="1.5"/>
+            <rect x="760" y="10" width="192" height="21" rx="2" fill="#3f6f58"/>
+            <text x="768" y="24" font-size="10" font-weight="800" fill="#ffffff">4. GITHUB PAGES BROWSER UI</text>
+            <text x="768" y="46" font-size="10" font-weight="700" fill="#0f172a">Tier 1: Live USGS NWIS Fetch</text>
+            <text x="768" y="60" font-size="9.2" fill="#475569">Browser CORS query (15-min cfs)</text>
+            <text x="768" y="74" font-size="8.8" font-family="JetBrains Mono, monospace" fill="#2b5c8f">waterservices.usgs.gov/nwis/iv/</text>
+            <line x1="768" y1="88" x2="944" y2="88" stroke="#dfd9cc" stroke-dasharray="3,2"/>
+            <text x="768" y="106" font-size="10" font-weight="700" fill="#0f172a">Tier 2: 6h Snapshot Fallback</text>
+            <text x="768" y="120" font-size="9.2" fill="#475569">On API timeout or offline mode:</text>
+            <text x="768" y="134" font-size="8.8" font-family="JetBrains Mono, monospace" fill="#7c4318">web/data/latest_metrics.json</text>
+            <line x1="768" y1="148" x2="944" y2="148" stroke="#dfd9cc"/>
+            <text x="768" y="166" font-size="9.5" font-weight="700" fill="#334155">MapLibre GL · D3 v7 · Chart.js</text>
+            <text x="768" y="182" font-size="9" fill="#475569">Zero 24/7 backend server</text>
+          </svg>
+        </div>
 
         <!-- Database Schema Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">

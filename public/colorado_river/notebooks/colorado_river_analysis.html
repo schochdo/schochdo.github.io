@@ -246,6 +246,80 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <li><strong>Browser Fetch Fallback:</strong> Direct CORS-enabled REST queries to USGS NWIS (<code class="inline-code">waterservices.usgs.gov</code>), falling back to the 6-hour snapshot (<code class="inline-code">latest_metrics.json</code>).</li>
 <li><strong>Dimensional Rule:</strong> Instantaneous rate $Q$ (<code class="inline-code">cfs</code>) and cumulative volume $V$ (<code class="inline-code">AF</code>, <code class="inline-code">MAF</code>) remain strictly separated: $1\text{ cfs sustained for 1 year} = 723.97\text{ AF} \approx 0.000724\text{ MAF}$.</li>
 </ul></div>
+<div class="notebook-cell markdown-cell"><!-- RAW_HTML_FLOWCHART -->
+<div style="background:#faf8f4;border:1px solid #cfc8ba;border-radius:2px;padding:14px 16px;margin:4px 0 8px 0;">
+  <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;color:#475569;margin-bottom:8px;">Unidirectional Data Pipeline &amp; Two-Tier Browser Delivery</div>
+  <svg viewBox="0 0 920 198" width="100%" style="max-width:920px;height:auto;display:block;font-family:'Inter',-apple-system,sans-serif;" role="img" aria-label="Colorado River Data Pipeline Flowchart">
+    <defs>
+      <marker id="nb-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#475569"/>
+      </marker>
+      <marker id="nb-arr-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#2b5c8f"/>
+      </marker>
+    </defs>
+    <!-- Stage 1A: Immutable Raw Archive -->
+    <rect x="8" y="10" width="198" height="76" rx="2" fill="#ffffff" stroke="#b8ae9c"/>
+    <rect x="8" y="10" width="198" height="20" rx="2" fill="#ebe4d6"/>
+    <text x="16" y="24" font-size="10" font-weight="800" fill="#0f172a">1A. RAW FEDERAL ARCHIVE</text>
+    <text x="16" y="44" font-size="10.5" font-weight="700" fill="#1e293b">data/raw/ (27 Files · 50.3 MB)</text>
+    <text x="16" y="59" font-size="9.5" fill="#475569">USBR Natural Flow, CUL, Compacts</text>
+    <text x="16" y="73" font-size="9" font-family="monospace" fill="#7c4318">SHA-256 verified in MANIFEST.csv</text>
+    <!-- Stage 1B: Scheduled Live Telemetry -->
+    <rect x="8" y="106" width="198" height="80" rx="2" fill="#ffffff" stroke="#b8ae9c"/>
+    <rect x="8" y="106" width="198" height="20" rx="2" fill="#ebe4d6"/>
+    <text x="16" y="120" font-size="10" font-weight="800" fill="#0f172a">1B. 6-HOUR GITHUB ACTIONS</text>
+    <text x="16" y="140" font-size="10.5" font-weight="700" fill="#1e293b">USGS · USBR · CDWR REST APIs</text>
+    <text x="16" y="155" font-size="9.5" fill="#475569">00:00, 06:00, 12:00, 18:00 UTC</text>
+    <text x="16" y="170" font-size="9" font-family="monospace" fill="#2b5c8f">15-min P7D/P30D &amp; EOM storage</text>
+    <!-- Arrows 1 -> 2 -->
+    <path d="M 206 48 L 242 48 L 242 82 L 266 82" fill="none" stroke="#475569" stroke-width="1.4" marker-end="url(#nb-arr)"/>
+    <path d="M 206 146 L 242 146 L 242 112 L 266 112" fill="none" stroke="#475569" stroke-width="1.4" marker-end="url(#nb-arr)"/>
+    <!-- Stage 2: SQLite SSOT -->
+    <rect x="270" y="42" width="202" height="112" rx="2" fill="#ffffff" stroke="#2b5c8f" stroke-width="1.5"/>
+    <rect x="270" y="42" width="202" height="22" rx="2" fill="#2b5c8f"/>
+    <text x="279" y="57" font-size="10" font-weight="800" fill="#ffffff">2. SQLITE SINGLE SOURCE OF TRUTH</text>
+    <text x="279" y="79" font-size="10.5" font-weight="700" font-family="monospace" fill="#0f172a">colorado_river_basin.db</text>
+    <text x="279" y="95" font-size="9.5" fill="#334155">31 normalized tables · 2 SQL views</text>
+    <text x="279" y="110" font-size="9.5" fill="#334155">2000–2024 baseline · 1922–2024 POR</text>
+    <text x="279" y="125" font-size="9.5" fill="#334155">92 facilities · WY 2016–2025 RBI</text>
+    <text x="279" y="142" font-size="9" font-family="monospace" fill="#3f6f58">Gate: scripts/data_smoke_test.py</text>
+    <!-- Arrow 2 -> Notebook & Exporter -->
+    <path d="M 472 76 L 516 48" fill="none" stroke="#2b5c8f" stroke-width="1.4" marker-end="url(#nb-arr-blue)"/>
+    <path d="M 472 118 L 516 142" fill="none" stroke="#475569" stroke-width="1.4" marker-end="url(#nb-arr)"/>
+    <!-- Stage 3A: Research Notebook -->
+    <rect x="520" y="10" width="176" height="76" rx="2" fill="#ffffff" stroke="#b8ae9c"/>
+    <rect x="520" y="10" width="176" height="20" rx="2" fill="#ebe4d6"/>
+    <text x="528" y="24" font-size="10" font-weight="800" fill="#0f172a">3A. JUPYTER NOTEBOOK</text>
+    <text x="528" y="43" font-size="10" font-weight="700" font-family="monospace" fill="#1e293b">colorado_river_analysis</text>
+    <text x="528" y="58" font-size="9.5" fill="#475569">Direct SQLite SQL + Seaborn</text>
+    <text x="528" y="73" font-size="9" font-family="monospace" fill="#7c4318">Figures 1–5 (nbclient PNGs)</text>
+    <!-- Stage 3B: Static JSON Exporter -->
+    <rect x="520" y="106" width="176" height="80" rx="2" fill="#ffffff" stroke="#b8ae9c"/>
+    <rect x="520" y="106" width="176" height="20" rx="2" fill="#ebe4d6"/>
+    <text x="528" y="120" font-size="10" font-weight="800" fill="#0f172a">3B. STATIC JSON EXPORT</text>
+    <text x="528" y="139" font-size="10" font-weight="700" font-family="monospace" fill="#1e293b">export_sqlite_to_json.py</text>
+    <text x="528" y="154" font-size="9.5" fill="#475569">10 JSON contracts in web/data/</text>
+    <text x="528" y="170" font-size="9" font-family="monospace" fill="#475569">Zero runtime DB server</text>
+    <!-- Arrow 3B -> 4 -->
+    <path d="M 696 146 L 730 146" fill="none" stroke="#475569" stroke-width="1.4" marker-end="url(#nb-arr)"/>
+    <!-- Stage 4: Browser Two-Tier Delivery -->
+    <rect x="734" y="10" width="178" height="176" rx="2" fill="#ffffff" stroke="#3f6f58" stroke-width="1.4"/>
+    <rect x="734" y="10" width="178" height="20" rx="2" fill="#3f6f58"/>
+    <text x="742" y="24" font-size="10" font-weight="800" fill="#ffffff">4. BROWSER CLIENT (CDN)</text>
+    <text x="742" y="45" font-size="10" font-weight="700" fill="#0f172a">Tier 1: Live USGS Fetch</text>
+    <text x="742" y="59" font-size="9.2" fill="#475569">Direct CORS REST query</text>
+    <text x="742" y="72" font-size="8.8" font-family="monospace" fill="#2b5c8f">waterservices.usgs.gov</text>
+    <line x1="742" y1="84" x2="904" y2="84" stroke="#dfd9cc" stroke-dasharray="3,2"/>
+    <text x="742" y="101" font-size="10" font-weight="700" fill="#0f172a">Tier 2: Snapshot Fallback</text>
+    <text x="742" y="115" font-size="9.2" fill="#475569">If offline/timeout, loads 6h</text>
+    <text x="742" y="128" font-size="8.8" font-family="monospace" fill="#7c4318">web/data/latest_metrics.json</text>
+    <line x1="742" y1="140" x2="904" y2="140" stroke="#dfd9cc"/>
+    <text x="742" y="157" font-size="9.5" font-weight="700" fill="#334155">MapLibre · D3 · Chart.js</text>
+    <text x="742" y="172" font-size="9" fill="#475569">GitHub Pages Static Edge</text>
+  </svg>
+</div>
+</div>
 
             <div class="notebook-cell code-cell">
               <div class="code-header">
@@ -294,7 +368,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Live USGS request unavailable (</span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s1">) — see web/data/latest_metrics.json'</span><span class="p">)</span>
 </pre></div>
-            <div class="outputs-wrapper"><div class="output-item stream-output"><pre class="notebook-output">Lee&#x27;s Ferry (#09380000): 5,860 cfs at 2026-11-26T10:00:00.000-07:00 (USGS NWIS IV)
+            <div class="outputs-wrapper"><div class="output-item stream-output"><pre class="notebook-output">Lee&#x27;s Ferry (#09380000): 8,350 cfs at 2026-11-26T20:00:00.000-07:00 (USGS NWIS IV)
 </pre></div></div></div>
 <div class="notebook-cell markdown-cell"><h2 id="2-core-sqlite-tables-standardized-date-windows" class="notebook-h2">2. Core SQLite Tables & Standardized Date Windows <a href="#2-core-sqlite-tables-standardized-date-windows" class="anchor-link">#</a></h2>
 <p class="notebook-p"><strong>Takeaway:</strong> All figures below read directly from six tables in <code class="inline-code">data/colorado_river_basin.db</code> using a standardized temporal hierarchy:</p>
