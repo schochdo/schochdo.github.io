@@ -13,6 +13,7 @@
   <!-- D3.js & D3-Sankey (Local vendor fallback for offline/sandboxed reliability) -->
   <script src="./vendor/d3.min.js"></script>
   <script src="./vendor/d3-sankey.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <script>
     if (!window.d3) {
       document.write('<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"><\/script>');
@@ -210,8 +211,8 @@
         <p id="budget-header-subtitle" class="text-[11px] text-stone-500 mt-1">2000–2024 (25-Year Baseline) · USBR Lees Ferry natural flow (12.40 MAF/yr) &amp; USBR CUL accounting (14.14 MAF/yr; ends in 2024 due to Reclamation's 1–2 yr verification lag on annual CUL/Natural Flow workbooks, whereas live gages run through Nov 2026)</p>
       </div>
 
-      <!-- Two View Sub-Tabs -->
-      <div class="flex items-center gap-1.5 p-1 bg-stone-200/90 rounded-[2px] border border-stone-300">
+      <!-- Three View Sub-Tabs -->
+      <div class="flex flex-wrap items-center gap-1.5 p-1 bg-stone-200/90 rounded-[2px] border border-stone-300">
         <button id="subtab-btn-sankey" onclick="switchBudgetSubtab('sankey')" class="px-3.5 py-1.5 rounded-[2px] text-xs font-bold transition shadow-xs bg-white text-sky-900 border border-stone-200 flex items-center gap-1.5 cursor-pointer">
           <span>⇋</span>
           <span>Inflows to Consumptive Depletions</span>
@@ -219,6 +220,10 @@
         <button id="subtab-btn-stacked" onclick="switchBudgetSubtab('stacked')" class="px-3.5 py-1.5 rounded-[2px] text-xs font-semibold transition text-stone-600 hover:text-stone-900 flex items-center gap-1.5 cursor-pointer">
           <span>⫸</span>
           <span>Physical Runoff vs. Statutory Paper Claims</span>
+        </button>
+        <button id="subtab-btn-compact" onclick="switchBudgetSubtab('compact')" class="px-3.5 py-1.5 rounded-[2px] text-xs font-semibold transition text-stone-600 hover:text-stone-900 flex items-center gap-1.5 cursor-pointer">
+          <span>▥</span>
+          <span>Natural Flow vs. Compact Promises (1922–2024)</span>
         </button>
       </div>
     </header>
@@ -427,6 +432,48 @@
             <a href="https://www.usbr.gov/lc/region/g4000/4200Rpts/CULReport/1971-2024%20Lower%20Colorado%20River%20System%20CUL%20Data.xlsx" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 underline font-semibold">USBR Lower CUL XLSX ↗</a>,
             <a href="https://www.usbr.gov/lc/region/g1000/pdfiles/crcompct.pdf" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 underline font-semibold">1922 Colorado River Compact (42 Stat. 171) ↗</a>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- VIEW 3: NATURAL FLOW VS. COMPACT PROMISES (1922–2024)             -->
+    <!-- ================================================================= -->
+    <div id="view-compact-section" class="space-y-3" style="display: none;">
+      <div class="bg-white border border-stone-300 rounded-[2px] p-5 shadow-xs">
+        <div class="flex flex-wrap items-center justify-between gap-4 pb-3 border-b border-stone-200">
+          <div class="max-w-3xl">
+            <h2 class="text-lg font-black text-stone-900 tracking-tight">
+              Natural Flow vs. Compact Promises (Water Years 1922–2024)
+            </h2>
+            <p class="text-xs text-stone-600 mt-1">
+              The <strong>16.5 MAF</strong> core statutory promise (7.5 Upper + 7.5 Lower + 1.5 Mexico) exceeded official USBR Lees Ferry Natural Flow in <strong>68.0% of years</strong>—and 21 of 25 years since 2000—forcing the system to draw down Powell and Mead storage to cover the gap.
+            </p>
+          </div>
+          <div class="flex flex-wrap items-center gap-3 text-[11px] font-semibold text-stone-700">
+            <span class="inline-flex items-center gap-1.5 cursor-pointer select-none" onclick="toggleCompactDataset(0)">
+              <span class="inline-block w-2.5 h-2.5 rounded-[1px]" style="background:#0284c7;"></span>
+              <span class="inline-block w-2.5 h-2.5 rounded-[1px] -ml-1" style="background:#b2182b;"></span>
+              <span>USBR Natural Flow (Surplus / Deficit)</span>
+            </span>
+            <span class="inline-flex items-center gap-1.5 cursor-pointer select-none" onclick="toggleCompactDataset(1)">
+              <span class="inline-block w-3.5 border-t-2 border-slate-700"></span>
+              <span>Lees Ferry Releases</span>
+            </span>
+            <span class="inline-flex items-center gap-1.5 cursor-pointer select-none" onclick="toggleCompactDataset(2)">
+              <span class="inline-block w-3.5 border-t-2 border-dashed border-slate-800"></span>
+              <span>16.5 MAF Core Promise</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="w-full relative mt-4" style="height: 360px;">
+          <canvas id="chart-compact-100yr"></canvas>
+        </div>
+
+        <div class="text-xs text-stone-600 flex flex-wrap justify-between items-center mt-3 pt-2.5 border-t border-stone-200 gap-2">
+          <span><strong>Why Releases Sit Below Natural Flow:</strong> Natural flow reconstructs unimpaired runoff <em>before</em> ~3.9–4.4 MAF/yr of Upper Basin consumptive use and evaporation; whenever gaged Lee's Ferry releases exceed remaining net inflow (or Lower Basin demand exceeds releases), Powell and Mead draw down.</span>
+          <span class="font-bold text-stone-700">Source: <a href="https://www.usbr.gov/lc/region/g4000/NaturalFlow/LFnatFlow1906-2024.2024.9.12.xlsx" target="_blank" rel="noopener noreferrer" class="text-sky-700 hover:text-sky-900 hover:underline font-semibold transition">USBR Natural Flow XLSX (1906–2024) ↗</a> &amp; <a href="https://waterdata.usgs.gov/monitoring-location/09380000/#parameterCode=00060" target="_blank" rel="noopener noreferrer" class="text-sky-700 hover:text-sky-900 hover:underline font-semibold transition">USGS Lees Ferry #09380000 ↗</a></span>
         </div>
       </div>
     </div>
@@ -1162,27 +1209,185 @@
       if (tip) tip.classList.remove('visible');
     }
 
+    let seasonalCompactData = null;
+    let compact100yrChart = null;
+
+    const glenCanyonDamMarkerPlugin = {
+      id: 'glenCanyonDamMarker',
+      afterDatasetsDraw(chart) {
+        const idx = chart.data.labels.indexOf(1963);
+        if (idx < 0) return;
+        const { ctx, chartArea, scales: { x } } = chart;
+        const xPos = x.getPixelForValue(idx);
+        ctx.save();
+        ctx.strokeStyle = '#64748b';
+        ctx.lineWidth = 1.2;
+        ctx.setLineDash([4, 3]);
+        ctx.beginPath();
+        ctx.moveTo(xPos, chartArea.top);
+        ctx.lineTo(xPos, chartArea.bottom);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = '#475569';
+        ctx.font = '700 10px Inter, sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText('1963: Glen Canyon Dam Closes', xPos + 6, chartArea.top + 12);
+        ctx.restore();
+      }
+    };
+
+    function toggleCompactDataset(dsIdx) {
+      if (!compact100yrChart) return;
+      const meta = compact100yrChart.getDatasetMeta(dsIdx);
+      meta.hidden = meta.hidden === null ? !compact100yrChart.data.datasets[dsIdx].hidden : null;
+      compact100yrChart.update();
+    }
+
+    async function renderCompact100yrChart() {
+      const canvas = document.getElementById('chart-compact-100yr');
+      if (!canvas) return;
+      if (!seasonalCompactData) {
+        const res = await fetch('./data/seasonal_regimes.json');
+        seasonalCompactData = await res.json();
+      }
+      const ts = (seasonalCompactData.compact_accounting_100yr && seasonalCompactData.compact_accounting_100yr.annual_time_series) || [];
+      if (!ts.length) return;
+      if (compact100yrChart) {
+        compact100yrChart.destroy();
+        compact100yrChart = null;
+      }
+
+      const labels = ts.map(d => d.wy);
+      const supplyVals = ts.map(d => d.supply_maf);
+      const releaseVals = ts.map(d => d.lees_ferry_release_maf);
+      const bgColors = ts.map(d => d.meets_compact ? '#0284c7' : '#b2182b');
+
+      compact100yrChart = new Chart(canvas.getContext('2d'), {
+        type: 'bar',
+        plugins: [glenCanyonDamMarkerPlugin],
+        data: {
+          labels,
+          datasets: [
+            {
+              type: 'bar',
+              label: 'USBR Natural Flow at Lees Ferry (MAF)',
+              data: supplyVals,
+              backgroundColor: bgColors,
+              borderRadius: 1.5,
+              barPercentage: 0.85,
+              order: 2
+            },
+            {
+              type: 'line',
+              label: 'Lees Ferry Releases (MAF)',
+              data: releaseVals,
+              borderColor: '#334155',
+              borderWidth: 1.75,
+              pointRadius: 0,
+              pointHoverRadius: 4,
+              pointHoverBackgroundColor: '#334155',
+              pointHoverBorderColor: '#ffffff',
+              pointHoverBorderWidth: 1.5,
+              tension: 0.1,
+              order: 1
+            },
+            {
+              type: 'line',
+              label: '16.5 MAF Core Statutory Line (7.5 Upper + 7.5 Lower + 1.5 MX)',
+              data: labels.map(() => 16.5),
+              borderColor: '#1e293b',
+              borderWidth: 2,
+              borderDash: [5, 4],
+              pointRadius: 0,
+              pointHoverRadius: 0,
+              fill: false,
+              order: 0
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          interaction: { mode: 'index', intersect: false },
+          layout: { padding: { left: 8, right: 10, top: 16, bottom: 4 } },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              filter: item => item.datasetIndex !== 2,
+              callbacks: {
+                title: items => items.length ? `Water Year ${items[0].label}` : '',
+                label: ctx => {
+                  const item = ts[ctx.dataIndex];
+                  if (ctx.dataset.type === 'bar') return ` USBR Natural Flow: ${item.supply_maf.toFixed(2)} MAF`;
+                  return ` Lees Ferry Release: ${ctx.parsed.y.toFixed(2)} MAF`;
+                },
+                footer: items => {
+                  if (!items.length) return '';
+                  const item = ts[items[0].dataIndex];
+                  if (!item) return '';
+                  const gapPromise = item.supply_maf - 16.5;
+                  const netDiff = item.supply_maf - item.lees_ferry_release_maf;
+                  return [
+                    `vs. 16.50 MAF Core Promise: ${gapPromise >= 0 ? '+' : ''}${gapPromise.toFixed(2)} MAF`,
+                    `Natural − Release (Upper Use ± ΔStor): ${netDiff >= 0 ? '+' : ''}${netDiff.toFixed(2)} MAF`
+                  ];
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: {
+                autoSkip: false,
+                maxRotation: 0,
+                font: { size: 10 },
+                color: '#64748b',
+                callback: function(val) {
+                  const yr = Number(this.getLabelForValue(val));
+                  return (yr % 10 === 0 || yr === 1922 || yr === 2024) ? String(yr) : '';
+                }
+              }
+            },
+            y: {
+              min: 0,
+              max: 30,
+              title: { display: true, text: 'Annual Volume (MAF)', font: { size: 11, weight: '600' }, color: '#475569' },
+              ticks: { stepSize: 5, callback: v => `${v} MAF`, font: { size: 10 }, color: '#64748b' },
+              grid: { color: '#e2e8f0', lineWidth: 1 }
+            }
+          }
+        }
+      });
+    }
+
     function switchBudgetSubtab(mode) {
       const btnSankey = document.getElementById('subtab-btn-sankey');
       const btnStacked = document.getElementById('subtab-btn-stacked');
+      const btnCompact = document.getElementById('subtab-btn-compact');
       const sankeySec = document.getElementById('view-sankey-section');
       const stackedSec = document.getElementById('view-stacked-section');
+      const compactSec = document.getElementById('view-compact-section');
 
       if (!sankeySec || !stackedSec) return;
 
-      const activeClass = "px-3.5 py-1.5 rounded-xs text-xs font-bold transition shadow-xs bg-white text-sky-900 border border-stone-200 flex items-center gap-1.5 cursor-pointer";
-      const inactiveClass = "px-3.5 py-1.5 rounded-xs text-xs font-semibold transition text-stone-600 hover:text-stone-900 flex items-center gap-1.5 cursor-pointer";
+      const activeClass = "px-3.5 py-1.5 rounded-[2px] text-xs font-bold transition shadow-xs bg-white text-sky-900 border border-stone-200 flex items-center gap-1.5 cursor-pointer";
+      const inactiveClass = "px-3.5 py-1.5 rounded-[2px] text-xs font-semibold transition text-stone-600 hover:text-stone-900 flex items-center gap-1.5 cursor-pointer";
 
       if (btnSankey) btnSankey.className = (mode === 'sankey') ? activeClass : inactiveClass;
       if (btnStacked) btnStacked.className = (mode === 'stacked') ? activeClass : inactiveClass;
+      if (btnCompact) btnCompact.className = (mode === 'compact') ? activeClass : inactiveClass;
+
+      sankeySec.style.display = (mode === 'sankey') ? 'block' : 'none';
+      stackedSec.style.display = (mode === 'stacked') ? 'block' : 'none';
+      if (compactSec) compactSec.style.display = (mode === 'compact') ? 'block' : 'none';
 
       if (mode === 'stacked') {
-        sankeySec.style.display = 'none';
-        stackedSec.style.display = 'block';
         renderStackedComparison();
+      } else if (mode === 'compact') {
+        renderCompact100yrChart();
       } else {
-        sankeySec.style.display = 'block';
-        stackedSec.style.display = 'none';
         renderSankey();
       }
     }
@@ -1213,6 +1418,8 @@
       const view = params.get('view');
       if (view === 'stacked') {
         switchBudgetSubtab('stacked');
+      } else if (view === 'compact') {
+        switchBudgetSubtab('compact');
       } else {
         switchBudgetSubtab('sankey');
       }
