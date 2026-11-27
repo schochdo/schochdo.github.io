@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Upper Basin River Dynamics &amp; Lake Powell Water Balance</title>
-  
+  <title>Tributary Hydrology &amp; Flow Regimes — Colorado River Basin</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Editorial Design Standard (Edward Tufte / NYT Restrained Palette) -->
   <link rel="stylesheet" href="editorial.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
@@ -27,1192 +26,700 @@
       font-variant-numeric: tabular-nums;
       font-feature-settings: "tnum";
     }
-    code, pre {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    .mono {
+      font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
     }
-
-    /* Dashboard Grid & Card System */
     .dashboard-grid {
       display: grid;
       gap: 10px;
       padding: 10px 14px;
       box-sizing: border-box;
-      background-color: #f5f2eb;
       width: 100%;
     }
-
     .dashboard-card {
       background: #ffffff;
       border: 1px solid #d6d3d1;
       border-radius: 2px;
-      padding: 12px;
+      padding: 12px 14px;
       display: flex;
       flex-direction: column;
       min-width: 0;
       overflow: hidden;
       box-sizing: border-box;
-      box-shadow: none;
     }
-
-    .card-header-row {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 8px;
-      margin-bottom: 4px;
-      flex-shrink: 0;
-    }
-
-    /* Compact HTML Legends for Cards 3 & 4 */
-    .chart-html-legend {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      font-size: 11.5px;
-      color: #334155;
-      margin-top: 2px;
-      margin-bottom: 6px;
-      flex-shrink: 0;
-      align-items: center;
-      line-height: 1.4;
-    }
-
     .legend-item {
       display: inline-flex;
       align-items: center;
       gap: 5px;
       cursor: pointer;
       user-select: none;
-      transition: opacity 0.15s ease, color 0.15s ease;
+      transition: opacity 0.15s ease;
       white-space: nowrap;
     }
-
-    .legend-item:hover {
-      color: #0f172a;
-    }
-
     .legend-item.dimmed {
-      opacity: 0.38;
+      opacity: 0.35;
       text-decoration: line-through;
     }
-
-    .legend-color-box {
-      width: 10px;
-      height: 10px;
-      border-radius: 2px;
+    .legend-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 9999px;
       display: inline-block;
       flex-shrink: 0;
     }
-
     .legend-line {
       width: 14px;
-      height: 0px;
+      height: 0;
       display: inline-block;
       flex-shrink: 0;
     }
 
-    /* Responsive Grid Breakpoints */
-    /* 1. Wide Desktop Monitors (> 1100px): Compact 2x2 Single-Screen Layout */
+    /* Wide desktop: 2-column layout (Left: 74-Gage Gapminder Scatter; Right: Linked Hydrograph + 5 Flow Regimes) */
     @media (min-width: 1101px) {
       html, body {
         height: 100vh;
         overflow: hidden;
       }
       .dashboard-grid {
-        height: calc(100vh - 64px);
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        grid-template-rows: repeat(2, minmax(0, 1fr));
+        height: calc(100vh - 54px);
+        grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+        grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
         overflow: hidden;
       }
-      body.in-iframe .dashboard-grid {
-        height: calc(100vh - 52px);
+      .card-gapminder {
+        grid-row: 1 / span 2;
       }
       .dashboard-card {
         min-height: 0;
       }
     }
 
-    /* 2. Narrower Viewports (<= 1100px): Single-Column Scrollable Layout */
+    /* Mobile & tablet: clean vertical stack */
     @media (max-width: 1100px) {
       html, body {
         height: auto !important;
         overflow-y: auto !important;
-        min-height: 100vh;
-      }
-      header {
-        height: auto !important;
-        min-height: 52px;
-        max-height: none !important;
-        flex-wrap: wrap;
-        padding-top: 8px;
-        padding-bottom: 8px;
-        gap: 8px;
       }
       .dashboard-grid {
-        height: auto !important;
         grid-template-columns: minmax(0, 1fr);
         grid-template-rows: auto;
-        overflow-y: visible !important;
       }
-      .dashboard-card {
-        min-height: 360px;
-        height: 420px;
+      .card-gapminder {
+        min-height: 440px;
       }
-    }
-
-    /* Shared Academic Sidebar Styles */
-    .sidebar-academic {
-      background-color: #f8fafc;
-      color: #334155;
-      border-right: 1px solid #e2e8f0;
-    }
-    .sidebar-category-header {
-      color: #64748b;
-      font-size: 10.5px;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      padding: 10px 10px 3px 10px;
-      display: flex;
-      align-items: center;
-    }
-    .sidebar-link {
-      color: #334155;
-      font-weight: 500;
-      font-size: 12px;
-      padding: 6.5px 10px;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      width: 100%;
-      text-align: left;
-      border: 1px solid transparent;
-      border-left: 3px solid transparent;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      background: transparent;
-    }
-    .sidebar-link svg {
-      color: #64748b;
-      flex-shrink: 0;
-      transition: color 0.15s ease;
-    }
-    .sidebar-link:hover {
-      background-color: #f1f5f9;
-      color: #0f172a;
-    }
-    .sidebar-link:hover svg {
-      color: #334155;
-    }
-    .sidebar-link.active {
-      background-color: #ffffff;
-      color: #0f172a;
-      font-weight: 700;
-      border: 1px solid #cbd5e1;
-      border-left: 3px solid #0072B2;
-      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
-    }
-    .sidebar-link.active svg {
-      color: #0072B2 !important;
+      .card-linked, .card-regimes {
+        min-height: 330px;
+      }
     }
   </style>
 </head>
 <body class="flex flex-col min-h-screen w-screen bg-[#f5f2eb]">
 
   <!-- Compact Standard Header -->
-  <header class="bg-[#f5f2eb] border-b border-stone-300 px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 box-border z-20">
-    <div>
-      <h1 class="text-lg md:text-xl font-black text-slate-900 tracking-tight leading-none">Tributary Hydrology</h1>
+  <header class="bg-[#f5f2eb] border-b border-stone-300 px-4 py-2 flex flex-wrap items-center justify-between gap-2 box-border z-20">
+    <div class="flex items-baseline gap-2.5 flex-wrap">
+      <h1 class="text-lg md:text-xl font-black text-slate-900 tracking-tight leading-none">Tributary Hydrology &amp; Flow Regimes</h1>
+      <span class="text-[11px] text-slate-500 font-medium hidden sm:inline">Click any of the 71 USGS gages to inspect its full historical daily hydrograph</span>
     </div>
 
-    <!-- Compact Regime Key & Direct Selection Hint (Top Two Charts) -->
+    <!-- Interactive Regime Filter Legend -->
     <div id="regime-key" class="flex flex-wrap items-center gap-3 text-xs shrink-0">
-      <span id="regime-legend-snowmelt" class="legend-item font-semibold" onclick="toggleRegimeCategory('snowmelt')" title="Click to highlight all Snowmelt rivers">
-        <span class="legend-color-box" style="background: #0072B2; border-radius: 9999px;"></span>
-        <span class="text-[#0072B2]">Snowmelt</span>
+      <span id="leg-Snowmelt" class="legend-item font-semibold" onclick="toggleRegimeFilter('Snowmelt')" title="Filter Snowmelt gages">
+        <span class="legend-dot" style="background: #2b5c8f;"></span>
+        <span class="text-[#2b5c8f]">Snowmelt</span>
       </span>
-      <span id="regime-legend-dam_controlled" class="legend-item font-semibold" onclick="toggleRegimeCategory('dam_controlled')" title="Click to highlight all Dam-Regulated rivers">
-        <span class="legend-color-box" style="background: #009E73; border-radius: 9999px;"></span>
-        <span class="text-[#009E73]">Dam-Regulated</span>
+      <span id="leg-Regulated" class="legend-item font-semibold" onclick="toggleRegimeFilter('Regulated')" title="Filter Dam-Regulated gages">
+        <span class="legend-dot" style="background: #3f6f58;"></span>
+        <span class="text-[#3f6f58]">Dam-Regulated</span>
       </span>
-      <span id="regime-legend-flash_flood" class="legend-item font-semibold" onclick="toggleRegimeCategory('flash_flood')" title="Click to highlight all Desert Flash-Flood rivers">
-        <span class="legend-color-box" style="background: #D55E00; border-radius: 9999px;"></span>
-        <span class="text-[#D55E00]">Desert Flash</span>
+      <span id="leg-Flashy" class="legend-item font-semibold" onclick="toggleRegimeFilter('Flashy')" title="Filter Desert Flash-Flood gages">
+        <span class="legend-dot" style="background: #b8502a;"></span>
+        <span class="text-[#b8502a]">Desert Flash</span>
       </span>
-      <button id="btn-reset-selection" onclick="clearRiverSelection()" class="hidden text-[11px] font-bold text-[#2b5c8f] hover:underline cursor-pointer">Reset</button>
+      <button id="btn-reset" onclick="resetSelection()" class="hidden text-[11px] font-bold text-[#2b5c8f] hover:underline cursor-pointer">Reset</button>
     </div>
   </header>
 
-  <!-- ============================================================== -->
-  <!-- 2x2 SINGLE-SCREEN EDITORIAL GRID                               -->
-  <!-- ============================================================== -->
-  <main class="dashboard-grid">
+  <!-- Main Linked Layout -->
+  <main class="dashboard-grid flex-1">
 
-    <!-- CARD 1: TRIBUTARY FLASHINESS VS. ANNUAL VOLUME -->
-    <section class="dashboard-card">
-      <div class="card-header-row">
-        <h2 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-          <span class="w-2 h-2 rounded-full bg-[#0072B2]"></span>
-          Tributary Flashiness vs. Annual Volume
-        </h2>
-        <span class="text-[10px] text-slate-500 font-medium">Water Years 2016–2025 (Oct 2015 – Sep 2025)</span>
-      </div>
-      <p id="card1-caption" class="text-[11px] text-slate-600 mb-1.5 leading-snug shrink-0">
-        Steady snowmelt rivers supply &gt;99% of Lake Powell's gaged inflow; flashy desert streams spike dramatically yet deliver &lt;1%.
-      </p>
-      <div class="flex-1 min-h-0 min-w-0 relative w-full">
-        <canvas id="chart-behavior-bubbles" style="position: absolute; top: 0; left: 0; width: 100% !important; height: 100% !important;"></canvas>
-      </div>
-      <div class="chart-provenance-footer flex items-center justify-between text-[10px] text-slate-500 pt-1.5 border-t border-slate-200 mt-1 shrink-0">
-        <div class="truncate">
-          <span class="font-bold text-slate-700">Source:</span> <a href="https://waterservices.usgs.gov/nwis/dv/?format=rdb&amp;sites=09180500,09315000,09379500,09234500,09333500,09337500&amp;parameterCd=00060&amp;startDT=2015-10-01&amp;endDT=2025-09-30" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 underline font-semibold">USGS Daily Discharge RDB (6 Gages, Water Years 2016–2025) ↗</a> (Richards–Baker Flashiness Index)
+    <!-- LEFT (FULL HEIGHT): 71-Gage Linked Gapminder Bubble Scatter -->
+    <section class="dashboard-card card-gapminder">
+      <div class="flex flex-wrap items-start justify-between gap-2 mb-1.5 shrink-0">
+        <div>
+          <h2 class="text-sm font-black text-slate-900 leading-tight">Basin-Wide Flashiness (RBI) vs. Annual Volume</h2>
+          <p class="text-[11px] text-slate-600 mt-0.5">
+            <strong>71 USGS gages</strong> (WY 2016–2025 daily RBI &amp; full-POR mean volume, log scale). Snowmelt rivers supply nearly all basin volume; desert flash channels spike violently but contribute &lt;1%.
+          </p>
         </div>
+        <div class="flex items-center gap-1.5 shrink-0">
+          <label for="station-picker" class="sr-only">Select USGS Gage</label>
+          <select id="station-picker" onchange="selectStationById(this.value)" class="text-[11px] font-semibold bg-[#faf8f4] border border-[#cfc8ba] rounded-[2px] px-2 py-1 text-slate-800 max-w-[210px] outline-none cursor-pointer">
+            <option value="">Jump to gage…</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="relative flex-1 min-h-0 w-full">
+        <canvas id="chart-gapminder"></canvas>
+      </div>
+
+      <div class="mt-1.5 pt-1.5 border-t border-stone-200 flex flex-wrap items-center justify-between gap-2 text-[10.5px] text-slate-500 shrink-0">
+        <span><strong>RBI</strong> = &Sigma;|&Delta;q| / &Sigma;q (0.00 steady &rarr; 1.00 extreme flash) &bull; Bubble size scaled by volume</span>
+        <a href="https://waterservices.usgs.gov/docs/dv-service/" target="_blank" rel="noopener noreferrer" class="text-[#2b5c8f] hover:underline font-semibold">USGS Daily Values (WY 2016–2025) ↗</a>
       </div>
     </section>
 
-    <!-- CARD 2: LAKE POWELL CANYON SHAPE (WATER PER FOOT OF RISE) -->
-    <section class="dashboard-card">
-      <div class="card-header-row">
-        <h2 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-          <span class="w-2 h-2 rounded-full bg-[#009E73]"></span>
-          Lake Powell Canyon Shape: Water per Foot of Rise
-        </h2>
-        <span id="card2-badge" class="text-[10px] text-slate-500 font-medium">1964–2021 Curve · 51k → 157k AF/ft</span>
-      </div>
-      <p id="card2-caption" class="text-[11px] text-slate-600 mb-1.5 leading-snug shrink-0">
-        When depleted, Lake Powell's narrow canyon needs less than half the water per foot of rise as full pool—making small inflows look bigger in feet.
-      </p>
-      <div class="flex-1 min-h-0 min-w-0 relative w-full">
-        <canvas id="chart-travel-time" style="position: absolute; top: 0; left: 0; width: 100% !important; height: 100% !important;"></canvas>
-      </div>
-      <div class="chart-provenance-footer flex items-center justify-between text-[10px] text-slate-500 pt-1.5 border-t border-slate-200 mt-1 shrink-0">
-        <div class="truncate">
-          <span class="font-bold text-slate-700">Source:</span> <a href="https://www.usbr.gov/uc/water/hydrodata/reservoir_data/919/csv/49.csv" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 underline font-semibold">USBR Lake Powell Elevation CSV ↗</a> &amp; <a href="https://www.usbr.gov/uc/water/hydrodata/reservoir_data/919/csv/17.csv" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 underline font-semibold">Storage CSV ↗</a> (1964–2021 full curve; 2023–2026 current pool)
+    <!-- TOP RIGHT: Linked Full-POR Daily Hydrograph for Selected Gage -->
+    <section class="dashboard-card card-linked">
+      <div class="flex flex-wrap items-start justify-between gap-2 mb-1 shrink-0">
+        <div class="min-w-0">
+          <div class="flex items-center gap-2 flex-wrap">
+            <h2 id="selected-name" class="text-sm font-black text-slate-900 leading-tight truncate">Colorado River near Cisco, UT</h2>
+            <span id="selected-badge" class="text-[10px] font-bold px-1.5 py-0.5 rounded-[2px] border">Snowmelt</span>
+          </div>
+          <p id="selected-subtitle" class="text-[11px] text-slate-600 mt-0.5 tabular-nums">
+            Full-POR daily mean hydrograph (cfs) &bull; Click any bubble on the left to switch gages
+          </p>
         </div>
+        <a id="selected-usgs-link" href="https://waterdata.usgs.gov/monitoring-location/09180500/#parameterCode=00060" target="_blank" rel="noopener noreferrer" class="text-[10.5px] font-mono font-semibold text-[#2b5c8f] hover:underline shrink-0">
+          USGS #09180500 ↗
+        </a>
+      </div>
+
+      <!-- 4 Compact Metrics Strip -->
+      <div class="grid grid-cols-4 gap-1.5 mb-2 shrink-0">
+        <div class="bg-[#faf8f4] border border-[#e5dfd3] rounded-[2px] px-2 py-1">
+          <div class="text-[9.5px] uppercase tracking-wider font-bold text-slate-500">Annual Vol</div>
+          <div id="stat-maf" class="text-xs font-extrabold text-slate-900 tabular-nums mono">—</div>
+        </div>
+        <div class="bg-[#faf8f4] border border-[#e5dfd3] rounded-[2px] px-2 py-1">
+          <div class="text-[9.5px] uppercase tracking-wider font-bold text-slate-500">Daily RBI</div>
+          <div id="stat-rbi" class="text-xs font-extrabold text-slate-900 tabular-nums mono">—</div>
+        </div>
+        <div class="bg-[#faf8f4] border border-[#e5dfd3] rounded-[2px] px-2 py-1">
+          <div class="text-[9.5px] uppercase tracking-wider font-bold text-slate-500">Peak Daily</div>
+          <div id="stat-peak" class="text-xs font-extrabold text-slate-900 tabular-nums mono">—</div>
+        </div>
+        <div class="bg-[#faf8f4] border border-[#e5dfd3] rounded-[2px] px-2 py-1">
+          <div class="text-[9.5px] uppercase tracking-wider font-bold text-slate-500">USGS Record</div>
+          <div id="stat-por" class="text-xs font-extrabold text-slate-900 tabular-nums mono">—</div>
+        </div>
+      </div>
+
+      <div class="relative flex-1 min-h-0 w-full">
+        <canvas id="chart-hydrograph"></canvas>
       </div>
     </section>
 
-    <!-- CARD 3: RATE VS. VOLUME (REAL FLASH FLOOD VS. SNOWMELT) & 5 FLOW REGIMES (Full-Width Bottom Row) -->
-    <section class="dashboard-card" style="grid-column: 1 / -1;">
-      <div class="card-header-row">
-        <h2 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-          <span class="w-2 h-2 rounded-full bg-[#2b5c8f]"></span>
-          <span id="card4-title">Rate vs. Volume: Flash Flood vs. Snowmelt (Water Year 2021)</span>
-        </h2>
-        <div class="flex items-center gap-1 shrink-0">
-          <button onclick="setCard4Mode('event')" id="btn-card4-event" class="px-2 py-0.5 text-[10px] font-bold rounded-[2px] bg-[#2b5c8f] text-white border border-[#2b5c8f] transition cursor-pointer">
-            Flash Flood vs. Snowmelt
-          </button>
-          <button onclick="setCard4Mode('regimes')" id="btn-card4-regimes" class="px-2 py-0.5 text-[10px] font-semibold rounded-[2px] bg-[#faf8f4] text-slate-600 border border-[#cfc8ba] hover:text-slate-900 transition cursor-pointer">
-            5 Flow Regimes
-          </button>
+    <!-- BOTTOM RIGHT: 5 Normalized Basin Flow Regimes -->
+    <section class="dashboard-card card-regimes">
+      <div class="flex flex-wrap items-start justify-between gap-2 mb-1 shrink-0">
+        <div>
+          <h2 class="text-sm font-black text-slate-900 leading-tight">5 Normalized Seasonal Flow Regimes (Jan–Dec)</h2>
+          <p class="text-[11px] text-slate-600 mt-0.5">
+            Each curve normalized to 0–100% of its own peak so timing can be compared across snowmelt, dams, diversions, and desert channels.
+          </p>
         </div>
       </div>
-      <p id="card4-caption" class="text-[11px] text-slate-600 mb-1.5 leading-snug shrink-0">
-        Daily USGS discharge: a short flash-flood spike reaches high cfs for days, while spring snowmelt sustains volume for months.
-      </p>
-      <!-- Compact HTML Legend for Card 3 (Event view) -->
-      <div id="legend-hydrograph" class="chart-html-legend">
-        <span class="legend-item" onclick="toggleDataset(chartHydro, 0)">
-          <span class="legend-color-box" style="background: #0072B2;"></span>
-          <span id="legend-cisco-label">CO River near Cisco, UT (Snowmelt, cfs)</span>
-        </span>
-        <span class="legend-item" onclick="toggleDataset(chartHydro, 1)">
-          <span class="legend-line" style="border-top: 2.4px solid #D55E00;"></span>
-          <span id="legend-dd-label">Dirty Devil near Hanksville, UT (Flash Flood, cfs)</span>
-        </span>
+
+      <!-- Compact Clickable Legend -->
+      <div id="regimes-legend" class="flex flex-wrap items-center gap-x-3 gap-y-1 text-[10.5px] font-semibold text-slate-700 mb-1.5 shrink-0"></div>
+
+      <div class="relative flex-1 min-h-0 w-full">
+        <canvas id="chart-regimes"></canvas>
       </div>
-      <div class="flex-1 min-h-0 min-w-0 relative w-full">
-        <canvas id="chart-snowmelt-vs-flash" style="position: absolute; top: 0; left: 0; width: 100% !important; height: 100% !important;"></canvas>
-      </div>
-      <div class="chart-provenance-footer flex items-center justify-between text-[10px] text-slate-500 pt-1.5 border-t border-slate-200 mt-1 shrink-0">
-        <div id="card4-source" class="truncate">
-          <span class="font-bold text-slate-700">Source:</span> <a href="https://waterservices.usgs.gov/nwis/dv/?format=rdb&amp;sites=09180500,09333500&amp;parameterCd=00060&amp;startDT=2020-10-01&amp;endDT=2021-09-30" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 underline font-semibold">USGS Water Year 2021 Daily RDB ↗</a> (<a href="https://waterdata.usgs.gov/monitoring-location/09180500/#parameterCode=00060" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 underline font-semibold">#09180500 Cisco ↗</a> &amp; <a href="https://waterdata.usgs.gov/monitoring-location/09333500/#parameterCode=00060" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 underline font-semibold">#09333500 Dirty Devil ↗</a>)
-        </div>
+
+      <div class="mt-1 pt-1 border-t border-stone-200 flex flex-wrap items-center justify-between gap-2 text-[10px] text-slate-500 shrink-0">
+        <span>Desert Bimodal = Little Colorado (#09402000) + Paria (#09382000): winter rain/snowmelt + Aug–Oct monsoon</span>
+        <span class="font-mono">Full USGS POR &amp; CDWR</span>
       </div>
     </section>
 
   </main>
 
-  <!-- ============================================================== -->
-  <!-- JAVASCRIPT: SHARED SELECTION STATE & GAPMINDER INTERACTIVITY   -->
-  <!-- ============================================================== -->
   <script>
-    Chart.defaults.font.family = "'Inter', -apple-system, sans-serif";
-    Chart.defaults.color = "#334155";
-    Chart.defaults.borderColor = "#cbd5e1";
-    Chart.defaults.animation = false;
-    Chart.defaults.animations = false;
-    Chart.defaults.transitions = false;
-
-    if (Chart.defaults.scale && Chart.defaults.scale.grid) {
-      Chart.defaults.scale.grid.color = '#e2e8f0';
-    }
-    if (Chart.defaults.scales) {
-      if (Chart.defaults.scales.linear && Chart.defaults.scales.linear.grid) {
-        Chart.defaults.scales.linear.grid.color = '#e2e8f0';
-      }
-      if (Chart.defaults.scales.category && Chart.defaults.scales.category.grid) {
-        Chart.defaults.scales.category.grid.color = '#e2e8f0';
-      }
-    }
-
-    // Light editorial card tooltip styling across all charts
-    if (Chart.defaults.plugins && Chart.defaults.plugins.tooltip) {
-      const tt = Chart.defaults.plugins.tooltip;
-      tt.backgroundColor = 'rgba(255, 255, 255, 0.98)';
-      tt.titleColor = '#0f172a';
-      tt.bodyColor = '#334155';
-      tt.footerColor = '#64748b';
-      tt.borderColor = '#cbd5e1';
-      tt.borderWidth = 1;
-      tt.cornerRadius = 3;
-      tt.padding = 10;
-      tt.usePointStyle = true;
-      tt.boxWidth = 8;
-      tt.boxHeight = 8;
-      tt.boxPadding = 6;
-    }
-
-    // Handle iframe detection and navigation
     if (window.self !== window.top) {
       document.body.classList.add('in-iframe');
     }
 
-    // Color conversion utility
-    function hexToRgba(hex, alpha) {
-      const h = hex.replace('#', '');
-      const r = parseInt(h.substring(0, 2), 16);
-      const g = parseInt(h.substring(2, 4), 16);
-      const b = parseInt(h.substring(4, 6), 16);
-      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-    }
-
-    // ================================================================
-    // COLORBLIND-SAFE PALETTE (OKABE-ITO / COLORBREWER STANDARD)
-    //   - Snowmelt Inflow Rivers:            #0072B2 (Okabe-Ito Deep Blue, fill rgba(0, 114, 178, 0.16))
-    //   - Dam-Regulated Releases:            #009E73 (Okabe-Ito Bluish-Green, fill rgba(0, 158, 115, 0.16))
-    //   - Desert Flash-Flood Tributaries:    #D55E00 (Okabe-Ito Vermilion, fill rgba(213, 94, 0, 0.16))
-    //   - Water Year Surplus Supply:         #0284c7 (ColorBrewer Water Blue)
-    //   - Structural Deficit (100-Yr Bar):   #b2182b (ColorBrewer Crimson / Deep Oxblood)
-    //   - Outflow & Diversion Demand (cfs):  #b45309 (ColorBrewer Warm Ochre)
-    //   - 16.5 MAF Compact Target:           #1e293b (Charcoal dashed 2px)
-    // ================================================================
-    const COLOR_SNOWMELT = '#0072B2';
-    const COLOR_DAM = '#009E73';
-    const COLOR_FLASH = '#D55E00';
-    const COLOR_SURPLUS = '#0284c7';
-    const COLOR_DEFICIT = '#b2182b';
-    const COLOR_DEMAND = '#b45309';
-    const COLOR_TARGET = '#1e293b';
-
-    let RIVERS = [];
-    let hydroDataCache = null;
-    let seasonalDataCache = null;
-
-    // Shared Multi-Select State (river IDs on Card 1 & header regime key)
-    const selectedRiverIds = new Set();
-
-    function isRiverActive(r) {
-      return selectedRiverIds.size === 0 || selectedRiverIds.has(r.id);
-    }
-
-    function regimeColor(regime) {
-      if (regime === 'snowmelt') return COLOR_SNOWMELT;
-      if (regime === 'dam_controlled') return COLOR_DAM;
-      return COLOR_FLASH;
-    }
-
-    function regimeLabelText(regime) {
-      if (regime === 'snowmelt') return 'Snowmelt';
-      if (regime === 'dam_controlled') return 'Dam-Regulated';
-      return 'Desert Flash';
-    }
-
-    function formatRiverHoverLines(r) {
-      const shareLine = r.inflow_share_pct != null
-        ? `Annual Volume: ${r.annual_maf.toFixed(3)} MAF/yr (${r.inflow_share_pct.toFixed(2)}% of gaged inflow)`
-        : `Annual Volume: ${r.annual_maf.toFixed(3)} MAF/yr (upstream of Green River, UT)`;
-      return [
-        `Regime: ${regimeLabelText(r.regime)}`,
-        shareLine,
-        `Flashiness (RBI): ${r.rbi.toFixed(4)} (${r.complete_water_years}-yr daily mean)`,
-        `Peak vs. Median: ${r.max_daily_cfs.toLocaleString()} cfs (${r.max_daily_date}) / ${r.median_cfs.toLocaleString()} cfs (${r.peak_to_median}x)`,
-        `Approx. Distance to Powell: ~${r.approx_miles_to_powell} river mi`
-      ];
-    }
-
-    function findHitRiverOnChart(chart, evt) {
-      if (!chart || !evt) return null;
-      const x = evt.x != null ? evt.x : evt.native?.offsetX;
-      const y = evt.y != null ? evt.y : evt.native?.offsetY;
-      if (x == null || y == null) return null;
-
-      const boxes = chart._labelBoxes || [];
-      for (const b of boxes) {
-        if (b.riverId && x >= b.x && x <= b.x + b.w && y >= b.y && y <= b.y + b.h) {
-          return b.riverId;
-        }
-      }
-
-      let bestId = null;
-      let bestDist = Infinity;
-      chart.data.datasets.forEach((ds, idx) => {
-        const meta = chart.getDatasetMeta(idx);
-        if (!meta || meta.hidden || !meta.data || !meta.data.length) return;
-        const rId = ds.riverId || ds.data?.[0]?.river?.id;
-        if (!rId) return;
-        const el = meta.data[0];
-        const dist = Math.hypot(x - el.x, y - el.y);
-        if (dist <= 16 && dist < bestDist) {
-          bestDist = dist;
-          bestId = rId;
-        }
-      });
-      return bestId;
-    }
-
-    let chartBubble = null;
-    let chartHypsometry = null;
-    let chartHydro = null;
-
-    async function loadHydroData() {
-      if (hydroDataCache) return hydroDataCache;
-      try {
-        const resp = await fetch('data/tributary_hydrology.json');
-        if (resp.ok) hydroDataCache = await resp.json();
-      } catch (e) {
-        try {
-          const resp2 = await fetch('./data/tributary_hydrology.json');
-          if (resp2.ok) hydroDataCache = await resp2.json();
-        } catch (e2) {}
-      }
-      return hydroDataCache;
-    }
-
-    async function loadSeasonalData() {
-      if (seasonalDataCache) return seasonalDataCache;
-      try {
-        const resp = await fetch('data/seasonal_regimes.json');
-        if (resp.ok) seasonalDataCache = await resp.json();
-      } catch (e) {
-        try {
-          const resp2 = await fetch('./data/seasonal_regimes.json');
-          if (resp2.ok) seasonalDataCache = await resp2.json();
-        } catch (e2) {}
-      }
-      return seasonalDataCache;
-    }
-
-    // ================================================================
-    // CARD 1: REAL TRIBUTARY FLASHINESS VS. ANNUAL VOLUME (WY 2016-2025)
-    // ================================================================
-    const card1LabelsPlugin = {
-      id: 'card1LabelsPlugin',
-      afterDatasetsDraw(chart) {
-        if (!chart || !chart.chartArea || !chart.scales?.x || !chart.scales?.y) return;
-        const { ctx, chartArea } = chart;
-        const xScale = chart.scales.x;
-        const yScale = chart.scales.y;
-
-        ctx.save();
-        ctx.font = 'bold 9px "Inter", -apple-system, sans-serif';
-        const candidates = [];
-
-        chart.data.datasets.forEach(ds => {
-          const r = ds.data?.[0]?.river;
-          if (!r) return;
-          const isDimmed = !isRiverActive(r);
-          const xPos = xScale.getPixelForValue(r.rbi);
-          const yPos = yScale.getPixelForValue(r.annual_maf);
-
-          const shareText = r.inflow_share_pct != null ? ` (${r.inflow_share_pct < 1 ? r.inflow_share_pct.toFixed(2) : r.inflow_share_pct.toFixed(0)}%)` : '';
-          const labelText = `${r.short_name}${shareText}`;
-          const textWidth = ctx.measureText(labelText).width;
-          const pillW = textWidth + 8;
-          const pillH = 14;
-
-          let px = xPos + 10 + pillW / 2;
-          let py = yPos;
-          if (r.id === '09337500') {
-            px = xPos - pillW / 2 - 8;
-            py = yPos - 12;
-          } else if (r.id === '09333500') {
-            px = xPos;
-            py = yPos - 16;
-          } else if (r.id === '09234500') {
-            px = xPos + 10 + pillW / 2;
-            py = yPos - 6;
-          } else if (r.id === '09379500') {
-            px = xPos + 10 + pillW / 2;
-            py = yPos + 4;
-          }
-
-          const pillX = Math.max(chartArea.left + 2, Math.min(chartArea.right - pillW - 2, px - pillW / 2));
-          const pillY = Math.max(chartArea.top + 2, Math.min(chartArea.bottom - pillH - 2, py - pillH / 2));
-          candidates.push({ r, isDimmed, labelText, pillX, pillY, pillW, pillH });
-        });
-
-        const labelBoxes = [];
-        candidates.forEach(item => {
-          let { pillX, pillY, pillW, pillH } = item;
-          for (let iter = 0; iter < 6; iter++) {
-            const hit = labelBoxes.find(b =>
-              pillX < b.x + b.w + 2 &&
-              pillX + pillW + 2 > b.x &&
-              pillY < b.y + b.h + 2 &&
-              pillY + pillH + 2 > b.y
-            );
-            if (!hit) break;
-            if (hit.y + hit.h + 3 + pillH <= chartArea.bottom - 2) {
-              pillY = hit.y + hit.h + 3;
-            } else {
-              pillY = Math.max(chartArea.top + 2, hit.y - pillH - 3);
-            }
-          }
-
-          labelBoxes.push({ riverId: item.r.id, regime: item.r.regime, x: pillX, y: pillY, w: pillW, h: pillH });
-
-          ctx.save();
-          ctx.fillStyle = item.isDimmed ? 'rgba(255, 255, 255, 0.6)' : '#ffffff';
-          ctx.fillRect(pillX, pillY, pillW, pillH);
-          ctx.strokeStyle = item.isDimmed ? 'rgba(203, 213, 225, 0.5)' : '#cbd5e1';
-          ctx.lineWidth = 1;
-          ctx.strokeRect(pillX, pillY, pillW, pillH);
-          ctx.restore();
-
-          ctx.fillStyle = item.isDimmed ? 'rgba(71, 85, 105, 0.4)' : '#0f172a';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillText(item.labelText, pillX + pillW / 2, pillY + pillH / 2);
-        });
-
-        chart._labelBoxes = labelBoxes;
-        ctx.restore();
-      }
+    const REGIME_COLORS = {
+      Snowmelt:  { fill: 'rgba(43, 92, 143, 0.72)',  border: '#2b5c8f', bg: '#eef4fa', text: '#1e436a' },
+      Regulated: { fill: 'rgba(63, 111, 88, 0.72)',  border: '#3f6f58', bg: '#edf5f0', text: '#27533d' },
+      Flashy:    { fill: 'rgba(184, 80, 42, 0.76)',  border: '#b8502a', bg: '#fbf0eb', text: '#8c3517' }
     };
 
-    function initTributaryChart(hydroData) {
-      const ctx = document.getElementById('chart-behavior-bubbles').getContext('2d');
-      RIVERS = (hydroData?.tributaries || []).map(t => ({
-        ...t,
-        color: regimeColor(t.regime)
-      }));
-      if (!RIVERS.length) return;
+    const FIVE_REGIME_DEFS = [
+      { key: 'alpine_snowmelt',        label: 'Alpine Snowmelt',                    color: '#2b5c8f', dash: [] },
+      { key: 'front_range_tunnels',    label: 'Trans-Mountain Tunnels',             color: '#7c4318', dash: [5, 3] },
+      { key: 'regulated_dam_releases', label: 'Dam Releases',                       color: '#3f6f58', dash: [] },
+      { key: 'lower_basin_canals',     label: 'Lower Basin Canals',                 color: '#6b5b95', dash: [3, 3] },
+      { key: 'monsoon_tributaries',    label: 'Desert Bimodal (Winter + Monsoon)',  color: '#b8502a', dash: [] }
+    ];
 
-      const flashShare = RIVERS.filter(r => r.regime === 'flash_flood' && r.inflow_share_pct != null)
-        .reduce((acc, r) => acc + r.inflow_share_pct, 0);
-      const snowShare = RIVERS.filter(r => r.regime === 'snowmelt' && r.inflow_share_pct != null)
-        .reduce((acc, r) => acc + r.inflow_share_pct, 0);
-      const capEl = document.getElementById('card1-caption');
-      if (capEl && snowShare > 0) {
-        capEl.textContent = `Water Years 2016–2025 USGS records: steady snowmelt rivers supply ${snowShare.toFixed(1)}% of gaged inflow; desert flash streams deliver ${flashShare.toFixed(2)}%.`;
+    // Landmark gages labeled directly on the scatter plot for instant orientation
+    const LABELED_IDS = new Set([
+      '09380000', // Lees Ferry
+      '09180500', // Cisco
+      '09315000', // Green River
+      '09379500', // San Juan Bluff
+      '09234500', // Flaming Gorge
+      '09333500', // Dirty Devil
+      '09337500', // Escalante
+      '09402000', // Little Colorado
+      '09421500'  // Below Hoover
+    ]);
+
+    const SHORT_LABELS = {
+      '09380000': "Lee's Ferry",
+      '09180500': 'CO River (Cisco)',
+      '09315000': 'Green River',
+      '09379500': 'San Juan',
+      '09234500': 'Flaming Gorge',
+      '09333500': 'Dirty Devil',
+      '09337500': 'Escalante',
+      '09402000': 'Little Colorado',
+      '09421500': 'Below Hoover'
+    };
+
+    const MONTH_DOY = [1, 32, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335];
+    const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+    let allGages = [];
+    let normalsData = null;
+    let selectedId = '09180500';
+    let activeRegimeFilter = null;
+    let gapminderChart = null;
+    let hydrographChart = null;
+    let regimesChart = null;
+
+    function buildDailyArray(siteObj) {
+      // historical_normals.json stores {"01-01": cfs, ...} or array; convert to 365-day array
+      if (Array.isArray(siteObj)) return siteObj.slice(0, 365);
+      const out = [];
+      const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+      for (let m = 1; m <= 12; m++) {
+        const mm = String(m).padStart(2, '0');
+        for (let d = 1; d <= daysInMonth[m - 1]; d++) {
+          const dd = String(d).padStart(2, '0');
+          const val = siteObj[`${mm}-${dd}`];
+          out.push(typeof val === 'number' ? val : null);
+        }
       }
+      return out;
+    }
 
-      const maxRbi = Math.max(...RIVERS.map(r => r.rbi), 0.55);
-      const xMax = Math.ceil((maxRbi + 0.04) * 10) / 10;
-      const maxMaf = Math.max(...RIVERS.map(r => r.annual_maf), 3.8);
-      const yMax = Math.ceil((maxMaf + 0.5) * 2) / 2;
+    function fmtVolume(maf) {
+      if (maf >= 0.1) return `${maf.toFixed(2)} MAF/yr`;
+      const af = maf * 1e6;
+      return `${Math.round(af).toLocaleString()} AF/yr`;
+    }
 
-      const datasets = RIVERS.map(r => ({
-        label: r.name,
-        riverId: r.id,
-        regime: r.regime,
-        data: [{ x: r.rbi, y: r.annual_maf, river: r }],
-        backgroundColor: hexToRgba(r.color, 0.85),
-        borderColor: r.color,
-        borderWidth: 1.5,
-        pointRadius: 7,
-        pointHoverRadius: 9,
-        hoverBorderWidth: 2.5,
-        hoverBorderColor: '#0f172a'
-      }));
+    function doyToMonthDay(idx0) {
+      const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+      let rem = idx0;
+      for (let m = 0; m < 12; m++) {
+        if (rem < daysInMonth[m]) return `${MONTH_NAMES[m]} ${rem + 1}`;
+        rem -= daysInMonth[m];
+      }
+      return 'Dec 31';
+    }
 
-      chartBubble = new Chart(ctx, {
-        type: 'scatter',
+    function renderGapminder() {
+      const ctx = document.getElementById('chart-gapminder').getContext('2d');
+      const regimes = ['Snowmelt', 'Regulated', 'Flashy'];
+
+      const datasets = regimes.map(reg => {
+        const pts = allGages
+          .filter(g => g.regime === reg)
+          .map(g => {
+            const isSel = g.id === selectedId;
+            const isDim = activeRegimeFilter && activeRegimeFilter !== reg;
+            const radius = Math.max(4.5, Math.min(16, 4 + Math.pow(g.annualMaf, 0.35) * 5.2));
+            return {
+              x: g.rbi,
+              y: Math.max(0.001, g.annualMaf),
+              r: isSel ? radius + 3 : radius,
+              gage: g,
+              isSel,
+              isDim
+            };
+          });
+
+        const pal = REGIME_COLORS[reg];
+        return {
+          label: reg,
+          data: pts,
+          backgroundColor: ctx2 => {
+            const raw = ctx2.raw;
+            if (!raw) return pal.fill;
+            if (raw.isSel) return pal.border;
+            if (raw.isDim) return 'rgba(148, 163, 184, 0.18)';
+            return pal.fill;
+          },
+          borderColor: ctx2 => {
+            const raw = ctx2.raw;
+            if (!raw) return '#ffffff';
+            if (raw.isSel) return '#0f172a';
+            if (raw.isDim) return 'rgba(148, 163, 184, 0.25)';
+            return '#ffffff';
+          },
+          borderWidth: ctx2 => (ctx2.raw && ctx2.raw.isSel ? 2.5 : 1.1)
+        };
+      });
+
+      const labelPlugin = {
+        id: 'landmarkLabels',
+        afterDatasetsDraw(chart) {
+          const { ctx } = chart;
+          ctx.save();
+          ctx.font = '600 10px Inter, sans-serif';
+          ctx.textBaseline = 'middle';
+          chart.data.datasets.forEach((ds, dsIdx) => {
+            const meta = chart.getDatasetMeta(dsIdx);
+            meta.data.forEach((el, i) => {
+              const raw = ds.data[i];
+              if (!raw || raw.isDim) return;
+              const g = raw.gage;
+              if (!LABELED_IDS.has(g.id) && !raw.isSel) return;
+              const txt = SHORT_LABELS[g.id] || g.name.split(',')[0].slice(0, 22);
+              const px = el.x;
+              const py = el.y;
+              const alignRight = px > chart.chartArea.right - 95;
+              ctx.textAlign = alignRight ? 'right' : 'left';
+              const ox = alignRight ? -(raw.r + 5) : (raw.r + 5);
+              ctx.fillStyle = raw.isSel ? '#0f172a' : '#334155';
+              if (raw.isSel) ctx.font = '800 10.5px Inter, sans-serif';
+              else ctx.font = '600 9.5px Inter, sans-serif';
+              ctx.fillText(txt, px + ox, py);
+            });
+          });
+          ctx.restore();
+        }
+      };
+
+      if (gapminderChart) gapminderChart.destroy();
+      gapminderChart = new Chart(ctx, {
+        type: 'bubble',
         data: { datasets },
-        plugins: [card1LabelsPlugin],
+        plugins: [labelPlugin],
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          animation: false,
-          layout: {
-            padding: { left: 10, right: 12, top: 14, bottom: 4 }
+          animation: { duration: 200 },
+          onClick: (_evt, elements) => {
+            if (!elements.length) return;
+            const { datasetIndex, index } = elements[0];
+            const g = gapminderChart.data.datasets[datasetIndex].data[index].gage;
+            if (g) selectStationById(g.id);
+          },
+          onHover: (evt, elements) => {
+            evt.native.target.style.cursor = elements.length ? 'pointer' : 'default';
           },
           plugins: {
             legend: { display: false },
             tooltip: {
+              backgroundColor: '#faf8f4',
+              titleColor: '#0f172a',
+              bodyColor: '#1e293b',
+              borderColor: '#b8ae9c',
+              borderWidth: 1,
+              padding: 8,
               callbacks: {
-                title: (items) => {
-                  const r = items[0]?.raw?.river;
-                  return r ? `${r.name} (USGS #${r.id})` : '';
-                },
-                label: (ctx) => {
-                  const r = ctx.raw?.river;
-                  return r ? formatRiverHoverLines(r) : [];
+                title: items => items[0]?.raw?.gage?.name || '',
+                label: item => {
+                  const g = item.raw.gage;
+                  return [
+                    `Regime: ${g.regime} (${g.tierLabel})`,
+                    `Mean Volume: ${fmtVolume(g.annualMaf)} (${Math.round(g.meanCfs).toLocaleString()} cfs)`,
+                    `Daily RBI: ${g.rbi.toFixed(3)}`,
+                    `Record: ${g.periodLabel}`
+                  ];
                 }
               }
             }
           },
           scales: {
             x: {
-              min: 0.0,
-              max: xMax,
-              title: {
-                display: true,
-                text: 'Richards–Baker Flashiness Index (0.00 Steady → Flashy)',
-                font: { size: 10, weight: 600 },
-                color: '#475569'
-              },
-              ticks: {
-                stepSize: 0.1,
-                autoSkip: false,
-                align: 'inner',
-                maxRotation: 0,
-                minRotation: 0,
-                callback: (v) => Number(v).toFixed(2),
-                font: { size: 9.5, weight: '500' },
-                color: '#64748b'
-              },
-              grid: { color: '#f1f5f9', lineWidth: 1 }
+              title: { display: true, text: 'Richards–Baker Flashiness Index (Daily RBI, WY 2016–2025)', font: { size: 11, weight: '700' }, color: '#334155' },
+              min: 0,
+              max: 0.72,
+              grid: { color: '#ece7dd' },
+              ticks: { font: { size: 10 }, color: '#475569' }
             },
             y: {
-              beginAtZero: true,
-              min: 0,
-              max: yMax,
-              title: {
-                display: true,
-                text: 'Annual Volume (MAF/yr)',
-                font: { size: 10, weight: 600 },
-                color: '#475569'
-              },
+              type: 'logarithmic',
+              title: { display: true, text: 'Mean Annual Volume (MAF/yr, log scale)', font: { size: 11, weight: '700' }, color: '#334155' },
+              min: 0.001,
+              max: 20,
+              grid: { color: '#ece7dd' },
               ticks: {
-                callback: (v) => `${v.toFixed(1)} MAF`,
-                font: { size: 9.5 },
-                color: '#64748b'
-              },
-              grid: { color: '#e2e8f0', lineWidth: 1 }
-            }
-          },
-          onHover: (evt) => {
-            const hit = findHitRiverOnChart(chartBubble, evt);
-            evt.native.target.style.cursor = hit ? 'pointer' : 'default';
-          },
-          onClick: (evt) => {
-            const hitId = findHitRiverOnChart(chartBubble, evt);
-            if (!hitId) {
-              clearRiverSelection();
-            } else if (evt.native?.shiftKey) {
-              const r = RIVERS.find(item => item.id === hitId);
-              if (r) toggleRegimeCategory(r.regime);
-            } else {
-              toggleRiverSelection(hitId);
-            }
-          }
-        }
-      });
-    }
-
-    // ================================================================
-    // CARD 2: LAKE POWELL CANYON SHAPE (HYPSOMETRY: AF PER FOOT OF RISE)
-    // ================================================================
-    const hypsometryBenchmarksPlugin = {
-      id: 'hypsometryBenchmarksPlugin',
-      afterDatasetsDraw(chart) {
-        if (!chart || !chart.chartArea || !chart.scales?.x || !chart.scales?.y) return;
-        const bmDs = chart.data.datasets[1];
-        if (!bmDs || !bmDs.data?.length) return;
-        const { ctx, chartArea } = chart;
-        const xScale = chart.scales.x;
-        const yScale = chart.scales.y;
-
-        ctx.save();
-        ctx.font = 'bold 9px "Inter", -apple-system, sans-serif';
-        bmDs.data.forEach((pt, idx) => {
-          const xPos = xScale.getPixelForValue(pt.x);
-          const yPos = yScale.getPixelForValue(pt.y);
-          const txt = `${pt.shortLabel}: ${Math.round(pt.y)}k AF/ft`;
-          const w = ctx.measureText(txt).width + 10;
-          const h = 15;
-          let lx = xPos - w / 2;
-          let ly = yPos - 22;
-          if (idx === 0) {
-            lx = xPos + 6;
-            ly = yPos - 18;
-          } else if (idx === 1) {
-            lx = xPos + 8;
-            ly = yPos + 6;
-          } else if (idx === 2) {
-            lx = xPos - w - 6;
-            ly = yPos - 6;
-          }
-          lx = Math.max(chartArea.left + 2, Math.min(chartArea.right - w - 2, lx));
-          ly = Math.max(chartArea.top + 2, Math.min(chartArea.bottom - h - 2, ly));
-
-          ctx.fillStyle = '#ffffff';
-          ctx.fillRect(lx, ly, w, h);
-          ctx.strokeStyle = pt.color || '#009E73';
-          ctx.lineWidth = 1.1;
-          ctx.strokeRect(lx, ly, w, h);
-          ctx.fillStyle = pt.color || '#0f172a';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillText(txt, lx + w / 2, ly + h / 2);
-        });
-        ctx.restore();
-      }
-    };
-
-    function initHypsometryChart(hydroData) {
-      const hyp = hydroData?.powell_hypsometry;
-      if (!hyp || !hyp.curve?.length) return;
-
-      const bm = hyp.benchmarks;
-      const badgeEl = document.getElementById('card2-badge');
-      if (badgeEl && bm) {
-        badgeEl.textContent = `1964–2021 Curve · Current ${hyp.latest_date}`;
-      }
-      const capEl = document.getElementById('card2-caption');
-      if (capEl && bm) {
-        capEl.textContent = `At current pool (${bm.current_pool.elev_ft.toLocaleString()} ft), 100k AF lifts Lake Powell +${bm.current_pool.rise_ft_per_100k_af.toFixed(2)} ft vs. +${bm.full_pool.rise_ft_per_100k_af.toFixed(2)} ft at full pool.`;
-      }
-
-      const curvePts = hyp.curve.map(b => ({
-        x: b.elev_ft,
-        y: b.k_af_per_ft,
-        meta: b
-      }));
-
-      const benchmarkPts = [
-        {
-          x: bm.min_power_pool.elev_ft,
-          y: bm.min_power_pool.af_per_ft / 1000,
-          shortLabel: 'Min Power',
-          label: 'Min Power Pool (3,490 ft)',
-          af_per_ft: bm.min_power_pool.af_per_ft,
-          rise100k: bm.min_power_pool.rise_ft_per_100k_af,
-          color: '#D55E00'
-        },
-        {
-          x: bm.current_pool.elev_ft,
-          y: bm.current_pool.af_per_ft / 1000,
-          shortLabel: `Current (${Math.round(bm.current_pool.elev_ft)} ft)`,
-          label: `Current Pool (${bm.current_pool.elev_ft} ft on ${hyp.latest_date})`,
-          af_per_ft: bm.current_pool.af_per_ft,
-          rise100k: bm.current_pool.rise_ft_per_100k_af,
-          color: '#0072B2'
-        },
-        {
-          x: bm.full_pool.elev_ft,
-          y: bm.full_pool.af_per_ft / 1000,
-          shortLabel: 'Full Pool',
-          label: 'Full Pool (3,700 ft)',
-          af_per_ft: bm.full_pool.af_per_ft,
-          rise100k: bm.full_pool.rise_ft_per_100k_af,
-          color: '#009E73'
-        }
-      ];
-
-      const ctx = document.getElementById('chart-travel-time').getContext('2d');
-      chartHypsometry = new Chart(ctx, {
-        type: 'line',
-        plugins: [hypsometryBenchmarksPlugin],
-        data: {
-          datasets: [
-            {
-              label: 'USBR Elevation–Capacity Slope (AF/ft)',
-              data: curvePts,
-              borderColor: '#009E73',
-              backgroundColor: 'rgba(0, 158, 115, 0.12)',
-              borderWidth: 2.2,
-              tension: 0.25,
-              fill: true,
-              pointRadius: 2,
-              pointHoverRadius: 5,
-              pointBackgroundColor: '#009E73'
-            },
-            {
-              type: 'scatter',
-              label: 'Operational Benchmarks',
-              data: benchmarkPts,
-              pointRadius: 6,
-              pointHoverRadius: 8,
-              pointBackgroundColor: benchmarkPts.map(p => p.color),
-              pointBorderColor: '#ffffff',
-              pointBorderWidth: 1.5
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          animation: false,
-          interaction: { mode: 'nearest', intersect: false },
-          layout: {
-            padding: { left: 10, right: 14, top: 14, bottom: 4 }
-          },
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              callbacks: {
-                title: (items) => {
-                  const raw = items[0]?.raw;
-                  if (raw?.label) return raw.label;
-                  return raw ? `Lake Powell @ ${raw.x.toLocaleString()} ft` : '';
-                },
-                label: (ctx) => {
-                  const raw = ctx.raw;
-                  if (raw?.meta) {
-                    const m = raw.meta;
-                    return [
-                      `Water per 1-ft rise: ${m.af_per_ft.toLocaleString()} AF/ft`,
-                      `Total Storage: ${m.storage_maf.toFixed(2)} MAF`,
-                      `100,000 AF inflow lifts lake: +${m.rise_ft_per_100k_af.toFixed(2)} ft`
-                    ];
-                  }
-                  if (raw?.af_per_ft) {
-                    return [
-                      `Water per 1-ft rise: ${raw.af_per_ft.toLocaleString()} AF/ft`,
-                      `100,000 AF inflow lifts lake: +${raw.rise100k.toFixed(2)} ft`
-                    ];
+                font: { size: 10 },
+                color: '#475569',
+                callback: v => {
+                  if ([0.001, 0.01, 0.1, 1, 10].includes(v)) {
+                    return v >= 1 ? `${v} MAF` : v >= 0.01 ? `${v} MAF` : '1k AF';
                   }
                   return '';
                 }
               }
             }
-          },
-          scales: {
-            x: {
-              type: 'linear',
-              min: 3490,
-              max: 3700,
-              title: {
-                display: true,
-                text: 'Lake Powell Elevation (ft NGVD29)',
-                font: { size: 10, weight: 600 },
-                color: '#475569'
-              },
-              ticks: {
-                stepSize: 30,
-                callback: (v) => `${v.toLocaleString()}`,
-                font: { size: 9.5 },
-                color: '#64748b'
-              },
-              grid: { color: '#f1f5f9', lineWidth: 1 }
-            },
-            y: {
-              min: 0,
-              max: 180,
-              title: {
-                display: true,
-                text: 'Volume per 1-ft Rise (k AF/ft)',
-                font: { size: 10, weight: 600 },
-                color: '#475569'
-              },
-              ticks: {
-                stepSize: 30,
-                callback: (v) => `${v}k`,
-                font: { size: 9.5 },
-                color: '#64748b'
-              },
-              grid: { color: '#e2e8f0', lineWidth: 1 }
-            }
           }
         }
       });
     }
 
-    // Toggle dataset visibility for Card 3 HTML legend
-    function toggleDataset(chart, datasetIndex) {
-      if (!chart) return;
-      const visible = chart.isDatasetVisible(datasetIndex);
-      chart.setDatasetVisibility(datasetIndex, !visible);
-      chart.update();
-      updateHtmlLegends();
-    }
+    function renderSelectedHydrograph(g) {
+      const pal = REGIME_COLORS[g.regime] || REGIME_COLORS.Snowmelt;
+      document.getElementById('selected-name').textContent = g.name;
+      const badge = document.getElementById('selected-badge');
+      badge.textContent = g.regime === 'Regulated' ? 'Dam-Regulated' : g.regime === 'Flashy' ? 'Desert Flash' : 'Snowmelt';
+      badge.style.backgroundColor = pal.bg;
+      badge.style.color = pal.text;
+      badge.style.borderColor = pal.border;
 
-    function updateHtmlLegends() {
-      if (chartHydro && card4Mode === 'event') {
-        const items = document.querySelectorAll('#legend-hydrograph .legend-item');
-        items.forEach((el, idx) => {
-          if (chartHydro.isDatasetVisible(idx)) {
-            el.classList.remove('dimmed');
-          } else {
-            el.classList.add('dimmed');
-          }
-        });
-      }
-    }
+      document.getElementById('selected-subtitle').textContent =
+        `${g.tierLabel} • Full-POR daily mean discharge (cfs) across ${g.periodLabel}`;
+      const link = document.getElementById('selected-usgs-link');
+      link.href = `https://waterdata.usgs.gov/monitoring-location/${g.id}/#parameterCode=00060`;
+      link.textContent = `USGS #${g.id} ↗`;
 
-    // ================================================================
-    // CARD 3: REAL FLASH FLOOD VS. SNOWMELT (AND 5 FLOW REGIMES)
-    // ================================================================
-    let card4Mode = 'event';
+      document.getElementById('stat-maf').textContent = fmtVolume(g.annualMaf);
+      document.getElementById('stat-rbi').textContent = g.rbi.toFixed(3);
+      document.getElementById('stat-peak').textContent = `${Math.round(g.peakCfs).toLocaleString()} cfs`;
+      document.getElementById('stat-por').textContent = g.periodShort;
 
-    function setCard4Mode(mode) {
-      card4Mode = mode === 'regimes' ? 'regimes' : 'event';
-      const btnEvent = document.getElementById('btn-card4-event');
-      const btnRegimes = document.getElementById('btn-card4-regimes');
-      const legendEl = document.getElementById('legend-hydrograph');
-      const titleEl = document.getElementById('card4-title');
-      const sourceEl = document.getElementById('card4-source');
-      const activeCls = 'px-2 py-0.5 text-[10px] font-bold rounded-[2px] bg-[#2b5c8f] text-white border border-[#2b5c8f] transition cursor-pointer';
-      const inactiveCls = 'px-2 py-0.5 text-[10px] font-semibold rounded-[2px] bg-[#faf8f4] text-slate-600 border border-[#cfc8ba] hover:text-slate-900 transition cursor-pointer';
-      if (btnEvent) btnEvent.className = card4Mode === 'event' ? activeCls : inactiveCls;
-      if (btnRegimes) btnRegimes.className = card4Mode === 'regimes' ? activeCls : inactiveCls;
-      if (legendEl) legendEl.style.display = card4Mode === 'event' ? 'flex' : 'none';
-      if (titleEl) {
-        titleEl.textContent = card4Mode === 'regimes'
-          ? '5 Normalized Basin Flow Regimes (USGS Full Record & 2022–2024 Tunnels)'
-          : 'Rate vs. Volume: Flash Flood vs. Snowmelt (Water Year 2021)';
-      }
-      if (sourceEl) {
-        sourceEl.innerHTML = card4Mode === 'regimes'
-          ? '<span class="font-bold text-slate-700">Source:</span> <a href="https://waterservices.usgs.gov/nwis/stat/?format=rdb&amp;sites=09095500,09260050,09402000,09382000,09380000,09527700&amp;parameterCd=00060&amp;statReportType=daily&amp;statType=mean" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 underline font-semibold">USGS Daily Normals RDB (6 Gages, Full Record) ↗</a> &amp; <a href="https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeseriesday/?format=json&amp;abbrev=ADATUNCO&amp;startDate=01%2F01%2F2022&amp;endDate=12%2F31%2F2024" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 underline font-semibold">CDWR Adams Tunnel API (2022–2024) ↗</a>'
-          : '<span class="font-bold text-slate-700">Source:</span> <a href="https://waterservices.usgs.gov/nwis/dv/?format=rdb&amp;sites=09180500,09333500&amp;parameterCd=00060&amp;startDT=2020-10-01&amp;endDT=2021-09-30" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 underline font-semibold">USGS Water Year 2021 Daily RDB ↗</a> (<a href="https://waterdata.usgs.gov/monitoring-location/09180500/#parameterCode=00060" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 underline font-semibold">#09180500 Cisco ↗</a> &amp; <a href="https://waterdata.usgs.gov/monitoring-location/09333500/#parameterCode=00060" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 underline font-semibold">#09333500 Dirty Devil ↗</a>)';
-      }
-      initHydrographChart();
-    }
-    window.setCard4Mode = setCard4Mode;
+      const picker = document.getElementById('station-picker');
+      if (picker) picker.value = g.id;
 
-    function renderCard4Regimes(data) {
-      const hb = data && data.seasonal_heartbeats;
-      if (!hb || !hb.regimes) return;
-      const captionEl = document.getElementById('card4-caption');
-      if (captionEl) {
-        captionEl.textContent = 'Normalized 365-day seasonal curves: USGS full-period-of-record daily normals (6 gages) and CDWR trans-mountain tunnel daily means (2022–2024).';
-      }
-      const canvas = document.getElementById('chart-snowmelt-vs-flash');
-      if (!canvas) return;
-      const regimes = hb.regimes;
-      const monthStartTick = (val, idx) => {
-        const monthStarts = { 0: 'Jan', 31: 'Feb', 59: 'Mar', 90: 'Apr', 120: 'May', 151: 'Jun', 181: 'Jul', 212: 'Aug', 243: 'Sep', 273: 'Oct', 304: 'Nov', 334: 'Dec' };
-        return monthStarts[idx] || '';
-      };
-      chartHydro = new Chart(canvas.getContext('2d'), {
+      const ctx = document.getElementById('chart-hydrograph').getContext('2d');
+      if (hydrographChart) hydrographChart.destroy();
+      hydrographChart = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: hb.doy,
-          datasets: [
-            { label: 'Alpine Snowmelt', data: regimes.alpine_snowmelt, borderColor: '#2b5c8f', backgroundColor: 'rgba(43, 92, 143, 0.12)', borderWidth: 2, fill: true, tension: 0.25, pointRadius: 0 },
-            { label: 'Summer Monsoons', data: regimes.monsoon_tributaries, borderColor: '#c26d2d', backgroundColor: 'rgba(194, 109, 45, 0.08)', borderWidth: 1.8, fill: true, tension: 0.25, pointRadius: 0 },
-            { label: 'Lower Basin Canals', data: regimes.lower_basin_canals, borderColor: '#9e3f32', borderDash: [4, 4], borderWidth: 1.8, fill: false, tension: 0.15, pointRadius: 0 },
-            { label: 'Regulated Dam Releases', data: regimes.regulated_dam_releases, borderColor: '#3f6f58', borderWidth: 1.75, fill: false, tension: 0.2, pointRadius: 0 },
-            { label: 'Trans-Mountain Tunnels', data: regimes.front_range_tunnels, borderColor: '#64748b', borderDash: [2, 2], borderWidth: 1.5, fill: false, tension: 0.2, pointRadius: 0 }
-          ]
+          labels: Array.from({ length: 365 }, (_, i) => i + 1),
+          datasets: [{
+            label: 'Historical Daily Mean (cfs)',
+            data: g.dailyCfs,
+            borderColor: pal.border,
+            backgroundColor: pal.fill.replace('0.72', '0.16').replace('0.76', '0.18'),
+            borderWidth: 2,
+            pointRadius: 0,
+            fill: true,
+            tension: 0.15
+          }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          animation: false,
+          animation: { duration: 180 },
           interaction: { mode: 'index', intersect: false },
-          layout: { padding: { left: 18, right: 10, top: 6, bottom: 4 } },
-          plugins: {
-            legend: { display: true, position: 'top', labels: { boxWidth: 12, boxHeight: 2.5, font: { size: 9.5, weight: '600' }, color: '#334155', padding: 8 } },
-            tooltip: {
-              callbacks: {
-                title: (items) => new Date(2025, 0, items[0].dataIndex + 1).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-                label: (ctx) => `${ctx.dataset.label}: ${(ctx.parsed.y * 100).toFixed(0)}% relative flow`
-              }
-            }
-          },
-          scales: {
-            x: { title: { display: true, text: 'Seasonal Timeline (January through December)', font: { size: 10, weight: 600 }, color: '#475569' }, ticks: { callback: monthStartTick, autoSkip: false, font: { size: 9.5, weight: '600' }, color: '#64748b' }, grid: { display: false } },
-            y: { min: 0, max: 1.05, title: { display: true, text: 'Flow Regime Share', font: { size: 10, weight: 600 }, color: '#475569' }, ticks: { stepSize: 0.25, callback: (v) => `${Math.round(v * 100)}%`, font: { size: 9.5 }, color: '#64748b' }, grid: { color: '#e2e8f0', lineWidth: 1 } }
-          }
-        }
-      });
-    }
-
-    function renderCard4Event(hydroData) {
-      const ev = hydroData?.event_comparison;
-      if (!ev || !ev.dates?.length) return;
-      const captionEl = document.getElementById('card4-caption');
-      if (captionEl) {
-        captionEl.textContent = `Water Year ${ev.water_year} (Oct 2020 – Sep 2021): Dirty Devil spiked to ${ev.dirty_devil_peak_cfs.toLocaleString()} cfs on ${ev.dirty_devil_peak_date} (${ev.dirty_devil_event_3d_af.toLocaleString()} AF over 3 days ≈ +${ev.dirty_devil_event_powell_inches.toFixed(1)} in on Lake Powell); Cisco delivered ${ev.cisco_wy_maf.toFixed(2)} MAF.`;
-      }
-      const ciscoLeg = document.getElementById('legend-cisco-label');
-      if (ciscoLeg) ciscoLeg.textContent = `CO River at Cisco (${ev.cisco_wy_maf.toFixed(2)} MAF in Water Year ${ev.water_year})`;
-      const ddLeg = document.getElementById('legend-dd-label');
-      if (ddLeg) ddLeg.textContent = `Dirty Devil nr Hanksville (${ev.dirty_devil_wy_maf.toFixed(3)} MAF in Water Year ${ev.water_year})`;
-
-      const ctx = document.getElementById('chart-snowmelt-vs-flash').getContext('2d');
-      const dates = ev.dates;
-      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      const yMax = Math.ceil((Math.max(ev.cisco_peak_cfs, ev.dirty_devil_peak_cfs) + 1000) / 2000) * 2000;
-
-      chartHydro = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: dates,
-          datasets: [
-            {
-              label: 'CO River near Cisco, UT (cfs)',
-              data: ev.cisco_cfs,
-              borderColor: COLOR_SNOWMELT,
-              backgroundColor: 'rgba(0, 114, 178, 0.16)',
-              fill: true,
-              borderWidth: 2,
-              tension: 0.2,
-              pointRadius: 0,
-              order: 2
-            },
-            {
-              label: 'Dirty Devil near Hanksville, UT (cfs)',
-              data: ev.dirty_devil_cfs,
-              borderColor: COLOR_FLASH,
-              backgroundColor: 'rgba(213, 94, 0, 0.20)',
-              fill: true,
-              borderWidth: 2,
-              tension: 0.1,
-              pointRadius: 0,
-              order: 1
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          animation: false,
-          interaction: { mode: 'index', intersect: false },
-          layout: {
-            padding: { left: 10, right: 10, top: 10, bottom: 4 }
-          },
           plugins: {
             legend: { display: false },
             tooltip: {
+              backgroundColor: '#faf8f4',
+              titleColor: '#0f172a',
+              bodyColor: '#1e293b',
+              borderColor: '#b8ae9c',
+              borderWidth: 1,
               callbacks: {
-                title: (items) => items[0]?.label || '',
-                label: (ctx) => `${ctx.dataset.label}: ${Math.round(ctx.parsed.y).toLocaleString()} cfs`
+                title: items => doyToMonthDay(items[0].dataIndex),
+                label: item => `${Math.round(item.parsed.y).toLocaleString()} cfs`
               }
             }
           },
           scales: {
             x: {
-              title: {
-                display: true,
-                text: `Water Year ${ev.water_year} Daily Discharge (Oct – Sep)`,
-                font: { size: 10, weight: 600 },
-                color: '#475569'
-              },
+              grid: { display: false },
               ticks: {
-                callback: (val, idx) => {
-                  const dt = dates[idx];
-                  if (!dt || !dt.endsWith('-01')) return '';
-                  const m = parseInt(dt.slice(5, 7), 10) - 1;
-                  return monthNames[m] || '';
-                },
                 autoSkip: false,
                 maxRotation: 0,
-                font: { size: 9.5, weight: 600 },
-                color: '#64748b'
-              },
-              grid: { display: false }
+                font: { size: 10 },
+                color: '#475569',
+                callback: (_val, idx) => {
+                  const mIdx = MONTH_DOY.indexOf(idx + 1);
+                  return mIdx >= 0 ? MONTH_NAMES[mIdx] : '';
+                }
+              }
             },
             y: {
-              min: 0,
-              max: yMax,
-              title: {
-                display: true,
-                text: 'Daily Flow (cfs)',
-                font: { size: 10, weight: 600 },
-                color: '#475569'
-              },
-              ticks: {
-                callback: (v) => v === 0 ? '0' : `${(v / 1000).toFixed(0)}k cfs`,
-                font: { size: 9.5 },
-                color: '#64748b'
-              },
-              grid: { color: '#e2e8f0', lineWidth: 1 }
+              beginAtZero: true,
+              title: { display: true, text: 'Mean Daily Flow (cfs)', font: { size: 10.5, weight: '700' }, color: '#334155' },
+              grid: { color: '#ece7dd' },
+              ticks: { font: { size: 10 }, color: '#475569', callback: v => Number(v).toLocaleString() }
             }
           }
         }
       });
-      updateHtmlLegends();
     }
 
-    async function initHydrographChart() {
-      if (chartHydro) {
-        chartHydro.destroy();
-        chartHydro = null;
-      }
-      if (card4Mode === 'regimes') {
-        const seasonalData = await loadSeasonalData();
-        if (seasonalData) renderCard4Regimes(seasonalData);
-        return;
-      }
-      const hydroData = await loadHydroData();
-      if (hydroData) renderCard4Event(hydroData);
-    }
-
-    // ================================================================
-    // INTERACTIVITY: CARD 1 SELECTION & REGIME CATEGORY FILTER
-    // ================================================================
-    function toggleRiverSelection(riverId) {
-      if (!riverId) return;
-      if (selectedRiverIds.has(riverId)) {
-        selectedRiverIds.delete(riverId);
-      } else {
-        selectedRiverIds.add(riverId);
-      }
-      applyVisualSelection();
-    }
-
-    function toggleRegimeCategory(regime) {
-      const catIds = RIVERS.filter(r => r.regime === regime).map(r => r.id);
-      if (!catIds.length) return;
-      const allAlreadySelected = catIds.every(id => selectedRiverIds.has(id)) && selectedRiverIds.size === catIds.length;
-      selectedRiverIds.clear();
-      if (!allAlreadySelected) {
-        catIds.forEach(id => selectedRiverIds.add(id));
-      }
-      applyVisualSelection();
-    }
-
-    function clearRiverSelection() {
-      selectedRiverIds.clear();
-      applyVisualSelection();
-    }
-
-    function applyVisualSelection() {
-      const hasFilter = selectedRiverIds.size > 0;
-
-      ['snowmelt', 'dam_controlled', 'flash_flood'].forEach(reg => {
-        const el = document.getElementById(`regime-legend-${reg}`);
-        if (!el) return;
-        const anyInRegime = RIVERS.some(r => r.regime === reg && selectedRiverIds.has(r.id));
-        el.classList.toggle('dimmed', hasFilter && !anyInRegime);
+    function renderFiveRegimes(regimesObj) {
+      const ctx = document.getElementById('chart-regimes').getContext('2d');
+      const datasets = FIVE_REGIME_DEFS.map(def => {
+        const raw = (regimesObj[def.key] || []).slice(0, 365);
+        return {
+          label: def.label,
+          data: raw.map(v => Math.round(v * 1000) / 10),
+          borderColor: def.color,
+          backgroundColor: 'transparent',
+          borderWidth: 2,
+          borderDash: def.dash,
+          pointRadius: 0,
+          tension: 0.2
+        };
       });
-      const resetBtn = document.getElementById('btn-reset-selection');
-      if (resetBtn) resetBtn.classList.toggle('hidden', !hasFilter);
 
-      if (chartBubble) {
-        chartBubble.data.datasets.forEach(ds => {
-          const r = ds.data[0].river;
-          const isSelected = isRiverActive(r);
-          if (isSelected) {
-            ds.backgroundColor = hexToRgba(r.color, 0.85);
-            ds.borderColor = hasFilter ? '#1e293b' : r.color;
-            ds.borderWidth = hasFilter ? 2.5 : 1.5;
-          } else {
-            ds.backgroundColor = hexToRgba(r.color, 0.16);
-            ds.borderColor = hexToRgba(r.color, 0.45);
-            ds.borderWidth = 1.0;
+      if (regimesChart) regimesChart.destroy();
+      regimesChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: Array.from({ length: 365 }, (_, i) => i + 1),
+          datasets
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: { duration: 180 },
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#faf8f4',
+              titleColor: '#0f172a',
+              bodyColor: '#1e293b',
+              borderColor: '#b8ae9c',
+              borderWidth: 1,
+              callbacks: {
+                title: items => doyToMonthDay(items[0].dataIndex),
+                label: item => `${item.dataset.label}: ${item.parsed.y.toFixed(0)}% of peak`
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: {
+                autoSkip: false,
+                maxRotation: 0,
+                font: { size: 10 },
+                color: '#475569',
+                callback: (_val, idx) => {
+                  const mIdx = MONTH_DOY.indexOf(idx + 1);
+                  return mIdx >= 0 ? MONTH_NAMES[mIdx] : '';
+                }
+              }
+            },
+            y: {
+              min: 0,
+              max: 105,
+              title: { display: true, text: '% of Regime Peak', font: { size: 10.5, weight: '700' }, color: '#334155' },
+              grid: { color: '#ece7dd' },
+              ticks: { font: { size: 10 }, color: '#475569', stepSize: 25, callback: v => `${v}%` }
+            }
           }
-        });
-        chartBubble.update('none');
-      }
+        }
+      });
+
+      const legEl = document.getElementById('regimes-legend');
+      legEl.innerHTML = FIVE_REGIME_DEFS.map((def, idx) => `
+        <span class="legend-item" onclick="toggleRegimeLine(${idx}, this)">
+          <span class="legend-line" style="border-top: 2px ${def.dash.length ? 'dashed' : 'solid'} ${def.color};"></span>
+          <span>${def.label}</span>
+        </span>
+      `).join('');
     }
 
-    // Initialize all 3 charts on page load
-    window.addEventListener('DOMContentLoaded', async () => {
-      const hydroData = await loadHydroData();
-      initTributaryChart(hydroData);
-      initHypsometryChart(hydroData);
-      initHydrographChart();
-    });
+    function toggleRegimeLine(dsIdx, el) {
+      if (!regimesChart) return;
+      const meta = regimesChart.getDatasetMeta(dsIdx);
+      meta.hidden = meta.hidden === null ? !regimesChart.data.datasets[dsIdx].hidden : null;
+      el.classList.toggle('dimmed', Boolean(meta.hidden));
+      regimesChart.update();
+    }
+
+    function toggleRegimeFilter(reg) {
+      activeRegimeFilter = (activeRegimeFilter === reg) ? null : reg;
+      ['Snowmelt', 'Regulated', 'Flashy'].forEach(r => {
+        const el = document.getElementById(`leg-${r}`);
+        if (el) el.classList.toggle('dimmed', Boolean(activeRegimeFilter && activeRegimeFilter !== r));
+      });
+      document.getElementById('btn-reset').classList.toggle('hidden', !activeRegimeFilter);
+      renderGapminder();
+    }
+
+    function resetSelection() {
+      activeRegimeFilter = null;
+      ['Snowmelt', 'Regulated', 'Flashy'].forEach(r => {
+        const el = document.getElementById(`leg-${r}`);
+        if (el) el.classList.remove('dimmed');
+      });
+      document.getElementById('btn-reset').classList.add('hidden');
+      selectStationById('09180500');
+    }
+
+    function selectStationById(id) {
+      const g = allGages.find(x => x.id === id);
+      if (!g) return;
+      selectedId = g.id;
+      renderSelectedHydrograph(g);
+      renderGapminder();
+    }
+
+    async function init() {
+      const [hierRes, normRes, regRes] = await Promise.all([
+        fetch('./data/station_hierarchy.json'),
+        fetch('./data/historical_normals.json'),
+        fetch('./data/seasonal_regimes.json')
+      ]);
+      const hier = await hierRes.json();
+      normalsData = await normRes.json();
+      const seasonal = await regRes.json();
+
+      const stationsMap = hier.stations || {};
+      const sites = normalsData.sites || {};
+      const siteMeta = normalsData.site_meta || {};
+
+      allGages = Object.values(stationsMap)
+        .filter(s => s && s.rbi !== null && s.rbi !== undefined && sites[s.id])
+        .map(s => {
+          const daily = buildDailyArray(sites[s.id]);
+          const valid = daily.filter(v => typeof v === 'number' && !Number.isNaN(v));
+          const meanCfs = valid.length ? valid.reduce((a, b) => a + b, 0) / valid.length : 0;
+          const peakCfs = valid.length ? Math.max(...valid) : 0;
+          const annualMaf = meanCfs * 0.00072397;
+          const sm = siteMeta[s.id] || {};
+          const periodLabel = sm.period_label || 'USGS Full POR';
+          const periodShort = sm.begin_yr && sm.end_yr ? `${sm.begin_yr}–${sm.end_yr}` : 'Full POR';
+          return {
+            id: s.id,
+            name: s.name,
+            regime: s.regime || 'Snowmelt',
+            tierLabel: s.tier_label || 'Tributary',
+            rbi: Number(s.rbi),
+            meanCfs,
+            peakCfs,
+            annualMaf,
+            dailyCfs: daily,
+            periodLabel,
+            periodShort
+          };
+        })
+        .filter(g => g.meanCfs > 0)
+        .sort((a, b) => b.annualMaf - a.annualMaf);
+
+      const picker = document.getElementById('station-picker');
+      picker.innerHTML = allGages.map(g =>
+        `<option value="${g.id}">${g.name} (${fmtVolume(g.annualMaf)})</option>`
+      ).join('');
+
+      const defaultGage = allGages.find(g => g.id === '09180500') || allGages[0];
+      selectedId = defaultGage.id;
+      renderGapminder();
+      renderSelectedHydrograph(defaultGage);
+      renderFiveRegimes((seasonal.seasonal_heartbeats && seasonal.seasonal_heartbeats.regimes) || {});
+    }
+
+    init().catch(err => console.error('Failed to initialize Tributary Hydrology:', err));
   </script>
 </body>
 </html>
