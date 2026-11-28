@@ -872,30 +872,30 @@ for ts in data["value"]["timeSeries"]:
               <button type="button" class="code-snippet-copy-btn" onclick="copyPopupCode(this)">Copy</button>
             </div>
             <pre><code>import requests
+from datetime import date, timedelta
 
 # Colorado Division of Water Resources (HydroBase REST API v2)
-# Hourly telemetric discharge for Continental Divide diversion tunnels:
-# ROBTUNCO = Harold D. Roberts Tunnel (Dillon -&gt; South Platte / Denver)
-# MOFTUNCO = Moffat Water Tunnel (Fraser -&gt; Gross Res / Denver)
-# ADATUNCO = Alva B. Adams Tunnel (Grand Lake -&gt; Estes Park / Northern)
-# BOUTUNCO = Charles H. Boustead Tunnel (Fryingpan -&gt; Arkansas / Aurora)
-
+# Query recent hourly discharge (past 48h) for Continental Divide tunnels:
+# ROBTUNCO = Roberts Tunnel, MOFTUNCO = Moffat Tunnel,
+# ADATUNCO = Adams Tunnel,   BOUTUNCO = Boustead Tunnel
+start_dt = (date.today() - timedelta(days=2)).strftime("%m/%d/%Y")
 base_url = "https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeserieshour/"
 params = {
     "abbrev": "ROBTUNCO,MOFTUNCO,ADATUNCO,BOUTUNCO",
+    "startDate": start_dt,
     "format": "json"
 }
 
-headers = {"User-Agent": "DAT1001-Research/1.0"}
-res = requests.get(base_url, params=params, headers=headers, timeout=10).json()
+res = requests.get(base_url, params=params, headers={"User-Agent": "DAT1001-Research/1.0"}, timeout=10).json()
+if isinstance(res, str):
+    raise RuntimeError(f"CDWR API notice: {res} (pass a free CDWR apiKey if rate-limited)")
 
-# Deduplicate to extract the latest reading per tunnel
 tunnel_flows = {}
 for item in res.get("ResultList", []):
     if item.get("parameter") == "DISCHRG":
         code = item["abbrev"]
         val = max(0.0, float(item.get("measValue", 0.0)))
-        dt = item.get("measDateTime")
+        dt = item.get("measDateTime", "")
         if code not in tunnel_flows or dt &gt; tunnel_flows[code]["time"]:
             tunnel_flows[code] = {"flow_cfs": val, "time": dt, "name": item["stationName"]}
 
@@ -984,33 +984,24 @@ for line in txt.splitlines():
             </div>
             <pre><code>import concurrent.futures
 import json
-from datetime import datetime
+import requests
 
-# Pipeline Architecture: src/fetch_water_data.py
-# 1. Multi-Threaded Concurrent Ingestion across Providers
-with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
-    future_usgs = pool.submit(fetch_usgs_streamflow)
-    future_tunnels = pool.submit(fetch_cdwr_tunnels)
-    future_res = pool.submit(fetch_reservoirs)
-    
-    streamflow = future_usgs.result()
-    diversions = future_tunnels.result()
-    reservoirs = future_res.result()
+def fetch_gage_cfs(site_id):
+    r = requests.get("https://waterservices.usgs.gov/nwis/iv/", params={
+        "sites": site_id, "parameterCd": "00060", "format": "json"
+    }, timeout=10).json()
+    vals = r["value"]["timeSeries"][0]["values"][0]["value"]
+    return float(vals[-1]["value"])
 
-# 2. Conservation of Mass Topological Routing
-# Downstream river reach flows are mathematically derived at confluences:
-# Continuous Shapely vectors are weighted by real-time flow (cfs)
-# and saved directly as GeoJSON rendered in GPU textures by MapLibre GL:
-metrics_payload = {
-    "timestamp": datetime.utcnow().isoformat() + "Z",
-    "stations": streamflow,
-    "tunnels": diversions,
-    "reservoirs": reservoirs
-}
+# 1. Concurrent ingestion across Lake Powell inflow gages vs. Lees Ferry release
+gages = {"cisco": "09180500", "green": "09315000", "san_juan": "09379500", "lees_ferry": "09380000"}
+with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
+    flows = dict(zip(gages.keys(), pool.map(fetch_gage_cfs, gages.values())))
 
-with open("web/data/latest_metrics.json", "w") as f:
-    json.dump(metrics_payload, f, indent=2)
-print("Hydrologic monitoring pipeline synced successfully.")</code></pre>
+# 2. Reach Mass Balance across Lake Powell (Inflows - Release = Net Storage Rate)
+inflow_cfs = flows["cisco"] + flows["green"] + flows["san_juan"]
+net_powell_cfs = inflow_cfs - flows["lees_ferry"]
+print(json.dumps({"gaged_inflow_cfs": inflow_cfs, "release_cfs": flows["lees_ferry"], "net_cfs": net_powell_cfs}, indent=2))</code></pre>
           </div>
         </div>
 

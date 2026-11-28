@@ -39,6 +39,20 @@ if (typeof Chart !== 'undefined') {
     tt.boxHeight = 8;
     tt.boxPadding = 6;
   }
+
+  // Dismiss Chart.js tooltips when tapping/clicking outside the chart canvas (fixes sticky popups on iPad/touch)
+  document.addEventListener('pointerdown', (e) => {
+    if (typeof Chart === 'undefined' || !Chart.instances) return;
+    const instances = Array.isArray(Chart.instances) ? Chart.instances : Object.values(Chart.instances);
+    instances.forEach((chart) => {
+      if (!chart || !chart.canvas || chart.canvas.contains(e.target)) return;
+      if (chart.tooltip && chart.tooltip.getActiveElements().length > 0) {
+        chart.setActiveElements([]);
+        chart.tooltip.setActiveElements([], { x: 0, y: 0 });
+        chart.update('none');
+      }
+    });
+  }, { passive: true });
 }
 
 let map;
@@ -592,13 +606,14 @@ const basemapLayerKeys = [
 
 const initialStyle = {
   version: 8,
+  glyphs: 'https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf',
   sources: {
     'terrain-dem': {
       type: 'raster-dem',
       tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
       tileSize: 256,
       encoding: 'terrarium',
-      maxzoom: 15
+      maxzoom: 12
     },
     'basemap-esriNatGeo': {
       type: 'raster',
@@ -649,10 +664,9 @@ const initialStyle = {
       maxzoom: 17,
       attribution: 'Tiles &copy; OpenTopoMap'
     },
-    'basemap-labels': {
-      type: 'raster',
-      tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Reference_Overlay/MapServer/tile/{z}/{y}/{x}'],
-      tileSize: 256
+    'basemap-vector-labels': {
+      type: 'vector',
+      url: 'https://tiles.openfreemap.org/planet'
     }
   },
   layers: [
@@ -662,8 +676,67 @@ const initialStyle = {
     { id: 'layer-esriWorldTopo', type: 'raster', source: 'basemap-esriWorldTopo', layout: { visibility: 'none' } },
     { id: 'layer-esriSatellite', type: 'raster', source: 'basemap-esriSatellite', layout: { visibility: 'none' } },
     { id: 'layer-openTopo', type: 'raster', source: 'basemap-openTopo', layout: { visibility: 'none' } },
-    // Reference labels overlay (active for Terrain with Labels)
-    { id: 'layer-labels', type: 'raster', source: 'basemap-labels', layout: { visibility: 'visible' }, paint: { 'raster-opacity': 0.85 } }
+    // Crisp vector boundaries & billboard place labels (never draped/stretched on 3D terrain)
+    {
+      id: 'ref-boundary-state',
+      type: 'line',
+      source: 'basemap-vector-labels',
+      'source-layer': 'boundary',
+      filter: ['all', ['==', ['get', 'admin_level'], 4], ['!=', ['get', 'maritime'], 1]],
+      layout: { visibility: 'visible', 'line-cap': 'round', 'line-join': 'round' },
+      paint: { 'line-color': '#64748b', 'line-width': 1.0, 'line-dasharray': [3, 2], 'line-opacity': 0.55 }
+    },
+    {
+      id: 'ref-boundary-country',
+      type: 'line',
+      source: 'basemap-vector-labels',
+      'source-layer': 'boundary',
+      filter: ['all', ['==', ['get', 'admin_level'], 2], ['!=', ['get', 'maritime'], 1]],
+      layout: { visibility: 'visible', 'line-cap': 'round', 'line-join': 'round' },
+      paint: { 'line-color': '#334155', 'line-width': 1.4, 'line-opacity': 0.75 }
+    },
+    {
+      id: 'ref-label-state',
+      type: 'symbol',
+      source: 'basemap-vector-labels',
+      'source-layer': 'place',
+      minzoom: 4,
+      maxzoom: 9,
+      filter: ['==', ['get', 'class'], 'state'],
+      layout: {
+        visibility: 'visible',
+        'text-field': ['coalesce', ['get', 'name_en'], ['get', 'name']],
+        'text-font': ['Noto Sans Bold'],
+        'text-transform': 'uppercase',
+        'text-letter-spacing': 0.18,
+        'text-size': ['interpolate', ['linear'], ['zoom'], 4, 9.5, 8, 12.5]
+      },
+      paint: {
+        'text-color': '#475569',
+        'text-halo-color': 'rgba(248, 245, 238, 0.92)',
+        'text-halo-width': 1.6
+      }
+    },
+    {
+      id: 'ref-label-place',
+      type: 'symbol',
+      source: 'basemap-vector-labels',
+      'source-layer': 'place',
+      minzoom: 5,
+      filter: ['match', ['get', 'class'], ['city', 'town', 'village'], true, false],
+      layout: {
+        visibility: 'visible',
+        'text-field': ['coalesce', ['get', 'name_en'], ['get', 'name']],
+        'text-font': ['match', ['get', 'class'], 'city', ['literal', ['Noto Sans Bold']], ['literal', ['Noto Sans Regular']]],
+        'text-max-width': 8,
+        'text-size': ['interpolate', ['linear'], ['zoom'], 5, ['match', ['get', 'class'], 'city', 11, 9.5], 12, ['match', ['get', 'class'], 'city', 15.5, 12.5]]
+      },
+      paint: {
+        'text-color': '#1e293b',
+        'text-halo-color': 'rgba(248, 245, 238, 0.92)',
+        'text-halo-width': 1.6
+      }
+    }
   ]
 };
 
@@ -879,10 +952,29 @@ function changeBasemap(key) {
     }
   });
 
-  // Reference labels overlay ONLY for basemaps that lack built-in editorial labels
+  // Vector reference labels & boundaries ONLY for basemaps that lack built-in labels,
+  // with crisp white-on-dark halo styling when Satellite imagery is active.
   const needsLabels = ['esriTerrain', 'esriPhysical', 'esriRelief', 'esriSatellite'].includes(key);
-  if (map.getLayer('layer-labels')) {
-    map.setLayoutProperty('layer-labels', 'visibility', needsLabels ? 'visible' : 'none');
+  const isSat = key === 'esriSatellite';
+  ['ref-boundary-state', 'ref-boundary-country', 'ref-label-state', 'ref-label-place'].forEach(id => {
+    if (map.getLayer(id)) {
+      map.setLayoutProperty(id, 'visibility', needsLabels ? 'visible' : 'none');
+    }
+  });
+  if (map.getLayer('ref-boundary-state')) {
+    map.setPaintProperty('ref-boundary-state', 'line-color', isSat ? 'rgba(255, 255, 255, 0.65)' : '#64748b');
+  }
+  if (map.getLayer('ref-boundary-country')) {
+    map.setPaintProperty('ref-boundary-country', 'line-color', isSat ? 'rgba(255, 255, 255, 0.85)' : '#334155');
+  }
+  if (map.getLayer('ref-label-state')) {
+    map.setPaintProperty('ref-label-state', 'text-color', isSat ? 'rgba(248, 250, 252, 0.90)' : '#475569');
+    map.setPaintProperty('ref-label-state', 'text-halo-color', isSat ? 'rgba(15, 23, 42, 0.88)' : 'rgba(248, 245, 238, 0.92)');
+  }
+  if (map.getLayer('ref-label-place')) {
+    map.setPaintProperty('ref-label-place', 'text-color', isSat ? '#ffffff' : '#1e293b');
+    map.setPaintProperty('ref-label-place', 'text-halo-color', isSat ? 'rgba(15, 23, 42, 0.90)' : 'rgba(248, 245, 238, 0.92)');
+    map.setPaintProperty('ref-label-place', 'text-halo-width', isSat ? 1.8 : 1.6);
   }
 
   ensurePointLayersOnTop();
@@ -2487,6 +2579,22 @@ function getPortalInfo(item) {
   const id = String(item.id || item.gauge_id || item.station_id || '');
   const name = String(item.name || '').toLowerCase();
 
+  // Check exact Reservoir IDs first so "(Hoover Dam)" etc. in reservoir names don't hit dam tailrace rules
+  const exactResUrls = {
+    lake_powell: { name: 'USBR Water Operations', url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/919/dashboard.html', label: 'USBR Lake Powell Dashboard' },
+    lake_mead: { name: 'USBR Water Operations', url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/921/dashboard.html', label: 'USBR Lake Mead Dashboard' },
+    flaming_gorge: { name: 'USBR Water Operations', url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/917/dashboard.html', label: 'USBR Flaming Gorge Reservoir Dashboard' },
+    navajo_reservoir: { name: 'USBR Water Operations', url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/920/dashboard.html', label: 'USBR Navajo Reservoir Dashboard' },
+    lake_mohave: { name: 'USBR Water Operations', url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/922/dashboard.html', label: 'USBR Lake Mohave Dashboard' },
+    blue_mesa: { name: 'USBR Water Operations', url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/913/dashboard.html', label: 'USBR Blue Mesa Reservoir Dashboard' },
+    lake_havasu: { name: 'USBR Water Operations', url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/923/dashboard.html', label: 'USBR Lake Havasu Dashboard' },
+    dillon_reservoir: { name: 'Colorado DWR / CDSS', url: 'https://dwr.state.co.us/Tools/Stations/DILRESCO', label: 'CDSS Dillon Reservoir (DILRESCO)' },
+    lake_granby: { name: 'Colorado DWR / CDSS', url: 'https://dwr.state.co.us/Tools/Stations/GRARESCO', label: 'CDSS Lake Granby (GRARESCO)' },
+    green_mountain: { name: 'USBR Water Operations', url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/2000/dashboard.html', label: 'USBR Green Mountain Reservoir Dashboard' },
+    homestake_reservoir: { name: 'Colorado DWR / CDSS', url: 'https://dwr.state.co.us/Tools/Stations/HOMRESCO', label: 'CDSS Homestake Reservoir (HOMRESCO)' }
+  };
+  if (exactResUrls[id]) return exactResUrls[id];
+
   // USBR Lower Colorado Dam Hydroelectric Releases (Davis, Hoover, Parker)
   if (id === 'USBR-DAVIS' || id === 'USBR_DAVIS' || id === '09423000' || name.includes('davis dam')) {
     return {
@@ -2562,7 +2670,7 @@ function getPortalInfo(item) {
     const stationId = (id.endsWith('CO') || id.endsWith('TUNCO') || id.endsWith('DIVCO')) ? id : 'ROBTUNCO';
     return {
       name: 'Colorado DWR / CDSS Surface Water Portal',
-      url: `https://dwr.state.co.us/Tools/Stations?station=${encodeURIComponent(stationId)}`,
+      url: `https://dwr.state.co.us/Tools/Stations/${encodeURIComponent(stationId)}?params=DISCHRG`,
       label: `CDSS #${stationId}`
     };
   }
@@ -2586,7 +2694,7 @@ function getPortalInfo(item) {
     },
     navajo_reservoir: {
       name: 'USBR Water Operations',
-      url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/924/dashboard.html',
+      url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/920/dashboard.html',
       label: 'USBR Navajo Reservoir Dashboard'
     },
     lake_mohave: {
@@ -2616,12 +2724,12 @@ function getPortalInfo(item) {
     },
     green_mountain: {
       name: 'USBR Water Operations',
-      url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/923/dashboard.html',
+      url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/2000/dashboard.html',
       label: 'USBR Green Mountain Reservoir Dashboard'
     },
     homestake_reservoir: {
       name: 'Colorado DWR / CDSS Stations',
-      url: 'https://dwr.state.co.us/Tools/Stations?station=HOMRESCO',
+      url: 'https://dwr.state.co.us/Tools/Stations/HOMRESCO',
       label: 'CDSS Homestake Reservoir Portal'
     }
   };
@@ -2671,7 +2779,7 @@ function getPortalInfo(item) {
     },
     homestake_dam: {
       name: 'Aurora Water / Colorado Springs Utilities',
-      url: 'https://dwr.state.co.us/Tools/Stations?station=HOMRESCO',
+      url: 'https://dwr.state.co.us/Tools/Stations/HOMRESCO',
       label: 'CDSS Homestake Dam Portal'
     },
     flaming_gorge_dam: {
@@ -4444,6 +4552,8 @@ function renderGeography(geo, riverNetwork, lakes, powellContours) {
 function ensurePointLayersOnTop() {
   if (!map) return;
   const topPointLayers = [
+    'ref-label-state',
+    'ref-label-place',
     'flow-direction-arrows',
     'gis-flow-arrows',
     'topology-sections-casing',
@@ -4590,7 +4700,7 @@ function formatGaugePopup(s) {
     } else if (isUsbr) {
       portalUrl = 'https://www.usbr.gov/lc/region/g4000/riverops/hourly7.html';
     } else if (isCdss) {
-      portalUrl = `https://dwr.state.co.us/Tools/Stations?station=${encodeURIComponent(s.id)}`;
+      portalUrl = `https://dwr.state.co.us/Tools/Stations/${encodeURIComponent(s.id)}?params=DISCHRG`;
     } else {
       portalUrl = 'https://waterdata.usgs.gov/nwis';
     }

@@ -55,6 +55,13 @@ function toggleMobileMenu(forceOpen) {
   if (text) text.textContent = isOpen ? 'Close' : 'Menu';
 }
 
+function filterAcronyms(query) {
+  const q = (query || '').trim().toLowerCase();
+  document.querySelectorAll('#acronyms-grid .acronym-row').forEach((row) => {
+    row.style.display = !q || row.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
 function setTab(tabId) {
   currentTab = tabId;
   toggleMobileMenu(false);
@@ -81,6 +88,8 @@ function setTab(tabId) {
   document.getElementById('section-methodology').classList.add('hidden');
   document.getElementById('section-law').classList.add('hidden');
   document.getElementById('section-sources').classList.add('hidden');
+  const secAcronyms = document.getElementById('section-acronyms');
+  if (secAcronyms) secAcronyms.classList.add('hidden');
 
   if (tabId === 'overview') {
     topHeader.classList.remove('hidden');
@@ -141,6 +150,10 @@ function setTab(tabId) {
   } else if (tabId === 'sources') {
     topHeader.classList.add('hidden');
     document.getElementById('section-sources').classList.remove('hidden');
+  } else if (tabId === 'acronyms') {
+    topHeader.classList.add('hidden');
+    const secAcronyms = document.getElementById('section-acronyms');
+    if (secAcronyms) secAcronyms.classList.remove('hidden');
   }
 
   // Synchronize browser URL query state without page reload
@@ -947,41 +960,59 @@ function initOverviewCharts() {
       type: 'bar',
       data: {
         labels: ['CA', 'CO', 'AZ', 'UT', 'WY', 'NM', 'NV'],
-        datasets: [{
-          label: 'Statutory Apportionment (MAF/yr)',
-          data: [4.40, 3.86, 2.85, 1.71, 1.04, 0.84, 0.30],
-          backgroundColor: [
-            '#c26d2d', // CA (Lower Basin)
-            '#2b5c8f', // CO (Upper Basin)
-            '#c26d2d', // AZ (Lower Basin + 0.05 Upper)
-            '#2b5c8f', // UT (Upper Basin)
-            '#2b5c8f', // WY (Upper Basin)
-            '#2b5c8f', // NM (Upper Basin)
-            '#c26d2d'  // NV (Lower Basin)
-          ],
-          borderRadius: 1
-        }]
+        datasets: [
+          {
+            label: 'Paper Allocation',
+            data: [4.40, 3.86, 2.85, 1.71, 1.04, 0.84, 0.30],
+            backgroundColor: '#e2ddd1',
+            borderColor: '#8c8476',
+            borderWidth: 1,
+            borderRadius: 1
+          },
+          {
+            label: 'Actual Use (2000–2024)',
+            data: [4.41, 1.96, 2.62, 0.93, 0.61, 0.37, 0.25],
+            backgroundColor: [
+              '#c26d2d', // CA (Lower Basin)
+              '#2b5c8f', // CO (Upper Basin)
+              '#c26d2d', // AZ (2.59 Lower + 0.03 Upper)
+              '#2b5c8f', // UT (Upper Basin)
+              '#2b5c8f', // WY (Upper Basin)
+              '#2b5c8f', // NM (Upper Basin)
+              '#c26d2d'  // NV (Lower Basin)
+            ],
+            borderRadius: 1
+          }
+        ]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
         plugins: {
           legend: { display: false },
           tooltip: {
             callbacks: {
               title: items => {
                 const desc = {
-                  CA: 'California • 4.40 MAF (1928 BCPA §4a, 45 Stat. 1058 p. 2)',
-                  CO: 'Colorado • 3.86 MAF derived (51.75% × 7.45 MAF • 1948 Compact Art. III, p. 3)',
-                  AZ: 'Arizona • 2.85 MAF (2.80 Lower BCPA p. 3 + 0.05 Upper 1948 Compact p. 2)',
-                  UT: 'Utah • 1.71 MAF derived (23.00% × 7.45 MAF • 1948 Compact Art. III, p. 3)',
-                  WY: 'Wyoming • 1.04 MAF derived (14.00% × 7.45 MAF • 1948 Compact Art. III, p. 3)',
-                  NM: 'New Mexico • 0.84 MAF derived (11.25% × 7.45 MAF • 1948 Compact Art. III, p. 3)',
-                  NV: 'Nevada • 0.30 MAF (1928 BCPA §4a, 45 Stat. 1059 p. 3)'
+                  CA: 'California (Lower Basin • 1928 Boulder Canyon Act)',
+                  CO: 'Colorado (Upper Basin • 51.75% of 7.45 MAF)',
+                  AZ: 'Arizona (2.80 Lower + 0.05 Upper)',
+                  UT: 'Utah (Upper Basin • 23.00% of 7.45 MAF)',
+                  WY: 'Wyoming (Upper Basin • 14.00% of 7.45 MAF)',
+                  NM: 'New Mexico (Upper Basin • 11.25% of 7.45 MAF)',
+                  NV: 'Nevada (Lower Basin • 1928 Boulder Canyon Act)'
                 };
                 return desc[items[0].label] || items[0].label;
               },
-              label: ctx => ` Statutory Apportionment: ${ctx.parsed.y.toFixed(2)} MAF/yr`
+              label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)} MAF/yr`,
+              afterBody: items => {
+                if (items.length < 2) return '';
+                const paper = items[0].parsed.y;
+                const actual = items[1].parsed.y;
+                const pct = Math.round((actual / paper) * 100);
+                return `Share Used: ${pct}% (${(actual - paper >= 0 ? '+' : '') + (actual - paper).toFixed(2)} MAF/yr)`;
+              }
             }
           }
         },
@@ -1392,7 +1423,7 @@ function renderMeadHistoricalCharts() {
             { value: 1075.0, label: 'Tier 1 Shortage', color: '#0072B2', dash: [5, 3], position: 'center' },
             { value: 950.0, label: 'Min Power Pool', color: '#D55E00', dash: [5, 3] },
             { value: 895.0, label: 'Dead Pool', color: '#dc2626', dash: [6, 3] },
-            { value: 860, label: 'SNWA Intake No. 3 ("Third Straw")', color: '#6d28d9', dash: [3, 3] }
+            { value: 860, label: 'SNWA Intake No. 3 ("Third Straw")', color: '#6d28d9', dash: [3, 3], yOffset: 4 }
           ]
         },
         legend: {
@@ -1408,7 +1439,7 @@ function renderMeadHistoricalCharts() {
       scales: {
         x: makeDecadeXAxis(10),
         y: {
-          min: 850,
+          min: 800,
           max: 1250,
           ticks: {
             font: { size: 10 },

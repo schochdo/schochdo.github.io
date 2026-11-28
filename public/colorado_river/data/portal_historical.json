@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-27T10:12:43.195298+00:00",
+  "generated_at": "2026-11-27T20:43:02.436823+00:00",
   "monthly_aggregation_method": "End-of-Month (EOM)",
   "lake_mead_historical": [
     {
@@ -1926,12 +1926,12 @@
         "AUG": 1038.83,
         "SEP": 1037.8,
         "OCT": 1038.85,
-        "NOV": 1041.34,
+        "NOV": 1041.3,
         "DEC": null
       },
       "min": 1037.8,
       "max": 1066.14,
-      "mean": 1049.31,
+      "mean": 1049.3,
       "range": 28.34
     }
   ],
@@ -2387,9 +2387,9 @@
     {
       "year": 2027,
       "min_af": 5169364.0,
-      "max_af": 6523584.0,
-      "mean_af": 5840637.0,
-      "year_end_af": 6523584.0
+      "max_af": 6526122.0,
+      "mean_af": 5852663.0,
+      "year_end_af": 6526122.0
     }
   ],
   "lees_ferry_daily": [
@@ -6568,6 +6568,14 @@
     {
       "date": "2026-11-24",
       "cfs": 6840
+    },
+    {
+      "date": "2026-11-25",
+      "cfs": 6830
+    },
+    {
+      "date": "2026-11-26",
+      "cfs": 6820
     }
   ],
   "lake_powell_elevation_historical": [
@@ -7907,13 +7915,13 @@
         "AUG": 3517.87,
         "SEP": 3518.08,
         "OCT": 3531.9,
-        "NOV": 3541.18,
+        "NOV": 3541.22,
         "DEC": null
       },
       "min": 3517.87,
-      "max": 3541.18,
+      "max": 3541.22,
       "mean": 3527.77,
-      "range": 23.31
+      "range": 23.35
     }
   ],
   "flaming_gorge_elevation_historical": [
@@ -9148,13 +9156,13 @@
         "AUG": 6010.01,
         "SEP": 6007.21,
         "OCT": 6004.67,
-        "NOV": 6002.82,
+        "NOV": 6002.73,
         "DEC": null
       },
-      "min": 6002.82,
+      "min": 6002.73,
       "max": 6022.81,
       "mean": 6014.56,
-      "range": 19.99
+      "range": 20.08
     }
   ],
   "navajo_elevation_historical": [
@@ -10515,13 +10523,13 @@
         "AUG": 6013.16,
         "SEP": 6015.22,
         "OCT": 6049.16,
-        "NOV": 6074.55,
+        "NOV": 6074.66,
         "DEC": null
       },
       "min": 6013.16,
-      "max": 6074.55,
-      "mean": 6034.63,
-      "range": 61.39
+      "max": 6074.66,
+      "mean": 6034.64,
+      "range": 61.5
     }
   ],
   "blue_mesa_elevation_historical": [
@@ -11819,12 +11827,12 @@
         "AUG": 7422.08,
         "SEP": 7413.1,
         "OCT": 7416.33,
-        "NOV": 7425.56,
+        "NOV": 7425.74,
         "DEC": null
       },
       "min": 7413.1,
       "max": 7467.76,
-      "mean": 7443.35,
+      "mean": 7443.37,
       "range": 54.66
     }
   ],
@@ -12283,13 +12291,13 @@
         "AUG": 8988.49,
         "SEP": 8982.66,
         "OCT": 8978.68,
-        "NOV": 8975.58,
+        "NOV": 8975.46,
         "DEC": null
       },
-      "min": 8975.58,
+      "min": 8975.46,
       "max": 8998.91,
-      "mean": 8991.15,
-      "range": 23.33
+      "mean": 8991.13,
+      "range": 23.45
     }
   ],
   "basin_storage_timeline": [
@@ -13363,15 +13371,15 @@
     },
     {
       "year": 2026,
-      "as_of_date": "2026-11-25",
-      "mead_maf": 7.07,
-      "powell_maf": 6.524,
-      "flaming_gorge_maf": 2.365,
-      "navajo_maf": 1.49,
-      "blue_mesa_maf": 0.192,
-      "dillon_maf": 0.151,
-      "granby_maf": 0.248,
-      "total_major_storage_maf": 17.641
+      "as_of_date": "2026-11-26",
+      "mead_maf": 7.067,
+      "powell_maf": 6.526,
+      "flaming_gorge_maf": 2.362,
+      "navajo_maf": 1.491,
+      "blue_mesa_maf": 0.193,
+      "dillon_maf": 0.15,
+      "granby_maf": 0.247,
+      "total_major_storage_maf": 17.639
     }
   ]
 }

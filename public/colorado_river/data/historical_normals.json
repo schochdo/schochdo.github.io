@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-11-27T10:12:43.219783+00:00",
+  "fetched_at": "2026-11-27T20:43:02.465509+00:00",
   "description": "USGS historical daily-mean streamflow (cfs) keyed by site_no -> MM-DD, with per-gage Period of Record metadata",
   "site_meta": {
     "09010500": {

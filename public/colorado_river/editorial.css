@@ -730,13 +730,13 @@ svg text.tabular-nums, svg .maf-badge, svg .axis-label {
 }
 
 .map-legend .legend-header-toggle {
-  background: #f5f2eb !important;
-  border-bottom: 1.5px solid var(--hairline) !important;
+  background: #ede6d8 !important;
+  border-bottom: 1.5px solid #b8ae9c !important;
   padding: 7px 12px !important;
 }
 
 .map-legend h4 {
-  color: var(--ink-heading) !important;
+  color: #3e3226 !important;
   font-size: 11.5px !important;
   font-weight: 800 !important;
   letter-spacing: 0.06em !important;
@@ -783,11 +783,11 @@ svg text.tabular-nums, svg .maf-badge, svg .axis-label {
 
 /* Collapsed State: Warm parchment pill with river-blue accent */
 .map-legend.collapsed {
-  background: #faf8f4 !important;
-  border: 1.5px solid var(--hairline) !important;
+  background: #ede6d8 !important;
+  border: 1.5px solid #b8ae9c !important;
   border-radius: var(--radius-card) !important;
   padding: 0 !important;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 2px 8px rgba(62, 50, 38, 0.10) !important;
 }
 
 .map-legend.collapsed .legend-header-toggle {
@@ -797,25 +797,25 @@ svg text.tabular-nums, svg .maf-badge, svg .axis-label {
 }
 
 .map-legend.collapsed h4 {
-  color: var(--ink-heading) !important;
+  color: #3e3226 !important;
   font-size: 11.5px !important;
   font-weight: 800 !important;
   letter-spacing: 0.06em !important;
 }
 
 .map-legend.collapsed:hover {
-  background: #ffffff !important;
-  border-color: var(--hairline-dark) !important;
+  background: #e2d8c5 !important;
+  border-color: #8c7a66 !important;
 }
 
 .map-legend.collapsed:hover h4 {
-  color: var(--ink-heading) !important;
+  color: #2f251b !important;
 }
 
 .map-legend.collapsed .legend-toggle-chevron {
-  background: #ffffff !important;
-  border: 1px solid var(--hairline) !important;
-  color: var(--ink-heading) !important;
+  background: #faf8f4 !important;
+  border: 1px solid #b8ae9c !important;
+  color: #3e3226 !important;
 }
 
 /* Map Bottom Gage Tray Handle Warm Corridor Overrides */

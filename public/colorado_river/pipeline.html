@@ -238,7 +238,7 @@
   </style>
 </head>
 <body>
-  <div class="max-w-[1360px] mx-auto space-y-3">
+  <div class="w-full space-y-3">
     <!-- Top Header & Sub-Tab Switcher Navigation -->
     <header class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-stone-300">
       <div>
@@ -267,7 +267,7 @@
     <div id="view-schematic" class="space-y-2.5">
       <!-- River Network Schematic SVG Container -->
       <div id="schematic-svg-wrap" class="relative bg-white rounded-xs border border-stone-300 shadow-md overflow-hidden p-3">
-        <svg id="canvas" viewBox="0 0 1280 860" preserveAspectRatio="xMidYMid meet" class="w-full h-auto block select-none">
+        <svg id="canvas" viewBox="0 0 1280 860" preserveAspectRatio="xMidYMid meet" style="max-height: calc(100vh - 148px);" class="w-full h-auto mx-auto block select-none">
           <defs>
             <!-- Gradients -->
             <linearGradient id="mainstemGrad" x1="100%" y1="0%" x2="0%" y2="100%">
@@ -669,7 +669,7 @@
     <div id="view-elevation" class="hidden space-y-2.5">
       <!-- Main Profile SVG Canvas Container -->
       <div id="profile-svg-wrap" class="relative bg-white border border-stone-300 rounded-xs p-3 shadow-md overflow-hidden">
-        <svg id="profile-svg" viewBox="0 0 1200 660" preserveAspectRatio="xMidYMid meet" class="w-full h-auto select-none block">
+        <svg id="profile-svg" viewBox="0 0 1200 660" preserveAspectRatio="xMidYMid meet" style="max-height: calc(100vh - 148px);" class="w-full h-auto mx-auto select-none block">
           <defs>
             <linearGradient id="sky-grid-grad" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stop-color="#0284c7" stop-opacity="0.08"/>
@@ -1075,7 +1075,7 @@
         <div class="flex items-center gap-1.5 flex-wrap">
           <span class="font-bold text-slate-700">Data Sources:</span>
           <a href="https://www.usgs.gov/3d-elevation-program" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 underline font-semibold">USGS 3D Elevation Program (3DEP) ↗</a>,
-          <a href="https://www.usbr.gov/uc/water/hydrodata/reservoir_data/919/csv/49.csv" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 underline font-semibold">USBR Powell Elevation CSV (919) ↗</a>,
+          <a href="https://www.usbr.gov/uc/water/hydrodata/reservoir_data/919/dashboard.html" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 underline font-semibold">USBR Powell Dashboard (919) ↗</a>,
           <a href="https://www.usbr.gov/lc/region/g4000/hourly/mead-elv.html" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 underline font-semibold">USBR Mead Elevation Table ↗</a>
         </div>
         <span class="text-[11px] text-stone-600"><strong>Temporal scope:</strong> Static USGS 3DEP river-mile profile with historical reference tributary averages &amp; Nov 2026 reservoir levels.</span>
@@ -1203,6 +1203,11 @@
     // SCHEMATIC LIVE TOOLTIPS & DATA FETCHING
     // ==========================================
     const tooltip = document.getElementById('flow-tooltip');
+    document.addEventListener('pointerdown', (e) => {
+      if (tooltip && tooltip.classList.contains('visible') && !tooltip.contains(e.target) && !e.target.closest('[data-node], .node-interactive, .reach-path, .elev-hit')) {
+        tooltip.classList.remove('visible');
+      }
+    }, { passive: true });
     let liveMetrics = null;
 
     async function fetchLiveMetrics() {
@@ -1392,7 +1397,7 @@
       if (!stationId && portal?.url?.includes('g4000/hourly/mead-elv')) stationId = 'lake_mead';
       if (!stationId && portal?.url?.includes('crsp/cs/gcd')) stationId = 'lake_powell';
       if (!stationId && portal?.url?.includes('reservoir_data/917')) stationId = 'flaming_gorge';
-      if (!stationId && portal?.url?.includes('reservoir_data/924')) stationId = 'navajo_reservoir';
+      if (!stationId && portal?.url?.includes('reservoir_data/920')) stationId = 'navajo_reservoir';
       if (!stationId && portal?.url?.includes('reservoir_data/913')) stationId = 'blue_mesa';
 
       const showOnMapBtn = stationId ? `
@@ -1479,7 +1484,7 @@
         <strong>Call Control:</strong> Enforces 1902 Shoshone right (1,250 cfs at #09070500)` + flowComparisonBox('09070500', 1.50) + `
       `, {
         label: 'USGS #09070500 (Dotsero)',
-        url: 'https://waterdata.usgs.gov/monitoring-location/09070500/'
+        url: 'https://waterdata.usgs.gov/monitoring-location/09070500/#parameterCode=00060'
       });
 
       attachElement('div-frontrange', 'Denver & Front Range Tunnels', () => `
@@ -1487,7 +1492,7 @@
         <strong>Role:</strong> Trans-divide export to Denver, Aurora &amp; Northern CO` + tunnelComparisonBox(0.52) + `
       `, {
         label: 'CDSS #ROBTUNCO',
-        url: 'https://dwr.state.co.us/Tools/Stations?station=ROBTUNCO'
+        url: 'https://dwr.state.co.us/Tools/Stations/ROBTUNCO?params=DISCHRG'
       });
 
       attachElement('river-green', 'Green River Basin', () => `
@@ -1495,7 +1500,7 @@
         <strong>Control:</strong> Flaming Gorge Dam (3.75M AF) &amp; Yampa confluence` + flowComparisonBox('09315000', 4.90) + `
       `, {
         label: 'USGS #09315000 (Green River, UT)',
-        url: 'https://waterdata.usgs.gov/monitoring-location/09315000/'
+        url: 'https://waterdata.usgs.gov/monitoring-location/09315000/#parameterCode=00060'
       });
 
       attachElement('river-yampa', 'Yampa River (Wild Tributary)', () => `
@@ -1503,7 +1508,7 @@
         <strong>Status:</strong> Largest undammed major Colorado tributary` + flowComparisonBox('09260050', 1.30) + `
       `, {
         label: 'USGS #09260050 (Deerlodge)',
-        url: 'https://waterdata.usgs.gov/monitoring-location/09260050/'
+        url: 'https://waterdata.usgs.gov/monitoring-location/09260050/#parameterCode=00060'
       });
 
       attachElement('river-upper-main', 'Colorado River Upper Mainstem', () => `
@@ -1511,7 +1516,7 @@
         <strong>Inflows:</strong> Roaring Fork, Eagle &amp; Gunnison rivers` + flowComparisonBox('09180500', 5.55) + `
       `, {
         label: 'USGS #09180500 (Cisco, UT)',
-        url: 'https://waterdata.usgs.gov/monitoring-location/09180500/'
+        url: 'https://waterdata.usgs.gov/monitoring-location/09180500/#parameterCode=00060'
       });
 
       attachElement('river-gunnison', 'Gunnison River Basin', () => `
@@ -1519,7 +1524,7 @@
         <strong>Storage:</strong> Blue Mesa, Morrow Point &amp; Crystal (Aspinall)` + flowComparisonBox('09152500', 2.10) + `
       `, {
         label: 'USGS #09152500 (Grand Jct)',
-        url: 'https://waterdata.usgs.gov/monitoring-location/09152500/'
+        url: 'https://waterdata.usgs.gov/monitoring-location/09152500/#parameterCode=00060'
       });
 
       attachElement('river-sanjuan', 'San Juan River Basin', () => `
@@ -1527,7 +1532,7 @@
         <strong>Control:</strong> Navajo Dam (1.70M AF) &amp; Animas River` + flowComparisonBox('09379500', 2.50) + `
       `, {
         label: 'USGS #09379500 (Bluff, UT)',
-        url: 'https://waterdata.usgs.gov/monitoring-location/09379500/'
+        url: 'https://waterdata.usgs.gov/monitoring-location/09379500/#parameterCode=00060'
       });
 
       attachElement('river-cataract', 'Cataract Canyon (Powell Inflow)', () => `
@@ -1535,12 +1540,12 @@
         <strong>Location:</strong> Confluence gatekeeper entering Lake Powell` + combinedInflowBox(['09180500', '09315000'], 10.45) + `
       `, {
         label: 'USGS #09180500',
-        url: 'https://waterdata.usgs.gov/monitoring-location/09180500/'
+        url: 'https://waterdata.usgs.gov/monitoring-location/09180500/#parameterCode=00060'
       });
 
       attachElement('dam-flaminggorge', 'Flaming Gorge Dam & Reservoir', () => `
         <strong>Capacity:</strong> 3.75 MAF (Upper Green River)<br>
-        <strong>Role:</strong> DROA drought-release reserve backing Lake Powell` + reservoirStorageBox('flaming_gorge') + `
+        <strong>Role:</strong> Drought Response (DROA) reserve backing Lake Powell` + reservoirStorageBox('flaming_gorge') + `
       `, {
         label: 'USBR Flaming Gorge',
         url: 'https://www.usbr.gov/uc/water/crsp/cs/fgd.html'
@@ -1548,7 +1553,7 @@
 
       attachElement('dam-bluemesa', 'Blue Mesa Dam (Aspinall Unit)', () => `
         <strong>Capacity:</strong> 0.83 MAF (Gunnison River)<br>
-        <strong>Role:</strong> Largest lake in CO; Upper Basin DROA reserve` + reservoirStorageBox('blue_mesa') + `
+        <strong>Role:</strong> Largest lake in CO; Upper Basin Drought Response (DROA) reserve` + reservoirStorageBox('blue_mesa') + `
       `, {
         label: 'USBR Blue Mesa',
         url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/913/dashboard.html'
@@ -1575,14 +1580,14 @@
         <strong>Role:</strong> Constitutional boundary separating Upper &amp; Lower Basins` + flowComparisonBox('09380000', 8.23) + `
       `, {
         label: 'USGS #09380000 (Lees Ferry)',
-        url: 'https://waterdata.usgs.gov/monitoring-location/09380000/'
+        url: 'https://waterdata.usgs.gov/monitoring-location/09380000/#parameterCode=00060'
       });
 
       attachElement('river-grandcanyon', 'Grand Canyon Reach', () => `
         <strong>Reach:</strong> Lees Ferry to Lake Mead (277 river miles)<br>
         <strong>Inflows:</strong> Little Colorado River &amp; Kanab Creek (~8.23–9.0 MAF)` , {
         label: 'USGS #09402500 (Phantom Ranch)',
-        url: 'https://waterdata.usgs.gov/monitoring-location/09402500/'
+        url: 'https://waterdata.usgs.gov/monitoring-location/09402500/#parameterCode=00060'
       });
 
       attachElement('river-littleco', 'Little Colorado River', () => `
@@ -1590,7 +1595,7 @@
         <strong>Character:</strong> Monsoon flash pulses; endangered Humpback Chub habitat` + flowComparisonBox('09402000', 0.25) + `
       `, {
         label: 'USGS #09402000 (Cameron)',
-        url: 'https://waterdata.usgs.gov/monitoring-location/09402000/'
+        url: 'https://waterdata.usgs.gov/monitoring-location/09402000/#parameterCode=00060'
       });
 
       attachElement('river-virgin', 'Virgin River', () => `
@@ -1598,7 +1603,7 @@
         <strong>Sink:</strong> Enters Lake Mead Overton Arm` + flowComparisonBox('09415000', 0.18) + `
       `, {
         label: 'USGS #09415000 (Littlefield)',
-        url: 'https://waterdata.usgs.gov/monitoring-location/09415000/'
+        url: 'https://waterdata.usgs.gov/monitoring-location/09415000/#parameterCode=00060'
       });
 
       attachElement('dam-hoover', 'Hoover Dam &amp; Lake Mead', () => `
@@ -1629,7 +1634,7 @@
         <strong>Priority:</strong> Junior 1968 allocation (1.47 MAF/yr CY 2000–2024 USBR mean)` + canalComparisonBox('cap', 1.47) + `
       `, {
         label: 'USGS #09426650 (CAP Intake)',
-        url: 'https://waterdata.usgs.gov/monitoring-location/09426650/'
+        url: 'https://waterdata.usgs.gov/monitoring-location/09426650/#parameterCode=00060'
       });
 
       attachElement('div-cra', 'Colorado River Aqueduct (CRA / MWD)', () => `
@@ -1637,7 +1642,7 @@
         <strong>Service:</strong> ~1.05 MAF/yr serving 19M MWD urban residents` + canalComparisonBox('cra', 1.05) + `
       `, {
         label: 'USGS #09424150 (CRA Intake)',
-        url: 'https://waterdata.usgs.gov/monitoring-location/09424150/'
+        url: 'https://waterdata.usgs.gov/monitoring-location/09424150/#parameterCode=00060'
       });
 
       attachElement('dam-imperial', 'Imperial Dam & Desilting Works', () => `
@@ -1652,7 +1657,7 @@
         <strong>Priority:</strong> Senior 1901 Present Perfected Rights (IID &amp; Coachella ag)` + canalComparisonBox('aac', 2.90) + `
       `, {
         label: 'USGS #09527700 (AAC)',
-        url: 'https://waterdata.usgs.gov/monitoring-location/09527700/'
+        url: 'https://waterdata.usgs.gov/monitoring-location/09527700/#parameterCode=00060'
       });
 
       attachElement('div-mexico', '1944 Mexican Water Treaty', () => `
@@ -1694,7 +1699,7 @@
         <strong>Annual Volume:</strong> ~9.00 MAF/yr managed Lake Mead release<br>
         <strong>Role:</strong> Feeds Parker Dam pumping intakes &amp; downstream deliveries` , {
         label: 'USGS #09421500 (Hoover)',
-        url: 'https://waterdata.usgs.gov/monitoring-location/09421500/'
+        url: 'https://waterdata.usgs.gov/monitoring-location/09421500/#parameterCode=00060'
       });
 
       attachElement('river-lower-mid', 'Lower River (Parker–Imperial)', () => `
@@ -1702,21 +1707,21 @@
         <strong>Role:</strong> Delivers Palo Verde, Imperial &amp; Mexico water` + flowComparisonBox('09429100', 6.45) + `
       `, {
         label: 'USGS #09427520 (Parker)',
-        url: 'https://waterdata.usgs.gov/monitoring-location/09427520/'
+        url: 'https://waterdata.usgs.gov/monitoring-location/09427520/#parameterCode=00060'
       });
 
       attachElement('river-lower-canal', 'Lower River (Above Imperial Dam)', () => `
         <strong>Annual Volume:</strong> ~5.90 MAF/yr post-channel transit losses<br>
         <strong>Next Node:</strong> Enters Imperial Dam desilting headworks` , {
         label: 'USGS #09429490 (Cibola)',
-        url: 'https://waterdata.usgs.gov/monitoring-location/09429490/'
+        url: 'https://waterdata.usgs.gov/monitoring-location/09429490/#parameterCode=00060'
       });
 
       attachElement('river-lower-treaty', 'Lower River (Imperial–Morelos)', () => `
         <strong>Annual Volume:</strong> ~2.60 MAF/yr (1.50 MAF diverted at Morelos)<br>
         <strong>Destination:</strong> International boundary delivery to Mexico` , {
         label: 'USGS #09522000 (Yuma)',
-        url: 'https://waterdata.usgs.gov/monitoring-location/09522000/'
+        url: 'https://waterdata.usgs.gov/monitoring-location/09522000/#parameterCode=00060'
       });
 
       attachElement('river-green-upper', 'Green River (Upper Wyoming Reach)', () => `
@@ -1724,7 +1729,7 @@
         <strong>Scaling:</strong> Widens to 4.90 MAF below Yampa River junction` + flowComparisonBox('09234500', 3.60) + `
       `, {
         label: 'USGS #09217000 (WY)',
-        url: 'https://waterdata.usgs.gov/monitoring-location/09217000/'
+        url: 'https://waterdata.usgs.gov/monitoring-location/09217000/#parameterCode=00060'
       });
 
       attachElement('river-upper-main-pre', 'Upper Colorado (Grand Valley Reach)', () => `
@@ -1732,7 +1737,7 @@
         <strong>Scaling:</strong> Widens to 5.55 MAF below Gunnison confluence` + flowComparisonBox('09095500', 3.45) + `
       `, {
         label: 'USGS #09095500 (Cameo)',
-        url: 'https://waterdata.usgs.gov/monitoring-location/09095500/'
+        url: 'https://waterdata.usgs.gov/monitoring-location/09095500/#parameterCode=00060'
       });
     }
 

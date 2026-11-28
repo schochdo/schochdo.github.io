@@ -236,8 +236,9 @@
       options.pitch = maxPitch;
     }
 
-    if (typeof mapInstance.setCenterClampedToGround === 'function') {
-      try { mapInstance.setCenterClampedToGround(true); } catch (_) {}
+    // Freeze center elevation during zoom-only / rotation-only eases so terrain height under crosshair doesn't step camera altitude
+    if (options.freezeElevation === undefined && !options.center && mapInstance.getTerrain && mapInstance.getTerrain()) {
+      options.freezeElevation = true;
     }
 
     if (!isInternalInertia && CameraStateMachine.getMode() !== 'inspect') {
@@ -246,8 +247,12 @@
         if (CameraStateMachine.getMode() === 'flyto') {
           CameraStateMachine.setMode('idle');
         }
-        if (mapInstance) {
-          mapInstance._elevationFreeze = false;
+        if (mapInstance && mapInstance._elevationFreeze) {
+          if (mapInstance.getTerrain && mapInstance.getTerrain() && typeof mapInstance._finalizeElevation === 'function') {
+            try { mapInstance._finalizeElevation(); } catch (_) { mapInstance._elevationFreeze = false; }
+          } else {
+            mapInstance._elevationFreeze = false;
+          }
         }
       };
       mapInstance.once('moveend', onEnd);
@@ -439,8 +444,7 @@
     var mouseDragTargetAltitude = null;
     var isAdjustingZoom = false;
 
-    // Pitfall 1: On flight stop, simply clear held altitude.
-    // NEVER invoke private MapLibre methods like releaseElevation() or putCenterBackOnTerrain().
+    // On flight stop, atomically finalize terrain elevation + recalculateZoom so 3D camera eye never jumps
     function stopFlight(_immediate) {
       activeKeys.clear();
       if (animationFrameId !== null) {
@@ -449,8 +453,12 @@
       }
       lastTimestamp = null;
       heldFlightAltitude = null;
-      if (map) {
-        map._elevationFreeze = false;
+      if (map && map._elevationFreeze) {
+        if (map.getTerrain && map.getTerrain() && typeof map._finalizeElevation === 'function') {
+          try { map._finalizeElevation(); } catch (_) { map._elevationFreeze = false; }
+        } else {
+          map._elevationFreeze = false;
+        }
       }
       if (CameraStateMachine.getMode() === 'flight') {
         CameraStateMachine.setMode('idle');
@@ -617,7 +625,16 @@
           heldFlightAltitude = minAllowedAltH;
         }
 
-        map.jumpTo({ center: [disp.nextLng, disp.nextLat] });
+        // Freeze MapLibre terrain center-elevation re-sampling during horizontal flight so camera cruises
+        // on a dead-level sea-level plane instead of stepping up/down over canyons & ridges.
+        if (map.getTerrain && map.getTerrain()) {
+          map._elevationFreeze = true;
+        }
+        var rawJump = map._rawJumpTo || map.jumpTo;
+        rawJump.call(map, { center: [disp.nextLng, disp.nextLat] });
+        if (minAllowedAltH >= heldFlightAltitude) {
+          adjustZoomForTargetAltitude(map, heldFlightAltitude);
+        }
       }
 
       try {
@@ -695,9 +712,8 @@
     }
 
     function onPanEnd() {
-      if (map && CameraStateMachine.getMode() !== 'flight') {
-        map._elevationFreeze = false;
-      }
+      // Do NOT clear map._elevationFreeze here: MapLibre 4.7's native dragPan manages its own
+      // _elevationFreeze + transform.recalculateZoom(terrain) across inertial deceleration.
       enforceProgressivePitch();
     }
 

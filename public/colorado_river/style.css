@@ -1,13 +1,13 @@
 :root {
-  /* Hydrologic blue-gray slate theme */
-  --bg-primary: #cbd5e1;          /* Cool slate background */
-  --bg-surface: #e2e8f0;          /* Navigation pane & app header background */
-  --bg-card: #f1f5f9;             /* Card and button base surface */
+  /* Warm sandstone editorial theme (aligned with editorial.css) */
+  --bg-primary: #ece8df;          /* Warm sandstone background */
+  --bg-surface: #ece8df;          /* Navigation pane & app header background */
+  --bg-card: #f5f2eb;             /* Warm parchment card & button base surface */
   --bg-card-hover: #ffffff;       /* Crisp white on hover */
-  --bg-card-active: #e2e8f0;      /* Slate-200 active / pressed surface */
-  --bg-panel: rgba(226, 232, 240, 0.96); /* Frosted floating panels */
-  --border-color: #94a3b8;        /* Slate-400 distinct interface border */
-  --border-subtle: #cbd5e1;       /* Slate-300 internal dividers */
+  --bg-card-active: #e2ddd1;      /* Sandstone active / pressed surface */
+  --bg-panel: rgba(245, 242, 235, 0.96); /* Frosted floating panels */
+  --border-color: #cfc8ba;        /* Warm muted stone interface border */
+  --border-subtle: #e2ddd1;       /* Warm sandstone internal dividers */
   
   --text-main: #0f172a;           /* Deep slate-900 primary text */
   --text-muted: #475569;          /* Balanced slate-600 secondary text */
@@ -695,7 +695,7 @@ body.map-gage-tray-expanded .map-legend,
 }
 
 .legend-header-toggle:hover {
-  background: #f1f5f9;
+  background: var(--bg-card-active);
 }
 
 .legend-toggle-chevron {
@@ -705,7 +705,7 @@ body.map-gage-tray-expanded .map-legend,
   width: 22px;
   height: 22px;
   border-radius: 2px;
-  background: rgba(148, 163, 184, 0.22);
+  background: var(--bg-card);
   border: 1px solid var(--border-color);
   color: var(--text-main);
   transform: none !important;
@@ -728,7 +728,7 @@ body.map-gage-tray-expanded .map-legend,
 .legend-header-toggle:hover .legend-toggle-chevron,
 .map-legend.collapsed:hover .legend-toggle-chevron {
   background: var(--bg-card-hover);
-  border-color: #64748b;
+  border-color: var(--hairline-dark, #8c8476);
   color: var(--text-main);
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12);
 }
@@ -931,13 +931,13 @@ body.map-gage-tray-expanded .map-legend,
 .sidebar-close-btn:hover {
   background: var(--bg-card-hover);
   color: var(--text-main);
-  border-color: #64748b;
+  border-color: var(--hairline-dark, #8c8476);
   box-shadow: 0 2px 4px rgba(15, 23, 42, 0.08);
 }
 
 .sidebar-close-btn:active {
   background: var(--bg-card-active);
-  border-color: #475569;
+  border-color: var(--hairline-dark, #8c8476);
 }
 
 .sidebar-mobile-actions {
@@ -1018,7 +1018,7 @@ body.map-gage-tray-expanded .map-legend,
   width: 20px;
   height: 20px;
   border-radius: 2px;
-  background: rgba(148, 163, 184, 0.22);
+  background: var(--bg-card);
   border: 1px solid var(--border-color);
   color: var(--text-main);
   transform: none !important;
@@ -1043,7 +1043,7 @@ body.map-gage-tray-expanded .map-legend,
 
 .card-header-clickable:hover .collapse-icon {
   background: var(--bg-card-hover);
-  border-color: #64748b;
+  border-color: var(--hairline-dark, #8c8476);
   color: var(--text-main);
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.10);
 }

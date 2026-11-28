@@ -57,7 +57,7 @@
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="h-screen overflow-hidden flex flex-col">
 
   <!-- Compact Standard Header -->
   <header class="bg-[#f5f2eb] border-b border-stone-300 px-4 sm:px-6 py-2.5 sticky top-0 z-20">
@@ -89,7 +89,7 @@
   </header>
 
   <!-- Main Body Content -->
-  <main class="w-full px-3 sm:px-5 py-3.5 flex-1 flex flex-col gap-3">
+  <main class="w-full px-3 sm:px-5 py-2.5 flex-1 min-h-0 flex flex-col gap-2.5">
 
     <!-- Structured Telemetry Controls: 3-Tier Visual Hierarchy -->
     <div class="bg-white rounded-[2px] border border-stone-300 shadow-xs flex flex-col divide-y divide-stone-200">
@@ -236,8 +236,8 @@
     </div>
 
     <!-- Gage & Facility Table Card -->
-    <div class="bg-white rounded-[2px] border border-stone-300 shadow-xs overflow-hidden flex-1 flex flex-col">
-      <div class="overflow-x-auto flex-1">
+    <div class="bg-white rounded-[2px] border border-stone-300 shadow-xs overflow-hidden flex-1 min-h-0 flex flex-col">
+      <div class="overflow-auto flex-1 min-h-0">
         <table class="w-full text-left text-xs border-collapse data-table">
           <thead>
             <tr class="border-b border-stone-200 text-slate-600 font-bold text-[10.5px] uppercase tracking-wider">
@@ -362,6 +362,66 @@
       const id = String(item.id || item.gauge_id || item.station_id || '');
       const name = String(item.name || '').toLowerCase();
 
+      // 1. Exact Reservoir IDs first (prevents "(Hoover Dam)" etc. in reservoir names from matching dam tailrace rules)
+      const resUrls = {
+        lake_powell: {
+          name: 'USBR UC',
+          url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/919/dashboard.html',
+          label: 'USBR Lake Powell (Site 919)'
+        },
+        lake_mead: {
+          name: 'USBR LC',
+          url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/921/dashboard.html',
+          label: 'USBR Lake Mead (Site 921)'
+        },
+        flaming_gorge: {
+          name: 'USBR UC',
+          url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/917/dashboard.html',
+          label: 'USBR Flaming Gorge Reservoir (Site 917)'
+        },
+        navajo_reservoir: {
+          name: 'USBR UC',
+          url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/920/dashboard.html',
+          label: 'USBR Navajo Reservoir (Site 920)'
+        },
+        lake_mohave: {
+          name: 'USBR LC',
+          url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/922/dashboard.html',
+          label: 'USBR Lake Mohave (Site 922)'
+        },
+        blue_mesa: {
+          name: 'USBR UC',
+          url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/913/dashboard.html',
+          label: 'USBR Blue Mesa Reservoir (Site 913)'
+        },
+        lake_havasu: {
+          name: 'USBR LC',
+          url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/923/dashboard.html',
+          label: 'USBR Lake Havasu (Site 923)'
+        },
+        dillon_reservoir: {
+          name: 'Colorado DWR',
+          url: 'https://dwr.state.co.us/Tools/Stations/DILRESCO',
+          label: 'CDSS Dillon Reservoir (DILRESCO)'
+        },
+        lake_granby: {
+          name: 'Colorado DWR',
+          url: 'https://dwr.state.co.us/Tools/Stations/GRARESCO',
+          label: 'CDSS Lake Granby (GRARESCO)'
+        },
+        green_mountain: {
+          name: 'USBR UC',
+          url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/2000/dashboard.html',
+          label: 'USBR Green Mountain Reservoir (Site 2000)'
+        },
+        homestake_reservoir: {
+          name: 'Colorado DWR',
+          url: 'https://dwr.state.co.us/Tools/Stations/HOMRESCO',
+          label: 'CDSS Homestake Reservoir (HOMRESCO)'
+        }
+      };
+      if (resUrls[id]) return resUrls[id];
+
       if (id === 'USBR-DAVIS' || id === 'USBR_DAVIS' || id === '09423000' || name.includes('davis dam')) {
         return {
           name: 'USBR Lower Colorado Water Operations',
@@ -386,28 +446,28 @@
       if (id === '09527700' || name.includes('all-american')) {
         return {
           name: 'USGS NWIS',
-          url: 'https://waterdata.usgs.gov/monitoring-location/09527700/',
+          url: 'https://waterdata.usgs.gov/monitoring-location/09527700/#parameterCode=00060',
           label: 'USGS NWIS #09527700'
         };
       }
       if (id === '09424150' || name.includes('colorado river aqueduct')) {
         return {
           name: 'USGS NWIS',
-          url: 'https://waterdata.usgs.gov/monitoring-location/09424150/',
+          url: 'https://waterdata.usgs.gov/monitoring-location/09424150/#parameterCode=00060',
           label: 'USGS NWIS #09424150'
         };
       }
-      if (id === '09426650' || name.includes('central arizona project') || name.includes('cap')) {
+      if (id === '09426650' || name.includes('central arizona project')) {
         return {
           name: 'USGS NWIS',
-          url: 'https://waterdata.usgs.gov/monitoring-location/09426650/',
+          url: 'https://waterdata.usgs.gov/monitoring-location/09426650/#parameterCode=00060',
           label: 'USGS NWIS #09426650'
         };
       }
       if (/^\d{8}$/.test(id)) {
         return {
           name: 'USGS NWIS',
-          url: `https://waterdata.usgs.gov/monitoring-location/${id}/`,
+          url: `https://waterdata.usgs.gov/monitoring-location/${id}/#parameterCode=00060`,
           label: `USGS NWIS #${id}`
         };
       }
@@ -415,53 +475,8 @@
         const stationId = (id.endsWith('CO') || id.endsWith('TUNCO') || id.endsWith('DIVCO')) ? id : 'ROBTUNCO';
         return {
           name: 'Colorado DWR',
-          url: `https://dwr.state.co.us/Tools/Stations?station=${encodeURIComponent(stationId)}`,
+          url: `https://dwr.state.co.us/Tools/Stations/${encodeURIComponent(stationId)}?params=DISCHRG`,
           label: `CDSS #${stationId}`
-        };
-      }
-      const resUrls = {
-        lake_powell: {
-          name: 'USBR UC',
-          url: 'https://www.usbr.gov/uc/water/crsp/cs/gcd.html',
-          label: 'USBR Glen Canyon / Lake Powell'
-        },
-        lake_mead: {
-          name: 'USBR LC',
-          url: 'https://www.usbr.gov/lc/region/g4000/hourly/mead-elv.html',
-          label: 'USBR Hoover Dam / Lake Mead'
-        },
-        flaming_gorge: {
-          name: 'USBR UC',
-          url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/917/dashboard.html',
-          label: 'USBR Flaming Gorge Reservoir'
-        },
-        navajo_reservoir: {
-          name: 'USBR UC',
-          url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/924/dashboard.html',
-          label: 'USBR Navajo Reservoir'
-        },
-        lake_mohave: {
-          name: 'USBR LC',
-          url: 'https://www.usbr.gov/lc/region/g4000/hourly/levels.html',
-          label: 'USBR Lake Mohave / Davis Dam (Levels)'
-        },
-        blue_mesa: {
-          name: 'USBR UC',
-          url: 'https://www.usbr.gov/uc/water/hydrodata/reservoir_data/913/dashboard.html',
-          label: 'USBR Blue Mesa Reservoir'
-        },
-        lake_havasu: {
-          name: 'USBR LC',
-          url: 'https://www.usbr.gov/lc/region/g4000/hourly/levels.html',
-          label: 'USBR Lake Havasu / Parker Dam (Levels)'
-        }
-      };
-      if (resUrls[id]) return resUrls[id];
-      if (id.includes('dillon') || id.includes('green_mountain') || id.includes('shadow_mountain') || id.includes('granby')) {
-        return {
-          name: 'Colorado DWR',
-          url: `https://dwr.state.co.us/Tools/Stations?station=${encodeURIComponent(id.toUpperCase())}`,
-          label: 'Colorado DWR HydroBase'
         };
       }
       return null;

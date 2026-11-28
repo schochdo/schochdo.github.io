@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-27T10:12:43.231843+00:00",
+  "generated_at": "2026-11-27T20:43:02.480479+00:00",
   "meta": {
     "period": "2000-2024 (25-Year Baseline)",
     "period_start": "2000",
@@ -67,8 +67,8 @@
       "summary": "Measured 5-reservoir change (1999-12-31 to 2024-12-31, 29.76 MAF total): Mead -0.65, Powell -0.51, FG/Navajo/BM -0.03 MAF/yr.",
       "breakdowns": null,
       "stationId": "lake_mead",
-      "stationLabel": "USBR HydroData Storage (17.csv)",
-      "portalUrl": "https://www.usbr.gov/uc/water/hydrodata/reservoir_data/921/csv/17.csv",
+      "stationLabel": "USBR HydroData Dashboard (Site 921)",
+      "portalUrl": "https://www.usbr.gov/uc/water/hydrodata/reservoir_data/921/dashboard.html",
       "source_id": "usbr_921_mead_stor",
       "locator": "921/919/917/920/913 17.csv, 1999-12-31 to 2024-12-31"
     },

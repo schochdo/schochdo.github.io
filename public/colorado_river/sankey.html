@@ -201,21 +201,21 @@
   </style>
 </head>
 <body>
-  <div class="sankey-page-container max-w-[1450px] mx-auto">
+  <div class="sankey-page-container w-full">
     <!-- Compact Standard Header (Matching Flow Schematic) -->
     <header class="flex flex-wrap items-center justify-between gap-2 pb-2 mb-3 border-b border-stone-300">
       <div>
         <h1 class="text-lg md:text-xl font-black text-slate-900 tracking-tight leading-none">
           Colorado River Annual Water Budget
         </h1>
-        <p id="budget-header-subtitle" class="text-[11px] text-stone-500 mt-1">2000–2024 (25-Year Baseline) · USBR Lees Ferry natural flow (12.40 MAF/yr) &amp; USBR CUL accounting (14.14 MAF/yr; ends in 2024 due to Reclamation's 1–2 yr verification lag on annual CUL/Natural Flow workbooks, whereas live gages run through Nov 2026)</p>
+        <p id="budget-header-subtitle" class="text-[11px] text-stone-500 mt-1">2000–2024 (25-Year Baseline) · USBR Lees Ferry natural flow (12.40 MAF/yr) &amp; USBR Consumptive Uses &amp; Losses (CUL) accounting (14.14 MAF/yr; ends in 2024 due to Reclamation's 1–2 yr verification lag on annual workbooks, whereas live gages run through Nov 2026)</p>
       </div>
 
       <!-- Three View Sub-Tabs -->
       <div class="flex flex-wrap items-center gap-1.5 p-1 bg-stone-200/90 rounded-[2px] border border-stone-300">
         <button id="subtab-btn-sankey" onclick="switchBudgetSubtab('sankey')" class="px-3.5 py-1.5 rounded-[2px] text-xs font-bold transition shadow-xs bg-white text-sky-900 border border-stone-200 flex items-center gap-1.5 cursor-pointer">
           <span>⇋</span>
-          <span>Supply to Water Use (Sankey)</span>
+          <span>Supply to Water Use</span>
         </button>
         <button id="subtab-btn-stacked" onclick="switchBudgetSubtab('stacked')" class="px-3.5 py-1.5 rounded-[2px] text-xs font-semibold transition text-stone-600 hover:text-stone-900 flex items-center gap-1.5 cursor-pointer">
           <span>⫸</span>
@@ -332,7 +332,7 @@
           <div class="lg:col-span-8 bg-stone-50/70 p-3 md:p-4 rounded-xs border border-stone-200 overflow-x-auto" style="-webkit-overflow-scrolling: touch;">
             <div class="flex items-end gap-3 min-w-[540px] sm:min-w-0 w-full">
             <!-- Shared Vertical Axis (0 to 20 MAF) -->
-            <div class="relative w-16 shrink-0 h-[480px] text-[10px] font-bold text-stone-500 tabular-nums whitespace-nowrap select-none border-r border-stone-300">
+            <div id="stacked-y-axis" class="relative w-16 shrink-0 h-[480px] text-[10px] font-bold text-stone-500 tabular-nums whitespace-nowrap select-none border-r border-stone-300">
               <div class="absolute right-2 top-0 -translate-y-1/2">20.0 MAF</div>
               <div class="absolute right-0 top-0 w-2 h-px bg-stone-400"></div>
 
@@ -471,7 +471,7 @@
           </div>
         </div>
 
-        <div class="w-full relative mt-4" style="height: 360px;">
+        <div class="w-full relative mt-4" style="height: clamp(360px, calc(100vh - 280px), 780px);">
           <canvas id="chart-compact-100yr"></canvas>
         </div>
 
@@ -621,7 +621,7 @@
       container.innerHTML = '';
 
       const width = Math.max(1280, container.clientWidth || 1350);
-      const height = 670;
+      const height = Math.max(670, Math.min(920, (window.innerHeight || 800) - 210));
 
       const nodes = (waterBudgetData.nodes || []).map(d => Object.assign({}, d));
       const links = (waterBudgetData.links || []).map(d => Object.assign({}, d));
@@ -1045,9 +1045,16 @@
       const demandEl = document.getElementById('stacked-bar-demand');
       const supplyBr = document.getElementById('stacked-brackets-supply');
       const demandBr = document.getElementById('stacked-brackets-demand');
+      const yAxisEl = document.getElementById('stacked-y-axis');
       if (!supplyEl || !demandEl) return;
 
-      const PX_PER_MAF = 24.0; // 480px track = 20.0 MAF
+      const TRACK_H = Math.round(Math.max(480, Math.min(780, (window.innerHeight || 800) - 310)));
+      const PX_PER_MAF = TRACK_H / 20.0; // Dynamic track = 20.0 MAF
+      supplyEl.style.height = `${TRACK_H}px`;
+      demandEl.style.height = `${TRACK_H}px`;
+      if (yAxisEl) yAxisEl.style.height = `${TRACK_H}px`;
+      if (supplyBr) { supplyBr.setAttribute('height', TRACK_H); supplyBr.setAttribute('viewBox', `0 0 84 ${TRACK_H}`); }
+      if (demandBr) { demandBr.setAttribute('height', TRACK_H); demandBr.setAttribute('viewBox', `0 0 38 ${TRACK_H}`); }
       const stacked = waterBudgetData.stacked || [];
       const meta = waterBudgetData.meta || {};
 
@@ -1097,10 +1104,10 @@
         const upperMaf = Number(meta.lf_natural_flow_maf || 12.4000);
         const lowerMaf = Number(meta.lb_gaged_tribs_maf || 0.3606);
         const gilaMaf = Number(meta.gila_cul_maf || 1.9946);
-        const yUpperTop = 480 - upperMaf * PX_PER_MAF;
+        const yUpperTop = TRACK_H - upperMaf * PX_PER_MAF;
         const yLowerTop = yUpperTop - lowerMaf * PX_PER_MAF;
         const yGilaTop = yLowerTop - gilaMaf * PX_PER_MAF;
-        const yUpperMid = (yUpperTop + 478) / 2;
+        const yUpperMid = (yUpperTop + TRACK_H - 2) / 2;
         const yLowerMid = (yLowerTop + yUpperTop) / 2;
         const yGilaMid = (yGilaTop + yLowerTop) / 2;
 
@@ -1115,25 +1122,25 @@
           <text x="19" y="${yLowerMid - 1}" font-size="8" font-weight="800" fill="#0d9488" letter-spacing="0.02em">LOWER ${lowerMaf.toFixed(2)}</text>
           <text x="19" y="${yLowerMid + 8}" font-size="7.5" font-weight="600" fill="#0f766e">Mainstem Tribs</text>
 
-          <path d="M 2 ${yUpperTop + 2} L 8 ${yUpperTop + 2} L 8 478 L 2 478" fill="none" stroke="#0284c7" stroke-width="2" />
+          <path d="M 2 ${yUpperTop + 2} L 8 ${yUpperTop + 2} L 8 ${TRACK_H - 2} L 2 ${TRACK_H - 2}" fill="none" stroke="#0284c7" stroke-width="2" />
           <text x="21" y="${yUpperMid}" text-anchor="middle" transform="rotate(-90 21 ${yUpperMid})" font-size="9.5" font-weight="900" letter-spacing="0.07em" fill="#0284c7">UPPER BASIN (${upperMaf.toFixed(2)} MAF)</text>
         `;
       }
 
       // Dynamic Demand Brackets
       if (demandBr) {
-        const yUpperTop = 480 - 7.50 * PX_PER_MAF; // 300
+        const yUpperTop = TRACK_H - 7.50 * PX_PER_MAF;
         const totalDemandMaf = Number(meta.statutory_plus_evap_maf || 18.8179);
         const lbAndEvapMaf = totalDemandMaf - 7.50;
-        const yTotalTop = 480 - totalDemandMaf * PX_PER_MAF;
+        const yTotalTop = TRACK_H - totalDemandMaf * PX_PER_MAF;
         const yLowerMid = (yTotalTop + yUpperTop - 6) / 2;
-        const yUpperMid = (yUpperTop + 478) / 2;
+        const yUpperMid = (yUpperTop + TRACK_H - 2) / 2;
 
         demandBr.innerHTML = `
           <path d="M 2 ${yTotalTop + 2} L 10 ${yTotalTop + 2} L 10 ${yUpperTop - 4} L 2 ${yUpperTop - 4}" fill="none" stroke="#ea580c" stroke-width="2.2" />
           <text x="23" y="${yLowerMid}" text-anchor="middle" transform="rotate(-90 23 ${yLowerMid})" font-size="9.5" font-weight="900" letter-spacing="0.06em" fill="#ea580c">LOWER, MEXICO &amp; EVAP (${lbAndEvapMaf.toFixed(2)} MAF)</text>
 
-          <path d="M 2 ${yUpperTop + 2} L 10 ${yUpperTop + 2} L 10 478 L 2 478" fill="none" stroke="#0284c7" stroke-width="2.2" />
+          <path d="M 2 ${yUpperTop + 2} L 10 ${yUpperTop + 2} L 10 ${TRACK_H - 2} L 2 ${TRACK_H - 2}" fill="none" stroke="#0284c7" stroke-width="2.2" />
           <text x="23" y="${yUpperMid}" text-anchor="middle" transform="rotate(-90 23 ${yUpperMid})" font-size="9.5" font-weight="900" letter-spacing="0.07em" fill="#0284c7">UPPER BASIN (7.50 MAF)</text>
         `;
       }
@@ -1386,6 +1393,25 @@
         }
       });
     }
+
+    // Dismiss Chart.js and custom Sankey tooltips when tapping/clicking outside (iPad/touch)
+    document.addEventListener('pointerdown', (e) => {
+      if (typeof Chart !== 'undefined' && Chart.instances) {
+        const instances = Array.isArray(Chart.instances) ? Chart.instances : Object.values(Chart.instances);
+        instances.forEach((chart) => {
+          if (!chart || !chart.canvas || chart.canvas.contains(e.target)) return;
+          if (chart.tooltip && chart.tooltip.getActiveElements().length > 0) {
+            chart.setActiveElements([]);
+            chart.tooltip.setActiveElements([], { x: 0, y: 0 });
+            chart.update('none');
+          }
+        });
+      }
+      const stt = document.getElementById('sankey-tooltip');
+      if (stt && stt.classList.contains('visible') && !stt.contains(e.target) && !e.target.closest('svg')) {
+        stt.classList.remove('visible');
+      }
+    }, { passive: true });
 
     function switchBudgetSubtab(mode) {
       const btnSankey = document.getElementById('subtab-btn-sankey');

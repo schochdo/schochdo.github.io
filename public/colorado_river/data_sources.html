@@ -58,7 +58,7 @@
   </style>
 </head>
 <body class="min-h-screen flex flex-col p-3 md:p-6">
-  <div class="max-w-6xl w-full mx-auto bg-white border border-[#94a3b8] rounded-[2px] shadow-sm flex flex-col overflow-hidden">
+  <div class="w-full bg-white border border-[#94a3b8] rounded-[2px] shadow-sm flex flex-col overflow-hidden">
     
     <!-- Top Academic Header -->
     <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 px-6 py-4 border-b border-[#cfc8ba] bg-[#ebe4d6]">
@@ -458,9 +458,14 @@
           const cat = CAT_LABELS[s.category] || { label: s.category, cls: 'bg-stone-100 text-stone-700 border-stone-200' };
           const hashShort = s.sha256 ? `SHA-256: ${s.sha256.slice(0, 12)}… (${fmtBytes(s.bytes)})` : fmtBytes(s.bytes);
           const rawLine = s.local_raw_path ? `<div class="text-[10px] font-mono text-stone-500 mt-0.5 break-all">${esc(s.local_raw_path)} • ${esc(hashShort)}</div>` : `<div class="text-[10px] text-stone-400 mt-0.5">${esc(hashShort)}</div>`;
-          const docLink = (s.doc_url && s.doc_url !== s.official_url)
-            ? `<a href="${esc(s.doc_url)}" target="_blank" rel="noopener noreferrer" class="text-[10px] text-stone-600 hover:text-stone-900 hover:underline block mt-0.5">Docs / Reference ↗</a>`
-            : '';
+          const usbrCsvMatch = (s.official_url || '').match(/^(https:\/\/www\.usbr\.gov\/uc\/water\/hydrodata\/reservoir_data\/(\d+))\/csv\/\d+\.csv$/);
+          const primaryUrl = usbrCsvMatch ? `${usbrCsvMatch[1]}/dashboard.html` : s.official_url;
+          const primaryLabel = usbrCsvMatch ? 'USBR Dashboard ↗' : 'Official Source ↗';
+          const secondaryLink = usbrCsvMatch
+            ? `<a href="${esc(s.official_url)}" download target="_blank" rel="noopener noreferrer" class="text-[10px] text-stone-600 hover:text-stone-900 hover:underline block mt-0.5">Raw CSV (download) ↗</a>`
+            : ((s.doc_url && s.doc_url !== s.official_url)
+              ? `<a href="${esc(s.doc_url)}" target="_blank" rel="noopener noreferrer" class="text-[10px] text-stone-600 hover:text-stone-900 hover:underline block mt-0.5">Docs / Reference ↗</a>`
+              : '');
           return `
             <tr class="hover:bg-stone-50/80 transition">
               <td class="p-2.5 align-top">
@@ -479,8 +484,8 @@
               </td>
               <td class="p-2.5 align-top text-stone-700 leading-relaxed">${esc(s.locator_detail)}</td>
               <td class="p-2.5 align-top whitespace-nowrap">
-                <a href="${esc(s.official_url)}" target="_blank" rel="noopener noreferrer" class="text-sky-700 hover:text-sky-900 hover:underline font-bold block">Official Source ↗</a>
-                ${docLink}
+                <a href="${esc(primaryUrl)}" target="_blank" rel="noopener noreferrer" class="text-sky-700 hover:text-sky-900 hover:underline font-bold block">${primaryLabel}</a>
+                ${secondaryLink}
               </td>
             </tr>`;
         }).join('');

@@ -197,7 +197,7 @@
         <div>
           <h2 class="text-sm font-black text-slate-900 leading-tight">Basin-Wide Flashiness (RBI) vs. Annual Volume</h2>
           <p class="text-[11px] text-slate-600 mt-0.5">
-            <strong>71 USGS gages</strong> (WY 2016–2025 daily RBI &amp; full-POR mean volume, log scale). Snowmelt rivers supply nearly all basin volume; desert flash channels spike violently but contribute &lt;1%.
+            <strong>71 USGS gages</strong> (WY 2016–2025 daily RBI &amp; full-record mean volume, log scale). Snowmelt rivers supply nearly all basin volume; desert flash channels spike violently but contribute &lt;1%.
           </p>
         </div>
         <div class="flex items-center gap-1.5 shrink-0">
@@ -227,7 +227,7 @@
             <span id="selected-badge" class="text-[10px] font-bold px-1.5 py-0.5 rounded-[2px] border">Snowmelt</span>
           </div>
           <p id="selected-subtitle" class="text-[11px] text-slate-600 mt-0.5 tabular-nums">
-            Full-POR daily mean hydrograph (cfs)
+            Full-record daily mean hydrograph (cfs)
           </p>
         </div>
         <a id="selected-usgs-link" href="https://waterdata.usgs.gov/monitoring-location/09180500/#parameterCode=00060" target="_blank" rel="noopener noreferrer" class="text-[10.5px] font-mono font-semibold text-[#2b5c8f] hover:underline shrink-0">
@@ -280,7 +280,7 @@
 
       <div class="mt-1 pt-1 border-t border-stone-200 flex flex-wrap items-center justify-between gap-2 text-[10px] text-slate-500 shrink-0">
         <span>Desert Bimodal = Little Colorado (#09402000) + Paria (#09382000): winter rain/snowmelt + Aug–Oct monsoon</span>
-        <span class="font-mono">Full USGS POR &amp; CDWR</span>
+        <span class="font-mono">Full USGS Record &amp; CDWR</span>
       </div>
     </section>
 
@@ -298,11 +298,11 @@
     };
 
     const FIVE_REGIME_DEFS = [
-      { key: 'alpine_snowmelt',        label: 'Alpine Snowmelt',                    color: '#1d5ea8', dash: [] },
-      { key: 'front_range_tunnels',    label: 'Trans-Mountain Tunnels',             color: '#7c4318', dash: [5, 3] },
-      { key: 'regulated_dam_releases', label: 'Dam Releases',                       color: '#9a6f08', dash: [] },
-      { key: 'lower_basin_canals',     label: 'Lower Basin Canals',                 color: '#6b5b95', dash: [3, 3] },
-      { key: 'monsoon_tributaries',    label: 'Desert Bimodal (Winter + Monsoon)',  color: '#c2410c', dash: [] }
+      { key: 'alpine_snowmelt',        label: 'Alpine Snowmelt',                    color: '#1d5ea8', fill: 'rgba(29, 94, 168, 0.12)',  doFill: true,  dash: [],       sign: 1 },
+      { key: 'monsoon_tributaries',    label: 'Desert Bimodal (Winter + Monsoon)',  color: '#c2410c', fill: 'rgba(194, 65, 12, 0.08)',  doFill: true,  dash: [],       sign: 1 },
+      { key: 'regulated_dam_releases', label: 'Dam Releases',                       color: '#b45309', fill: 'rgba(180, 83, 9, 0.08)',   doFill: true,  dash: [],       sign: -1 },
+      { key: 'front_range_tunnels',    label: 'Trans-Mountain Tunnels',             color: '#0f766e', fill: 'transparent',              doFill: false, dash: [6, 3],   sign: -1 },
+      { key: 'lower_basin_canals',     label: 'Lower Basin Canals',                 color: '#6d28d9', fill: 'transparent',              doFill: false, dash: [2.5, 3], sign: -1 }
     ];
 
     // Landmark gages labeled directly on the scatter plot with clean offsets
@@ -570,7 +570,7 @@
       badge.style.borderColor = pal.border;
 
       document.getElementById('selected-subtitle').textContent =
-        `${g.tierLabel} • Full-POR daily mean discharge (cfs) across ${g.periodLabel}`;
+        `${g.tierLabel} • Full-record daily mean discharge (cfs) across ${g.periodLabel}`;
       const link = document.getElementById('selected-usgs-link');
       link.href = `https://waterdata.usgs.gov/monitoring-location/${g.id}/#parameterCode=00060`;
       link.textContent = `USGS #${g.id} ↗`;
@@ -644,19 +644,61 @@
       });
     }
 
+    function smoothCircular7Day(arr) {
+      const n = arr.length;
+      if (!n) return [];
+      const out = new Array(n);
+      for (let i = 0; i < n; i++) {
+        let sum = 0;
+        for (let k = -3; k <= 3; k++) {
+          sum += arr[(i + k + n) % n] || 0;
+        }
+        out[i] = sum / 7;
+      }
+      return out;
+    }
+
+    const mirroredRegimeBandPlugin = {
+      id: 'mirroredRegimeBandPlugin',
+      afterDraw(chart) {
+        const { ctx, chartArea, scales } = chart;
+        if (!chartArea || !scales.y) return;
+        const y0 = scales.y.getPixelForValue(0);
+        ctx.save();
+        // Crisp 0% center divider
+        ctx.beginPath();
+        ctx.strokeStyle = '#64748b';
+        ctx.lineWidth = 1.4;
+        ctx.moveTo(chartArea.left, y0);
+        ctx.lineTo(chartArea.right, y0);
+        ctx.stroke();
+
+        // Subtle quadrant labels in dedicated margin bands (>100% / <-100%) so they never touch curves
+        ctx.font = "700 9.5px 'Inter', -apple-system, sans-serif";
+        ctx.textAlign = 'left';
+        ctx.fillStyle = '#1d5ea8';
+        ctx.fillText('NATURAL INFLOW REGIMES ↑', chartArea.left + 8, chartArea.top + 11);
+        ctx.fillStyle = '#475569';
+        ctx.fillText('ENGINEERED RELEASES & DIVERSIONS ↓', chartArea.left + 8, chartArea.bottom - 5);
+        ctx.restore();
+      }
+    };
+
     function renderFiveRegimes(regimesObj) {
       const ctx = document.getElementById('chart-regimes').getContext('2d');
       const datasets = FIVE_REGIME_DEFS.map(def => {
         const raw = (regimesObj[def.key] || []).slice(0, 365);
+        const smoothed = smoothCircular7Day(raw);
         return {
           label: def.label,
-          data: raw.map(v => Math.round(v * 1000) / 10),
+          data: smoothed.map(v => def.sign * (Math.round(v * 1000) / 10)),
           borderColor: def.color,
-          backgroundColor: 'transparent',
+          backgroundColor: def.fill,
+          fill: def.doFill ? 'origin' : false,
           borderWidth: 2,
           borderDash: def.dash,
           pointRadius: 0,
-          tension: 0.2
+          tension: 0.25
         };
       });
 
@@ -667,6 +709,7 @@
           labels: Array.from({ length: 365 }, (_, i) => i + 1),
           datasets
         },
+        plugins: [mirroredRegimeBandPlugin],
         options: {
           responsive: true,
           maintainAspectRatio: false,
@@ -681,8 +724,8 @@
               borderColor: '#b8ae9c',
               borderWidth: 1,
               callbacks: {
-                title: items => doyToMonthDay(items[0].dataIndex),
-                label: item => `${item.dataset.label}: ${item.parsed.y.toFixed(0)}% of peak`
+                title: items => `${doyToMonthDay(items[0].dataIndex)} (7-day avg)`,
+                label: item => `${item.dataset.label}: ${Math.abs(item.parsed.y).toFixed(0)}% of peak`
               }
             }
           },
@@ -701,11 +744,16 @@
               }
             },
             y: {
-              min: 0,
-              max: 105,
-              title: { display: true, text: '% of Regime Peak', font: { size: 10.5, weight: '700' }, color: '#334155' },
-              grid: { color: '#ece7dd' },
-              ticks: { font: { size: 10 }, color: '#475569', stepSize: 25, callback: v => `${v}%` }
+              min: -118,
+              max: 118,
+              title: { display: true, text: '% of Regime Peak (7-Day Avg)', font: { size: 10.5, weight: '700' }, color: '#334155' },
+              grid: { color: (ctx) => Math.abs(ctx.tick?.value) <= 100 ? '#ece7dd' : 'transparent' },
+              ticks: {
+                font: { size: 10 },
+                color: '#475569',
+                stepSize: 25,
+                callback: v => Math.abs(v) <= 100 ? `${Math.abs(v)}%` : ''
+              }
             }
           }
         }
@@ -727,6 +775,20 @@
       el.classList.toggle('dimmed', Boolean(meta.hidden));
       regimesChart.update();
     }
+
+    // Dismiss Chart.js tooltips when tapping/clicking outside any chart canvas (iPad/touch)
+    document.addEventListener('pointerdown', (e) => {
+      if (typeof Chart === 'undefined' || !Chart.instances) return;
+      const instances = Array.isArray(Chart.instances) ? Chart.instances : Object.values(Chart.instances);
+      instances.forEach((chart) => {
+        if (!chart || !chart.canvas || chart.canvas.contains(e.target)) return;
+        if (chart.tooltip && chart.tooltip.getActiveElements().length > 0) {
+          chart.setActiveElements([]);
+          chart.tooltip.setActiveElements([], { x: 0, y: 0 });
+          chart.update('none');
+        }
+      });
+    }, { passive: true });
 
     function setRegimeFilter(reg) {
       activeRegimeFilter = (reg && activeRegimeFilter === reg) ? null : reg;
